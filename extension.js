@@ -8,7 +8,16 @@ var http = require('http')
 
 var PLUGIN_ID = null;
 const SOURCE = "vscode";
+
+// MAX_TEXT_SIZE is a limit on the number of bytes in the text buffer.
+// Above this limit, events will not contain the contents of the buffer.
 const MAX_TEXT_SIZE = Math.pow(2, 20);
+
+// MAX_PAYLOAD_SIZE is a limit on the number of bytes in the body of each HTTP
+// request, after encoding the full JSON object. Given the MAX_TEXT_SIZE
+// limit, this limit should never be exceeded, but we still have it just in
+// case.
+const MAX_PAYLOAD_SIZE = Math.pow(2, 21);
 
 // Called when VSCode is started
 function activate (context) {
