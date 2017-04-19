@@ -1,0 +1,61 @@
+'use strict';
+const {CompletionItem} = require('vscode');
+const {StateController, Logger} = require('kite-installer');
+const {MAX_FILE_SIZE} = require('./constants');
+const {promisifyRequest, promisifyReadResponse, parseJSON} = require('./utils');
+const {completionsPath} = require('./urls');
+
+module.exports = class KiteCompletionProvider {
+  provideCompletionItems(document, position, token) {
+    const text = document.getText();
+
+    if (text.length > MAX_FILE_SIZE) {
+      Logger.warn('buffer contents too large, not attempting completions');
+      return Promise.resolve([]);
+    }
+
+    const cursorPosition = document.offsetAt(position);
+    const payload = {
+      text,
+      editor: 'atom',
+      filename: document.fileName,
+      cursor_runes: cursorPosition,
+      localtoken: StateController.client.LOCAL_TOKEN,
+    };
+    Logger.debug(payload);
+
+    return promisifyRequest(StateController.client.request({
+      path: completionsPath(),
+      method: 'POST',
+    }, JSON.stringify(payload)))
+    .then(resp => {
+      Logger.logResponse(resp);
+    //   Kite.handle403Response(editor, resp);
+      if (resp.statusCode === 404) {
+        // This means we had no completions for this cursor position.
+        // Do not call reject() because that will generate an error
+        // in the console and lock autocomplete-plus
+        return [];
+      } else if (resp.statusCode !== 200) {
+        return promisifyReadResponse(resp).then(data => {
+          throw new Error(`Error ${resp.statusCode}: ${data}`);
+        });
+      } else {
+        return promisifyReadResponse(resp);
+      }
+    })
+    .then(data => {
+      data = parseJSON(data, {});
+      data.completions = data.completions || [];
+
+      return data.completions.map((c) => {
+        console.log(c.type);
+        return new CompletionItem(c.display)
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      return [];
+    });
+  }
+}
