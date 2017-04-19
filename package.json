@@ -1,0 +1,39 @@
+{
+    "name": "kite",
+    "displayName": "kite",
+    "description": "kite integration",
+    "version": "0.0.1",
+    "publisher": "Kiteco",
+    "engines": {
+        "vscode": "^1.10.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+         "onLanguage:python"
+    ],
+    "main": "./src/kite",
+    "contributes": {
+        "commands": [{
+            "command": "extension.sayHello",
+            "title": "Hello World"
+        }]
+    },
+    "scripts": {
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test"
+    },
+    "dependencies": {
+        "kite-installer": "git@github.com:kiteco/kite-installer.git#feature-vscode-support",
+        "md5": "^2.2.0"
+    },
+    "devDependencies": {
+        "typescript": "^2.0.3",
+        "vscode": "^1.0.0",
+        "mocha": "^2.3.3",
+        "eslint": "^3.6.0",
+        "@types/node": "^6.0.40",
+        "@types/mocha": "^2.2.32"
+    }
+}
