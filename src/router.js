@@ -6,6 +6,8 @@ const vscode = require('vscode');
 const {Logger} = require('kite-installer');
 const KiteValueReport = require('./value-report');
 const KiteMembersList = require('./members-list');
+const KiteExamplesList = require('./examples-list');
+const KiteCuratedExample = require('./curated-example');
 const {wrapHTML} = require('./html-utils');
 const URI = 'kite-vscode-internal://sidebar'
 
@@ -37,6 +39,12 @@ module.exports = class KiteRouter {
         break;
       case 'members-list':
         promise =  KiteMembersList.render(path);
+        break;
+      case 'examples-list':
+        promise =  KiteExamplesList.render(path);
+        break;
+      case 'example':
+        promise =  KiteCuratedExample.render(path);
         break;
       default:
         promise = Promise.resolve(wrapHTML(`Unknown route '${authority}/${path}'`))

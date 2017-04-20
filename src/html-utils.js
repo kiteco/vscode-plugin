@@ -70,6 +70,17 @@ function renderMembersList(data) {
     ${debugData(data)}`
 }
 
+function renderExamplesList(data) {
+  const examples = data.report.examples || [];
+
+  return `
+    <div class="examples-list">
+      <ul>${examples.map(m => renderExample(m)).join('')}</ul>
+    </div>
+    ${debugData(data)}
+  `;
+}
+
 function renderModule(data) {
   const {value} = data;
 
@@ -440,6 +451,7 @@ module.exports = {
   renderDefinition,
   renderExample,
   renderExamples,
+  renderExamplesList,
   renderExtend,
   renderInvocations,
   renderLink,

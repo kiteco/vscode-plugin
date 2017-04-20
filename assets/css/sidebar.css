@@ -1208,3 +1208,176 @@
   flex: 1 1 0;
   position: relative;
 }
+
+.kite .examples-list ul {
+  width: 100%;
+  padding-right: 0 !important;
+  margin-top: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+.examples-list {
+  flex: 1 1 0;
+  overflow-y: auto;
+}
+.examples-list .split-line .name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.examples-list .split-line .type {
+  flex: 0 0 auto;
+}
+.examples-list ul li {
+  position: relative;
+}
+.examples-list ul li > .icon {
+  position: absolute;
+  top: 0.2em;
+}
+.examples-list ul li > a,
+.examples-list ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.examples-list ul li > a span,
+.examples-list ul li > span span {
+  display: inline-block;
+}
+.examples-list ul li > a .icon,
+.examples-list ul li > span .icon {
+  position: absolute;
+  top: 0.2em;
+  right: 0;
+}
+.examples-list caption,
+.examples-list figcaption {
+  padding: 0;
+  color: #d6dae1;
+  margin-bottom: 5px;
+}
+
+.example-wrapper {
+  overflow-y: auto;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+.example-wrapper pre {
+  -webkit-user-select: text;
+  cursor: text;
+}
+.example-wrapper caption,
+.example-wrapper figcaption {
+  padding: 0;
+  color: #d6dae1;
+  margin-bottom: 5px;
+}
+.example-wrapper table {
+  width: 100%;
+  margin-bottom: 5px;
+}
+.example-wrapper table th,
+.example-wrapper table td {
+  padding: 0.4em;
+  border: 1px solid #565b64;
+}
+.example-wrapper .related-examples ul li {
+  position: relative;
+}
+.example-wrapper .related-examples ul li > .icon {
+  position: absolute;
+  top: 0.2em;
+}
+.example-wrapper .related-examples ul li > a,
+.example-wrapper .related-examples ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.example-wrapper .related-examples ul li > a span,
+.example-wrapper .related-examples ul li > span span {
+  display: inline-block;
+}
+.example-wrapper .related-examples ul li > a .icon,
+.example-wrapper .related-examples ul li > span .icon {
+  position: absolute;
+  top: 0.2em;
+  right: 0;
+}
+.example-wrapper .example-code {
+  background: #343b47;
+  border-radius: 3px;
+  padding: 5px;
+}
+.example-wrapper .example-code figcaption {
+  margin-top: 10px;
+  font-size: 0.8em;
+  font-weight: 300;
+  font-style: italic;
+}
+.example-wrapper img {
+  max-width: 100%;
+}
+.example-wrapper pre {
+  flex: 0 0 auto;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 10px;
+}
+.example-wrapper pre a {
+  color: inherit;
+}
+.example-wrapper pre code {
+  white-space: pre;
+}
+.example-wrapper pre.output {
+  display: inline-block;
+}
+.example-wrapper pre.input {
+  background: #343b47;
+  border-radius: 3px;
+  padding: 5px;
+}
+.example-wrapper table,
+.example-wrapper ul.list-tree.root,
+.example-wrapper pre.output {
+  width: auto;
+  background: #2b313b;
+  padding: 5px;
+  border-radius: 3px;
+}
+figcaption + .example-wrapper table,
+figcaption + .example-wrapper ul.list-tree.root,
+figcaption + .example-wrapper pre.output {
+  margin-top: -5px;
+}
+.example-wrapper table,
+.example-wrapper ul.list-tree.root,
+.example-wrapper pre {
+  margin-bottom: 10px;
+}
+.example-wrapper table:last-child,
+.example-wrapper ul.list-tree.root:last-child,
+.example-wrapper pre:last-child {
+  margin-bottom: 0;
+}
+.example-wrapper ul.list-tree.root {
+  display: inline-block;
+  padding-right: 10px;
+}
+.example-wrapper ul.list-tree li {
+  font-size: 1em;
+}
+.example-wrapper ul.list-tree li + li {
+  margin-top: 0;
+}
+.example-wrapper table {
+  border-radius: 3px;
+  border-collapse: separate !important;
+}
+.example-wrapper table th,
+.example-wrapper table td {
+  border: none;
+}
+.example-wrapper table td:not(:last-child) {
+  padding-right: 3rem;
+}
