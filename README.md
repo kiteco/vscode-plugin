@@ -14,4 +14,3 @@ Open Visual Studio Code, navigate to this project directory, and change the
 launch target from `Launch Extension` to `Launch Tests`. Then, hit the green
 play triangle. Testing from the command line to come as soon as I can figure
 it out.
->>>>>>> aeafc6cda090dc9888382b5de07b9ad52990b487
