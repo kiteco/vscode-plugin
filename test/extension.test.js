@@ -1,4 +1,3 @@
-/* global suite, test */
 
 //
 // Note: This example test is leveraging the Mocha test framework.

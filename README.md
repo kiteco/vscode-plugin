@@ -1,65 +1,17 @@
-# kite README
+# Kite plugin for VSCode
 
-This is the README for your extension "kite". After writing up a brief description, we recommend including the following sections.
+To use this plugin you must (download and install the Kite Engine)[https://kite.com].
 
-## Features
+### Installation
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Download Kite from http://kite.com/. During the installation process, select
+"Visual Studio Code" in the list of editors and Kite will install this plugin
+for you.
 
-For example if there is an image subfolder under your extension project workspace:
+### Debugging pointers
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Open Visual Studio Code, navigate to this project directory, and change the
+launch target from `Launch Extension` to `Launch Tests`. Then, hit the green
+play triangle. Testing from the command line to come as soon as I can figure
+it out.
+>>>>>>> aeafc6cda090dc9888382b5de07b9ad52990b487
