@@ -1,0 +1,8 @@
+.vscode-dark {
+  --color-green: #73c990;
+  --color-blue: #6494ed;
+  --link-color: #6494ed;
+  --text-color: #9ba5b6;
+  --text-color-highlight: #d6dae1;
+  --usage-bullet-color: rgba(255, 255, 255, 0.2);
+}

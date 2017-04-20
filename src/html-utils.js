@@ -1,3 +1,6 @@
+'use strict';
+
+const fs = require('fs');
 const path = require('path');
 const {head, compact, flatten} = require('./utils');
 const {openDocumentationInWebURL} = require('./urls');
@@ -6,6 +9,12 @@ const {
   valueLabel, valueType,
   memberLabel, parameterName, parameterType,
 } = require('./data-utils');
+
+const ASSETS_PATH = path.resolve(__dirname, '..', 'assets', 'css');
+const STYLESHEETS = fs.readdirSync(ASSETS_PATH)
+.map(p => path.resolve(ASSETS_PATH, p))
+.map(p => `<link href="file://${p}" rel="stylesheet"/>`)
+.join('');
 
 // const {
 //   highlightChunk,
@@ -24,22 +33,23 @@ function proFeatures(message) {
   return Plan.hasStartedTrial()
     ? `<div class="kite-pro-features">
       ${message},
-      <a is="kite-localtoken-anchor"
-         href="http://local.kite.com:46624/redirect/pro">upgrade to Kite Pro</a>, or
-      <a is="kite-localtoken-anchor"
-         href="http://local.kite.com:46624/redirect/invite">get Kite Pro for free</a>
+      <a href='command:kite.web?"redirect/pro'>upgrade to Kite Pro</a>, or
+      <a href='command:kite.web?"redirect/invite'>get Kite Pro for free</a>
       </div>`
     : `${message},
-      <a is="kite-localtoken-anchor"
-         href="http://local.kite.com:46624/redirect/trial">start your Kite Pro trial</a> at any time`;
+      <a href='command:kite.web?"redirect/trial'>start your Kite Pro trial</a> at any time`;
 }
 
 function wrapHTML (html) {
+
+  html = html
+  .replace(/<a class="internal_link" href="#([^"]+)"/g, 
+           `<a class="internal_link" href='command:kite.navigate?"value/$1"'`)
+  .replace(/<a href="#([^"]+)" class="internal_link"/g, 
+           `<a href='command:kite.navigate?"value/$1"' class="internal_link"`);
   return `
-  <!doctype html>
-  <html>
-    ${html}
-  </html>`
+  ${STYLESHEETS}
+  <div class="kite">${html}</div>`
 }
 
 function highlightCode(content) {
@@ -49,6 +59,15 @@ function highlightCode(content) {
   //   .map(highlightChunk)
   //   .map(wrapLine)
   //   .join(''));
+}
+
+function renderMembersList(data) {
+  return `
+    <div class="members-list">
+      <ul>${data.members.map(m => renderMember(m)).join('')}</ul>
+    </div>
+
+    ${debugData(data)}`
 }
 
 function renderModule(data) {
@@ -209,22 +228,22 @@ function renderExtend(symbol) {
   //   : `
   //   <div class="expand-extend split-line">
   //     <span class="name">
-  //       <a href="kite-vscode-internal://base/method">BaseCounter.increment(n)</a>
+  //       <a href='command:kite.navigate?"base/method"'>BaseCounter.increment(n)</a>
   //     </span>
-  //     <span class="type"><a href="kite-vscode-internal://base/return">-> int</a></span>
+  //     <span class="type"><a href='command:kite.navigate?"base/return"'>-> int</a></span>
   //   </div>`;
 }
 
 function renderDefinition(value) {
   const def = value.report && value.report.definition;
   if (def && def.filename && def.filename.trim() !== '') {
-    const url = `kite-vscode-internal://goto/${stripLeadingSlash(def.filename)}:${def.line}`;
+    const url = `command:kite.navigate?"goto/${stripLeadingSlash(def.filename)}:${def.line}"`;
 
     return section('Definition', `
     <ul>
       <li>
         <i class="icon icon-file-code"></i>
-        <a href="${url}" class="file">
+        <a href='${url}' class="file">
           <span class="title">${path.basename(def.filename)}:${def.line}</span>
           <i class="icon icon-chevron-right"></i>
         </a>
@@ -257,7 +276,7 @@ function renderLink(link) {
 function additionalLinksLink(linksCount, data) {
   return linksCount <= 0
     ? ''
-    : `<a href="kite-vscode-internal://links-list/${data.value.id}"
+    : `<a href='command:kite.navigate?"links-list/${data.value.id}"'
           class="more-links">See ${linksCount} more links</a>`;
 }
 
@@ -273,7 +292,7 @@ function renderExamples(data, limit = 2) {
 function renderExample(example) {
   return `<li data-name="${example.title}">
     <i class="icon icon-code"></i>
-    <a href="kite-vscode-internal://example/${example.id}" class="example">
+    <a href='command:kite.navigate?"example/${example.id}"' class="example">
       <span class="title">${example.title}</span>
       <i class="icon icon-chevron-right"></i>
     </a>
@@ -283,7 +302,7 @@ function renderExample(example) {
 function additionalExamplesLink(examplesCount, data) {
   return examplesCount <= 0
     ? ''
-    : `<a href="kite-vscode-internal://examples-list/${data.value.id}"
+    : `<a href='command:kite.navigate?"examples-list/${data.value.id}"'
           class="more-examples">See ${examplesCount} more examples</a>`;
 }
 
@@ -301,17 +320,20 @@ function renderUsages(symbol) {
 function renderUsage(usage) {
   const base = path.basename(usage.filename);
   const url = [
-    `kite-vscode-internal://goto/${stripLeadingSlash(usage.filename)}`,
+    `command:kite.navigate?"goto/${stripLeadingSlash(usage.filename)}`,
     usage.line,
     usage.begin_runes,
-  ].join(':');
+  ].join(':') + '"';
 
-  return `<li class="usage">
-    ${highlightCode(usage.code)}
-    <div class="links">
-      <a href="${url}">${base}:${usage.line}</a>
-    </div>
-  </li>`;
+  return `<div class="usage-container">
+    <div class="usage-bullet"></div>
+    <li class="usage">
+      ${highlightCode(usage.code.trim())}
+      <div class="links">
+        <a href='${url}'>${base}:${usage.line}</a>
+      </div>
+    </li>
+  </div>`;
 }
 
 function renderMembers(value, limit) {
@@ -341,7 +363,7 @@ function stripLeadingSlash(str) {
 
 function renderMember(member) {
   const label = member.id && member.id !== ''
-    ? `<a href="kite-vscode-internal://member/${member.id}">${memberLabel(member)}</a>`
+    ? `<a href='command:kite.navigate?"value/${member.id}"'>${memberLabel(member)}</a>`
     : memberLabel(member);
 
   if (member.value) {
@@ -366,7 +388,7 @@ function renderMember(member) {
 function additionalMembersLink(membersCount, value) {
   return membersCount <= 0
     ? ''
-    : `<a href="kite-vscode-internal://members-list/${value.id}"
+    : `<a href='command:kite.navigate?"members-list/${value.id}"'
           class="more-members">See ${membersCount} more members</a>`;
 }
 
@@ -424,6 +446,7 @@ module.exports = {
   renderLinks,
   renderMember,
   renderMembers,
+  renderMembersList,
   renderParameter,
   renderParameters,
   renderSymbolHeader,

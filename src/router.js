@@ -1,8 +1,11 @@
 'use strict';
 
+const fs = require('fs');
+const pth = require('path');
 const vscode = require('vscode');
 const {Logger} = require('kite-installer');
-const KiteValueReportProvider = require('./value-report');
+const KiteValueReport = require('./value-report');
+const KiteMembersList = require('./members-list');
 const {wrapHTML} = require('./html-utils');
 const URI = 'kite-vscode-internal://sidebar'
 
@@ -17,7 +20,6 @@ module.exports = class KiteRouter {
   }
 
   get onDidChange() { 
-    console.log('on did change called');
     return this.didChangeEmitter.event; 
   }
 
@@ -25,16 +27,38 @@ module.exports = class KiteRouter {
   }
 
   provideTextDocumentContent() {
-    console.log('provideTextDocumentContent called for uri', String(this.currentURI))
     let {authority, path} = this.currentURI;
+    let promise
     path = path.replace(/^\//, '');
 
     switch(authority) {
       case 'value':
-        return KiteValueReportProvider.render(path);
+        promise =  KiteValueReport.render(path);
+        break;
+      case 'members-list':
+        promise =  KiteMembersList.render(path);
+        break;
       default:
-        return Promise.resolve(wrapHTML(`Unknown route '${authority}/${path}'`))
+        promise = Promise.resolve(wrapHTML(`Unknown route '${authority}/${path}'`))
     }
+
+    return promise.then(html => {
+      fs.writeFileSync(pth.resolve(__dirname, '..', 'sample.html'), `<!doctype html>
+      <html class="vscode-dark">
+      <style> 
+        html {
+          background: #333333;
+          color: #999999;
+          font-family: sans-serif;
+          font-size: 14px;
+          line-height: 1.4em;
+        }
+      </style>
+      ${html}
+      </html>
+      `)
+      return html
+    })
   }
 
   navigate(uri) {

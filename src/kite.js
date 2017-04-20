@@ -40,6 +40,11 @@ module.exports = {
         const uri = `kite-vscode-internal://value/${id}`;
         router.navigate(uri);
       });
+
+      vscode.commands.registerCommand('kite.navigate', (path) => {
+        const uri = `kite-vscode-internal://${path}`;
+        router.navigate(uri);
+      });
       
       vscode.commands.registerCommand('kite.web', (id) => {
         console.log('more clicked', id);
