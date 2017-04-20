@@ -14,12 +14,16 @@ module.exports = class EditorEvents {
     this.sendEvent('focus');
   }
 
+  edit() {
+    this.sendEvent('edit');
+  }
+
   selectionChanged() {
     this.sendEvent('selection');
   }
 
   sendEvent(action) {
-    const event = this.makeEvent(action, this.document, this.document.selection);
+    const event = this.makeEvent(action, this.document, this.editor.selection);
     const payload = JSON.stringify(event);
 
     if (payload.length > MAX_PAYLOAD_SIZE) {

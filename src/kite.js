@@ -33,7 +33,18 @@ module.exports = {
 
       ctx.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(e => {
         const evt = this.editorEventsByEditor.get(e.textEditor);
-        evt.selectionChanged(e.selections);
+        evt.selectionChanged();
+      }));
+
+      ctx.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
+        const doc = e.document;
+        vscode.window.visibleTextEditors.forEach(e => {
+          const textEditor = e
+          if (e.document === doc) {
+            const evt = this.editorEventsByEditor.get(textEditor);
+            evt.edit();
+          }
+        })
       }));
       
       vscode.commands.registerCommand('kite.more', (id) => {
