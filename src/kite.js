@@ -5,6 +5,7 @@ const {StateController, Logger} = require('kite-installer');
 const {PYTHON_MODE} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
+const KiteSignatureProvider = require('./signature');
 const KiteRouter = require('./router');
 const EditorEvents = require('./events');
 
@@ -20,6 +21,7 @@ module.exports = {
       if (state >= StateController.STATES.AUTHENTICATED) {
         ctx.subscriptions.push(vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider()));
         ctx.subscriptions.push(vscode.languages.registerCompletionItemProvider(PYTHON_MODE, new KiteCompletionProvider(), '.'));
+        ctx.subscriptions.push(vscode.languages.registerSignatureHelpProvider(PYTHON_MODE, new KiteSignatureProvider(), '(', ','));
       }
 
       ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {

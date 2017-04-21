@@ -35,7 +35,7 @@ module.exports = class KiteCompletionProvider {
     const cursorPosition = document.offsetAt(position);
     const payload = {
       text,
-      editor: 'atom',
+      editor: 'vscode',
       filename: document.fileName,
       cursor_runes: cursorPosition,
       localtoken: StateController.client.LOCAL_TOKEN,
