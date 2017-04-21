@@ -1,5 +1,5 @@
 'use strict';
-const {CompletionItem} = require('vscode');
+const {CompletionItem, CompletionItemKind} = require('vscode');
 const {StateController, Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
 const {promisifyRequest, promisifyReadResponse, parseJSON} = require('./utils');
@@ -10,6 +10,17 @@ const fill = (s, l, f = ' ') => {
     s = `${f}${s}`
   }
   return s;
+}
+
+const kindForHint = hint => {
+  switch(hint) {
+    case 'function': return CompletionItemKind.Function;
+    case 'module': return CompletionItemKind.Module;
+    case 'type': return CompletionItemKind.Class;
+    case 'keyword': return CompletionItemKind.Keyword;
+    case 'string': return CompletionItemKind.Value;
+    default: return CompletionItemKind.Value;
+  }
 }
 
 module.exports = class KiteCompletionProvider {
@@ -57,9 +68,17 @@ module.exports = class KiteCompletionProvider {
 
       const length = String(completions.length).length;
 
+      // this.lastCompletions = completions.reduce((m, c) => {
+
+      // }, {});
+
       return completions.map((c, i) => {
         const item = new CompletionItem(c.display);
-        item.sortText = fill(String(i), length, '0')
+        item.sortText = fill(String(i), length, '0');
+        item.insertText = c.insert;
+        item.documentation = c.documentation_text;
+        item.detail = c.hint;
+        item.kind = kindForHint(c.hint);
         return item;
       });
     })
