@@ -5,6 +5,13 @@ const {MAX_FILE_SIZE} = require('./constants');
 const {promisifyRequest, promisifyReadResponse, parseJSON} = require('./utils');
 const {completionsPath} = require('./urls');
 
+const fill = (s, l, f = ' ') => {
+  while(s.length < l) {
+    s = `${f}${s}`
+  }
+  return s;
+}
+
 module.exports = class KiteCompletionProvider {
   provideCompletionItems(document, position, token) {
     const text = document.getText();
@@ -46,11 +53,14 @@ module.exports = class KiteCompletionProvider {
     })
     .then(data => {
       data = parseJSON(data, {});
-      data.completions = data.completions || [];
+      const completions = data.completions || [];
 
-      return data.completions.map((c) => {
-        console.log(c.type);
-        return new CompletionItem(c.display)
+      const length = String(completions.length).length;
+
+      return completions.map((c, i) => {
+        const item = new CompletionItem(c.display);
+        item.sortText = fill(String(i), length, '0')
+        return item;
       });
     })
     .catch(err => {
