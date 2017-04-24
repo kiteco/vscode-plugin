@@ -3,11 +3,11 @@
 const fs = require('fs');
 const pth = require('path');
 const vscode = require('vscode');
-const {Logger} = require('kite-installer');
 const KiteValueReport = require('./value-report');
 const KiteMembersList = require('./members-list');
 const KiteExamplesList = require('./examples-list');
 const KiteCuratedExample = require('./curated-example');
+const metrics = require('./metrics');
 const {wrapHTML} = require('./html-utils');
 const URI = 'kite-vscode-internal://sidebar'
 
@@ -35,15 +35,19 @@ module.exports = class KiteRouter {
 
     switch(authority) {
       case 'value':
+        metrics.track(`Navigation to value report clicked`);
         promise =  KiteValueReport.render(path);
         break;
       case 'members-list':
+        metrics.track(`Navigation to members list clicked`);
         promise =  KiteMembersList.render(path);
         break;
       case 'examples-list':
+        metrics.track(`Navigation to examples list clicked`);
         promise =  KiteExamplesList.render(path);
         break;
       case 'example':
+        metrics.track(`Navigation to example clicked`);
         promise =  KiteCuratedExample.render(path);
         break;
       default:
