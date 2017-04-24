@@ -1,6 +1,7 @@
 'use strict';
 
 const vscode = require('vscode');
+const opn = require('opn');
 const {StateController, Logger} = require('kite-installer');
 const {PYTHON_MODE} = require('./constants');
 const KiteHoverProvider = require('./hover');
@@ -8,9 +9,14 @@ const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
 const KiteRouter = require('./router');
 const EditorEvents = require('./events');
+const metrics = require('./metrics');
+const {openDocumentationInWebURL} = require('./urls');
 
 module.exports = {
   activate(ctx) {
+    // send the activated event
+    metrics.track('activated');
+
     const router = new KiteRouter();
     Logger.LEVEL = Logger.LEVELS.DEBUG;
 
@@ -18,6 +24,14 @@ module.exports = {
 
     this.editorEventsByEditor = new Map();
     StateController.handleState().then(state => {
+      if (state === StateController.STATES.UNSUPPORTED) {
+        if (!StateController.isOSSupported()) {
+          metrics.track('OS unsupported');
+        } else if (!StateController.isOSVersionSupported()) {
+          metrics.track('OS version unsupported');
+        }
+      }
+
       if (state >= StateController.STATES.AUTHENTICATED) {
         ctx.subscriptions.push(vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider()));
         ctx.subscriptions.push(vscode.languages.registerCompletionItemProvider(PYTHON_MODE, new KiteCompletionProvider(), '.'));
@@ -49,7 +63,8 @@ module.exports = {
         })
       }));
       
-      vscode.commands.registerCommand('kite.more', (id) => {
+      vscode.commands.registerCommand('kite.more', ({id, source}) => {
+        metrics.track(`${source} See info clicked`);
         const uri = `kite-vscode-internal://value/${id}`;
         router.navigate(uri);
       });
@@ -59,11 +74,13 @@ module.exports = {
         router.navigate(uri);
       });
       
-      vscode.commands.registerCommand('kite.web', (id) => {
-        console.log('more clicked', id);
+      vscode.commands.registerCommand('kite.web', ({id, source}) => {
+        metrics.track(`${source} Open in web clicked`);
+        opn(openDocumentationInWebURL(id, true));
       });
 
-      vscode.commands.registerCommand('kite.def', (id) => {
+      vscode.commands.registerCommand('kite.def', ({id, source}) => {
+        metrics.track(`${source} Go to definition clicked`);
         console.log('def clicked', id);
       });
 
@@ -78,5 +95,8 @@ module.exports = {
     });
   },
   
-  deactivate() {},
+  deactivate() {
+    // send the activated event
+    metrics.track('deactivated');
+  },
 }

@@ -35,9 +35,14 @@ module.exports = class KiteHoverProvider {
         ];
 
         if (id && id !== '') {
-          texts.push(`[def](command:kite.def?${JSON.stringify(id)})
-         [web](command:kite.web?${JSON.stringify(id)})
-         [more](command:kite.more?${JSON.stringify(id)})`);
+          const linkData = JSON.stringify({
+            id,
+            source: 'Hover',
+          });
+
+          texts.push(`[def](command:kite.def?${linkData})
+         [web](command:kite.web?${linkData})
+         [more](command:kite.more?${linkData})`);
         }
 
         return new Hover(compact(texts));
