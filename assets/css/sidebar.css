@@ -1381,3 +1381,51 @@ figcaption + .example-wrapper pre.output {
 .example-wrapper table td:not(:last-child) {
   padding-right: 3rem;
 }
+
+.links-list ul {
+  width: 100%;
+  padding-right: 0 !important;
+  margin-top: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+.links-list {
+  flex: 1 1 0;
+  overflow-y: auto;
+}
+.links-list .split-line .name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.links-list .split-line .type {
+  flex: 0 0 auto;
+}
+.links-list ul li {
+  position: relative;
+}
+.links-list ul li > .icon {
+  position: absolute;
+  top: 0.2em;
+}
+.links-list ul li > a,
+.links-list ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.links-list ul li > a span,
+.links-list ul li > span span {
+  display: inline-block;
+}
+.links-list ul li > a .icon,
+.links-list ul li > span .icon {
+  position: absolute;
+  top: 0.2em;
+  right: 0;
+}
+.links-list caption,
+.links-list figcaption {
+  padding: 0;
+  color: #d6dae1;
+  margin-bottom: 5px;
+}

@@ -265,6 +265,16 @@ function renderDefinition(value) {
   }
 }
 
+function renderLinksList(data) {
+  const links = (data.report && data.report.links) || [];
+  return `
+    <div class="links-list">
+      <ul>${links.map(m => renderLink(m)).join('')}</ul>
+    </div>
+    ${debugData(data)}
+    `;
+}
+
 function renderLinks(data, limit = 2) {
   return data.report && data.report.links && data.report.links.length
     ? section('Links', `
@@ -456,6 +466,7 @@ module.exports = {
   renderInvocations,
   renderLink,
   renderLinks,
+  renderLinksList,
   renderMember,
   renderMembers,
   renderMembersList,

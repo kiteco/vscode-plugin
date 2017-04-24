@@ -6,6 +6,7 @@ const vscode = require('vscode');
 const KiteValueReport = require('./value-report');
 const KiteMembersList = require('./members-list');
 const KiteExamplesList = require('./examples-list');
+const KiteLinksList = require('./links-list');
 const KiteCuratedExample = require('./curated-example');
 const metrics = require('./metrics');
 const {wrapHTML} = require('./html-utils');
@@ -41,6 +42,10 @@ module.exports = class KiteRouter {
       case 'members-list':
         metrics.track(`Navigation to members list clicked`);
         promise =  KiteMembersList.render(path);
+        break;
+      case 'links-list':
+        metrics.track(`Navigation to links list clicked`);
+        promise =  KiteLinksList.render(path);
         break;
       case 'examples-list':
         metrics.track(`Navigation to examples list clicked`);
