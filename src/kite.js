@@ -81,9 +81,18 @@ module.exports = {
         opn(openDocumentationInWebURL(id, true));
       });
 
-      vscode.commands.registerCommand('kite.def', ({id, source}) => {
+      vscode.commands.registerCommand('kite.def', ({file, line, source}) => {
         metrics.track(`${source} Go to definition clicked`);
-        console.log('def clicked', id);
+        vscode.workspace.openTextDocument(file).then(doc => {
+          vscode.window.visibleTextEditors.some(e => {
+          if (e.document === doc) {
+            e.revealRange(new vscode.Range(
+              new vscode.Position(line - 1, 0),
+              new vscode.Position(line - 1, 100)
+            ))
+          }
+        })
+        })
       });
 
       if (vscode.window.activeTextEditor) {

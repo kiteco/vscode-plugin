@@ -34,16 +34,29 @@ module.exports = class KiteHoverProvider {
           truncate(symbol.value && symbol.value.length && head(symbol.value).synopsis),
         ];
 
+        const links = [];
+
+        if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
+          const defData = JSON.stringify({
+            file: data.report.definition.filename,
+            line: data.report.definition.line,
+            source: 'Hover',
+          });
+          links.push(`[def](command:kite.def?${defData})`);
+        }
+
         if (id && id !== '') {
           const linkData = JSON.stringify({
             id,
             source: 'Hover',
           });
 
-          texts.push(`[def](command:kite.def?${linkData})
-         [web](command:kite.web?${linkData})
-         [more](command:kite.more?${linkData})`);
+          
+          links.push(`[web](command:kite.web?${linkData})`);
+          links.push(`[more](command:kite.more?${linkData})`);
         }
+
+        if (links.length) { texts.push(links.join(' ')); }
 
         return new Hover(compact(texts));
       }
