@@ -6,8 +6,17 @@ const MAX_FILE_SIZE = 2 ** 20; // 1048576
 // MAX_PAYLOAD_SIZE is the maximum length for a POST reqest body
 const MAX_PAYLOAD_SIZE = 2 ** 21; // 2097152
 
+const CONNECT_ERROR_LOCKOUT = 15 * 60;
+
+const ATTEMPTS = 30;
+
+const INTERVAL = 2500;
+
 module.exports = {
+    ATTEMPTS, 
+    INTERVAL,
     PYTHON_MODE,
     MAX_PAYLOAD_SIZE,
-    MAX_FILE_SIZE
+    MAX_FILE_SIZE,
+    CONNECT_ERROR_LOCKOUT,
 };

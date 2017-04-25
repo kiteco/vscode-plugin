@@ -1,5 +1,7 @@
 'use strict';
 
+const vscode = require('vscode');
+
 const compact = a => a.filter(v => v && v !== '');
 
 const uniq = a => a.reduce((m, v) => m.indexOf(v) === -1 ? m.concat(v) : m, []);
@@ -62,6 +64,9 @@ const stopPropagationAndDefault = f => function(e) {
   return f && f.call(this, e);
 };
 
+const editorsForDocument = document =>
+  vscode.window.visibleTextEditors.filter(e => e.document === doc);
+
 module.exports = {
   compact,
   delayPromise,
@@ -76,4 +81,5 @@ module.exports = {
   stopPropagationAndDefault,
   truncate,
   uniq,
+  editorsForDocument,
 };

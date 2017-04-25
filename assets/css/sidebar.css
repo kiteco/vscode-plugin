@@ -81,6 +81,7 @@
 }
 .kite pre {
   -webkit-user-select: text;
+  user-select: text;
   cursor: text;
 }
 .kite .debug {
@@ -93,6 +94,7 @@
   flex: 1 1 auto;
   cursor: text;
   -webkit-user-select: all;
+  user-select: all;
   user-select: all;
   overflow: auto;
 }
@@ -625,6 +627,7 @@
 
 .kite pre {
   -webkit-user-select: text;
+  user-select: text;
   cursor: text;
 }
 .kite .debug {
@@ -637,6 +640,7 @@
   flex: 1 1 auto;
   cursor: text;
   -webkit-user-select: all;
+  user-select: all;
   user-select: all;
   overflow: auto;
 }
@@ -1263,6 +1267,7 @@
 }
 .example-wrapper pre {
   -webkit-user-select: text;
+  user-select: text;
   cursor: text;
 }
 .example-wrapper caption,

@@ -1,11 +1,12 @@
 'use strict';
 
 const {StateController, Logger} = require('kite-installer');
-const {MAX_PAYLOAD_SIZE} = require('./constants');
-const {promisifyRequest} = require('./utils');
+const {MAX_PAYLOAD_SIZE, CONNECT_ERROR_LOCKOUT} = require('./constants');
+const {promisifyRequest, secondsSince} = require('./utils');
 
 module.exports = class EditorEvents {
-  constructor(editor) {
+  constructor(Kite, editor) {
+    this.Kite = Kite;
     this.editor = editor;
     this.document = editor.document;
   }
@@ -36,9 +37,10 @@ module.exports = class EditorEvents {
       method: 'POST',
     }, payload))
     .then(resp => {
+      this.Kite.handle403Response(this.document, resp);
       Logger.logResponse(resp);
     })
-    .catch(err => {
+    .catch(() => {
       // on connection error send a metric, but not too often or we will generate too many events
       if (!this.lastErrorAt ||
           secondsSince(this.lastErrorAt) >= CONNECT_ERROR_LOCKOUT) {

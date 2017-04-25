@@ -8,11 +8,16 @@ const {promisifyReadResponse, compact, head, truncate} = require('./utils');
 const {symbolLabel, symbolType, symbolId} = require('./data-utils');
 
 module.exports = class KiteHoverProvider {
+  constructor (Kite) {
+    this.Kite = Kite;
+  }
+
   provideHover(doc, pos) {
     const range = doc.getWordRangeAtPosition(pos);
     const path = hoverPath(doc, range);
     return StateController.client.request({path})
     .then(resp => {
+      this.Kite.handle403Response(doc, resp);
       if (resp.statusCode !== 200) {
         return promisifyReadResponse(resp).then(data => {
           throw new Error(`bad status ${resp.statusCode}: ${data}`);
