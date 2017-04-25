@@ -71,6 +71,12 @@ module.exports = {
         router.navigate(uri);
       });
 
+      vscode.commands.registerCommand('kite.more-range', ({range, source}) => {
+        metrics.track(`${source} See info clicked`);
+        const uri = `kite-vscode-internal://value-range/${JSON.stringify(range)}`;
+        router.navigate(uri);
+      });
+
       vscode.commands.registerCommand('kite.navigate', (path) => {
         const uri = `kite-vscode-internal://${path}`;
         router.navigate(uri);

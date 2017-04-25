@@ -54,6 +54,13 @@ module.exports = class KiteHoverProvider {
           
           links.push(`[web](command:kite.web?${linkData})`);
           links.push(`[more](command:kite.more?${linkData})`);
+        } else {
+          const linkData = JSON.stringify({
+            range,
+            source: 'Hover',
+          });
+
+          links.push(`[more](command:kite.more-range?${linkData})`);
         }
 
         if (links.length) { texts.push(links.join(' ')); }

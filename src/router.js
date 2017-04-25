@@ -39,6 +39,10 @@ module.exports = class KiteRouter {
         metrics.track(`Navigation to value report clicked`);
         promise =  KiteValueReport.render(path);
         break;
+      case 'value-range':
+        metrics.track(`Navigation to value report from range clicked`);
+        promise =  KiteValueReport.renderFromRange(vscode.window.activeTextEditor.document, JSON.parse(path));
+        break;
       case 'members-list':
         metrics.track(`Navigation to members list clicked`);
         promise =  KiteMembersList.render(path);

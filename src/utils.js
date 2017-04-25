@@ -56,50 +56,6 @@ function delayPromise(factory, timeout) {
   });
 }
 
-function bufferPositionForMouseEvent(editorElement, event) {
-  return editorElement.getModel().bufferPositionForScreenPosition(screenPositionForMouseEvent(editorElement, event));
-}
-
-function screenPositionForMouseEvent(editorElement, event) {
-  const pixelPosition = pixelPositionForMouseEvent(editorElement, event);
-
-  if (pixelPosition == null) { return null; }
-
-  return editorElement.screenPositionForPixelPosition != null
-    ? editorElement.screenPositionForPixelPosition(pixelPosition)
-    : editorElement.getModel().screenPositionForPixelPosition(pixelPosition);
-}
-
-function screenPositionForPixelPosition(editorElement, position) {
-  if (position == null) { return null; }
-
-  position = pixelPositionInEditorCoordinates(editorElement, position);
-
-  return editorElement.screenPositionForPixelPosition != null
-    ? editorElement.screenPositionForPixelPosition(position)
-    : editorElement.getModel().screenPositionForPixelPosition(position);
-}
-
-function pixelPositionInEditorCoordinates(editorElement, position) {
-  const {left: x, top: y} = position;
-  const scrollTarget = editorElement.getScrollTop != null
-    ? editorElement
-    : editorElement.getModel();
-
-  if (editorElement.querySelector('.lines') == null) { return null; }
-
-  let {top, left} = editorElement.querySelector('.lines').getBoundingClientRect();
-  top = (y - top) + scrollTarget.getScrollTop();
-  left = (x - left) + scrollTarget.getScrollLeft();
-  return {top, left};
-}
-
-function pixelPositionForMouseEvent(editorElement, event) {
-  const {clientX: left, clientY: top} = event;
-
-  return pixelPositionInEditorCoordinates(editorElement, {top, left});
-}
-
 const stopPropagationAndDefault = f => function(e) {
   e.stopPropagation();
   e.preventDefault();
@@ -107,7 +63,6 @@ const stopPropagationAndDefault = f => function(e) {
 };
 
 module.exports = {
-  bufferPositionForMouseEvent,
   compact,
   delayPromise,
   flatten,
@@ -115,11 +70,8 @@ module.exports = {
   last,
   log,
   parseJSON,
-  pixelPositionForMouseEvent,
   promisifyReadResponse,
   promisifyRequest,
-  screenPositionForMouseEvent,
-  screenPositionForPixelPosition,
   secondsSince,
   stopPropagationAndDefault,
   truncate,
