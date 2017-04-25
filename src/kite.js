@@ -143,7 +143,7 @@ const Kite = {
           break;
         case StateController.STATES.REACHABLE:
           vscode.window.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
-            if (item) { opn('http://localhost:46624/login'); }
+            if (item) { opn('http://localhost:46624/settings'); }
           })
           break;
       }
