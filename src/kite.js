@@ -12,6 +12,7 @@ const KiteRouter = require('./router');
 const EditorEvents = require('./events');
 const metrics = require('./metrics');
 const {openDocumentationInWebURL} = require('./urls');
+// const Rollbar = require('rollbar');
 
 module.exports = {
   activate(ctx) {
@@ -20,6 +21,9 @@ module.exports = {
 
     const router = new KiteRouter();
     Logger.LEVEL = Logger.LEVELS.DEBUG;
+
+    // Rollbar.init('cce6430d4e25421084d7562afa976886');
+    // Rollbar.handleUncaughtExceptions('cce6430d4e25421084d7562afa976886');
 
     ctx.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('kite-vscode-internal', router));
 

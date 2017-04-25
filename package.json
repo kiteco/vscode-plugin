@@ -30,6 +30,7 @@
     "atob": "^2.0.3",
     "opn": "^1.0.0",
     "kite-installer": "git@github.com:kiteco/kite-installer.git#feature-vscode-support",
+    "rollbar": "*",
     "md5": "^2.2.0"
   },
   "devDependencies": {
