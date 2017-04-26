@@ -18,6 +18,48 @@
 .kite section.summary:empty {
   display: none;
 }
+
+.kite section.summary {
+  line-height: 1.4em;
+}
+
+.kite section.summary dd, 
+.kite section.summary dt {
+  font-size: 1em;
+}
+
+.kite section.summary dt {
+  color: var(--text-color-highlight);
+}
+
+.kite section.summary dd {
+  color: var(--text-color);
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.kite section.summary dl dd a {
+  font-size: 1em;
+}
+
+.kite section.summary table {
+  border-collapse: collapse;
+}
+
+.kite section.summary pre {
+  background: var(--examples-output-background);
+  border-radius: 3px;
+  padding: var(--half-padding);
+}
+
+.kite section.summary table td ul:first-child {
+  margin-top: 0;
+}
+
+.kite section.summary table td ul li {
+  font-size: 1em;
+}
+
 .kite header {
   margin-bottom: 10px;
   display: flex;
@@ -121,7 +163,7 @@
 .kite section.summary table th,
 .kite section.summary table td {
   padding: 0.4em;
-  border: 1px solid #565b64;
+  border: 1px solid var(--border-color);
 }
 .kite section.parameters {
   flex: 0 0 auto;
@@ -253,15 +295,7 @@
   position: relative;
   overflow: hidden;
 }
-.kite section.summary.collapsible.collapse.overflow .description::after {
-  content: '';
-  position: absolute;
-  height: 30px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: linear-gradient(to top, #252a32 0%, transparent 100%);
-}
+
 .kite section.summary .description {
   margin-top: 10px;
   font-size: 1em;
@@ -424,18 +458,7 @@
   display: inline-block;
   white-space: nowrap;
 }
-.kite-content section.usages .section-content .usages-box .usage .links .web-link {
-  cursor: pointer;
-  opacity: 0.7;
-  border-radius: 0.25em;
-  padding: 0.25em 0.5em;
-  background-color: #4d586a;
-  color: #b2bac7;
-}
-.kite-content section.usages .section-content .usages-box .usage .links .web-link:hover {
-  opacity: 1;
-  text-decoration: none;
-}
+
 .kite-content ul {
   margin: 0 0 20px;
   padding: 0;
@@ -689,7 +712,7 @@
 .kite kite-expand-function section.summary table td,
 .kite kite-expand-instance section.summary table td {
   padding: 0.4em;
-  border: 1px solid #565b64;
+  border: 1px solid var(--border-color);
 }
 .kite kite-expand-module section.parameters,
 .kite kite-expand-function section.parameters,
@@ -826,15 +849,6 @@
   max-height: 250px;
   position: relative;
   overflow: hidden;
-}
-.kite section.summary.collapsible.collapse.overflow .description::after {
-  content: '';
-  position: absolute;
-  height: 30px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: linear-gradient(to top, #252a32 0%, transparent 100%);
 }
 .kite section.summary .description {
   margin-top: 10px;
@@ -989,18 +1003,7 @@
   display: inline-block;
   white-space: nowrap;
 }
-.kite section.usages .section-content .usages-box .usage .links .web-link {
-  cursor: pointer;
-  opacity: 0.7;
-  border-radius: 0.25em;
-  padding: 0.25em 0.5em;
-  background-color: #4d586a;
-  color: #b2bac7;
-}
-.kite section.usages .section-content .usages-box .usage .links .web-link:hover {
-  opacity: 1;
-  text-decoration: none;
-}
+
 .kite ul {
   margin: 0 0 20px;
   padding: 0;
@@ -1256,7 +1259,7 @@
 .examples-list caption,
 .examples-list figcaption {
   padding: 0;
-  color: #d6dae1;
+  color: var(--text-color-highlight);
   margin-bottom: 5px;
 }
 
@@ -1273,7 +1276,7 @@
 .example-wrapper caption,
 .example-wrapper figcaption {
   padding: 0;
-  color: #d6dae1;
+  color: var(--text-color-highlight);
   margin-bottom: 5px;
 }
 .example-wrapper table {
@@ -1283,7 +1286,7 @@
 .example-wrapper table th,
 .example-wrapper table td {
   padding: 0.4em;
-  border: 1px solid #565b64;
+  border: 1px solid var(--border-color);
 }
 .example-wrapper .related-examples ul li {
   position: relative;
@@ -1308,9 +1311,10 @@
   right: 0;
 }
 .example-wrapper .example-code {
-  background: #343b47;
+  background: var(--examples-background);
   border-radius: 3px;
   padding: 5px;
+  margin-bottom: var(--component-padding);
 }
 .example-wrapper .example-code figcaption {
   margin-top: 10px;
@@ -1337,7 +1341,7 @@
   display: inline-block;
 }
 .example-wrapper pre.input {
-  background: #343b47;
+  background: var(--examples-background);
   border-radius: 3px;
   padding: 5px;
 }
@@ -1345,7 +1349,7 @@
 .example-wrapper ul.list-tree.root,
 .example-wrapper pre.output {
   width: auto;
-  background: #2b313b;
+  background: var(--examples-output-background);
   padding: 5px;
   border-radius: 3px;
 }
@@ -1430,6 +1434,6 @@ figcaption + .example-wrapper pre.output {
 .links-list caption,
 .links-list figcaption {
   padding: 0;
-  color: #d6dae1;
+  color: var(--text-color-highlight);
   margin-bottom: 5px;
 }

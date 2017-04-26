@@ -1,3 +1,11 @@
 .vscode-light {
-  color: red;
+  --color-green: #73c990;
+  --color-blue: #6494ed;
+  --link-color: #6494ed;
+  --text-color: #333333;
+  --text-color-highlight: #000000;
+  --border-color: rgba(0,0,0,0.1);
+  --usage-bullet-color: rgba(0, 0, 0, 0.2);
+  --examples-background: rgba(0, 0, 0, 0.05);
+  --examples-output-background: rgba(0, 0, 0, 0.1);
 }

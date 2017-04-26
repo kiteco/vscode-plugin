@@ -1,4 +1,12 @@
 
 .vscode-high-contrast {
-  color: blue;
+  --color-green: lightgreen;
+  --color-blue: cyan;
+  --link-color: cyan;
+  --text-color: white;
+  --text-color-highlight: white;
+  --border-color: white;
+  --usage-bullet-color: white;
+  --examples-background: black;
+  --examples-output-background: black;
 }
