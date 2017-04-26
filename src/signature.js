@@ -6,6 +6,10 @@ const {promisifyRequest, promisifyReadResponse, parseJSON, compact} = require('.
 const {signaturePath} = require('./urls');
 
 module.exports = class KiteSignatureProvider {
+  constructor(Kite) {
+    this.Kite = Kite;
+  }
+
   provideSignatureHelp(document, position, token) {
     const text = document.getText();
 
@@ -29,6 +33,7 @@ module.exports = class KiteSignatureProvider {
       method: 'POST',
     }, JSON.stringify(payload)))
     .then(resp => {
+      this.Kite.handle403Response(document, resp);
       Logger.logResponse(resp);
       //   Kite.handle403Response(editor, resp);
       if (resp.statusCode !== 200) {

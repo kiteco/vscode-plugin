@@ -24,6 +24,9 @@ const kindForHint = hint => {
 }
 
 module.exports = class KiteCompletionProvider {
+  constructor(Kite) {
+    this.Kite = Kite;
+  }
   provideCompletionItems(document, position, token) {
     const text = document.getText();
 
@@ -47,6 +50,7 @@ module.exports = class KiteCompletionProvider {
       method: 'POST',
     }, JSON.stringify(payload)))
     .then(resp => {
+      this.Kite.handle403Response(document, resp);
       Logger.logResponse(resp);
     //   Kite.handle403Response(editor, resp);
       if (resp.statusCode === 404) {

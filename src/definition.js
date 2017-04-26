@@ -7,11 +7,16 @@ const {promisifyRequest, promisifyReadResponse, parseJSON} = require('./utils');
 const {hoverPath} = require('./urls');
 
 module.exports = class KiteDefinitionProvider {
+  constructor(Kite) {
+    this.Kite = Kite;
+  }
+
   provideDefinition(document, position, token) {
     const range = document.getWordRangeAtPosition(position);
     const path = hoverPath(document, range);
     return promisifyRequest(StateController.client.request({path}))
     .then(resp => {
+      this.Kite.handle403Response(document, resp);
       Logger.logResponse(resp);
       if (resp.statusCode !== 200) {
         throw new Error(`${resp.statusCode} status at ${path}`);
