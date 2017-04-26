@@ -9,6 +9,7 @@ const {
   valueLabel, valueType,
   memberLabel, parameterName, parameterType,
 } = require('./data-utils');
+const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
 
 const ASSETS_PATH = path.resolve(__dirname, '..', 'assets', 'css');
 const STYLESHEETS = fs.readdirSync(ASSETS_PATH)
@@ -106,7 +107,7 @@ function renderModule(data) {
 
   <footer>
     <div></div>
-    <kite-open-link data-url="${openDocumentationInWebURL(value.id)}"></kite-open-link>
+    <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
   </footer>`;
 }
 
@@ -135,7 +136,7 @@ function renderFunction(data) {
 
   <footer>
     <div></div>
-    <kite-open-link data-url="${openDocumentationInWebURL(value.id)}"></kite-open-link>
+    <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
   </footer>
   `;
 }
@@ -164,7 +165,7 @@ function renderInstance(data) {
 
   <footer>
     <div></div>
-    <kite-open-link data-url="${openDocumentationInWebURL(value.id)}"></kite-open-link>
+    <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
   </footer>
   `;
 }

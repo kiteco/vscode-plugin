@@ -71,13 +71,9 @@
 }
 .kite footer {
   display: block;
-  align-items: flex-end;
-  align-content: space-around;
-  justify-content: flex-end;
+  text-align: right;
   flex: 0 0 auto;
-}
-.kite footer {
-  padding-top: 10px;
+  padding: 10px 0;
 }
 
 .auto-cursor {
@@ -1436,4 +1432,79 @@ figcaption + .example-wrapper pre.output {
   padding: 0;
   color: var(--text-color-highlight);
   margin-bottom: 5px;
+}
+
+a.kite-open-link {
+  display: inline-block;
+  transition: 125ms opacity;
+  margin-right: 0.5em;
+  text-decoration: none;
+}
+
+a.kite-open-link,
+a.kite-open-link:active,
+a.kite-open-link:focus,
+a.kite-open-link:visited {
+  color: var(--color-blue);
+  text-decoration: none;
+}
+a.kite-open-link span,
+a.kite-open-link:active span,
+a.kite-open-link:focus span,
+a.kite-open-link:visited span {
+  color: var(--text-color);
+  opacity: 0.6;
+}
+a.kite-open-link:hover,
+a.kite-open-link:active:hover,
+a.kite-open-link:focus:hover,
+a.kite-open-link:visited:hover {
+  text-decoration: none;
+}
+a.kite-open-link:hover span,
+a.kite-open-link:active:hover span,
+a.kite-open-link:focus:hover span,
+a.kite-open-link:visited:hover span {
+  text-decoration: none;
+  opacity: 1;
+}
+a.kite-open-link > * {
+  pointer-events: none;
+}
+a.kite-open-link i {
+  font-style: normal;
+  font-weight: normal;
+}
+a.kite-open-link span {
+  background-color: var(--open-web-link-background);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+}
+a.kite-open-link span i,
+a.kite-open-link span kbd {
+  display: inline-block;
+  vertical-align: middle;
+}
+a.kite-open-link kbd {
+  font-size: 1.2em;
+  font-weight: lighter;
+  font-family: sans-serif;
+  margin-left: 0.5em;
+  background-color: transparent;
+  padding: 0;
+}
+
+a.kite-open-link {
+  display: inline-block;
+}
+
+a.kite-open-link svg {
+  opacity: 0.5;
+  margin-left: 0.5em;
+  vertical-align: middle;
+  display: inline-block;
+  width: 1.2em;
+}
+a.kite-open-link svg polygon {
+  fill: var(--text-color-highlight);
 }

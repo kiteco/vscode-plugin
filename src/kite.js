@@ -12,7 +12,7 @@ const KiteDefinitionProvider = require('./definition');
 const KiteRouter = require('./router');
 const KiteEditor = require('./kite-editor');
 const metrics = require('./metrics');
-const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath} = require('./urls');
+const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, appendToken} = require('./urls');
 // const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse} = require('./utils');
 
@@ -100,6 +100,11 @@ const Kite = {
     vscode.commands.registerCommand('kite.web', ({id, source}) => {
       metrics.track(`${source} Open in web clicked`);
       opn(openDocumentationInWebURL(id, true));
+    });
+
+    vscode.commands.registerCommand('kite.web-url', (url) => {
+      metrics.track(`Open in web clicked`);
+      opn(appendToken(url));
     });
 
     vscode.commands.registerCommand('kite.def', ({file, line, source}) => {
