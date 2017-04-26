@@ -12,6 +12,12 @@ const ATTEMPTS = 30;
 
 const INTERVAL = 2500;
 
+const ERROR_COLOR = '#ff0000';
+
+const WARNING_COLOR = '#ffcc00';
+
+const NOT_WHITELISTED = 7;
+
 module.exports = {
     ATTEMPTS, 
     INTERVAL,
@@ -19,4 +25,7 @@ module.exports = {
     MAX_PAYLOAD_SIZE,
     MAX_FILE_SIZE,
     CONNECT_ERROR_LOCKOUT,
+    ERROR_COLOR,
+    WARNING_COLOR,
+    NOT_WHITELISTED,
 };

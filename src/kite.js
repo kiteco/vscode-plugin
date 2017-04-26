@@ -4,7 +4,7 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const {StateController, Logger} = require('kite-installer');
-const {PYTHON_MODE, ATTEMPTS, INTERVAL} = require('./constants');
+const {PYTHON_MODE, ATTEMPTS, INTERVAL, ERROR_COLOR, WARNING_COLOR, NOT_WHITELISTED} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
@@ -19,6 +19,8 @@ const {editorsForDocument, promisifyRequest, promisifyReadResponse} = require('.
 const Kite = {
   activate(ctx) 
   {
+    this.kiteEditorByEditor = new Map();
+
     // send the activated event
     metrics.track('activated');
 
@@ -40,13 +42,11 @@ const Kite = {
       vscode.languages.registerSignatureHelpProvider(PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
 
     ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
-      if (!this.kiteEditorByEditor.has(e)) {
-        this.kiteEditorByEditor.set(
-          vscode.window.activeTextEditor, 
-          new KiteEditor(Kite, vscode.window.activeTextEditor));
+      if (e.document.languageId === 'python') {
+        this.registerEditor(e);
       }
 
-      const evt = this.kiteEditorByEditor.set(e);
+      const evt = this.kiteEditorByEditor.get(e);
       evt.focus();
     }));
 
@@ -61,7 +61,25 @@ const Kite = {
         evt.edit();
       })
     }));
+
+    ctx.subscriptions.push(vscode.workspace.onDidOpenTextDocument(doc => {
+      if (doc.languageId === 'python') {
+        this.registerDocument(doc);
+      }
+    }));
+
+    this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+    this.statusBarItem.text = '$(primitive-dot) Kite';
+    this.statusBarItem.color = '#abcdef';
+    this.statusBarItem.command = 'kite.status';
+    this.statusBarItem.show();
+
+    ctx.subscriptions.push(this.statusBarItem);
     
+    vscode.commands.registerCommand('kite.status', () => {
+      console.log('status clicked');
+    });
+
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
       const uri = `kite-vscode-internal://value/${id}`;
@@ -95,22 +113,37 @@ const Kite = {
         });
       })
     });
-    
-    this.kiteEditorByEditor = new Map();
 
-    if (vscode.window.activeTextEditor) {
-      const evt = new KiteEditor(Kite, vscode.window.activeTextEditor);
-      this.kiteEditorByEditor.set(vscode.window.activeTextEditor, evt);
+    setTimeout(() => {
+      vscode.window.visibleTextEditors.forEach(e => {
+        if (e.document.languageId === 'python') {
+          this.registerEditor(e);
+        }
+      })
 
-      evt.focus();
-    }
-
-    this.checkState();
+      this.checkState();
+    }, 100);
   },
   
   deactivate() {
     // send the activated event
     metrics.track('deactivated');
+  },
+
+  registerDocument(document) {
+    editorsForDocument(document).forEach(e => this.registerEditor(e));
+  },
+
+  registerEditor(e) {
+    if (!this.kiteEditorByEditor.has(e)) {
+      console.log('register kite editor for', e.document.fileName, e.document.languageId);
+      const evt = new KiteEditor(Kite, e);
+      this.kiteEditorByEditor.set(e, evt);
+
+      if (e === vscode.window.activeTextEditor) {
+        evt.focus();
+      }
+    }
   },
 
   checkState() {
@@ -146,24 +179,61 @@ const Kite = {
             if (item) { opn('http://localhost:46624/settings'); }
           })
           break;
+        default: 
+          if (vscode.window.activeTextEditor && vscode.window.activeTextEditor.document.languageId === 'python') {
+            this.registerEditor(vscode.window.activeTextEditor);
+            const evt = this.kiteEditorByEditor.get(vscode.window.activeTextEditor);
+            console.log(Object.keys(evt), evt.constructor.name);
+            evt.focus();
+          }
       }
+      this.setStatus(state);
     }).catch(err => {
       console.error(err);
     });
+  },
+
+  setStatus(state) {
+    switch (state) {
+      case StateController.STATES.UNSUPPORTED:
+        this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
+        this.statusBarItem.color = ERROR_COLOR;
+        break;
+      case StateController.STATES.UNINSTALLED:
+        this.statusBarItem.tooltip = 'Kite engine is not installed';
+        this.statusBarItem.color = ERROR_COLOR;
+        break;
+      case StateController.STATES.INSTALLED:
+        this.statusBarItem.tooltip = 'Kite engine is not running';
+        this.statusBarItem.color = ERROR_COLOR;
+        break;
+      case StateController.STATES.RUNNING:
+        this.statusBarItem.tooltip = 'Kite engine is not reachable';
+        this.statusBarItem.color = ERROR_COLOR;
+        break;
+      case StateController.STATES.REACHABLE:
+        this.statusBarItem.color = WARNING_COLOR;
+        break;
+      case NOT_WHITELISTED: 
+        this.statusBarItem.color = WARNING_COLOR;
+        this.statusBarItem.tooltip = 'Current path is not whitelisted';
+        break;
+      default: 
+        this.statusBarItem.color = undefined;
+        this.statusBarItem.tooltip = 'Kite is ready';
+    }
   },
 
   handle403Response(document, resp) {
     // for the moment a 404 response is sent for non-whitelisted file by
     // the tokens endpoint
     if (resp.statusCode === 403) {
+      this.setStatus(NOT_WHITELISTED);
       this.shouldOfferWhitelist(document)
-      .then(res => {
-        console.log(res);
-        if (res) {
-          this.warnNotWhitelisted(document, res);
-        }
-      })
+      .then(res => { if (res) { this.warnNotWhitelisted(document, res); }})
       .catch(err => console.error(err));
+    } else {
+      this.setStatus(StateController.STATES.WHITELISTED);
     }
   },
 
