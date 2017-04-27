@@ -4,6 +4,7 @@
   --link-color: #6494ed;
   --text-color: #9ba5b6;
   --text-color-highlight: #d6dae1;
+  --button-background: rgba(255, 255, 255, 0.1);
   --border-color: rgba(255, 255, 255, 0.1);
   --usage-bullet-color: rgba(255, 255, 255, 0.2);
   --examples-background: rgba(255, 255, 255, 0.05);

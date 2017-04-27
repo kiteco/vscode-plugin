@@ -4,14 +4,16 @@ const vscode = require('vscode');
 const {StateController, Logger} = require('kite-installer')
 const {promisifyRequest, promisifyReadResponse, parseJSON} = require('./utils');
 const {valueReportPath, hoverPath} = require('./urls');
-const {renderModule, renderFunction, renderInstance, wrapHTML} = require('./html-utils');
+const {renderModule, renderFunction, renderInstance} = require('./html-utils');
 const {reportFromHover} = require('./data-utils');
+const Plan = require('./plan');
 
 module.exports = {
   render(id) {
     const path = valueReportPath(id);
 
-    return promisifyRequest(StateController.client.request({path}))
+    return Plan.queryPlan()
+    .then(() => promisifyRequest(StateController.client.request({path})))
     .then(resp => {
       Logger.logResponse(resp);
       if (resp.statusCode !== 200) {
@@ -34,7 +36,8 @@ module.exports = {
       end: new vscode.Position(end.line, end.character)
     });
 
-    return promisifyRequest(StateController.client.request({path}))
+    return Plan.queryPlan()
+    .then(() => promisifyRequest(StateController.client.request({path})))
     .then(resp => {
       Logger.logResponse(resp);
       if (resp.statusCode !== 200) {
@@ -48,17 +51,16 @@ module.exports = {
   },
 
   renderData(data) {
-    let html;
     switch(data.value.kind) {
       case 'module':
       case 'type':
-        html = renderModule(data);
+        return renderModule(data);
       case 'function': 
-        html = renderFunction(data);
+        return renderFunction(data);
       case 'instance': 
-        html = renderInstance(data);
+        return renderInstance(data);
+      default:
+        return '';
     }
-
-    return wrapHTML(html);
   }
 }

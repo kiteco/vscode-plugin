@@ -23,10 +23,7 @@ const STYLESHEETS = fs.readdirSync(ASSETS_PATH)
 //   wrapPre,
 // } = require('../highlighter');
 
-// const Plan = require('../plan');
-const Plan = {
-  can() { return true }
-};
+const Plan = require('./plan');
 
 const pluralize = (a, s, p) => a.length === 1 ? s : p;
 
@@ -51,6 +48,29 @@ function wrapHTML (html) {
   return `
   ${STYLESHEETS}
   <div class="kite">${html}</div>`
+}
+
+function prependNavigation(html, steps, step) {
+  let nav = '';
+  if (steps.length > 1) {
+    nav = `<header>
+      <div class="btn-group">
+        <a class="btn ${step > 0 ? '' : 'disabled'}"
+           href="command:kite.previous">
+          <i class="icon-chevron-left"></i>
+        </a>
+
+        <a class="btn ${step < (steps.length - 1) ? '' : 'disabled'}"
+           href="command:kite.next">
+          <i class="icon-chevron-right"></i>
+        </a>
+      </div>
+    </header>`
+  }
+
+  return `
+  ${nav}
+  ${html}`;
 }
 
 function highlightCode(content) {
@@ -106,7 +126,6 @@ function renderModule(data) {
   </div>
 
   <footer>
-    <div></div>
     <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
   </footer>`;
 }
@@ -135,7 +154,6 @@ function renderFunction(data) {
   </div>
 
   <footer>
-    <div></div>
     <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
   </footer>
   `;
@@ -164,7 +182,6 @@ function renderInstance(data) {
   </div>
 
   <footer>
-    <div></div>
     <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
   </footer>
   `;
@@ -484,4 +501,5 @@ module.exports = {
   symbolDescription,
   valueDescription,
   wrapHTML,
+  prependNavigation,
 };

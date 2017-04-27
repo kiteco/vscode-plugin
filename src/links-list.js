@@ -3,7 +3,7 @@
 const {StateController, Logger} = require('kite-installer')
 const {promisifyRequest, promisifyReadResponse, parseJSON} = require('./utils');
 const {valueReportPath} = require('./urls');
-const {renderLinksList, wrapHTML} = require('./html-utils');
+const {renderLinksList} = require('./html-utils');
 
 module.exports = {
   render(id) {
@@ -18,6 +18,6 @@ module.exports = {
       return promisifyReadResponse(resp);
     })
     .then(report => parseJSON(report))
-    .then(data => wrapHTML(renderLinksList(data)));
+    .then(data => renderLinksList(data));
   }
 }

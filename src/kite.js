@@ -56,7 +56,7 @@ const Kite = {
     }));
 
     ctx.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
-      editorsForDocument(e.document).forEach(e => {
+      e.document && editorsForDocument(e.document).forEach(e => {
         const evt = this.kiteEditorByEditor.get(e);
         evt.edit();
       })
@@ -83,17 +83,30 @@ const Kite = {
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
       const uri = `kite-vscode-internal://value/${id}`;
+      router.clearNavigation();
       router.navigate(uri);
+    });
+
+    vscode.commands.registerCommand('kite.previous', () => {
+      metrics.track(`Back navigation clicked`);
+      router.back();
+    });
+
+    vscode.commands.registerCommand('kite.next', () => {
+      metrics.track(`Forward navigation clicked`);
+      router.forward();
     });
 
     vscode.commands.registerCommand('kite.more-range', ({range, source}) => {
       metrics.track(`${source} See info clicked`);
       const uri = `kite-vscode-internal://value-range/${JSON.stringify(range)}`;
+      router.clearNavigation();
       router.navigate(uri);
     });
 
     vscode.commands.registerCommand('kite.navigate', (path) => {
       const uri = `kite-vscode-internal://${path}`;
+      router.chopNavigation();
       router.navigate(uri);
     });
     

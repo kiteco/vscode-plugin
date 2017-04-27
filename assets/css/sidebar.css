@@ -61,14 +61,33 @@
 }
 
 .kite header {
-  margin-bottom: 10px;
+  padding: 10px 0;
+  display: block;
+}
+.kite header .btn-group {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
 }
-.kite header {
-  align-items: center;
+
+.kite header .btn-group .btn {
+  text-align: center;
+  padding: 0.2em 0.5em;
+  line-height: 1em;
+  display: inline-block;
+  background: var(--button-background);
+  color: var(--text-color);
+  cursor: pointer;
 }
+
+.kite header .btn-group .btn:hover {
+  color: var(--text-color-highlight);
+}
+
+.kite header .btn-group .btn.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .kite footer {
   display: block;
   text-align: right;
@@ -329,6 +348,12 @@
   margin-top: -10px;
   margin-bottom: 20px;
 }
+
+.kite .members-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
 .kite ul {
   margin: 20px 0;
 }

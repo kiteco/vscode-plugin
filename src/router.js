@@ -9,7 +9,7 @@ const KiteExamplesList = require('./examples-list');
 const KiteLinksList = require('./links-list');
 const KiteCuratedExample = require('./curated-example');
 const metrics = require('./metrics');
-const {wrapHTML} = require('./html-utils');
+const {wrapHTML, prependNavigation} = require('./html-utils');
 const URI = 'kite-vscode-internal://sidebar'
 
 module.exports = class KiteRouter {
@@ -20,17 +20,17 @@ module.exports = class KiteRouter {
         delete this.sidebarIsOpen;
       }
     });
+    this.clearNavigation();
   }
 
   get onDidChange() { 
     return this.didChangeEmitter.event; 
   }
 
-  dispose() {
-  }
+  dispose() {}
 
   provideTextDocumentContent() {
-    let {authority, path} = this.currentURI;
+    let {authority, path} = this.navigation[this.step];
     let promise
     path = path.replace(/^\//, '');
 
@@ -60,10 +60,13 @@ module.exports = class KiteRouter {
         promise =  KiteCuratedExample.render(path);
         break;
       default:
-        promise = Promise.resolve(wrapHTML(`Unknown route '${authority}/${path}'`))
+        promise = Promise.resolve(`Unknown route '${authority}/${path}'`)
     }
 
-    return promise.then(html => {
+    return promise
+    .then(html => prependNavigation(html, this.navigation, this.step))
+    .then(html => wrapHTML(html))
+    .then(html => {
       fs.writeFileSync(pth.resolve(__dirname, '..', 'sample.html'), `<!doctype html>
       <html class="vscode-dark">
       <style> 
@@ -82,8 +85,32 @@ module.exports = class KiteRouter {
     })
   }
 
+  clearNavigation() {
+    this.navigation = [];
+    this.step = 0;
+  }
+
+  chopNavigation() {
+    this.navigation = this.navigation.slice(0, this.step + 1);
+  }
+
+  registerNavigationStep(uri) {
+    this.step = this.navigation.length;
+    this.navigation.push(uri);
+  }
+
+  back() {
+    this.step = Math.max(0, this.step - 1);
+    this.update();
+  }
+
+  forward() {
+    this.step = Math.min(this.navigation.length - 1, this.step + 1);
+    this.update();
+  }
+
   navigate(uri) {
-    this.currentURI = vscode.Uri.parse(uri);
+    this.registerNavigationStep(vscode.Uri.parse(uri));
     if (this.isSidebarOpen()) {
       this.update();
     } else {
