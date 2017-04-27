@@ -457,6 +457,7 @@ function renderInvocations(symbol) {
 module.exports = {
   debugData,
   highlightCode,
+  logo,
   pluralize,
   proFeatures,
   renderDefinition,

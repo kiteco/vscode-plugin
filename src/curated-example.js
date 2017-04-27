@@ -3,7 +3,7 @@
 const atob = require('atob');
 const {head, last} = require('./utils');
 const {openExampleInWebURL} = require('./urls');
-const {section, renderExample, debugData, wrapHTML} = require('./html-utils');
+const {section, renderExample, debugData, wrapHTML, logo} = require('./html-utils');
 const {StateController} = require('kite-installer')
 const {promisifyRequest, promisifyReadResponse, parseJSON} = require('./utils');
 const {examplePath} = require('./urls');
@@ -183,7 +183,7 @@ module.exports = {
       ${debugData(data)}
       <footer>
         <div></div>
-        <kite-open-link data-url="${openExampleInWebURL(data.id)}"></kite-open-link>
+        <a class="kite-open-link" href='command:kite.web-url?"${openExampleInWebURL(data.id)}"'><span>Open in web</span>${logo}</a>
       </footer>
       `);
     });
