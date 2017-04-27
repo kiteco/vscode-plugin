@@ -122,7 +122,7 @@ function processContent(content) {
       splitByLine(content.code),
       content.references
     ).map(wrapLine).join('')
-  }`;
+  }</pre>`;
 }
 
 function processOutput(part) {
