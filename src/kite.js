@@ -29,7 +29,7 @@ const Kite = {
 
     // Rollbar.init('cce6430d4e25421084d7562afa976886');
     // Rollbar.handleUncaughtExceptions('cce6430d4e25421084d7562afa976886');
-
+    
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-internal', router));
     ctx.subscriptions.push(
@@ -40,6 +40,10 @@ const Kite = {
       vscode.languages.registerCompletionItemProvider(PYTHON_MODE, new KiteCompletionProvider(Kite), '.'));
     ctx.subscriptions.push(
       vscode.languages.registerSignatureHelpProvider(PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
+
+    ctx.subscriptions.push(vscode.workspace.onDidChangeConfiguration(() => {
+      Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
+    }));
 
     ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
       if (e.document.languageId === 'python') {
