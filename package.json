@@ -15,12 +15,30 @@
   ],
   "main": "./src/kite",
   "contributes": {
-    "commands": [
-      {
-        "command": "extension.sayHello",
-        "title": "Hello World"
+    "configuration": {
+      "type": "object",
+      "title": "Kite Configuration",
+      "properties": {
+        "kite.sidebarDebugMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "When enabled, each time a view is rendered in the kite sidebar the sample.html file will be updated with the sidebar content. It allows for quick inspection in a real browser."
+        },
+        "kite.loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "description": "The verbosity level of Kite's logs."
+        }
       }
-    ]
+    }
   },
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",

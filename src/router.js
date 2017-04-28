@@ -67,20 +67,22 @@ module.exports = class KiteRouter {
     .then(html => prependNavigation(html, this.navigation, this.step))
     .then(html => wrapHTML(html))
     .then(html => {
-      fs.writeFileSync(pth.resolve(__dirname, '..', 'sample.html'), `<!doctype html>
-      <html class="vscode-dark">
-      <style> 
-        html {
-          background: #333333;
-          color: #999999;
-          font-family: sans-serif;
-          font-size: 14px;
-          line-height: 1.4em;
-        }
-      </style>
-      ${html}
-      </html>
-      `)
+      if (vscode.workspace.getConfiguration('kite').sidebarDebugMode) {
+        fs.writeFileSync(pth.resolve(__dirname, '..', 'sample.html'), `<!doctype html>
+        <html class="vscode-dark">
+        <style> 
+          html {
+            background: #333333;
+            color: #999999;
+            font-family: sans-serif;
+            font-size: 14px;
+            line-height: 1.4em;
+          }
+        </style>
+        ${html}
+        </html>
+        `)
+      }
       return html
     })
   }

@@ -21,11 +21,11 @@ const Kite = {
   {
     this.kiteEditorByEditor = new Map();
 
+    const router = new KiteRouter(Kite);
+    Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
+
     // send the activated event
     metrics.track('activated');
-
-    const router = new KiteRouter(Kite);
-    Logger.LEVEL = Logger.LEVELS.DEBUG;
 
     // Rollbar.init('cce6430d4e25421084d7562afa976886');
     // Rollbar.handleUncaughtExceptions('cce6430d4e25421084d7562afa976886');
@@ -76,9 +76,7 @@ const Kite = {
 
     ctx.subscriptions.push(this.statusBarItem);
     
-    vscode.commands.registerCommand('kite.status', () => {
-      console.log('status clicked');
-    });
+    vscode.commands.registerCommand('kite.status', () => {});
 
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
@@ -154,7 +152,7 @@ const Kite = {
 
   registerEditor(e) {
     if (!this.kiteEditorByEditor.has(e)) {
-      console.log('register kite editor for', e.document.fileName, e.document.languageId);
+      Logger.debug('register kite editor for', e.document.fileName, e.document.languageId);
       const evt = new KiteEditor(Kite, e);
       this.kiteEditorByEditor.set(e, evt);
 
@@ -201,7 +199,6 @@ const Kite = {
           if (vscode.window.activeTextEditor && vscode.window.activeTextEditor.document.languageId === 'python') {
             this.registerEditor(vscode.window.activeTextEditor);
             const evt = this.kiteEditorByEditor.get(vscode.window.activeTextEditor);
-            console.log(Object.keys(evt), evt.constructor.name);
             evt.focus();
           }
       }
@@ -270,9 +267,9 @@ const Kite = {
     ).then(item => {
       return item 
         ? StateController.whitelistPath(res)
-          .then(() => console.log('whitelisted'))
+          .then(() => Logger.debug('whitelisted'))
         : StateController.blacklistPath(res)
-          .then(() => console.log('blacklisted'));
+          .then(() => Logger.debug('blacklisted'));
     });
   },
 
