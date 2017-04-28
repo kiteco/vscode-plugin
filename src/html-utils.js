@@ -1,5 +1,6 @@
 'use strict';
 
+const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
 const {head, compact, flatten} = require('./utils');
@@ -227,14 +228,18 @@ function renderHeader(name, type) {
     <span class="type">${type}</span>
   </div>`;
 }
+function escapeHTML(s) {
+  return s
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;');
+}
 
 function debugData(data) {
-  return '';
-  // return atom.config.get('kite.developerMode')
-  //   ? `<div class="debug">
-  //       ${highlightCode(JSON.stringify(data, null, 2))}
-  //     </div>`
-  //   : '';
+  return vscode.workspace.getConfiguration('kite').developerMode
+    ? `<div class="debug">
+        <pre>${escapeHTML(JSON.stringify(data, null, 2))}</pre>
+      </div>`
+    : '';
 }
 
 function parameterize(string) {

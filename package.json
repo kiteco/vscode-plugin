@@ -24,6 +24,11 @@
           "default": false,
           "description": "When enabled, each time a view is rendered in the kite sidebar the sample.html file will be updated with the sidebar content. It allows for quick inspection in a real browser."
         },
+        "kite.developerMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Displays JSON data used by a view"
+        },
         "kite.loggingLevel": {
           "type": "string",
           "default": "info",
