@@ -120,7 +120,6 @@ function renderModule(data) {
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
       <section class="summary">
-        <h4>Summary</h4>
         ${valueDescription(data)}
       </section>
 
@@ -147,7 +146,6 @@ function renderFunction(data) {
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
       <section class="summary">
-        <h4>Summary</h4>
         ${valueDescription(data)}
       </section>
 
@@ -177,7 +175,6 @@ function renderInstance(data) {
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
       <section class="summary">
-        <h4>Summary</h4>
         ${valueDescription(data)}
       </section>
 

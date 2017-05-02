@@ -432,7 +432,6 @@
 .kite section.definition ul li > a .icon,
 .kite section.definition ul li > span .icon {
   position: absolute;
-    top: 0.2em;
   right: 0;
 }
 
@@ -576,7 +575,6 @@
 .kite h4 {
   font-weight: 100;
   margin: 0;
-  cursor: pointer;
   font-size: 1.1em;
 }
 .kite h4 .sticky {
@@ -680,7 +678,6 @@
 }
 .kite section.examples ul li > .icon {
   position: absolute;
-  top: 0.2em;
 }
 .kite section.examples ul li > a,
 .kite section.examples ul li > span {
@@ -694,7 +691,6 @@
 .kite section.examples ul li > a .icon,
 .kite section.examples ul li > span .icon {
   position: absolute;
-  top: 0.2em;
   right: 0;
 }
 .kite section.links a.more-links {
@@ -707,7 +703,6 @@
 }
 .kite section.links ul li > .icon {
   position: absolute;
-  top: 0.2em;
 }
 .kite section.links ul li > a,
 .kite section.links ul li > span {
@@ -729,7 +724,6 @@
 }
 .kite section.definition ul li > .icon {
   position: absolute;
-  top: 0.2em;
 }
 .kite section.definition ul li > a,
 .kite section.definition ul li > span {
