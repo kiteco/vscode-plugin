@@ -1375,6 +1375,10 @@
   padding: 5px;
   border-radius: 3px;
 }
+.example-wrapper ul.list-tree {
+  padding-left: 20px;
+  margin: 0; 
+}
 figcaption + .example-wrapper table,
 figcaption + .example-wrapper ul.list-tree.root,
 figcaption + .example-wrapper pre.output {
