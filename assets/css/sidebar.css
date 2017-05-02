@@ -140,6 +140,7 @@
   -webkit-user-select: text;
   user-select: text;
   cursor: text;
+  overflow-x: auto; 
 }
 .kite .debug {
   margin-top: 5px;
@@ -1359,7 +1360,7 @@
   white-space: pre;
 }
 .example-wrapper pre.output {
-  display: inline-block;
+  display: block;
 }
 .example-wrapper pre.input {
   background: var(--examples-background);
