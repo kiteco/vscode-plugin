@@ -1093,7 +1093,7 @@ figcaption + .example-wrapper pre.output {
   border: none;
 }
 .example-wrapper table td:not(:last-child) {
-  padding-right: 3rem;
+  padding-right: 2rem;
 }
 
 .links-list ul {
