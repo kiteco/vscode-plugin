@@ -58,6 +58,7 @@ module.exports = {
       case 'function': 
         return renderFunction(data);
       case 'instance': 
+      case 'unknown': 
         return renderInstance(data);
       default:
         return '';
