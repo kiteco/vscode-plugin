@@ -17,6 +17,12 @@ const STYLESHEETS = fs.readdirSync(ASSETS_PATH)
 .map(p => path.resolve(ASSETS_PATH, p))
 .map(p => `<link href="file://${p}" rel="stylesheet"/>`)
 .join('');
+const SCRIPTS = `
+<script>
+  [].slice.call(document.querySelectorAll('a.external_link')).forEach(a => {
+    a.href = a.getAttribute('href').replace(/^#/, '');
+  });
+</script>`
 
 // const {
 //   highlightChunk,
@@ -48,7 +54,8 @@ function wrapHTML (html) {
            `<a href='command:kite.navigate?"value/$1"' class="internal_link"`);
   return `
   ${STYLESHEETS}
-  <div class="kite">${html}</div>`
+  <div class="kite">${html}</div>
+  ${SCRIPTS}`
 }
 
 function prependNavigation(html, steps, step) {
