@@ -68,7 +68,6 @@ module.exports = class KiteSignatureProvider {
       return help;
     })
     .catch(err => {
-      console.error(err);
       return [];
     });
   }
