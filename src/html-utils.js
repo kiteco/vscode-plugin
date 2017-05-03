@@ -38,11 +38,11 @@ function proFeatures(message) {
   return Plan.hasStartedTrial()
     ? `<div class="kite-pro-features">
       ${message},
-      <a href='command:kite.web?"redirect/pro'>upgrade to Kite Pro</a>, or
-      <a href='command:kite.web?"redirect/invite'>get Kite Pro for free</a>
+      <a href='command:kite.web-url?"http://localhost:46624/redirect/pro"'>upgrade to Kite Pro</a>, or
+      <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'>get Kite Pro for free</a>
       </div>`
     : `${message},
-      <a href='command:kite.web?"redirect/trial'>start your Kite Pro trial</a> at any time`;
+      <a href='command:kite.web-url?"http://localhost:46624/redirect/trial"'>start your Kite Pro trial</a> at any time`;
 }
 
 function wrapHTML (html) {

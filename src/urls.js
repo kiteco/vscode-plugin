@@ -121,17 +121,17 @@ function appendToken(url) {
     : `${url}?localtoken=${token}`;
 }
 function openDocumentationInWebURL(id, token = false) {
-  const url = `http://local.kite.com:46624/clientapi/desktoplogin?d=/docs/python/${escapeId(id)}`;
+  const url = `http://localhost:46624/clientapi/desktoplogin?d=/docs/python/${escapeId(id)}`;
   return token ? appendToken(url) : url;
 }
 
 function openSignatureInWebURL(id, token = false) {
-  const url = `http://local.kite.com:46624/clientapi/desktoplogin?d=/docs/python/${escapeId(id)}%23signature`;
+  const url = `http://localhost:46624/clientapi/desktoplogin?d=/docs/python/${escapeId(id)}%23signature`;
   return token ? appendToken(url) : url;
 }
 
 function openExampleInWebURL(id, token = false) {
-  const url = `http://local.kite.com:46624/clientapi/desktoplogin?d=/examples/python/${escapeId(id)}`;
+  const url = `http://localhost:46624/clientapi/desktoplogin?d=/examples/python/${escapeId(id)}`;
   return token ? appendToken(url) : url;
 }
 
