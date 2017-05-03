@@ -65,7 +65,7 @@ const stopPropagationAndDefault = f => function(e) {
 };
 
 const editorsForDocument = document =>
-  vscode.window.visibleTextEditors.filter(e => e.document === doc);
+  vscode.window.visibleTextEditors.filter(e => e.document === document);
 
 module.exports = {
   compact,
