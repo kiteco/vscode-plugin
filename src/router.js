@@ -10,13 +10,13 @@ const KiteLinksList = require('./links-list');
 const KiteCuratedExample = require('./curated-example');
 const metrics = require('./metrics');
 const {wrapHTML, prependNavigation} = require('./html-utils');
-const URI = 'kite-vscode-internal://sidebar'
+const URI = 'kite-vscode-sidebar://sidebar'
 
 module.exports = class KiteRouter {
   constructor() {
     this.didChangeEmitter = new vscode.EventEmitter();
     vscode.workspace.onDidCloseTextDocument(doc => {
-      if (doc.uri.toString().indexOf('kite-vscode-internal://') === 0) {
+      if (doc.uri.toString().indexOf('kite-vscode-sidebar://') === 0) {
         delete this.sidebarIsOpen;
       }
     });
@@ -65,6 +65,7 @@ module.exports = class KiteRouter {
 
     return promise
     .then(html => prependNavigation(html, this.navigation, this.step))
+    .then(html => html + `<script>handleExternalLinks()</script>`)
     .then(html => wrapHTML(html))
     .then(html => {
       if (vscode.workspace.getConfiguration('kite').sidebarDebugMode) {

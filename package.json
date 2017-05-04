@@ -15,6 +15,10 @@
   ],
   "main": "./src/kite",
   "contributes": {
+    "commands": [{
+      "command": "kite.search",
+      "title": "Kite Active Search"
+    }],
     "configuration": {
       "type": "object",
       "title": "Kite Configuration",
