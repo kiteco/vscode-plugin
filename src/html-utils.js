@@ -272,10 +272,19 @@ function renderExtend(symbol) {
   //   </div>`;
 }
 
+function definitionCommand(def) {
+  const defData = JSON.stringify({
+    file: def.filename,
+    line: def.line,
+    source: 'Sidebar',
+  });
+  return `command:kite.def?${defData}`;
+}
+
 function renderDefinition(value) {
   const def = value.report && value.report.definition;
   if (def && def.filename && def.filename.trim() !== '') {
-    const url = `command:kite.navigate?"goto/${stripLeadingSlash(def.filename)}:${def.line}"`;
+    const url = definitionCommand(def);
 
     return section('Definition', `
     <ul>
@@ -367,11 +376,7 @@ function renderUsages(symbol) {
 
 function renderUsage(usage) {
   const base = path.basename(usage.filename);
-  const url = [
-    `command:kite.navigate?"goto/${stripLeadingSlash(usage.filename)}`,
-    usage.line,
-    usage.begin_runes,
-  ].join(':') + '"';
+  const url = definitionCommand(usage);
 
   return `<div class="usage-container">
     <div class="usage-bullet"></div>
