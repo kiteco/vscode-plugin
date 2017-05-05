@@ -167,7 +167,7 @@ const Kite = {
   },
 
   checkState() {
-    StateController.handleState().then(state => {
+    return StateController.handleState().then(state => {
       switch (state) {
         case StateController.STATES.UNSUPPORTED:
           if (!StateController.isOSSupported()) {
@@ -202,8 +202,6 @@ const Kite = {
         default: 
           if (vscode.window.activeTextEditor && vscode.window.activeTextEditor.document.languageId === 'python') {
             this.registerEditor(vscode.window.activeTextEditor);
-            const evt = this.kiteEditorByEditor.get(vscode.window.activeTextEditor);
-            evt.focus();
           }
       }
       this.setStatus(state);
