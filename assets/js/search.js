@@ -3,7 +3,7 @@ window.initSearch = (inputId, resultsId, viewId) => {
   const results = document.getElementById(resultsId);
   const view = document.getElementById(viewId);
   let stack = Promise.resolve(); 
-  let selectedItem;
+  let selectedItem = document.querySelector('li.selected');
 
   input.addEventListener('input', () => {
     const text = input.value;

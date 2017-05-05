@@ -1231,6 +1231,7 @@ a.kite-open-link svg polygon {
   background: none;
   border: none;
   width: 100%;
+  font-size: 1.2em;
   border-bottom: 1px solid var(--border-color);
   padding: 5px;
   color: var(--text-color-highlight);

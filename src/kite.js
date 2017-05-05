@@ -88,6 +88,7 @@ const Kite = {
     vscode.commands.registerCommand('kite.status', () => {});
 
     vscode.commands.registerCommand('kite.search', () => {
+      search.clearCache();
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-search://search', vscode.ViewColumn.Two, 'Kite Search');
     });
 

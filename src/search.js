@@ -10,9 +10,13 @@ const {promisifyReadResponse} = require('./utils');
 const {searchPath} = require('./urls');
 const KiteValueReport = require('./value-report');
 
+let lastTerm, lastList, lastId, lastView;
+
 server.addRoute('GET', '/search', (req, res, url) => { 
   const text = params(url).text;
   const path = searchPath(text);
+
+  lastTerm = text;
 
   StateController.client.request({path}).then(resp => {
     Logger.logResponse(resp);
@@ -37,8 +41,12 @@ server.addRoute('GET', '/search', (req, res, url) => {
 
 server.addRoute('GET', '/view', (req, res, url) => {
   const id = params(url).id;
+
+  lastId = id;
+
   KiteValueReport.render(id).then(html => {
     res.writeHead(200, {'Content-Type': 'text/plain'});
+    lastView = html;
     res.end(html);
   })
   .catch(err => {
@@ -50,6 +58,18 @@ server.addRoute('GET', '/view', (req, res, url) => {
 module.exports = class KiteSearch {
   constructor(Kite) {
     this.Kite = Kite;
+    // vscode.workspace.onDidCloseTextDocument(doc => {
+    //   if (doc.uri.toString().indexOf('kite-vscode-search://') === 0) {
+    //     clearCache();
+    //   }
+    // });
+  }
+
+  clearCache() {
+    lastTerm = null;
+    lastList = null;
+    lastView = null;
+    lastId = null;
   }
 
   provideTextDocumentContent() {
@@ -57,12 +77,12 @@ module.exports = class KiteSearch {
 
     return Promise.resolve(`
       <div class="search-form">
-        <input type="text" id="text" placeholder="Search identifier…"></input>
+        <input type="text" id="text" placeholder="Search identifier…" ${lastTerm ? `value="${lastTerm}"` : ''}></input>
         <i class="icon icon-search"></i>
       </div>
 
-      <ul id="results"></ul>
-      <div id="view"></div>
+      <ul id="results">${renderList(lastList)}</ul>
+      <div id="view">${lastView || ''}</div>
       <script>
         window.PORT = ${server.PORT};
         initSearch('text', 'results', 'view');
@@ -90,11 +110,17 @@ module.exports = class KiteSearch {
     })
   }
 }
+
 function renderList(results) {
+  lastList = results
   return results && results.results
     ? results.results
       .filter(r => r.result.repr && r.result.repr.trim() !== '')
-      .map(r => `<li data-id="${r.result.id}">${r.result.repr}</li>`).join('')
+      .map(r => 
+        lastId === r.result.id
+          ? `<li data-id="${r.result.id}" class="selected">${r.result.repr}</li>`
+          : `<li data-id="${r.result.id}">${r.result.repr}</li>`)
+      .join('')
     : ''
 }
 
