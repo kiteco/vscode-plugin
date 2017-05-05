@@ -12,15 +12,15 @@ module.exports = class EditorEvents {
   }
 
   focus() {
-    this.sendEvent('focus');
+    this.Kite.checkState().then(() => this.sendEvent('focus'));
   }
 
   edit() {
-    this.sendEvent('edit');
+    this.Kite.checkState().then(() => this.sendEvent('edit'));
   }
 
   selectionChanged() {
-    this.sendEvent('selection');
+    this.Kite.checkState().then(() => this.sendEvent('selection'));
   }
 
   sendEvent(action) {
