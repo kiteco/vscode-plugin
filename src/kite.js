@@ -83,6 +83,14 @@ const Kite = {
     
     vscode.commands.registerCommand('kite.status', () => {});
 
+    vscode.commands.registerCommand('kite.open-settings', () => {
+      opn(appendToken('http://localhost:46624/settings'));
+    });
+
+    vscode.commands.registerCommand('kite.open-permissions', () => {
+      opn(appendToken('http://localhost:46624/settings/permissions'));
+    });
+
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
       const uri = `kite-vscode-internal://value/${id}`;

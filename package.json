@@ -15,6 +15,20 @@
   ],
   "main": "./src/kite",
   "contributes": {
+    "commands": [{
+      "command": "kite.open-settings",
+      "title": "Open Kite Settings"
+    }, {
+      "command": "kite.open-permissions",
+      "title": "Open Kite Permissions"
+    }],
+    "menus": {
+      "editor/context": [{
+        "command": "kite.open-settings"
+      }, {
+        "command": "kite.open-permissions"
+      }]
+    },
     "configuration": {
       "type": "object",
       "title": "Kite Configuration",
