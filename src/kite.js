@@ -12,6 +12,7 @@ const KiteDefinitionProvider = require('./definition');
 const KiteRouter = require('./router');
 const KiteEditor = require('./kite-editor');
 const metrics = require('./metrics');
+const Plan = require('./plan');
 const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, appendToken} = require('./urls');
 // const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse} = require('./utils');
@@ -198,16 +199,27 @@ const Kite = {
           vscode.window.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
             if (item) { opn('http://localhost:46624/settings'); }
           })
-          break;
+          return Plan.queryPlan()
         default: 
           if (vscode.window.activeTextEditor && vscode.window.activeTextEditor.document.languageId === 'python') {
             this.registerEditor(vscode.window.activeTextEditor);
           }
+          return Plan.queryPlan()
       }
       this.setStatus(state);
-    }).catch(err => {
+    })
+    .then(() => {
+      this.updatePlan();
+    })
+    .catch(err => {
       console.error(err);
     });
+  },
+
+  updatePlan() {
+    this.statusBarItem.text = Plan.isActivePro() 
+      ? '$(primitive-dot) Kite Pro'
+      : '$(primitive-dot) Kite';
   },
 
   setStatus(state) {
