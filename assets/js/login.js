@@ -1,0 +1,3 @@
+window.initLogin = function initLogin() {
+  
+}

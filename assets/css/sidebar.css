@@ -1201,16 +1201,21 @@ a.kite-open-link {
   display: inline-block;
 }
 
-a.kite-open-link svg {
-  opacity: 0.5;
-  margin-left: 0.5em;
+svg {
   vertical-align: middle;
   display: inline-block;
   width: 1.2em;
 }
-a.kite-open-link svg polygon {
+
+svg polygon {
   fill: var(--text-color-highlight);
 }
+
+a.kite-open-link svg {
+  opacity: 0.5;
+  margin-left: 0.5em;
+}
+
 .search-form {
   position: relative;
 }
@@ -1225,7 +1230,7 @@ a.kite-open-link svg polygon {
   top: 0;
   pointer-events: none;
 }
-#text {
+input {
   -webkit-appearance: none;
   appearance: none;
   background: none;
@@ -1236,13 +1241,13 @@ a.kite-open-link svg polygon {
   padding: 5px;
   color: var(--text-color-highlight);
 }
-#text:focus {
+input:focus {
   border:none;
   border-bottom: 1px solid var(--color-blue);
   outline: none;
 }
 
-#text:-webkit-input-placeholder {
+input:-webkit-input-placeholder {
   color: var(--text-color-highlight);
 }
 #results li {
@@ -1262,4 +1267,44 @@ a.kite-open-link svg polygon {
 #view:not(:empty) {
   border-top: 1px solid var(--examples-output-background);
   padding-top: 10px;
+}
+
+:not(.password-less) .no-password {
+  display: none;
+}
+
+.password-less .has-password {
+  display: none;
+}
+
+.pull-right {
+  float: right;
+  margin-left: 10px;
+}
+
+.login-form {
+  padding: 0 10px;
+}
+
+.login-form input {
+  margin-bottom: 10px;
+}
+
+.login-form button {
+  background-color: var(--open-web-link-background);
+  color: var(--text-color);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  font-size: 1.2em;
+  border: none;
+  cursor: pointer;
+}
+
+.login-form button.primary {
+  background-color: var(--color-blue);
+  color: var(--text-color-highlight);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  font-size: 1.2em;
+  border: none;
 }

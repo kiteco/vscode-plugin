@@ -19,6 +19,9 @@
       "command": "kite.search",
       "title": "Kite Active Search"
     }, {
+      "command": "kite.login",
+      "title": "Open Kite Login"
+    }, {
       "command": "kite.open-settings",
       "title": "Open Kite Settings"
     }, {
