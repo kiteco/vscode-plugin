@@ -176,15 +176,15 @@ const Kite = {
           } else if (!StateController.isOSVersionSupported()) {
             metrics.track('OS version unsupported');
           }
-          vscode.window.showErrorMessage('Sorry, the Kite engine is currently not supported on your platform');
+          this.showErrorMessage('Sorry, the Kite engine is currently not supported on your platform');
           break;
         case StateController.STATES.UNINSTALLED:
-          vscode.window.showErrorMessage('Kite is not installed: Grab the installer from our website', 'Get Kite').then(item => {
+          this.showErrorMessage('Kite is not installed: Grab the installer from our website', 'Get Kite').then(item => {
             if (item) { opn('https://kite.com/'); }
           });
           break;
         case StateController.STATES.INSTALLED:
-          vscode.window.showErrorMessage('Kite is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite').then(item => {
+          this.showErrorMessage('Kite is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite').then(item => {
             if (item) {
               return StateController.runKiteAndWait(ATTEMPTS, INTERVAL)
               .then(() => this.checkState())
@@ -193,10 +193,10 @@ const Kite = {
           })
           break;
         case StateController.STATES.RUNNING:
-          vscode.window.showErrorMessage('The Kite background service is running but not reachable.');
+          this.showErrorMessage('The Kite background service is running but not reachable.');
           break;
         case StateController.STATES.REACHABLE:
-          vscode.window.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
+          this.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
             if (item) { opn('http://localhost:46624/settings'); }
           })
           return Plan.queryPlan()
@@ -214,6 +214,20 @@ const Kite = {
     .catch(err => {
       console.error(err);
     });
+  },
+
+  showErrorMessage(message, ...actions) {
+    this.shownNotifications = this.shownNotifications || {};
+
+    if (!this.shownNotifications[message]) {
+      this.shownNotifications[message] = true;
+      return vscode.window.showErrorMessage(message, ...actions).then(item => {
+        delete this.shownNotifications[message];
+        return item;
+      });
+    } else {
+      return Promise.resolve();
+    }
   },
 
   updatePlan() {
@@ -275,16 +289,24 @@ const Kite = {
   },
   
   warnNotWhitelisted(document, res) {
-    vscode.window.showErrorMessage(
-      `The Kite engine is disabled for ${document.fileName}`,
-      `Whitelist ${res}`
-    ).then(item => {
-      return item 
-        ? StateController.whitelistPath(res)
-          .then(() => Logger.debug('whitelisted'))
-        : StateController.blacklistPath(res)
-          .then(() => Logger.debug('blacklisted'));
-    });
+    this.shownNotifications = this.shownNotifications || {};
+
+    if (!this.shownNotifications['whitelist']) {
+      this.shownNotifications['whitelist'] = true;
+      vscode.window.showErrorMessage(
+        `The Kite engine is disabled for ${document.fileName}`,
+        `Whitelist ${res}`
+      ).then(item => {
+        delete this.shownNotifications['whitelist'];
+        return item 
+          ? StateController.whitelistPath(res)
+            .then(() => Logger.debug('whitelisted'))
+          : StateController.blacklistPath(res)
+            .then(() => Logger.debug('blacklisted'));
+      });
+    } else {
+      return Promise.resolve();
+    }
   },
 
   projectDirForEditor(document) {
