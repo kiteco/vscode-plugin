@@ -65,6 +65,8 @@ module.exports = class KiteSearch {
     // });
   }
 
+  dispose() {}
+
   clearCache() {
     lastTerm = null;
     lastList = null;

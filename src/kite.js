@@ -14,6 +14,7 @@ const KiteSearch = require('./search');
 const KiteEditor = require('./kite-editor');
 const metrics = require('./metrics');
 const Plan = require('./plan');
+const server = require('./server');
 const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, appendToken} = require('./urls');
 // const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse} = require('./utils');
@@ -33,6 +34,10 @@ const Kite = {
 
     // Rollbar.init('cce6430d4e25421084d7562afa976886');
     // Rollbar.handleUncaughtExceptions('cce6430d4e25421084d7562afa976886');
+
+    ctx.subscriptions.push(server);
+    ctx.subscriptions.push(router);
+    ctx.subscriptions.push(search);
     
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-sidebar', router));

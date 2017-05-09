@@ -12,6 +12,10 @@ module.exports = {
     this.routes.push([method, route, handle]);
   },
 
+  dispose() {
+    if (this.started) { this.stop(); }
+  },
+
   start() {
     if (this.started) { return; }
 
