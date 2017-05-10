@@ -241,7 +241,7 @@ const Kite = {
   updatePlan() {
     this.statusBarItem.text = Plan.isActivePro() 
       ? '$(primitive-dot) Kite Pro'
-      : '$(primitive-dot) Kite';
+      : '$(primitive-dot) Kite Basic';
   },
 
   setStatus(state) {
