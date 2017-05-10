@@ -15,25 +15,29 @@
   ],
   "main": "./src/kite",
   "contributes": {
-    "commands": [{
-      "command": "kite.search",
-      "title": "Kite Active Search"
-    }, {
-      "command": "kite.login",
-      "title": "Open Kite Login"
-    }, {
-      "command": "kite.open-settings",
-      "title": "Open Kite Settings"
-    }, {
-      "command": "kite.open-permissions",
-      "title": "Open Kite Permissions"
-    }],
+    "commands": [
+      {
+        "command": "kite.search",
+        "title": "Kite Active Search"
+      },
+      {
+        "command": "kite.open-settings",
+        "title": "Open Kite Settings"
+      },
+      {
+        "command": "kite.open-permissions",
+        "title": "Open Kite Permissions"
+      }
+    ],
     "menus": {
-      "editor/context": [{
-        "command": "kite.open-settings"
-      }, {
-        "command": "kite.open-permissions"
-      }]
+      "editor/context": [
+        {
+          "command": "kite.open-settings"
+        },
+        {
+          "command": "kite.open-permissions"
+        }
+      ]
     },
     "configuration": {
       "type": "object",
@@ -71,10 +75,11 @@
   },
   "dependencies": {
     "atob": "^2.0.3",
-    "opn": "^1.0.0",
+    "formidable": "^1.1.1",
     "kite-installer": "git@github.com:kiteco/kite-installer.git#feature-vscode-support",
-    "rollbar": "*",
-    "md5": "^2.2.0"
+    "md5": "^2.2.0",
+    "opn": "^1.0.0",
+    "rollbar": "*"
   },
   "devDependencies": {
     "typescript": "^2.0.3",

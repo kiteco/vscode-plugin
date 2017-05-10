@@ -14,6 +14,32 @@
   bottom: 0;
 }
 
+.block {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.inline-block {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.text-danger {
+  color: var(--color-red);
+}
+
+.text-warning {
+  color: var(--color-orange);
+}
+
+.text-info {
+  color: var(--color-blue);
+}
+
+.text-success {
+  color: var(--color-green);
+}
+
 .kite section.summary:empty {
   display: none;
 }
@@ -895,9 +921,6 @@
   flex-direction: row;
   padding-right: 10px;
 }
-.kite-breadcrumb.hidden {
-  display: none;
-}
 .kite-breadcrumb ul.breadcrumb {
   display: inline-block;
   margin-bottom: 0;
@@ -908,6 +931,10 @@
   overflow-x: auto;
   flex: 1 1 0;
   position: relative;
+}
+
+.hidden {
+  display: none;
 }
 
 .kite .examples-list ul {
@@ -1269,11 +1296,11 @@ input:-webkit-input-placeholder {
   padding-top: 10px;
 }
 
-:not(.password-less) .no-password {
+form:not(.password-less) .no-password {
   display: none;
 }
 
-.password-less .has-password {
+form.password-less .has-password {
   display: none;
 }
 
@@ -1286,25 +1313,32 @@ input:-webkit-input-placeholder {
   padding: 0 10px;
 }
 
-.login-form input {
-  margin-bottom: 10px;
-}
-
+.login-form .btn,
 .login-form button {
   background-color: var(--open-web-link-background);
   color: var(--text-color);
   padding: 0.25em 0.5em;
   border-radius: 0.25em;
-  font-size: 1.2em;
+  font-size: 1.1em;
   border: none;
   cursor: pointer;
+  text-decoration: none;
+  box-sizing: border-box;
+  display: inline-block;
 }
 
+.login-form .btn.primary,
 .login-form button.primary {
   background-color: var(--color-blue);
   color: var(--text-color-highlight);
   padding: 0.25em 0.5em;
   border-radius: 0.25em;
-  font-size: 1.2em;
+  font-size: 1.1em;
   border: none;
+}
+
+.login-form a.btn[href]:hover,
+.login-form a.btn[href]:focus,
+.login-form a.btn[href]:active {
+  color: var(--text-color-highlight);
 }

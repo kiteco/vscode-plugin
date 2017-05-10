@@ -233,10 +233,14 @@ const Kite = {
           this.showErrorMessage('The Kite background service is running but not reachable.');
           break;
         case StateController.STATES.REACHABLE:
+          this.setStatus(state);
           this.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
-            if (item) { opn('http://localhost:46624/settings'); }
-          })
-          return Plan.queryPlan()
+            if (item) { 
+              // opn('http://localhost:46624/settings'); 
+              vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+            }
+          });
+          return Plan.queryPlan();
         default: 
           if (vscode.window.activeTextEditor && vscode.window.activeTextEditor.document.languageId === 'python') {
             this.registerEditor(vscode.window.activeTextEditor);

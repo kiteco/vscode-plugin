@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const vscode = require('vscode');
+const formidable = require('formidable');
 const {AccountManager, Logger} = require('kite-installer');
 const server = require('./server');
 const {wrapHTML, logo} = require('./html-utils');
@@ -11,33 +12,39 @@ const {promisifyReadResponse} = require('./utils');
 const INVALID_PASSWORD = 6;
 const PASSWORD_LESS_USER = 9;
 
-server.addRoute('GET', '/login', (req, res, url) => { 
-  const data = params(url);
+server.addRoute('POST', '/login', (req, res, url) => { 
+  const form = new formidable.IncomingForm();
 
-  AccountManager.login(data).then(resp => {
-    Logger.logResponse(resp);
-    if (resp.statusCode === 200) {
-      res.writeHead(200, {'Content-Type': 'text/plain'});
-      res.end('ok');
-    } else {
-      return promisifyReadResponse(resp).then(data => {
-        res.writeHead(resp.statusCode, {'Content-Type': 'text/plain'});
-        data = JSON.parse(data);
-        switch (data.code) {
-          case INVALID_PASSWORD:
-            res.end('Invalid Password');
-          case PASSWORD_LESS_USER:
-            res.end('Password not set');
-          default:
-            this.emitter.emit('did-get-unauthorized');
-            res.end('Unauthorized');
-        }
-      });
+  form.parse(req, (err, fields) => {
+    if (err) {
+      res.writeHead(500, {'Content-Type': 'text/plain'});
+      return res.end(err.stack);
     }
-  })
-  .catch(err => {
-    res.writeHead(500, {'Content-Type': 'text/plain'});
-    res.end(err.stack);
+    AccountManager.login(fields)
+    .then(resp => {
+      Logger.logResponse(resp);
+      if (resp.statusCode === 200) {
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('ok');
+      } else {
+        return promisifyReadResponse(resp).then(data => {
+          data = JSON.parse(data);
+          res.writeHead(resp.statusCode, {'Content-Type': 'text/plain'});
+          switch (data.code) {
+            case INVALID_PASSWORD:
+              res.end('Invalid Password');
+            case PASSWORD_LESS_USER:
+              res.end('Password not set');
+            default:
+              res.end('Unauthorized');
+          }
+        });
+      }
+    })
+    .catch(err => {
+      res.writeHead(500, {'Content-Type': 'text/plain'});
+      res.end(err.message);
+    });
   });
 });
 
@@ -53,9 +60,13 @@ module.exports = class KiteLogin {
     server.start();
 
     return Promise.resolve(`
+      <div class="text-success hidden">Logged in successfully</div>
       <form class="login-form">
         <div class="pull-right">${logo}</div>
-        <div class="block has-password">Sign into Kite:</div>
+        <div class="block has-password">
+          Sign into Kite:
+          <span class="form-status"></span>
+        </div>
         <div class="block text-warning no-password">It looks like you didn't set a password for your account yet.</div>
         <div class="block has-password">
           <input class="input-text" name="email" type="text" placeholder="Email" tabindex="1">
@@ -70,11 +81,10 @@ module.exports = class KiteLogin {
              href="https://kite.com/">Signup</a>
           <button type="submit" class="primary has-password">Sign into Kite</button>
           <button type="button" class="cancel">Cancel</button>
-          <button type="button" class="send-link no-password primary">
+          <a class="send-link no-password primary btn" href="#">
             Resend password setup email
-          </button>
+          </a>
         </div>
-        <div class="form-status"></div>
       </form>
 
       <script>
@@ -104,11 +114,3 @@ module.exports = class KiteLogin {
     })
   }
 }
-
-function params (url) {
-  return url.query.split('&').reduce((m, p) => {
-    const [k,v] = p.split('=');
-    m[k] = v;
-    return m;
-  }, {})
-};
