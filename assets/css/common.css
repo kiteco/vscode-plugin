@@ -1,0 +1,58 @@
+:root {
+  --component-padding: 10px;
+  --negative-component-padding: -10px;
+  --half-padding: 5px;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--link-color);
+}
+
+ul, i {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.icon-kite::before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+   mask-image: url('../images/logo-no-text.svg');
+   mask-size: contain;
+   mask-repeat: no-repeat;
+  -webkit-mask-image: url('../images/logo-no-text.svg');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  background-color: #999;
+}
+
+.icon-so::before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1.2em;
+  line-height: 1em;
+  height: 1em;
+  width: 1em;
+  background-image: url('../images/so.svg');
+}
+
+.icon-kite-gift::before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1.2em;
+  line-height: 1em;
+  height: 1em;
+  width: 1em;
+  background-size: 100%;
+  background-image: url('../images/icon-gift.png');
+}

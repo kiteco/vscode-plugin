@@ -1,11 +1,11 @@
 {
-  "name": "KiteCode",
-  "displayName": "KiteCode",
-  "description": "Kite integration for Visual Studio Code",
-  "version": "0.1.0",
-  "publisher": "kite",
+  "name": "kite",
+  "displayName": "kite",
+  "description": "kite integration",
+  "version": "0.0.1",
+  "publisher": "Kiteco",
   "engines": {
-    "vscode": "^1.0.0"
+    "vscode": "^1.10.0"
   },
   "categories": [
     "Other"
@@ -13,13 +13,69 @@
   "activationEvents": [
     "onLanguage:python"
   ],
-  "main": "./extension",
+  "main": "./src/kite",
+  "contributes": {
+    "commands": [{
+      "command": "kite.open-settings",
+      "title": "Open Kite Settings"
+    }, {
+      "command": "kite.open-permissions",
+      "title": "Open Kite Permissions"
+    }],
+    "menus": {
+      "editor/context": [{
+        "command": "kite.open-settings"
+      }, {
+        "command": "kite.open-permissions"
+      }]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Kite Configuration",
+      "properties": {
+        "kite.sidebarDebugMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "When enabled, each time a view is rendered in the kite sidebar the sample.html file will be updated with the sidebar content. It allows for quick inspection in a real browser."
+        },
+        "kite.developerMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Displays JSON data used by a view"
+        },
+        "kite.loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "description": "The verbosity level of Kite's logs."
+        }
+      }
+    }
+  },
   "scripts": {
-    "test": "node ./node_modules/vscode/bin/test",
-    "postinstall": "node ./node_modules/vscode/bin/install"
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test"
+  },
+  "dependencies": {
+    "atob": "^2.0.3",
+    "opn": "^1.0.0",
+    "kite-installer": "git@github.com:kiteco/kite-installer.git#feature-vscode-support",
+    "rollbar": "*",
+    "md5": "^2.2.0"
   },
   "devDependencies": {
-    "sinon": "^1.17.4",
-    "vscode": "^0.11.0"
+    "typescript": "^2.0.3",
+    "vscode": "^1.0.0",
+    "mocha": "^2.3.3",
+    "eslint": "^3.6.0",
+    "@types/node": "^6.0.40",
+    "@types/mocha": "^2.2.32"
   }
 }

@@ -1,0 +1,1213 @@
+.auto-cursor {
+  cursor: default;
+}
+.kite {
+  display: flex;
+  font-size: 1em;
+  font-family: sans-serif;
+  flex-direction: column;
+  position: absolute;
+  padding: 10px 10px 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.kite section.summary:empty {
+  display: none;
+}
+
+.kite section.summary {
+  line-height: 1.4em;
+}
+
+.kite section.summary dd, 
+.kite section.summary dt {
+  font-size: 1em;
+}
+
+.kite section.summary dt {
+  color: var(--text-color-highlight);
+}
+
+.kite section.summary dd {
+  color: var(--text-color);
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.kite section.summary dl dd a {
+  font-size: 1em;
+}
+
+.kite section.summary table {
+  border-collapse: collapse;
+}
+
+.kite section.summary pre {
+  background: var(--examples-output-background);
+  border-radius: 3px;
+  padding: var(--half-padding);
+}
+
+.kite section.summary table td ul:first-child {
+  margin-top: 0;
+}
+
+.kite section.summary table td ul li {
+  font-size: 1em;
+}
+
+.kite header {
+  padding: 10px 0;
+  display: block;
+}
+.kite header .btn-group {
+  display: flex;
+  flex-direction: row;
+}
+
+.kite header .btn-group .btn {
+  text-align: center;
+  padding: 0.2em 0.5em;
+  line-height: 1em;
+  display: inline-block;
+  background: var(--button-background);
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.kite header .btn-group .btn:hover {
+  color: var(--text-color-highlight);
+}
+
+.kite header .btn-group .btn.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.kite footer {
+  display: block;
+  text-align: right;
+  flex: 0 0 auto;
+  padding: 10px 0;
+}
+
+.auto-cursor {
+  cursor: default;
+}
+.unreachable,
+.unreachable:hover,
+.unreachable:active,
+.unreachable:focus {
+  color: var(--text-color);
+  opacity: 0.6;
+  text-decoration: none;
+}
+.unreachable * {
+  color: var(--text-color);
+}
+
+.split-line {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+}
+.split-line > * {
+  flex: 1 1 0;
+}
+.split-line > :last-child {
+  text-align: right;
+  padding-left: 10px;
+}
+.split-line > :last-child:empty {
+  display: none;
+}
+.split-line + .split-line {
+  margin-top: 5px;
+}
+.split-line .name {
+  padding-left: 10px;
+  text-indent: -10px;
+}
+.kite {
+  cursor: default;
+}
+.kite pre {
+  -webkit-user-select: text;
+  user-select: text;
+  cursor: text;
+  overflow-x: auto; 
+}
+.kite .debug {
+  margin-top: 5px;
+  flex: 0 1 auto;
+  display: flex;
+  max-height: 300px;
+}
+.kite .debug pre {
+  flex: 1 1 auto;
+  cursor: text;
+  -webkit-user-select: all;
+  user-select: all;
+  user-select: all;
+  overflow: auto;
+}
+.kite .debug pre > * {
+  pointer-events: none;
+}
+
+.kite .expand-header {
+  flex: 0 0 auto;
+  margin-bottom: 10px;
+}
+.kite section.summary pre code {
+  white-space: pre;
+}
+.kite section.summary caption {
+  padding: 0;
+  color: var(--text-color-highlight);
+  margin-bottom: 5px;
+}
+.kite section.summary table {
+  width: 100%;
+  margin-bottom: 5px;
+}
+.kite section.summary table th,
+.kite section.summary table td {
+  padding: 0.4em;
+  border: 1px solid var(--border-color);
+}
+.kite section.parameters {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+.kite section.parameters dl {
+  margin-top: 0;
+}
+.kite section.parameters .section-content {
+  flex: 0 1 auto;
+  overflow-y: auto;
+}
+.kite a * {
+  pointer-events: none;
+}
+.kite a[href],
+.kite a[href]:hover,
+.kite a[href]:active,
+.kite a[href]:focus,
+.kite a[href] code {
+  color: var(--color-blue);
+}
+.kite a:not([href]) {
+  pointer-events: none;
+}
+.kite a:not([href]),
+.kite a:not([href]):hover,
+.kite a:not([href]):active,
+.kite a:not([href]):focus,
+.kite a:not([href]) code {
+  color: inherit;
+}
+.kite a.external_link::after {
+  content: "\f07f";
+  font-family: 'Octicons Regular';
+}
+.kite a.unreachable,
+.kite a.unreachable:hover,
+.kite a.unreachable:active,
+.kite a.unreachable:focus {
+  color: var(--text-color);
+  opacity: 0.6;
+  text-decoration: none;
+}
+.kite a.unreachable * {
+  color: var(--text-color);
+}
+.kite a i {
+  font-style: normal;
+  font-size: 0.8em;
+  font-weight: lighter;
+}
+.kite .scroll-wrapper {
+  flex: 1 1 auto;
+  position: relative;
+  transform: translateZ(0);
+}
+.kite .scroll-wrapper .sections-wrapper {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.kite h4 {
+  font-weight: 100;
+  margin: 0;
+  font-size: 1.1em;
+}
+.kite h4 .sticky {
+  padding: 10px 0;
+}
+.kite h4 .sticky.fixed {
+  position: fixed;
+  box-sizing: border-box;
+  z-index: 10;
+}
+.kite .type {
+  white-space: nowrap;
+}
+.kite .type,
+.kite .signature {
+  color: var(--text-color);
+}
+.kite .split-line {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+}
+.kite .split-line > * {
+  flex: 1 1 0;
+}
+.kite .split-line > :last-child {
+  text-align: right;
+  padding-left: 10px;
+}
+.kite .split-line > :last-child:empty {
+  display: none;
+}
+.kite .split-line + .split-line {
+  margin-top: 5px;
+}
+.kite .split-line .name {
+  padding-left: 10px;
+  text-indent: -10px;
+}
+.kite section {
+  margin: 0;
+}
+.kite section .section-content {
+  margin-left: 10px;
+}
+.kite .expand-header {
+  font-size: 1.4em;
+  color: var(--text-color-highlight);
+}
+.kite .expand-extend {
+  font-size: 1.2em;
+}
+.kite section.summary {
+  margin: 0 0 15px;
+}
+.kite section.summary.collapsible.collapse .description {
+  max-height: 250px;
+  position: relative;
+  overflow: hidden;
+}
+
+.kite section.summary .description {
+  margin-top: 10px;
+  font-size: 1em;
+  color: var(--text-color-highlight);
+}
+.kite section.summary .description h1,
+.kite section.summary .description h2,
+.kite section.summary .description h3,
+.kite section.summary .description h4 {
+  font-size: inherit;
+  margin: inherit;
+  line-height: inherit;
+}
+.kite section.collapsed > :not(h4) {
+  display: none !important;
+}
+.kite section.collapsed h4 {
+  margin-bottom: 0;
+}
+.kite section.top-members .split-line .name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kite section.top-members .split-line .type {
+  flex: 0 0 auto;
+}
+.kite section.top-members a.more-members {
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+.kite section.examples a.more-examples {
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+.kite .members-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.kite ul {
+  margin: 20px 0;
+}
+
+.kite ul li + li {
+  margin-top: 10px;
+}
+.kite section.examples ul li {
+  position: relative;
+}
+.kite section.examples ul li > .icon {
+  position: absolute;
+  top: 0;
+}
+.kite section.examples ul li > a,
+.kite section.examples ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  display: inline-block;
+}
+.kite section.examples ul li > a span,
+.kite section.examples ul li > span span {
+  display: inline-block;
+}
+.kite section.examples ul li > a .icon,
+.kite section.examples ul li > span .icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.kite section.links a.more-links {
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+.kite section.links ul li {
+  position: relative;
+}
+.kite section.links ul li > .icon {
+  position: absolute;
+  top: 0;
+}
+.kite section.links ul li > a,
+.kite section.links ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  display: inline-block;
+}
+.kite section.links ul li > a span,
+.kite section.links ul li > span span {
+  display: inline-block;
+}
+.kite section.links ul li > a .icon,
+.kite section.links ul li > span .icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.kite section.definition ul li {
+  position: relative;
+}
+.kite section.definition ul li > .icon {
+  position: absolute;
+  top: 0;
+}
+.kite section.definition ul li > a,
+.kite section.definition ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.kite section.definition ul li > a span,
+.kite section.definition ul li > span span {
+  display: inline-block;
+}
+.kite section.definition ul li > a .icon,
+.kite section.definition ul li > span .icon {
+  position: absolute;
+  right: 0;
+}
+
+.kite pre {
+  -webkit-user-select: text;
+  user-select: text;
+  cursor: text;
+}
+.kite .debug {
+  margin-top: 5px;
+  flex: 0 1 auto;
+  display: flex;
+  max-height: 300px;
+}
+.kite .debug pre {
+  flex: 1 1 auto;
+  cursor: text;
+  -webkit-user-select: all;
+  user-select: all;
+  user-select: all;
+  overflow: auto;
+}
+.kite .debug pre > * {
+  pointer-events: none;
+}
+.kite kite-expand-module,
+.kite kite-expand-function,
+.kite kite-expand-instance {
+  flex-direction: column;
+}
+.kite kite-expand-module .expand-header,
+.kite kite-expand-function .expand-header,
+.kite kite-expand-instance .expand-header,
+.kite kite-expand-module .expand-extend,
+.kite kite-expand-function .expand-extend,
+.kite kite-expand-instance .expand-extend {
+  flex: 0 0 auto;
+  margin-bottom: 10px;
+}
+.kite kite-expand-module section.summary pre code,
+.kite kite-expand-function section.summary pre code,
+.kite kite-expand-instance section.summary pre code {
+  white-space: pre;
+}
+.kite kite-expand-module section.summary caption,
+.kite kite-expand-function section.summary caption,
+.kite kite-expand-instance section.summary caption,
+.kite kite-expand-module section.summary figcaption,
+.kite kite-expand-function section.summary figcaption,
+.kite kite-expand-instance section.summary figcaption {
+  padding: 0;
+  color: var(--text-color-highlight);
+  margin-bottom: 5px;
+}
+.kite kite-expand-module section.summary table,
+.kite kite-expand-function section.summary table,
+.kite kite-expand-instance section.summary table {
+  width: 100%;
+  margin-bottom: 5px;
+}
+.kite kite-expand-module section.summary table th,
+.kite kite-expand-function section.summary table th,
+.kite kite-expand-instance section.summary table th,
+.kite kite-expand-module section.summary table td,
+.kite kite-expand-function section.summary table td,
+.kite kite-expand-instance section.summary table td {
+  padding: 0.4em;
+  border: 1px solid var(--border-color);
+}
+.kite kite-expand-module section.parameters,
+.kite kite-expand-function section.parameters,
+.kite kite-expand-instance section.parameters {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+.kite kite-expand-module section.parameters dl,
+.kite kite-expand-function section.parameters dl,
+.kite kite-expand-instance section.parameters dl {
+  margin-top: 0;
+}
+.kite kite-expand-module section.parameters .section-content,
+.kite kite-expand-function section.parameters .section-content,
+.kite kite-expand-instance section.parameters .section-content {
+  flex: 0 1 auto;
+  overflow-y: auto;
+}
+.kite a * {
+  pointer-events: none;
+}
+.kite a[href],
+.kite a[href]:hover,
+.kite a[href]:active,
+.kite a[href]:focus,
+.kite a[href] code {
+  color: var(--color-blue);
+}
+.kite a:not([href]) {
+  pointer-events: none;
+}
+.kite a:not([href]),
+.kite a:not([href]):hover,
+.kite a:not([href]):active,
+.kite a:not([href]):focus,
+.kite a:not([href]) code {
+  color: inherit;
+}
+.kite a.external_link::after {
+  content: "\f07f";
+  font-family: 'Octicons Regular';
+}
+.kite a.unreachable,
+.kite a.unreachable:hover,
+.kite a.unreachable:active,
+.kite a.unreachable:focus {
+  color: var(--text-color);
+  opacity: 0.6;
+  text-decoration: none;
+}
+.kite a.unreachable * {
+  color: var(--text-color);
+}
+.kite a i {
+  font-style: normal;
+  font-size: 0.8em;
+  font-weight: lighter;
+}
+.kite .scroll-wrapper {
+  flex: 1 1 auto;
+  position: relative;
+  transform: translateZ(0);
+}
+.kite .scroll-wrapper .sections-wrapper {
+  overflow-y: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.kite h4 {
+  font-weight: 100;
+  margin: 0;
+  font-size: 1.1em;
+}
+.kite h4 .sticky {
+  padding: 10px 0;
+}
+.kite h4 .sticky.fixed {
+  position: fixed;
+  box-sizing: border-box;
+  z-index: 10;
+}
+.kite .type {
+  white-space: nowrap;
+}
+.kite .type,
+.kite .signature {
+  color: var(--text-color);
+}
+.kite .split-line {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+}
+.kite .split-line > * {
+  flex: 1 1 0;
+}
+.kite .split-line > :last-child {
+  text-align: right;
+  padding-left: 10px;
+}
+.kite .split-line > :last-child:empty {
+  display: none;
+}
+.kite .split-line + .split-line {
+  margin-top: 5px;
+}
+.kite .split-line .name {
+  padding-left: 10px;
+  text-indent: -10px;
+}
+.kite section {
+  margin: 0;
+}
+.kite section .section-content {
+  margin-left: 10px;
+}
+.kite .expand-header {
+  font-size: 1.4em;
+  color: var(--text-color-highlight);
+}
+.kite .expand-extend {
+  font-size: 1.2em;
+}
+.kite section.summary {
+  margin: 0 0 15px;
+}
+.kite section.summary.collapsible.collapse .description {
+  max-height: 250px;
+  position: relative;
+  overflow: hidden;
+}
+.kite section.summary .description {
+  margin-top: 10px;
+  font-size: 1em;
+  color: var(--text-color-highlight);
+}
+.kite section.summary .description h1,
+.kite section.summary .description h2,
+.kite section.summary .description h3,
+.kite section.summary .description h4 {
+  font-size: inherit;
+  margin: inherit;
+  line-height: inherit;
+}
+.kite section.collapsed > :not(h4) {
+  display: none !important;
+}
+.kite section.collapsed h4 {
+  margin-bottom: 0;
+}
+.kite section.top-members .split-line .name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kite section.top-members .split-line .type {
+  flex: 0 0 auto;
+}
+.kite section.top-members a.more-members {
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+.kite section.examples a.more-examples {
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+.kite section.examples ul li {
+  position: relative;
+}
+.kite section.examples ul li > .icon {
+  position: absolute;
+}
+.kite section.examples ul li > a,
+.kite section.examples ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.kite section.examples ul li > a span,
+.kite section.examples ul li > span span {
+  display: inline-block;
+}
+.kite section.examples ul li > a .icon,
+.kite section.examples ul li > span .icon {
+  position: absolute;
+  right: 0;
+}
+.kite section.links a.more-links {
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+.kite section.links ul li {
+  position: relative;
+}
+.kite section.links ul li > .icon {
+  position: absolute;
+}
+.kite section.links ul li > a,
+.kite section.links ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.kite section.links ul li > a span,
+.kite section.links ul li > span span {
+  display: inline-block;
+}
+.kite section.links ul li > a .icon,
+.kite section.links ul li > span .icon {
+  position: absolute;
+  top: 0.2em;
+  right: 0;
+}
+.kite section.definition ul li {
+  position: relative;
+}
+.kite section.definition ul li > .icon {
+  position: absolute;
+}
+.kite section.definition ul li > a,
+.kite section.definition ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.kite section.definition ul li > a span,
+.kite section.definition ul li > span span {
+  display: inline-block;
+}
+.kite section.definition ul li > a .icon,
+.kite section.definition ul li > span .icon {
+  position: absolute;
+  top: 0.2em;
+  right: 0;
+}
+.kite section.usages .section-content {
+  margin: 0;
+}
+.kite section.usages .section-content .kite-pro-features {
+  font-size: 1.2em;
+  padding-left: 10px;
+}
+.kite section.usages .section-content .usages-box .usage-container {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+}
+.kite section.usages .section-content .usages-box .usage-bullet {
+  width: 0.8em;
+  height: 0.8em;
+  border-radius: 50%;
+  background-color: var(--usage-bullet-color);
+  margin-right: 0.5em;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+.kite section.usages .section-content .usages-box .usage {
+  flex-grow: 1;
+  padding: 0.5em;
+  margin: 0;
+}
+.kite section.usages .section-content .usages-box .usage + .usage {
+  margin-top: 1px;
+}
+.kite section.usages .section-content .usages-box .usage pre {
+  margin: 0;
+  background-color: transparent;
+  font-family: inherit;
+  padding: 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+.kite section.usages .section-content .usages-box .usage pre code {
+  font-family: inherit;
+}
+.kite section.usages .section-content .usages-box .usage .links {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.kite ul {
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+}
+.kite ul li {
+  overflow: hidden;
+}
+.kite ul li + li {
+  margin-top: 5px;
+}
+.kite ul li .icon::before {
+  margin: 0;
+}
+.kite ul li .icon,
+.kite ul li > .file,
+.kite ul li > .example,
+.kite ul li > .link {
+  display: inline-block;
+  vertical-align: middle;
+}
+.kite ul li .file,
+.kite ul li .example,
+.kite ul li .link {
+  font-weight: 300;
+  color: var(--text-color-highlight);
+}
+.kite ul li .file .icon,
+.kite ul li .example .icon,
+.kite ul li .link .icon {
+  color: var(--text-color);
+  font-weight: 0.8em;
+}
+.kite ul li .icon {
+  line-height: 1em;
+}
+.kite ul li .icon-file-code::before {
+  color: var(--color-blue);
+  font-size: 1.2em;
+  line-height: 1em;
+  height: 1em;
+}
+.kite ul li .icon-code::before {
+  color: var(--color-green);
+  font-size: 1.2em;
+  line-height: 1em;
+  height: 1em;
+}
+.kite ul li pre {
+  clear: both;
+  margin-top: 5px;
+  margin-left: 20px;
+}
+.kite dl,
+.kite ul {
+  margin: 10px 0 20px;
+}
+.kite dl dt,
+.kite ul dt,
+.kite dl li,
+.kite ul li {
+  color: var(--text-color);
+  font-weight: normal;
+  font-size: 1.2em;
+}
+.kite dl dd p,
+.kite ul dd p {
+  margin: 0;
+}
+.kite dl dd a,
+.kite ul dd a {
+  font-size: 0.9em;
+}
+.kite dl dt + dt,
+.kite ul dt + dt,
+.kite dl dd + dt,
+.kite ul dd + dt,
+.kite dl li + dt,
+.kite ul li + dt,
+.kite dl dt + li,
+.kite ul dt + li,
+.kite dl dd + li,
+.kite ul dd + li,
+.kite dl li + li,
+.kite ul li + li {
+  margin-top: 10px;
+}
+.kite pre {
+  color: var(--text-color-highlight);
+  font-size: inherit;
+  margin-bottom: 5px;
+}
+.kite pre a.icon,
+.kite pre a.icon:hover,
+.kite pre a.icon:active,
+.kite pre a.icon:focus {
+  color: var(--color-blue);
+}
+.kite p {
+  /* Default Atom p margin is assymetrical. Overriding for sanity */
+  margin: 0.5em 0;
+}
+.kite .split-line > * {
+  flex: 1 1 auto;
+}
+.kite-breadcrumb {
+  display: flex;
+  flex-direction: row;
+  padding-right: 10px;
+}
+.kite-breadcrumb.hidden {
+  display: none;
+}
+.kite-breadcrumb ul.breadcrumb {
+  display: inline-block;
+  margin-bottom: 0;
+  padding: 0;
+  margin-left: 10px;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow-x: auto;
+  flex: 1 1 0;
+  position: relative;
+}
+
+.kite .examples-list ul {
+  width: 100%;
+  padding-right: 0 !important;
+  margin-top: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+.examples-list {
+  flex: 1 1 0;
+  overflow-y: auto;
+}
+.examples-list .split-line .name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.examples-list .split-line .type {
+  flex: 0 0 auto;
+}
+.examples-list ul li {
+  position: relative;
+}
+.examples-list ul li > .icon {
+  position: absolute;
+  top: 0.2em;
+}
+.examples-list ul li > a,
+.examples-list ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.examples-list ul li > a span,
+.examples-list ul li > span span {
+  display: inline-block;
+}
+.examples-list ul li > a .icon,
+.examples-list ul li > span .icon {
+  position: absolute;
+  top: 0.2em;
+  right: 0;
+}
+.examples-list caption,
+.examples-list figcaption {
+  padding: 0;
+  color: var(--text-color-highlight);
+  margin-bottom: 5px;
+}
+
+.example-wrapper {
+  overflow-y: auto;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+.example-wrapper pre {
+  -webkit-user-select: text;
+  user-select: text;
+  cursor: text;
+}
+.example-wrapper caption,
+.example-wrapper figcaption {
+  padding: 0;
+  color: var(--text-color-highlight);
+  margin-bottom: 5px;
+}
+.example-wrapper table {
+  width: 100%;
+  margin-bottom: 5px;
+}
+.example-wrapper table th,
+.example-wrapper table td {
+  padding: 0.4em;
+  border: 1px solid var(--border-color);
+}
+.example-wrapper .related-examples ul li {
+  position: relative;
+}
+.example-wrapper .related-examples ul li > .icon {
+  position: absolute;
+  top: 0.2em;
+}
+.example-wrapper .related-examples ul li > a,
+.example-wrapper .related-examples ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.example-wrapper .related-examples ul li > a span,
+.example-wrapper .related-examples ul li > span span {
+  display: inline-block;
+}
+.example-wrapper .related-examples ul li > a .icon,
+.example-wrapper .related-examples ul li > span .icon {
+  position: absolute;
+  top: 0.2em;
+  right: 0;
+}
+.example-wrapper .example-code {
+  background: var(--examples-background);
+  border-radius: 3px;
+  padding: 5px;
+  margin-bottom: var(--component-padding);
+}
+.example-wrapper .example-code figcaption {
+  margin-top: 10px;
+  font-size: 0.8em;
+  font-weight: 300;
+  font-style: italic;
+}
+.example-wrapper img {
+  max-width: 100%;
+}
+.example-wrapper pre {
+  flex: 0 0 auto;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 10px;
+}
+.example-wrapper pre a {
+  color: inherit;
+}
+.example-wrapper pre code {
+  white-space: pre;
+}
+.example-wrapper pre.output {
+  display: block;
+}
+.example-wrapper pre.input {
+  background: var(--examples-background);
+  border-radius: 3px;
+  padding: 5px;
+}
+.example-wrapper table,
+.example-wrapper ul.list-tree.root,
+.example-wrapper pre.output {
+  width: auto;
+  background: var(--examples-output-background);
+  padding: 5px;
+  border-radius: 3px;
+}
+.example-wrapper ul.list-tree {
+  padding-left: 20px;
+  margin: 0; 
+}
+figcaption + .example-wrapper table,
+figcaption + .example-wrapper ul.list-tree.root,
+figcaption + .example-wrapper pre.output {
+  margin-top: -5px;
+}
+.example-wrapper table,
+.example-wrapper ul.list-tree.root,
+.example-wrapper pre {
+  margin-bottom: 10px;
+}
+.example-wrapper table:last-child,
+.example-wrapper ul.list-tree.root:last-child,
+.example-wrapper pre:last-child {
+  margin-bottom: 0;
+}
+.example-wrapper ul.list-tree.root {
+  display: inline-block;
+  padding-right: 10px;
+}
+.example-wrapper ul.list-tree li {
+  font-size: 1em;
+}
+.example-wrapper ul.list-tree li + li {
+  margin-top: 0;
+}
+.example-wrapper table {
+  border-radius: 3px;
+  border-collapse: separate !important;
+}
+.example-wrapper table th,
+.example-wrapper table td {
+  border: none;
+}
+.example-wrapper table td:not(:last-child) {
+  padding-right: 2rem;
+}
+
+.links-list ul {
+  width: 100%;
+  padding-right: 0 !important;
+  margin-top: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+.links-list {
+  flex: 1 1 0;
+  overflow-y: auto;
+}
+.links-list .split-line .name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.links-list .split-line .type {
+  flex: 0 0 auto;
+}
+.links-list ul li {
+  position: relative;
+}
+.links-list ul li > .icon {
+  position: absolute;
+  top: 0.2em;
+}
+.links-list ul li > a,
+.links-list ul li > span {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.links-list ul li > a span,
+.links-list ul li > span span {
+  display: inline-block;
+}
+.links-list ul li > a .icon,
+.links-list ul li > span .icon {
+  position: absolute;
+  top: 0.2em;
+  right: 0;
+}
+.links-list caption,
+.links-list figcaption {
+  padding: 0;
+  color: var(--text-color-highlight);
+  margin-bottom: 5px;
+}
+
+a.kite-open-link {
+  display: inline-block;
+  transition: 125ms opacity;
+  margin-right: 0.5em;
+  text-decoration: none;
+}
+
+a.kite-open-link,
+a.kite-open-link:active,
+a.kite-open-link:focus,
+a.kite-open-link:visited {
+  color: var(--color-blue);
+  text-decoration: none;
+}
+a.kite-open-link span,
+a.kite-open-link:active span,
+a.kite-open-link:focus span,
+a.kite-open-link:visited span {
+  color: var(--text-color);
+  opacity: 0.6;
+}
+a.kite-open-link:hover,
+a.kite-open-link:active:hover,
+a.kite-open-link:focus:hover,
+a.kite-open-link:visited:hover {
+  text-decoration: none;
+}
+a.kite-open-link:hover span,
+a.kite-open-link:active:hover span,
+a.kite-open-link:focus:hover span,
+a.kite-open-link:visited:hover span {
+  text-decoration: none;
+  opacity: 1;
+}
+a.kite-open-link > * {
+  pointer-events: none;
+}
+a.kite-open-link i {
+  font-style: normal;
+  font-weight: normal;
+}
+a.kite-open-link span {
+  background-color: var(--open-web-link-background);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+}
+a.kite-open-link span i,
+a.kite-open-link span kbd {
+  display: inline-block;
+  vertical-align: middle;
+}
+a.kite-open-link kbd {
+  font-size: 1.2em;
+  font-weight: lighter;
+  font-family: sans-serif;
+  margin-left: 0.5em;
+  background-color: transparent;
+  padding: 0;
+}
+
+a.kite-open-link {
+  display: inline-block;
+}
+
+a.kite-open-link svg {
+  opacity: 0.5;
+  margin-left: 0.5em;
+  vertical-align: middle;
+  display: inline-block;
+  width: 1.2em;
+}
+a.kite-open-link svg polygon {
+  fill: var(--text-color-highlight);
+}
