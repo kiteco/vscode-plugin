@@ -80,7 +80,6 @@ module.exports = class KiteLogin {
           <a class="signup pull-right"
              href="https://kite.com/">Signup</a>
           <button type="submit" class="primary has-password">Sign into Kite</button>
-          <button type="button" class="cancel">Cancel</button>
           <a class="send-link no-password primary btn" href="#">
             Resend password setup email
           </a>
