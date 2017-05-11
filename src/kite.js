@@ -67,7 +67,7 @@ const Kite = {
     }));
 
     ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
-      if (e.document.languageId === 'python') {
+      if (e && e.document.languageId === 'python') {
         this.registerEditor(e);
       }
 
