@@ -1017,6 +1017,12 @@
   font-weight: 300;
   font-style: italic;
 }
+.example-wrapper .example-code a {
+  text-decoration: none;
+}
+.example-wrapper .example-code a:hover {
+  text-decoration: underline;
+}
 .example-wrapper img {
   max-width: 100%;
 }
