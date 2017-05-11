@@ -5,9 +5,12 @@
   --link-color: cyan;
   --text-color: white;
   --text-color-highlight: white;
+  --button-background: white;
+  --button-color: black;
   --border-color: white;
   --usage-bullet-color: white;
   --examples-background: black;
   --examples-output-background: black;
-  --open-web-link-background: black;
+  --open-web-link-background: white;
+  --open-web-link-color: black;
 }
