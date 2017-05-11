@@ -58,5 +58,6 @@ window.initLogin = function initLogin() {
   function logged() {
     form.classList.add('hidden');
     success.classList.remove('hidden');
+    request('GET', `http://localhost:${window.PORT}/check`);
   }
 }

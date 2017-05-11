@@ -48,6 +48,12 @@ const Kite = {
     ctx.subscriptions.push(server);
     ctx.subscriptions.push(router);
     ctx.subscriptions.push(search);
+
+    server.addRoute('GET', '/check', (req, res) => {
+      this.checkState();
+      res.writeHead(200);
+      res.end();
+    });
     
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-sidebar', router));
