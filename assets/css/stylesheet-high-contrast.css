@@ -2,6 +2,8 @@
 .vscode-high-contrast {
   --color-green: lightgreen;
   --color-blue: cyan;
+  --color-red: red;
+  --color-orange: orange;
   --link-color: cyan;
   --text-color: white;
   --text-color-highlight: white;
