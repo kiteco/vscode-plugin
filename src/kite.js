@@ -19,6 +19,8 @@ const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, appendToken}
 // const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse} = require('./utils');
 
+const pluralize = (n, singular, plural) => n === 1 ? singular : plural;
+
 const Kite = {
   activate(ctx) 
   {
@@ -57,7 +59,7 @@ const Kite = {
     }));
 
     ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
-      if (e.document.languageId === 'python') {
+      if (e && e.document.languageId === 'python') {
         this.registerEditor(e);
       }
 
@@ -254,9 +256,23 @@ const Kite = {
   },
 
   updatePlan() {
-    this.statusBarItem.text = Plan.isActivePro() 
-      ? '$(primitive-dot) Kite Pro'
-      : '$(primitive-dot) Kite Basic';
+    if (Plan.isActivePro()) {
+      let trialSuffix = '';
+
+      if (Plan.isTrialing()) {
+        const days = Plan.remainingTrialDays();
+        trialSuffix = [
+          ' (trial:',
+          days,
+          pluralize(days, 'day', 'days'),
+          'left)',
+        ].join(' ');
+      }
+
+      this.statusBarItem.text = `$(primitive-dot) Kite Pro${trialSuffix}`;
+    } else {
+      this.statusBarItem.text = '$(primitive-dot) Kite Basic';
+    }
   },
 
   setStatus(state) {

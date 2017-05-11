@@ -69,7 +69,7 @@
   "dependencies": {
     "atob": "^2.0.3",
     "opn": "^1.0.0",
-    "kite-installer": "git@github.com:kiteco/kite-installer.git#feature-vscode-support",
+    "kite-installer": "^0.16.0",
     "rollbar": "*",
     "md5": "^2.2.0"
   },
