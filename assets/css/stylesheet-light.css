@@ -4,9 +4,12 @@
   --link-color: #6494ed;
   --text-color: #333333;
   --text-color-highlight: #000000;
+  --button-background: rgba(0, 0, 0, 0.1);
+  --button-color: #333333;
   --border-color: rgba(0,0,0,0.1);
   --usage-bullet-color: rgba(0, 0, 0, 0.2);
   --examples-background: rgba(0, 0, 0, 0.05);
   --examples-output-background: rgba(0, 0, 0, 0.1);
   --open-web-link-background: rgba(0, 0, 0, 0.2);
+  --open-web-link-color: #333333;
 }
