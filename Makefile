@@ -5,4 +5,4 @@ install:
 
 build-production:
 	docker pull kiteco/build-vscode-plugin
-	docker run --rm -v "$(PWD)":/vscode-plugin -w /vscode-plugin -t kiteco/build-vscode-plugin npm install --production
+	docker run --rm -v "$(PWD)":/vscode-plugin -w /vscode-plugin -t kiteco/build-vscode-plugin npm install --production --quiet
