@@ -1444,7 +1444,7 @@ form.password-less .has-password {
 .kite-status-panel .links a:not(.btn):visited,
 .kite-status-panel .links a:not(.btn):focus {
   color: var(--text-color-highlight);
-  font-size: 1.1em;
+  font-size: 1em;
 }
 .kite-status-panel .links a:not(.btn).kite-gift,
 .kite-status-panel .links a:not(.btn).kite-gift:active,

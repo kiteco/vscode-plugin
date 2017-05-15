@@ -12,6 +12,7 @@ const {
 } = require('./data-utils');
 const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
 const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
+const giftLogoPath = path.resolve(__dirname, '..', 'assets', 'images', 'icon-gift.png');
 
 const ASSETS_PATH = path.resolve(__dirname, '..', 'assets');
 const STYLESHEETS = fs.readdirSync(path.resolve(ASSETS_PATH, 'css'))
@@ -73,6 +74,19 @@ function wrapHTML (html) {
   .replace(/<a href="#([^"]+)" class="internal_link"/g, 
            `<a href='command:kite.navigate?"value/$1"' class="internal_link"`);
   return `
+  <style>
+    .icon-kite-gift::before {
+      content: '';
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 1.2em;
+      line-height: 1em;
+      height: 1em;
+      width: 1em;
+      background-size: 100%;
+      background-image: url('${giftLogoPath}');
+    }
+  </style>
   ${STYLESHEETS}
   ${SCRIPTS}
   <div class="kite">${html}</div>`
