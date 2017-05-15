@@ -116,7 +116,7 @@ const Kite = {
     ctx.subscriptions.push(this.statusBarItem);
     
     vscode.commands.registerCommand('kite.status', () => {
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Login');
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
     });
 
     vscode.commands.registerCommand('kite.search', () => {
