@@ -6,7 +6,7 @@ const vscode = require('vscode');
 const {StateController, Logger} = require('kite-installer');
 const server = require('./server');
 const {wrapHTML} = require('./html-utils');
-const {promisifyReadResponse} = require('./utils');
+const {promisifyReadResponse, params} = require('./utils');
 const {searchPath} = require('./urls');
 const KiteValueReport = require('./value-report');
 
@@ -125,11 +125,3 @@ function renderList(results) {
       .join('')
     : ''
 }
-
-function params (url) {
-  return url.query.split('&').reduce((m, p) => {
-    const [k,v] = p.split('=');
-    m[k] = v;
-    return m;
-  }, {})
-};

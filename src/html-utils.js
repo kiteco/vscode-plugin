@@ -11,6 +11,7 @@ const {
   memberLabel, parameterName, parameterType,
 } = require('./data-utils');
 const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
+const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
 
 const ASSETS_PATH = path.resolve(__dirname, '..', 'assets');
 const STYLESHEETS = fs.readdirSync(path.resolve(ASSETS_PATH, 'css'))
@@ -48,6 +49,7 @@ function debugHTML (html) {
     fs.writeFileSync(path.resolve(__dirname, '..', 'sample.html'), `
       <!doctype html>
       <html class="vscode-dark">
+        <meta charset="utf-8"/>
         <style> 
           html {
             background: #333333;
@@ -507,6 +509,7 @@ module.exports = {
   debugData,
   highlightCode,
   logo,
+  proLogoSvg,
   pluralize,
   proFeatures,
   renderDefinition,
