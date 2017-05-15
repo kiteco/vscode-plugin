@@ -43,6 +43,26 @@ function proFeatures(message) {
       <a href='command:kite.web-url?"http://localhost:46624/redirect/trial"'>start your Kite Pro trial</a> at any time`;
 }
 
+function debugHTML (html) {
+  if (vscode.workspace.getConfiguration('kite').sidebarDebugMode) {
+    fs.writeFileSync(path.resolve(__dirname, '..', 'sample.html'), `
+      <!doctype html>
+      <html class="vscode-dark">
+        <style> 
+          html {
+            background: #333333;
+            color: #999999;
+            font-family: sans-serif;
+            font-size: 14px;
+            line-height: 1.4em;
+          }
+        </style>
+        ${html}
+      </html>`);
+  }
+  return html;
+}
+
 function wrapHTML (html) {
 
   html = html
@@ -513,5 +533,6 @@ module.exports = {
   symbolDescription,
   valueDescription,
   wrapHTML,
+  debugHTML,
   prependNavigation,
 };
