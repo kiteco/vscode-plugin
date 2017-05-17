@@ -34,6 +34,18 @@ const Plan = {
     return this.plan && this.plan.trial_days_remaining;
   },
 
+  referralsCredited() {
+    return this.plan ? this.plan.referrals_credited : undefined;
+  },
+
+  referralsCredits() {
+    return this.plan ? this.plan.max_referral_credits : undefined;
+  },
+
+  daysCredited() {
+    return this.plan ? this.plan.num_days_pro_credited : undefined;
+  },
+
   planPath() {
     return [
       '/clientapi/plan',

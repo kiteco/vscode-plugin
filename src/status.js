@@ -1,12 +1,11 @@
 'use strict';
 
-const formidable = require('formidable');
 const vscode = require('vscode');
-const {StateController} = require('kite-installer');
+const {StateController, Logger} = require('kite-installer');
 const server = require('./server');
 const {wrapHTML, debugHTML, proLogoSvg, logo, pluralize} = require('./html-utils');
 const Plan = require('./plan');
-const {accountPath} = require('./urls');
+const {accountPath, statusPath} = require('./urls');
 const {promisifyRequest, promisifyReadResponse, params} = require('./utils');
 const {MAX_FILE_SIZE} = require('./constants');
 const {STATES} = StateController;
@@ -79,6 +78,7 @@ module.exports = class KiteStatus {
 
     return promisifyRequest(StateController.client.request({path}))
       .then(resp => {
+        Logger.logResponse(resp);
         if (resp.statusCode !== 200) {
           throw new Error(`${resp.statusCode} at ${path}`);
         }
@@ -87,12 +87,32 @@ module.exports = class KiteStatus {
       .then(account => JSON.parse(account));
   }
 
+  getStatus(editor) {
+    if (!editor) { return Promise.resolve(null); }
+
+    const filepath = editor.document.fileName;
+    const path = statusPath(filepath);
+
+    return promisifyRequest(StateController.client.request({path}))
+    .then(resp => {
+      Logger.logResponse(resp);
+      if (resp.statusCode === 200) {
+        return promisifyReadResponse(resp)
+        .then(json => JSON.parse(json))
+        .catch(() => null);
+      }
+      return null;
+    })
+    .catch(() => null);
+  }
+
   renderCurrent() {
     const editor = vscode.window.activeTextEditor;
     const promises = [
       Plan.queryPlan().catch(() => null),
       StateController.handleState(),
       this.getUserAccountInfo().catch(() => ({})),
+      this.getStatus(editor),
     ];
     if (this.Kite.isGrammarSupported(editor)) {
       promises.push(this.Kite.projectDirForEditor(editor.document).catch(() => null));
@@ -101,12 +121,12 @@ module.exports = class KiteStatus {
     return Promise.all(promises).then(data => this.render(...data));
   }
 
-  render(plan, status, account, projectDir) {
+  render(plan, status, account, syncStatus, projectDir) {
     return `
       ${this.renderSubscription(plan, status)}
       ${this.renderEmailWarning(account)}
       ${this.renderLinks()}
-      ${this.renderStatus(status, projectDir)}
+      ${this.renderStatus(status, syncStatus, projectDir)}
     `;
   }
 
@@ -114,9 +134,20 @@ module.exports = class KiteStatus {
     let giftLink = '';
 
     if (!Plan.isActivePro()) {
-      giftLink = `<li>
-        <a href="#" class="kite-gift">Get free Pro! <i class="icon-kite-gift"></i></a>
-      </li>`;
+      if (Plan.referralsCredited() &&
+          Plan.referralsCredited() < Plan.referralsCredits()) {
+        giftLink = `<li>
+          <a is="kite-localtoken-anchor"
+             href="http://localhost:46624/redirect/invite"
+             class="kite-gift">Get free Pro! <i class="icon-kite-gift"></i></a>
+        </li>`;
+      } else {
+        giftLink = `<li>
+          <a is="kite-localtoken-anchor"
+             href="http://localhost:46624/redirect/invite"
+             class="kite-gift">Invite friends <i class="icon-kite-gift"></i></a>
+        </li>`;
+      }
     }
 
     return `
@@ -142,7 +173,7 @@ module.exports = class KiteStatus {
       </div>`;
   }
 
-  renderStatus(status, projectDir) {
+  renderStatus(status, syncStatus, projectDir) {
     let content = '';
     switch (status) {
       case STATES.UNSUPPORTED:
@@ -182,9 +213,19 @@ module.exports = class KiteStatus {
             content = `
             <div class="text-warning">The current file is too large for Kite to handle ${dot}</div>`;
           } else {
-            content = `
-              <div class="ready">Kite engine is ready and working ${dot}</div>
-            `;
+            switch (syncStatus.status) {
+              case 'ready':
+                content = `<div class="ready">Kite engine is ready and working ${dot}</div>`;
+                break;
+
+              case 'indexing':
+                content = `<div class="ready">Kite engine is indexing your code ${dot}</div>`;
+                break;
+
+              case 'syncing':
+                content = `<div class="ready">Kite engine is syncing your code ${dot}</div>`;
+                break;
+            }
           }
         } else {
           const path = encodeURI(editor.document.fileName);
