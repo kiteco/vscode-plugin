@@ -140,14 +140,12 @@ module.exports = class KiteStatus {
       if (Plan.referralsCredited() &&
           Plan.referralsCredited() < Plan.referralsCredits()) {
         giftLink = `<li>
-          <a is="kite-localtoken-anchor"
-             href="http://localhost:46624/redirect/invite"
+          <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
              class="kite-gift">Get free Pro! <i class="icon-kite-gift"></i></a>
         </li>`;
       } else {
         giftLink = `<li>
-          <a is="kite-localtoken-anchor"
-             href="http://localhost:46624/redirect/invite"
+          <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
              class="kite-gift">Invite friends <i class="icon-kite-gift"></i></a>
         </li>`;
       }
