@@ -1218,3 +1218,55 @@ a.kite-open-link svg {
 a.kite-open-link svg polygon {
   fill: var(--text-color-highlight);
 }
+.search-form {
+  position: relative;
+}
+.kite a[href].internal_link {
+  pointer-events: none;
+  text-decoration: none;
+  color: inherit;
+}
+.search-form i {
+  position: absolute;
+  right: 0;
+  top: 0;
+  pointer-events: none;
+}
+#text {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  width: 100%;
+  font-size: 1.2em;
+  border-bottom: 1px solid var(--border-color);
+  padding: 5px;
+  color: var(--text-color-highlight);
+}
+#text:focus {
+  border:none;
+  border-bottom: 1px solid var(--color-blue);
+  outline: none;
+}
+
+#text:-webkit-input-placeholder {
+  color: var(--text-color-highlight);
+}
+#results li {
+  padding: 5px;
+}
+#results li + li {
+  margin: 0;
+}
+#results li.selected {
+  background: var(--button-background);
+}
+#view {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+#view:not(:empty) {
+  border-top: 1px solid var(--examples-output-background);
+  padding-top: 10px;
+}
