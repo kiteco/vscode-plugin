@@ -180,14 +180,18 @@
   padding: 0.4em;
   border: 1px solid var(--border-color);
 }
+.kite section.kwargs, 
 .kite section.parameters {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
 }
-.kite section.parameters dl {
-  margin-top: 0;
+
+.kite section .kite-pro-features {
+  margin-bottom: 10px;
 }
+
+.kite section.kwargs .section-content,
 .kite section.parameters .section-content {
   flex: 0 1 auto;
   overflow-y: auto;

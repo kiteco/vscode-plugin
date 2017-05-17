@@ -7,8 +7,8 @@ const {head, compact, flatten} = require('./utils');
 const {openDocumentationInWebURL} = require('./urls');
 const {
   symbolLabel, symbolType,
-  valueLabel, valueType,
-  memberLabel, parameterName, parameterType,
+  valueLabel, valueType, callSignature,
+  memberLabel, parameterName, parameterType, parameterDefault,
 } = require('./data-utils');
 const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
 
@@ -150,6 +150,8 @@ function renderFunction(data) {
       </section>
 
       ${renderParameters(value)}
+      ${renderPatterns(value)}
+      ${renderKwargs(value)}
       ${renderExamples(data)}
       ${renderLinks(data)}
       ${renderDefinition(data)}
@@ -414,6 +416,54 @@ function stripLeadingSlash(str) {
   return str.replace(/^\//, '');
 }
 
+function renderPatterns(data) {
+  let patterns = '';
+  const name = data.repr;
+  if (data.detail && data.detail.signatures && data.detail.signatures.length) {
+    patterns = Plan.can('common_invocations_editor')
+      ? `
+        <section class="patterns">
+        <h4>Popular Patterns</h4>
+        <div class="section-content">${
+          highlightCode(
+            data.detail.signatures
+            .map(s => callSignature(s))
+            .map(s => `${name}(${s})`)
+            .join('\n'))
+          }</div>
+        </section>`
+      : `<section class="patterns">
+          <h4>Popular Patterns</h4>
+          <div class="section-content">
+          ${proFeatures(
+            `To see ${data.detail.signatures.length} ${
+              pluralize(data.detail.signatures.length, 'pattern', 'patterns')
+            }`
+          )}</div>
+        </section>`;
+  }
+  return patterns;
+}
+
+function renderKwargs(data) {
+  let kwargs = '';
+  const {detail} = data;
+  if (detail && detail.kwarg_parameters && detail.kwarg_parameters.length) {
+    kwargs = `<section class="kwargs">
+      <h4>**${detail.kwarg.name}</h4>
+      <div class="section-content"><dl>
+        ${
+          detail.kwarg_parameters
+          .map(p => renderParameter(p))
+          .map(p => `<dt>${p}</dt>`)
+          .join('')
+        }
+      </dl></div>
+    </section>`;
+  }
+  return kwargs;
+}
+
 function renderMember(member) {
   const label = member.id && member.id !== ''
     ? `<a href='command:kite.navigate?"value/${member.id}"'>${memberLabel(member)}</a>`
@@ -455,8 +505,8 @@ function renderParameters(value) {
   ]));
 
   return detail &&
-         allParameters.length &&
-         allParameters.some(p => p.synopsis && p.synopsis !== '')
+         allParameters.length /*&&
+         allParameters.some(p => p.synopsis && p.synopsis !== '')*/
     ? section('Parameters', `
     <dl>
       ${detail.parameters
@@ -472,7 +522,7 @@ function renderParameter(param, prefix = '') {
   return !param
     ? ''
     : `<dt class="split-line">
-      <span class="name">${parameterName(param, prefix)}</span>
+      <span class="name">${parameterName(param, prefix)}${parameterDefault(param)}</span>
       <span class="type">${parameterType(param)}</span>
     </dt>
     <dd>${param.synopsis}</dd>
@@ -505,6 +555,7 @@ module.exports = {
   renderMembersList,
   renderParameter,
   renderParameters,
+  renderPatterns,
   renderSymbolHeader,
   renderUsages,
   renderValueHeader,
