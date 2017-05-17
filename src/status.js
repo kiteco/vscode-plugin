@@ -88,7 +88,10 @@ module.exports = class KiteStatus {
   }
 
   getStatus(editor) {
-    if (!editor) { return Promise.resolve(null); }
+    const def = {status: 'ready'}
+    if (!editor || !this.Kite.isGrammarSupported(editor)) {
+      return Promise.resolve(def); 
+    }
 
     const filepath = editor.document.fileName;
     const path = statusPath(filepath);
@@ -99,11 +102,11 @@ module.exports = class KiteStatus {
       if (resp.statusCode === 200) {
         return promisifyReadResponse(resp)
         .then(json => JSON.parse(json))
-        .catch(() => null);
+        .catch(() => def);
       }
-      return null;
+      return def;
     })
-    .catch(() => null);
+    .catch(() => def);
   }
 
   renderCurrent() {
