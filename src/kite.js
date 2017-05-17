@@ -3,16 +3,20 @@
 const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
-const {StateController, Logger} = require('kite-installer');
+const {StateController, AccountManager, Logger} = require('kite-installer');
 const {PYTHON_MODE, ATTEMPTS, INTERVAL, ERROR_COLOR, WARNING_COLOR, NOT_WHITELISTED} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
 const KiteDefinitionProvider = require('./definition');
 const KiteRouter = require('./router');
+const KiteSearch = require('./search');
+const KiteLogin = require('./login');
+const KiteStatus = require('./status');
 const KiteEditor = require('./kite-editor');
 const metrics = require('./metrics');
 const Plan = require('./plan');
+const server = require('./server');
 const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, appendToken} = require('./urls');
 // const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse} = require('./utils');
@@ -25,6 +29,10 @@ const Kite = {
     this.kiteEditorByEditor = new Map();
 
     const router = new KiteRouter(Kite);
+    const search = new KiteSearch(Kite);
+    const login = new KiteLogin(Kite);
+    const status = new KiteStatus(Kite);
+
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
     // send the activated event
@@ -32,9 +40,33 @@ const Kite = {
 
     // Rollbar.init('cce6430d4e25421084d7562afa976886');
     // Rollbar.handleUncaughtExceptions('cce6430d4e25421084d7562afa976886');
+
+    AccountManager.initClient(
+      StateController.client.hostname,
+      StateController.client.port,
+      ''
+    );
+
+    ctx.subscriptions.push(server);
+    ctx.subscriptions.push(router);
+    ctx.subscriptions.push(search);
+    ctx.subscriptions.push(status);
+
+    server.addRoute('GET', '/check', (req, res) => {
+      this.checkState();
+      res.writeHead(200);
+      res.end();
+    });
     
     ctx.subscriptions.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-internal', router));
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-sidebar', router));
+    ctx.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-search', search));
+    ctx.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-login', login));
+    ctx.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
+
     ctx.subscriptions.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
     ctx.subscriptions.push(
@@ -49,7 +81,7 @@ const Kite = {
     }));
 
     ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
-      if (e && e.document.languageId === 'python') {
+      if (this.isGrammarSupported(e)) {
         this.registerEditor(e);
       }
 
@@ -83,7 +115,18 @@ const Kite = {
 
     ctx.subscriptions.push(this.statusBarItem);
     
-    vscode.commands.registerCommand('kite.status', () => {});
+    vscode.commands.registerCommand('kite.status', () => {
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
+    });
+
+    vscode.commands.registerCommand('kite.search', () => {
+      search.clearCache();
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-search://search', vscode.ViewColumn.Two, 'Kite Search');
+    }); 
+    
+    vscode.commands.registerCommand('kite.login', () => {
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+    }); 
 
     vscode.commands.registerCommand('kite.open-settings', () => {
       opn(appendToken('http://localhost:46624/settings'));
@@ -95,7 +138,7 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
-      const uri = `kite-vscode-internal://value/${id}`;
+      const uri = `kite-vscode-sidebar://value/${id}`;
       router.clearNavigation();
       router.navigate(uri);
     });
@@ -112,13 +155,13 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.more-range', ({range, source}) => {
       metrics.track(`${source} See info clicked`);
-      const uri = `kite-vscode-internal://value-range/${JSON.stringify(range)}`;
+      const uri = `kite-vscode-sidebar://value-range/${JSON.stringify(range)}`;
       router.clearNavigation();
       router.navigate(uri);
     });
 
     vscode.commands.registerCommand('kite.navigate', (path) => {
-      const uri = `kite-vscode-internal://${path}`;
+      const uri = `kite-vscode-sidebar://${path}`;
       router.chopNavigation();
       router.navigate(uri);
     });
@@ -206,10 +249,14 @@ const Kite = {
           this.showErrorMessage('The Kite background service is running but not reachable.');
           break;
         case StateController.STATES.REACHABLE:
+          this.setStatus(state);
           this.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
-            if (item) { opn('http://localhost:46624/settings'); }
-          })
-          return Plan.queryPlan()
+            if (item) { 
+              // opn('http://localhost:46624/settings'); 
+              vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+            }
+          });
+          return Plan.queryPlan();
         default: 
           if (vscode.window.activeTextEditor && vscode.window.activeTextEditor.document.languageId === 'python') {
             this.registerEditor(vscode.window.activeTextEditor);
@@ -291,9 +338,23 @@ const Kite = {
     }
   },
 
+  isGrammarSupported(e) {
+    return e && e.document.languageId === 'python';
+  },
+
+  isEditorWhitelisted(e) {
+    const ke = this.kiteEditorByEditor.get(e);
+    return ke && ke.isWhitelisted();
+  },
+
   handle403Response(document, resp) {
     // for the moment a 404 response is sent for non-whitelisted file by
     // the tokens endpoint
+    editorsForDocument(document).forEach(e => {
+      const ke = this.kiteEditorByEditor.get(e);
+      if (ke) { ke.whitelisted = resp.statusCode !== 403 }
+    });
+
     if (resp.statusCode === 403) {
       this.setStatus(NOT_WHITELISTED);
       this.shouldOfferWhitelist(document)
