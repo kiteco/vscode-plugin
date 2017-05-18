@@ -1319,6 +1319,10 @@ input:focus {
 input:-webkit-input-placeholder {
   color: var(--text-color-highlight);
 }
+#results {
+  overflow-y: auto;
+  max-height: 200px;
+}
 #results li {
   padding: 5px;
 }

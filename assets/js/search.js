@@ -63,12 +63,32 @@ window.initSearch = (inputId, resultsId, viewId) => {
     selectedItem = item;
     selectedItem.classList.add('selected');
     loadItem(item.getAttribute('data-id'));
+    scrollTo(item);
   }
 
   function loadItem(id) {
     view.style.display = '';
     request('GET', `http://localhost:${window.PORT}/view?id=${id}`).then(html => {
-      view.innerHTML = html
+      view.innerHTML = html;
+
+      const sticky = new StickyTitle(
+        document.querySelectorAll('h4'), 
+        document.querySelector('.sections-wrapper')
+      );
+      handleExternalLinks();
     });
+  }
+
+  function scrollTo(target) {
+    const containerBounds = results.getBoundingClientRect();
+    const scrollTop = results.scrollTop;
+    const targetBounds = target.getBoundingClientRect();
+
+    if (targetBounds.top < scrollTop || 
+        targetBounds.bottom > scrollTop + containerBounds.height) {
+      const top = targetBounds.top + scrollTop - containerBounds.top;
+
+      results.scrollTop = top;
+    }
   }
 }
