@@ -12,6 +12,7 @@ const KiteDefinitionProvider = require('./definition');
 const KiteRouter = require('./router');
 const KiteSearch = require('./search');
 const KiteLogin = require('./login');
+const KiteStatus = require('./status');
 const KiteEditor = require('./kite-editor');
 const metrics = require('./metrics');
 const Plan = require('./plan');
@@ -30,6 +31,7 @@ const Kite = {
     const router = new KiteRouter(Kite);
     const search = new KiteSearch(Kite);
     const login = new KiteLogin(Kite);
+    const status = new KiteStatus(Kite);
 
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
@@ -48,6 +50,7 @@ const Kite = {
     ctx.subscriptions.push(server);
     ctx.subscriptions.push(router);
     ctx.subscriptions.push(search);
+    ctx.subscriptions.push(status);
 
     server.addRoute('GET', '/check', (req, res) => {
       this.checkState();
@@ -62,6 +65,9 @@ const Kite = {
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-login', login));
     ctx.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
+
+    ctx.subscriptions.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
     ctx.subscriptions.push(
       vscode.languages.registerDefinitionProvider(PYTHON_MODE, new KiteDefinitionProvider(Kite)));
@@ -75,7 +81,7 @@ const Kite = {
     }));
 
     ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
-      if (e && e.document.languageId === 'python') {
+      if (this.isGrammarSupported(e)) {
         this.registerEditor(e);
       }
 
@@ -109,7 +115,9 @@ const Kite = {
 
     ctx.subscriptions.push(this.statusBarItem);
     
-    vscode.commands.registerCommand('kite.status', () => {});
+    vscode.commands.registerCommand('kite.status', () => {
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
+    });
 
     vscode.commands.registerCommand('kite.search', () => {
       search.clearCache();
@@ -330,9 +338,23 @@ const Kite = {
     }
   },
 
+  isGrammarSupported(e) {
+    return e && e.document.languageId === 'python';
+  },
+
+  isEditorWhitelisted(e) {
+    const ke = this.kiteEditorByEditor.get(e);
+    return ke && ke.isWhitelisted();
+  },
+
   handle403Response(document, resp) {
     // for the moment a 404 response is sent for non-whitelisted file by
     // the tokens endpoint
+    editorsForDocument(document).forEach(e => {
+      const ke = this.kiteEditorByEditor.get(e);
+      if (ke) { ke.whitelisted = resp.statusCode !== 403 }
+    });
+
     if (resp.statusCode === 403) {
       this.setStatus(NOT_WHITELISTED);
       this.shouldOfferWhitelist(document)

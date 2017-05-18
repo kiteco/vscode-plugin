@@ -67,6 +67,14 @@ const stopPropagationAndDefault = f => function(e) {
 const editorsForDocument = document =>
   vscode.window.visibleTextEditors.filter(e => e.document === document);
 
+function params (url) {
+  return url.query.split('&').reduce((m, p) => {
+    const [k,v] = p.split('=');
+    m[k] = v;
+    return m;
+  }, {})
+};
+
 module.exports = {
   compact,
   delayPromise,
@@ -82,4 +90,5 @@ module.exports = {
   truncate,
   uniq,
   editorsForDocument,
+  params,
 };

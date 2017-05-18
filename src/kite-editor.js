@@ -8,6 +8,7 @@ module.exports = class KiteEditor {
     this.document = editor.document;
     this.events = new EditorEvents(Kite, editor);
     this.enabled = true;
+    this.whitelisted = true;
   }
 
   focus() {
@@ -20,5 +21,9 @@ module.exports = class KiteEditor {
 
   selectionChanged() {
     this.enabled && this.events.selectionChanged();
+  }
+
+  isWhitelisted() {
+    return this.whitelisted;
   }
 }

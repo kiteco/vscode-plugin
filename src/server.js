@@ -23,7 +23,9 @@ module.exports = {
 
       const url = URL.parse(req.url);
       res.setHeader('Access-Control-Allow-Origin', '*');
-      const handle = last(head(this.routes.filter(r => r[0] === req.method && r[1] === url.pathname)));
+      const handle = last(
+        head(this.routes.filter(r => r[0] === req.method && r[1] === url.pathname)) || []
+      );
       if (handle) {
         handle(req, res, url);
       } else {

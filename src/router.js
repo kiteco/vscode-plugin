@@ -1,7 +1,5 @@
 'use strict';
 
-const fs = require('fs');
-const pth = require('path');
 const vscode = require('vscode');
 const KiteValueReport = require('./value-report');
 const KiteMembersList = require('./members-list');
@@ -9,7 +7,7 @@ const KiteExamplesList = require('./examples-list');
 const KiteLinksList = require('./links-list');
 const KiteCuratedExample = require('./curated-example');
 const metrics = require('./metrics');
-const {wrapHTML, prependNavigation} = require('./html-utils');
+const {wrapHTML, debugHTML, prependNavigation} = require('./html-utils');
 const URI = 'kite-vscode-sidebar://sidebar'
 
 module.exports = class KiteRouter {
@@ -75,29 +73,7 @@ module.exports = class KiteRouter {
         handleExternalLinks();
       </script>`)
     .then(html => wrapHTML(html))
-    .then(html => {
-      if (vscode.workspace.getConfiguration('kite').sidebarDebugMode) {
-        fs.writeFileSync(pth.resolve(__dirname, '..', 'sample.html'), `<!doctype html>
-        <html class="vscode-dark">
-        <style> 
-          html {
-            background: #333333;
-            color: #999999;
-            font-family: sans-serif;
-            font-size: 14px;
-            line-height: 1.4em;
-          }
-
-          :root {
-            --background-color: #333333;
-          }
-        </style>
-        ${html}
-        </html>
-        `)
-      }
-      return html
-    })
+    .then(html => debugHTML(html))
   }
 
   clearNavigation() {

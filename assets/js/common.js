@@ -21,3 +21,7 @@ window.request = function request (method, url, data) {
     xhr.send(data);
   });
 }
+
+window.requestGet = function requestGet(path) {
+  return request('GET', `http://localhost:${window.PORT}${path}`);
+};
