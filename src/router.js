@@ -65,7 +65,15 @@ module.exports = class KiteRouter {
 
     return promise
     .then(html => prependNavigation(html, this.navigation, this.step))
-    .then(html => html + `<script>handleExternalLinks()</script>`)
+    .then(html => `
+      ${html}
+      <script>
+        const sticky = new StickyTitle(
+          document.querySelectorAll('h4'), 
+          document.querySelector('.sections-wrapper')
+        );
+        handleExternalLinks();
+      </script>`)
     .then(html => wrapHTML(html))
     .then(html => {
       if (vscode.workspace.getConfiguration('kite').sidebarDebugMode) {
@@ -78,6 +86,10 @@ module.exports = class KiteRouter {
             font-family: sans-serif;
             font-size: 14px;
             line-height: 1.4em;
+          }
+
+          :root {
+            --background-color: #333333;
           }
         </style>
         ${html}
