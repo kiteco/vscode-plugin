@@ -39,9 +39,12 @@ window.StickyTitle = class StickyTitle {
     });
 
     this.scrollContainer.addEventListener('click', (e) => {
-      if (e.target.matches('section h4 .sticky.fixed')) {
-        this.scrollTo(e.target.parentNode);
-      }
+      this.stickies.some(sticky => {
+        const bounds = sticky.getBoundingClientRect();
+        if (e.pageY >= bounds.top && e.pageY < bounds.bottom) {
+          this.scrollTo(sticky.parentNode);
+        }
+      })
     });
 
     this.collapsible = true;

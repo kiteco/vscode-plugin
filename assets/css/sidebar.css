@@ -639,7 +639,12 @@
   position: fixed;
   box-sizing: border-box;
   z-index: 10;
+  pointer-events: none;
 }
+.kite h4 .sticky.fixed span {
+  pointer-events: auto;
+}
+
 .kite .type {
   white-space: nowrap;
 }
