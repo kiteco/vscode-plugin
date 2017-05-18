@@ -8,7 +8,7 @@ const {openDocumentationInWebURL} = require('./urls');
 const {
   symbolLabel, symbolType,
   valueLabel, valueType, callSignature,
-  memberLabel, parameterName, parameterType, parameterDefault,
+  memberLabel, parameterName, parameterDefault, parameterTypeLink,
 } = require('./data-utils');
 const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
 const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
@@ -561,7 +561,7 @@ function renderParameter(param, prefix = '') {
     ? ''
     : `<dt class="split-line">
       <span class="name">${parameterName(param, prefix)}${parameterDefault(param)}</span>
-      <span class="type">${parameterType(param)}</span>
+      <span class="type">${parameterTypeLink(param)}</span>
     </dt>
     <dd>${param.synopsis}</dd>
     `;

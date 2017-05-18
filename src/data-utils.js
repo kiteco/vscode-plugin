@@ -17,6 +17,12 @@ const parameterType = (p, prefix = '') =>
     ? `${prefix}${uniq(p.inferred_value.map(v => v.type)).join(' or ')}`
     : '';
 
+const parameterTypeLink = (p, prefix = '') =>
+  p.inferred_value
+    ? `${prefix}${uniq(p.inferred_value.map(v =>
+      `<a href='command:kite.navigate?"value/${v.type_id}"' class="parameter-type">${v.type}</a>`)).join(' <i>or</i> ')}`
+    : '';
+
 const parameterValue = p =>
   `${parameterName(p)}${parameterType(p, ':')}${parameterDefault(p)}`;
 
@@ -158,6 +164,7 @@ module.exports = {
   parameterType,
   parameterDefault,
   parameterValue,
+  parameterTypeLink,
   reportFromHover,
   returnType,
   signature,
