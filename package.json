@@ -16,6 +16,9 @@
   "main": "./src/kite",
   "contributes": {
     "commands": [{
+      "command": "kite.search",
+      "title": "Kite Active Search"
+    }, {
       "command": "kite.open-settings",
       "title": "Open Kite Settings"
     }, {
