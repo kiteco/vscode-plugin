@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
-const {StateController, Logger} = require('kite-installer');
+const {StateController, AccountManager, Logger} = require('kite-installer');
 const {PYTHON_MODE, ATTEMPTS, INTERVAL, ERROR_COLOR, WARNING_COLOR, NOT_WHITELISTED} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
@@ -11,6 +11,7 @@ const KiteSignatureProvider = require('./signature');
 const KiteDefinitionProvider = require('./definition');
 const KiteRouter = require('./router');
 const KiteSearch = require('./search');
+const KiteLogin = require('./login');
 const KiteEditor = require('./kite-editor');
 const metrics = require('./metrics');
 const Plan = require('./plan');
@@ -28,6 +29,7 @@ const Kite = {
 
     const router = new KiteRouter(Kite);
     const search = new KiteSearch(Kite);
+    const login = new KiteLogin(Kite);
 
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
@@ -37,14 +39,28 @@ const Kite = {
     // Rollbar.init('cce6430d4e25421084d7562afa976886');
     // Rollbar.handleUncaughtExceptions('cce6430d4e25421084d7562afa976886');
 
+    AccountManager.initClient(
+      StateController.client.hostname,
+      StateController.client.port,
+      ''
+    );
+
     ctx.subscriptions.push(server);
     ctx.subscriptions.push(router);
     ctx.subscriptions.push(search);
+
+    server.addRoute('GET', '/check', (req, res) => {
+      this.checkState();
+      res.writeHead(200);
+      res.end();
+    });
     
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-sidebar', router));
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-search', search));
+    ctx.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-login', login));
     ctx.subscriptions.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
     ctx.subscriptions.push(
@@ -98,6 +114,10 @@ const Kite = {
     vscode.commands.registerCommand('kite.search', () => {
       search.clearCache();
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-search://search', vscode.ViewColumn.Two, 'Kite Search');
+    }); 
+    
+    vscode.commands.registerCommand('kite.login', () => {
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
     }); 
 
     vscode.commands.registerCommand('kite.open-settings', () => {
@@ -221,10 +241,14 @@ const Kite = {
           this.showErrorMessage('The Kite background service is running but not reachable.');
           break;
         case StateController.STATES.REACHABLE:
+          this.setStatus(state);
           this.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
-            if (item) { opn('http://localhost:46624/settings'); }
-          })
-          return Plan.queryPlan()
+            if (item) { 
+              // opn('http://localhost:46624/settings'); 
+              vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+            }
+          });
+          return Plan.queryPlan();
         default: 
           if (vscode.window.activeTextEditor && vscode.window.activeTextEditor.document.languageId === 'python') {
             this.registerEditor(vscode.window.activeTextEditor);
