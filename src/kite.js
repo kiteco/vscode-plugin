@@ -83,10 +83,10 @@ const Kite = {
     ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
       if (this.isGrammarSupported(e)) {
         this.registerEditor(e);
+        
+        const evt = this.kiteEditorByEditor.get(e);
+        evt.focus();
       }
-
-      const evt = this.kiteEditorByEditor.get(e);
-      evt.focus();
     }));
 
     ctx.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(e => {
