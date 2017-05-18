@@ -5,7 +5,7 @@ const path = require('path');
 const vscode = require('vscode');
 const {StateController, Logger} = require('kite-installer');
 const server = require('./server');
-const {wrapHTML} = require('./html-utils');
+const {wrapHTML, debugHTML} = require('./html-utils');
 const {promisifyReadResponse, params} = require('./utils');
 const {searchPath} = require('./urls');
 const KiteValueReport = require('./value-report');
@@ -91,25 +91,7 @@ module.exports = class KiteSearch {
       </script>
     `)
     .then(html => wrapHTML(html))
-    .then(html => {
-      if (vscode.workspace.getConfiguration('kite').sidebarDebugMode) {
-        fs.writeFileSync(path.resolve(__dirname, '..', 'sample.html'), `<!doctype html>
-        <html class="vscode-dark">
-        <style> 
-          html {
-            background: #333333;
-            color: #999999;
-            font-family: sans-serif;
-            font-size: 14px;
-            line-height: 1.4em;
-          }
-        </style>
-        ${html}
-        </html>
-        `)
-      }
-      return html
-    })
+    .then(html => debugHTML(html))
   }
 }
 
