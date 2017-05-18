@@ -5,6 +5,8 @@ window.initSearch = (inputId, resultsId, viewId) => {
   let stack = Promise.resolve(); 
   let selectedItem = document.querySelector('li.selected');
 
+  initItemContent();
+
   input.addEventListener('input', () => {
     const text = input.value;
 
@@ -70,13 +72,18 @@ window.initSearch = (inputId, resultsId, viewId) => {
     view.style.display = '';
     request('GET', `http://localhost:${window.PORT}/view?id=${id}`).then(html => {
       view.innerHTML = html;
+      initItemContent();
+    });
+  }
 
+  function initItemContent() {
+    if (document.querySelector('.sections-wrapper')) {
       const sticky = new StickyTitle(
         document.querySelectorAll('h4'), 
         document.querySelector('.sections-wrapper')
       );
-      handleExternalLinks();
-    });
+    }
+    handleExternalLinks();
   }
 
   function scrollTo(target) {
