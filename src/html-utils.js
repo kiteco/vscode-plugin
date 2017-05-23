@@ -183,13 +183,14 @@ function renderFunction(data) {
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
+      ${renderParameters(value)}
+      ${renderPatterns(value)}
+      ${renderKwargs(value)}
+
       <section class="summary">
         ${valueDescription(data)}
       </section>
 
-      ${renderParameters(value)}
-      ${renderPatterns(value)}
-      ${renderKwargs(value)}
       ${renderExamples(data)}
       ${renderLinks(data)}
       ${renderDefinition(data)}
