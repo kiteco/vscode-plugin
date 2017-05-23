@@ -281,7 +281,7 @@ module.exports = class KiteStatus {
 
         rightSide = `<a href='command:kite.web-url?"http://localhost:46624/redirect/pro"'>Upgrade</a>`;
       } else {
-        rightSide = `<a href='command:kite.web-url?"http://localhost:46624/redirect/pro"'>Account</a>`;
+        rightSide = `<a href='command:kite.web-url?"localhost:46624/clientapi/desktoplogin?d=/settings/acccount"'>Account</a>`;
       }
     }
 
