@@ -41,7 +41,6 @@ module.exports = class KiteCompletionProvider {
       editor: 'vscode',
       filename: document.fileName,
       cursor_runes: cursorPosition,
-      localtoken: StateController.client.LOCAL_TOKEN,
     };
     Logger.debug(payload);
 
