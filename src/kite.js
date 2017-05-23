@@ -17,7 +17,7 @@ const KiteEditor = require('./kite-editor');
 const metrics = require('./metrics');
 const Plan = require('./plan');
 const server = require('./server');
-const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, appendToken} = require('./urls');
+const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath} = require('./urls');
 // const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse} = require('./utils');
 
@@ -129,11 +129,11 @@ const Kite = {
     }); 
 
     vscode.commands.registerCommand('kite.open-settings', () => {
-      opn(appendToken('http://localhost:46624/settings'));
+      opn('http://localhost:46624/settings');
     });
 
     vscode.commands.registerCommand('kite.open-permissions', () => {
-      opn(appendToken('http://localhost:46624/settings/permissions'));
+      opn('http://localhost:46624/settings/permissions');
     });
 
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
@@ -173,7 +173,7 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.web-url', (url) => {
       metrics.track(`Open in web clicked`);
-      opn(appendToken(url));
+      opn(url);
     });
 
     vscode.commands.registerCommand('kite.def', ({file, line, source}) => {

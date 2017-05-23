@@ -54,10 +54,7 @@ const Plan = {
   },
 
   planPath() {
-    return [
-      '/clientapi/plan',
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
-    ].join('?');
+    return '/clientapi/plan';
   },
 
   queryPlan() {
