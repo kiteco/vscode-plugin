@@ -128,6 +128,7 @@ module.exports = class KiteStatus {
     return `
       ${this.renderSubscription(plan, status)}
       ${this.renderEmailWarning(account)}
+      ${this.renderReferralsCredited(plan)}
       ${this.renderLinks()}
       ${this.renderStatus(status, syncStatus, projectDir)}
     `;
@@ -172,6 +173,23 @@ module.exports = class KiteStatus {
           <a href="https://alpha.kite.com/account/resetPassword/request?email=${account.email}">Resend email</a>
         </div>
       </div>`;
+  }
+
+  renderReferralsCredited(plan) {
+    return Plan.hasReferralCredits()
+      ? `<div class="kite-info-box">
+        ${Plan.referralsCredited()}
+        ${pluralize(Plan.referralsCredited(), 'user', 'users')}
+        accepted your invite.<br/>We've credited
+        ${Plan.daysCredited()}
+        ${pluralize(Plan.daysCredited(), 'day', 'days')}
+        of Kite Pro to your account!
+        <div class="actions">
+          <a is="kite-localtoken-anchor"
+             href="http://localhost:46624/redirect/invite">Invite more people</a>
+        </div>
+      </div>`
+      : '';
   }
 
   renderStatus(status, syncStatus, projectDir) {
@@ -264,24 +282,29 @@ module.exports = class KiteStatus {
     } else if (Plan.isPro()) {
       leftSide = `<div class="pro">${proLogoSvg}</div>`;
 
-      if (Plan.isTrialing()) {
+      if (Plan.isTrialing() || Plan.hasReferralCredits()) {
         const days = Plan.remainingTrialDays();
         const remains = [
-          'Trial:',
           days,
           pluralize(days, 'day', 'days'),
           'left',
-        ].join(' ');
+        ];
 
-        if (days < 5) {
-          leftSide += `<span class="kite-trial-days text-danger">${remains}</span>`;
-        } else {
-          leftSide += `<span class="kite-trial-days">${remains}</span>`;
+        if (Plan.isTrialing()) {
+          remains.unshift('Trial:');
         }
 
-        rightSide = `<a href='command:kite.web-url?"http://localhost:46624/redirect/pro"'>Upgrade</a>`;
+        if (days < 5) {
+          leftSide += `<span class="kite-trial-days text-danger">${remains.join(' ')}</span>`;
+        } else {
+          leftSide += `<span class="kite-trial-days ">${remains.join(' ')}</span>`;
+        }
+
+        rightSide = `<a is="kite-localtoken-anchor"
+                        href="http://localhost:46624/redirect/pro">Upgrade</a>`;
       } else {
-        rightSide = `<a href='command:kite.web-url?"localhost:46624/clientapi/desktoplogin?d=/settings/acccount"'>Account</a>`;
+        rightSide = `<a is="kite-localtoken-anchor"
+                        href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a>`;
       }
     }
 

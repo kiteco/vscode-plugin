@@ -1550,3 +1550,23 @@ form.password-less .has-password {
   color: var(--text-color-highlight);
   text-decoration: underline;
 }
+
+.kite-status-panel .kite-info-box {
+  background: rgba(100, 148, 237, 0.2);
+  color: var(--text-color-highlight);
+  padding: 5px 10px;
+  margin: 10px 0;
+  border-radius: 0.3em;
+}
+.kite-status-panel .kite-info-box .actions {
+  display: block;
+  text-align: right;
+  margin-top: 10px;
+}
+.kite-status-panel .kite-info-box a,
+.kite-status-panel .kite-info-box a:active,
+.kite-status-panel .kite-info-box a:visited,
+.kite-status-panel .kite-info-box a:focus {
+  color: var(--text-color-highlight);
+  text-decoration: underline;
+}

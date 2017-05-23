@@ -30,6 +30,13 @@ const Plan = {
     return this.plan && this.plan.started_kite_pro_trial;
   },
 
+  hasReferralCredits() {
+    return this.isPro()
+        && this.hasStartedTrial()
+        && this.remainingTrialDays() > 0
+        && this.daysCredited() > 0;
+  },
+
   remainingTrialDays() {
     return this.plan && this.plan.trial_days_remaining;
   },
@@ -43,7 +50,7 @@ const Plan = {
   },
 
   daysCredited() {
-    return this.plan ? this.plan.num_days_pro_credited : undefined;
+    return this.plan ? this.plan.referral_days_credited : undefined;
   },
 
   planPath() {
