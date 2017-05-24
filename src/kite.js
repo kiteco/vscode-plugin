@@ -37,9 +37,9 @@ const Kite = {
 
     // send the activated event
     metrics.track('activated');
-
-    // Rollbar.init('cce6430d4e25421084d7562afa976886');
-    // Rollbar.handleUncaughtExceptions('cce6430d4e25421084d7562afa976886');
+    
+    Rollbar.init('4ca1bfd4721544e487c76583478a436a');
+    Rollbar.handleUncaughtExceptions('4ca1bfd4721544e487c76583478a436a');
 
     AccountManager.initClient(
       StateController.client.hostname,
