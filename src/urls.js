@@ -20,6 +20,16 @@ function accountPath() {
   ].join('?');
 }
 
+function statusPath(path) {
+  return [
+    '/clientapi/status',
+    [
+      `filename=${encodeURI(path)}`,
+      `localtoken=${StateController.client.LOCAL_TOKEN}`,
+    ].join('&'),
+  ].join('?');
+}
+
 function signaturePath() {
   return [
     '/clientapi/editor/signatures',
@@ -184,5 +194,6 @@ module.exports = {
   tokensPath,
   usagePath,
   usagesPath,
+  statusPath,
   valueReportPath,
 };

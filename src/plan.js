@@ -30,8 +30,27 @@ const Plan = {
     return this.plan && this.plan.started_kite_pro_trial;
   },
 
+  hasReferralCredits() {
+    return this.isPro()
+        && this.hasStartedTrial()
+        && this.remainingTrialDays() > 0
+        && this.daysCredited() > 0;
+  },
+
   remainingTrialDays() {
     return this.plan && this.plan.trial_days_remaining;
+  },
+
+  referralsCredited() {
+    return this.plan ? this.plan.referrals_credited : undefined;
+  },
+
+  referralsCredits() {
+    return this.plan ? this.plan.max_referral_credits : undefined;
+  },
+
+  daysCredited() {
+    return this.plan ? this.plan.referral_days_credited : undefined;
   },
 
   planPath() {

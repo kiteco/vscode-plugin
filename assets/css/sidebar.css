@@ -1,3 +1,12 @@
+/*
+  Provided variables:
+    --background-color
+    --color
+    --font-family
+    --font-weight
+    --font-size
+*/
+
 .auto-cursor {
   cursor: default;
 }
@@ -12,6 +21,32 @@
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+.block {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.inline-block {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.text-danger {
+  color: var(--color-red);
+}
+
+.text-warning {
+  color: var(--color-orange);
+}
+
+.text-info {
+  color: var(--color-blue);
+}
+
+.text-success {
+  color: var(--color-green);
 }
 
 .kite section.summary:empty {
@@ -180,14 +215,18 @@
   padding: 0.4em;
   border: 1px solid var(--border-color);
 }
+.kite section.kwargs, 
 .kite section.parameters {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
 }
-.kite section.parameters dl {
-  margin-top: 0;
+
+.kite section .kite-pro-features {
+  margin-bottom: 10px;
 }
+
+.kite section.kwargs .section-content,
 .kite section.parameters .section-content {
   flex: 0 1 auto;
   overflow-y: auto;
@@ -258,6 +297,7 @@
   position: fixed;
   box-sizing: border-box;
   z-index: 10;
+  background: var(--background-color);
 }
 .kite .type {
   white-space: nowrap;
@@ -309,6 +349,22 @@
   max-height: 250px;
   position: relative;
   overflow: hidden;
+}
+
+.kite section.summary.collapsible.collapse .description {
+  max-height: 250px;
+  position: relative;
+  overflow: hidden;
+}
+
+.kite section.summary.collapsible.collapse.overflow .description::after {
+  content: '';
+  position: absolute;
+  height: 30px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(to top, var(--background-color) 0%, transparent 100%);
 }
 
 .kite section.summary .description {
@@ -583,7 +639,12 @@
   position: fixed;
   box-sizing: border-box;
   z-index: 10;
+  pointer-events: none;
 }
+.kite h4 .sticky.fixed span {
+  pointer-events: auto;
+}
+
 .kite .type {
   white-space: nowrap;
 }
@@ -895,9 +956,6 @@
   flex-direction: row;
   padding-right: 10px;
 }
-.kite-breadcrumb.hidden {
-  display: none;
-}
 .kite-breadcrumb ul.breadcrumb {
   display: inline-block;
   margin-bottom: 0;
@@ -908,6 +966,10 @@
   overflow-x: auto;
   flex: 1 1 0;
   position: relative;
+}
+
+.hidden {
+  display: none;
 }
 
 .kite .examples-list ul {
@@ -1208,13 +1270,303 @@ a.kite-open-link {
   display: inline-block;
 }
 
-a.kite-open-link svg {
-  opacity: 0.5;
-  margin-left: 0.5em;
+svg {
   vertical-align: middle;
   display: inline-block;
   width: 1.2em;
 }
-a.kite-open-link svg polygon {
+
+svg polygon {
   fill: var(--text-color-highlight);
+}
+
+a.kite-open-link svg {
+  opacity: 0.5;
+  margin-left: 0.5em;
+}
+
+.search-form {
+  position: relative;
+}
+.kite a[href].internal_link {
+  pointer-events: none;
+  text-decoration: none;
+  color: inherit;
+}
+.search-form i {
+  position: absolute;
+  right: 0;
+  top: 0;
+  pointer-events: none;
+}
+input {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  width: 100%;
+  font-size: 1.2em;
+  border-bottom: 1px solid var(--border-color);
+  padding: 5px;
+  color: var(--text-color-highlight);
+}
+input:focus {
+  border:none;
+  border-bottom: 1px solid var(--color-blue);
+  outline: none;
+}
+
+input:-webkit-input-placeholder {
+  color: var(--text-color-highlight);
+}
+#results {
+  overflow-y: auto;
+  max-height: 200px;
+}
+#results li {
+  padding: 5px;
+}
+#results li + li {
+  margin: 0;
+}
+#results li.selected {
+  background: var(--button-background);
+}
+#view {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+#view:not(:empty) {
+  border-top: 1px solid var(--examples-output-background);
+  padding-top: 10px;
+}
+
+form:not(.password-less) .no-password {
+  display: none;
+}
+
+form.password-less .has-password {
+  display: none;
+}
+
+.pull-right {
+  float: right;
+  margin-left: 10px;
+}
+
+.login-form {
+  padding: 0 10px;
+}
+
+.kite-status-panel .btn,
+.login-form .btn,
+.login-form button {
+  background-color: var(--open-web-link-background);
+  color: var(--text-color);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  font-size: 1.1em;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-sizing: border-box;
+  display: inline-block;
+}
+
+.kite-status-panel .btn.primary,
+.login-form .btn.primary,
+.login-form button.primary {
+  background-color: var(--color-blue);
+  color: var(--text-color-highlight);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  font-size: 1.1em;
+  border: none;
+}
+
+.kite-status-panel .btn.warning,
+.login-form .btn.warning,
+.login-form button.warning {
+  background-color: var(--color-orange);
+  color: var(--text-color-highlight);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  font-size: 1.1em;
+  border: none;
+}
+
+.kite-status-panel .btn.error,
+.login-form .btn.error,
+.login-form button.error {
+  background-color: var(--color-red);
+  color: var(--text-color-highlight);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  font-size: 1.1em;
+  border: none;
+}
+
+.kite-status-panel a.btn[href]:hover,
+.kite-status-panel a.btn[href]:focus,
+.kite-status-panel a.btn[href]:active,
+.login-form a.btn[href]:hover,
+.login-form a.btn[href]:focus,
+.login-form a.btn[href]:active {
+  color: var(--text-color-highlight);
+}
+
+.kite-status-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+.kite-status-panel .pro {
+  height: 16px;
+}
+.kite-status-panel .pro,
+.kite-status-panel .logo {
+  margin-right: 5px;
+  display: inline-block
+}
+.kite-status-panel .pro svg,
+.kite-status-panel .logo svg {
+  height: 16px;
+  width: auto;
+}
+.kite-status-panel .pro svg polygon,
+.kite-status-panel .logo svg polygon,
+.kite-status-panel .pro svg path,
+.kite-status-panel .logo svg path {
+  fill: var(--text-color-highlight);
+}
+
+.kite-status-panel .split-line {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.kite-status-panel .split-line > * {
+  flex: 1 1 0;
+}
+.kite-status-panel .split-line > :last-child {
+  text-align: right;
+  padding-left: 10px;
+}
+.kite-status-panel .split-line > :last-child:empty {
+  display: none;
+}
+.kite-status-panel .split-line + .split-line {
+  margin-top: 5px;
+}
+.kite-status-panel .split-line .name {
+  padding-left: 10px;
+  text-indent: -10px;
+}
+.kite-status-panel .split-line > * {
+  white-space: nowrap;
+}
+.kite-status-panel .links {
+  list-style: none;
+}
+.kite-status-panel .links:nth-child(1n+2) {
+  padding: 10px 5px 0;
+  border-top: 1px solid var(--border-color);
+}
+.kite-status-panel .links li + li {
+  margin-top: 5px;
+}
+.kite-status-panel .links a:not(.btn),
+.kite-status-panel .links a:not(.btn):active,
+.kite-status-panel .links a:not(.btn):visited,
+.kite-status-panel .links a:not(.btn):focus {
+  color: var(--text-color-highlight);
+  font-size: 1em;
+}
+.kite-status-panel .links a:not(.btn).kite-gift,
+.kite-status-panel .links a:not(.btn).kite-gift:active,
+.kite-status-panel .links a:not(.btn).kite-gift:visited,
+.kite-status-panel .links a:not(.btn).kite-gift:focus {
+  color: var(--color-red);
+}
+.kite-status-panel .status {
+  text-align: right;
+  padding: 5px 5px 0;
+}
+.kite-status-panel .status > div {
+  margin-bottom: 5px;
+  white-space: nowrap;
+}
+.kite-status-panel .status > div + .btn {
+  margin-top: 5px;
+}
+.kite-status-panel .status .btn + .btn {
+  margin-top: 10px;
+}
+.kite-status-panel .status:nth-child(1n+2) {
+  padding: 10px 5px 0;
+  border-top: 1px solid var(--border-color);
+}
+.kite-status-panel .status .dot {
+  font-size: 2.4em;
+  line-height: 0.5em;
+  vertical-align: bottom;
+  display: inline-block;
+}
+.kite-status-panel .status .ready .dot {
+  color: var(--color-blue);
+}
+.kite-status-panel a:not(.btn),
+.kite-status-panel a:not(.btn):active,
+.kite-status-panel a:not(.btn):visited,
+.kite-status-panel a:not(.btn):focus {
+  color: var(--color-blue);
+  text-decoration: none;
+}
+.kite-status-panel a:not(.btn):hover,
+.kite-status-panel a:not(.btn):active:hover,
+.kite-status-panel a:not(.btn):visited:hover,
+.kite-status-panel a:not(.btn):focus:hover {
+  text-decoration: underline;
+}
+.kite-status-panel .kite-warning-box {
+  background: rgba(255, 99, 71, 0.2);
+  color: var(--text-color-highlight);
+  padding: 5px 10px;
+  margin: 10px 0;
+  border-radius: 0.3em;
+}
+.kite-status-panel .kite-warning-box .actions {
+  display: block;
+  text-align: right;
+  margin-top: 10px;
+}
+.kite-status-panel .kite-warning-box a,
+.kite-status-panel .kite-warning-box a:active,
+.kite-status-panel .kite-warning-box a:visited,
+.kite-status-panel .kite-warning-box a:focus {
+  color: var(--text-color-highlight);
+  text-decoration: underline;
+}
+
+.kite-status-panel .kite-info-box {
+  background: rgba(100, 148, 237, 0.2);
+  color: var(--text-color-highlight);
+  padding: 5px 10px;
+  margin: 10px 0;
+  border-radius: 0.3em;
+}
+.kite-status-panel .kite-info-box .actions {
+  display: block;
+  text-align: right;
+  margin-top: 10px;
+}
+.kite-status-panel .kite-info-box a,
+.kite-status-panel .kite-info-box a:active,
+.kite-status-panel .kite-info-box a:visited,
+.kite-status-panel .kite-info-box a:focus {
+  color: var(--text-color-highlight);
+  text-decoration: underline;
 }

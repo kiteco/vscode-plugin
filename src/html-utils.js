@@ -7,22 +7,22 @@ const {head, compact, flatten} = require('./utils');
 const {openDocumentationInWebURL} = require('./urls');
 const {
   symbolLabel, symbolType,
-  valueLabel, valueType,
-  memberLabel, parameterName, parameterType,
+  valueLabel, valueType, callSignature,
+  memberLabel, parameterName, parameterDefault, parameterTypeLink,
 } = require('./data-utils');
 const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
+const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
+const giftLogoPath = path.resolve(__dirname, '..', 'assets', 'images', 'icon-gift.png');
 
-const ASSETS_PATH = path.resolve(__dirname, '..', 'assets', 'css');
-const STYLESHEETS = fs.readdirSync(ASSETS_PATH)
-.map(p => path.resolve(ASSETS_PATH, p))
+const ASSETS_PATH = path.resolve(__dirname, '..', 'assets');
+const STYLESHEETS = fs.readdirSync(path.resolve(ASSETS_PATH, 'css'))
+.map(p => path.resolve(ASSETS_PATH, 'css', p))
 .map(p => `<link href="file://${p}" rel="stylesheet"/>`)
 .join('');
-const SCRIPTS = `
-<script>
-  [].slice.call(document.querySelectorAll('a.external_link')).forEach(a => {
-    a.href = a.getAttribute('href').replace(/^#/, '');
-  });
-</script>`
+const SCRIPTS = fs.readdirSync(path.resolve(ASSETS_PATH, 'js'))
+.map(p => path.resolve(ASSETS_PATH, 'js', p))
+.map(p => `<script src="file://${p}" type="text/javascript"></script>`)
+.join('');
 
 // const {
 //   highlightChunk,
@@ -45,6 +45,31 @@ function proFeatures(message) {
       <a href='command:kite.web-url?"http://localhost:46624/redirect/trial"'>start your Kite Pro trial</a> at any time`;
 }
 
+function debugHTML (html) {
+  if (vscode.workspace.getConfiguration('kite').sidebarDebugMode) {
+    fs.writeFileSync(path.resolve(__dirname, '..', 'sample.html'), `
+      <!doctype html>
+      <html class="vscode-dark">
+        <meta charset="utf-8"/>
+        <style> 
+          html {
+            background: #333333;
+            color: #999999;
+            font-family: sans-serif;
+            font-size: 14px;
+            line-height: 1.4em;
+          }
+
+          :root {
+            --background-color: #333333;
+          }
+        </style>
+        ${html}
+      </html>`);
+  }
+  return html;
+}
+
 function wrapHTML (html) {
 
   html = html
@@ -53,9 +78,22 @@ function wrapHTML (html) {
   .replace(/<a href="#([^"]+)" class="internal_link"/g, 
            `<a href='command:kite.navigate?"value/$1"' class="internal_link"`);
   return `
+  <style>
+    .icon-kite-gift::before {
+      content: '';
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 1.2em;
+      line-height: 1em;
+      height: 1em;
+      width: 1em;
+      background-size: 100%;
+      background-image: url('${giftLogoPath}');
+    }
+  </style>
   ${STYLESHEETS}
-  <div class="kite">${html}</div>
-  ${SCRIPTS}`
+  ${SCRIPTS}
+  <div class="kite">${html}</div>`
 }
 
 function prependNavigation(html, steps, step) {
@@ -145,11 +183,14 @@ function renderFunction(data) {
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
+      ${renderParameters(value)}
+      ${renderPatterns(value)}
+      ${renderKwargs(value)}
+
       <section class="summary">
         ${valueDescription(data)}
       </section>
 
-      ${renderParameters(value)}
       ${renderExamples(data)}
       ${renderLinks(data)}
       ${renderDefinition(data)}
@@ -414,6 +455,54 @@ function stripLeadingSlash(str) {
   return str.replace(/^\//, '');
 }
 
+function renderPatterns(data) {
+  let patterns = '';
+  const name = data.repr;
+  if (data.detail && data.detail.signatures && data.detail.signatures.length) {
+    patterns = Plan.can('common_invocations_editor')
+      ? `
+        <section class="patterns">
+        <h4>Popular Patterns</h4>
+        <div class="section-content">${
+          highlightCode(
+            data.detail.signatures
+            .map(s => callSignature(s))
+            .map(s => `${name}(${s})`)
+            .join('\n'))
+          }</div>
+        </section>`
+      : `<section class="patterns">
+          <h4>Popular Patterns</h4>
+          <div class="section-content">
+          ${proFeatures(
+            `To see ${data.detail.signatures.length} ${
+              pluralize(data.detail.signatures.length, 'pattern', 'patterns')
+            }`
+          )}</div>
+        </section>`;
+  }
+  return patterns;
+}
+
+function renderKwargs(data) {
+  let kwargs = '';
+  const {detail} = data;
+  if (detail && detail.kwarg_parameters && detail.kwarg_parameters.length) {
+    kwargs = `<section class="kwargs">
+      <h4>**${detail.kwarg.name}</h4>
+      <div class="section-content"><dl>
+        ${
+          detail.kwarg_parameters
+          .map(p => renderParameter(p))
+          .map(p => `<dt>${p}</dt>`)
+          .join('')
+        }
+      </dl></div>
+    </section>`;
+  }
+  return kwargs;
+}
+
 function renderMember(member) {
   const label = member.id && member.id !== ''
     ? `<a href='command:kite.navigate?"value/${member.id}"'>${memberLabel(member)}</a>`
@@ -455,8 +544,8 @@ function renderParameters(value) {
   ]));
 
   return detail &&
-         allParameters.length &&
-         allParameters.some(p => p.synopsis && p.synopsis !== '')
+         allParameters.length /*&&
+         allParameters.some(p => p.synopsis && p.synopsis !== '')*/
     ? section('Parameters', `
     <dl>
       ${detail.parameters
@@ -472,8 +561,8 @@ function renderParameter(param, prefix = '') {
   return !param
     ? ''
     : `<dt class="split-line">
-      <span class="name">${parameterName(param, prefix)}</span>
-      <span class="type">${parameterType(param)}</span>
+      <span class="name">${parameterName(param, prefix)}${parameterDefault(param)}</span>
+      <span class="type">${parameterTypeLink(param)}</span>
     </dt>
     <dd>${param.synopsis}</dd>
     `;
@@ -489,6 +578,7 @@ module.exports = {
   debugData,
   highlightCode,
   logo,
+  proLogoSvg,
   pluralize,
   proFeatures,
   renderDefinition,
@@ -505,6 +595,7 @@ module.exports = {
   renderMembersList,
   renderParameter,
   renderParameters,
+  renderPatterns,
   renderSymbolHeader,
   renderUsages,
   renderValueHeader,
@@ -515,5 +606,6 @@ module.exports = {
   symbolDescription,
   valueDescription,
   wrapHTML,
+  debugHTML,
   prependNavigation,
 };
