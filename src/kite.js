@@ -18,7 +18,7 @@ const metrics = require('./metrics');
 const Plan = require('./plan');
 const server = require('./server');
 const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, appendToken} = require('./urls');
-// const Rollbar = require('rollbar');
+const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse} = require('./utils');
 
 const pluralize = (n, singular, plural) => n === 1 ? singular : plural;
