@@ -167,7 +167,7 @@ function escapeId(id) {
 
 function cleanPath(p) {
   return encodeURI(p)
-  .replace(/^([A-Z]):/, '/windows/$1')
+  .replace(/^([a-zA-Z]):/, '/windows/$1')
   .replace(/\/|\\|%5C/g, ':');
 }
 
