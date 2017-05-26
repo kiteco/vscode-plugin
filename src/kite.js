@@ -237,13 +237,40 @@ const Kite = {
           });
           break;
         case StateController.STATES.INSTALLED:
-          this.showErrorMessage('Kite is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite').then(item => {
-            if (item) {
-              return StateController.runKiteAndWait(ATTEMPTS, INTERVAL)
-              .then(() => this.checkState())
-              .catch(err => console.error(err));
+          Promise.all([
+            StateController.isKiteInstalled().then(() => true).catch(() => false),
+            StateController.isKiteEnterpriseInstalled().then(() => true).catch(() => false),
+          ]).then(([kiteInstalled, kiteEnterpriseInstalled]) => {
+            if (kiteInstalled && kiteEnterpriseInstalled) {
+              this.showErrorMessage('Kite is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite Enterprise', 'Launch Kite Cloud').then(item => {
+                if (item === 'Launch Kite Cloud') {
+                  return StateController.runKiteAndWait(ATTEMPTS, INTERVAL)
+                  .then(() => this.checkState())
+                  .catch(err => console.error(err));
+                } else if (item === 'Launch Kite Enterprise') {
+                  return StateController.runKiteEnterpriseAndWait(ATTEMPTS, INTERVAL)
+                  .then(() => this.checkState())
+                  .catch(err => console.error(err));
+                }
+              });
+            } else if (kiteInstalled) {
+              this.showErrorMessage('Kite is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite').then(item => {
+                if (item) {
+                  return StateController.runKiteAndWait(ATTEMPTS, INTERVAL)
+                  .then(() => this.checkState())
+                  .catch(err => console.error(err));
+                }
+              });
+            } else if (kiteEnterpriseInstalled) {
+              this.showErrorMessage('Kite Enterprise is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite Enterprise').then(item => {
+                if (item) {
+                  return StateController.runKiteEnterpriseAndWait(ATTEMPTS, INTERVAL)
+                  .then(() => this.checkState())
+                  .catch(err => console.error(err));
+                }
+              });
             }
-          })
+          });
           break;
         case StateController.STATES.RUNNING:
           this.showErrorMessage('The Kite background service is running but not reachable.');
