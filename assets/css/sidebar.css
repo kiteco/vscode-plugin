@@ -1407,6 +1407,21 @@ form.password-less .has-password {
   border: none;
 }
 
+.kite-status-panel .btn.purple,
+.login-form .btn.purple,
+.login-form button.purple {
+  background-color: var(--color-purple);
+  color: var(--text-color-highlight);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  font-size: 1.1em;
+  border: none;
+}
+
+.kite-status-panel .btn {
+  margin-bottom: 5px;
+}
+
 .kite-status-panel a.btn[href]:hover,
 .kite-status-panel a.btn[href]:focus,
 .kite-status-panel a.btn[href]:active,

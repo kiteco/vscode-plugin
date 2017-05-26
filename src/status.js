@@ -125,7 +125,18 @@ module.exports = class KiteStatus {
     const editor = vscode.window.activeTextEditor;
     const promises = [
       Plan.queryPlan().catch(() => null),
-      StateController.handleState(),
+      StateController.handleState().then(state => {
+        return Promise.all([
+          StateController.isKiteInstalled().then(() => true, () => false),
+          StateController.isKiteEnterpriseInstalled().then(() => true, () => false),
+        ]).then(([kiteInstalled, kiteEnterpriseInstalled]) => {
+          return {
+            state,
+            kiteInstalled,
+            kiteEnterpriseInstalled,
+          };
+        });
+      }),
       this.getUserAccountInfo().catch(() => ({})),
       this.getStatus(editor),
     ];
@@ -206,7 +217,7 @@ module.exports = class KiteStatus {
 
   renderStatus(status, syncStatus, projectDir) {
     let content = '';
-    switch (status) {
+    switch (status.state) {
       case STATES.UNSUPPORTED:
         content = `<div class="text-danger">Kite engine is not available on your system ${dot}</div>`;
         break;
@@ -218,12 +229,31 @@ module.exports = class KiteStatus {
         `;
         break;
       case STATES.INSTALLED:
-        content = `
-          <div class="text-danger">Kite engine is not running ${dot}</div>
-          <a href="#" 
-             onclick="requestGet('/status/start').then(() => requestGet('/status/reload'))" 
-             class="btn error">Launch now</a>
-        `;
+        if (status.kiteInstalled && status.kiteEnterpriseInstalled) {
+          content = `
+            <div class="text-danger">Kite engine is not running ${dot}<br/>Which version of kite do you want to launch?</div>
+            <a href="#" 
+               onclick="requestGet('/status/start-enterprise').then(() => requestGet('/status/reload'))" 
+               class="btn purple">Launch Kite Enterprise</a><br/>
+            <a href="#" 
+               onclick="requestGet('/status/start').then(() => requestGet('/status/reload'))" 
+               class="btn primary">Launch Kite cloud</a>
+          `;
+        } else if (status.kiteInstalled) {
+          content = `
+            <div class="text-danger">Kite engine is not running ${dot}</div>
+            <a href="#" 
+              onclick="requestGet('/status/start').then(() => requestGet('/status/reload'))" 
+              class="btn error">Launch now</a>
+          `;
+        } else if (status.kiteEnterpriseInstalled) {
+          content = `
+            <div class="text-danger">Kite engine is not running ${dot}</div>
+            <a href="#" 
+              onclick="requestGet('/status/start-enterprise').then(() => requestGet('/status/reload'))" 
+              class="btn error">Launch now</a>
+          `;
+        }
         break;
       case STATES.RUNNING:
         content = `
