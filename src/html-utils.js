@@ -12,6 +12,7 @@ const {
 } = require('./data-utils');
 const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
 const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
+const enterpriseLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kiteenterprise.svg')).toString();
 const giftLogoPath = path.resolve(__dirname, '..', 'assets', 'images', 'icon-gift.png');
 
 const ASSETS_PATH = path.resolve(__dirname, '..', 'assets');
@@ -576,6 +577,7 @@ function renderInvocations(symbol) {
 
 module.exports = {
   debugData,
+  enterpriseLogoSvg,
   highlightCode,
   logo,
   proLogoSvg,

@@ -288,7 +288,9 @@ const Kite = {
   },
 
   updatePlan() {
-    if (Plan.isActivePro()) {
+    if (Plan.isEnterprise()) {
+      this.statusBarItem.text = '$(primitive-dot) Kite Enterprise';
+    } else if (Plan.isActivePro()) {
       let trialSuffix = '';
 
       if (Plan.isTrialing()) {

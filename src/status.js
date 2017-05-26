@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 const {StateController, Logger} = require('kite-installer');
 const server = require('./server');
-const {wrapHTML, debugHTML, proLogoSvg, logo, pluralize} = require('./html-utils');
+const {wrapHTML, debugHTML, proLogoSvg, enterpriseLogoSvg, logo, pluralize} = require('./html-utils');
 const Plan = require('./plan');
 const {accountPath, statusPath} = require('./urls');
 const {promisifyRequest, promisifyReadResponse, params} = require('./utils');
@@ -13,6 +13,18 @@ const dot = '<span class="dot">•</span>';
 
 server.addRoute('GET', '/status/start', (req, res, url) => {
   StateController.runKiteAndWait()
+  .then(() => {
+    res.writeHead(200),
+    res.end();
+  })
+  .catch(() => {
+    res.writeHead(500);
+    res.end();
+  });
+});
+
+server.addRoute('GET', '/status/start-enterprise', (req, res, url) => {
+  StateController.runKiteEnterpriseAndWait()
   .then(() => {
     res.writeHead(200),
     res.end();
@@ -271,7 +283,11 @@ module.exports = class KiteStatus {
     let leftSide = '';
     let rightSide = '';
 
-    if (!Plan.isPro() && Plan.isActive()) {
+    if (Plan.isEnterprise()) {
+      leftSide = `<div class="enterprise">${enterpriseLogoSvg}</div>`;
+      rightSide = `<a is="kite-localtoken-anchor"
+                      href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a>`;
+    } else if (!Plan.isPro() && Plan.isActive()) {
       leftSide = `<div class="logo">${logo}</div> Kite Basic`;
 
       if (Plan.hasStartedTrial()) {

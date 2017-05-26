@@ -1421,22 +1421,27 @@ form.password-less .has-password {
   flex-direction: column;
   padding: 10px;
 }
+.kite-status-panel .enterprise,
 .kite-status-panel .pro {
   height: 16px;
 }
 .kite-status-panel .pro,
+.kite-status-panel .enterprise,
 .kite-status-panel .logo {
   margin-right: 5px;
   display: inline-block
 }
 .kite-status-panel .pro svg,
+.kite-status-panel .enterprise svg,
 .kite-status-panel .logo svg {
   height: 16px;
   width: auto;
 }
 .kite-status-panel .pro svg polygon,
-.kite-status-panel .logo svg polygon,
 .kite-status-panel .pro svg path,
+.kite-status-panel .enterprise svg polygon,
+.kite-status-panel .enterprise svg path,
+.kite-status-panel .logo svg polygon,
 .kite-status-panel .logo svg path {
   fill: var(--text-color-highlight);
 }
