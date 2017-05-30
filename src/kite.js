@@ -302,8 +302,10 @@ const Kite = {
       }
 
       this.statusBarItem.text = `$(primitive-dot) Kite Pro${trialSuffix}`;
-    } else {
+    } else if (Plan.plan) {
       this.statusBarItem.text = '$(primitive-dot) Kite Basic';
+    } else {
+      this.statusBarItem.text = '$(primitive-dot) Kite';
     }
   },
 
