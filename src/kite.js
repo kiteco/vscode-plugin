@@ -13,6 +13,7 @@ const KiteRouter = require('./router');
 const KiteSearch = require('./search');
 const KiteLogin = require('./login');
 const KiteStatus = require('./status');
+const KiteTour = require('./tour');
 const KiteEditor = require('./kite-editor');
 const metrics = require('./metrics');
 const Plan = require('./plan');
@@ -32,6 +33,7 @@ const Kite = {
     const search = new KiteSearch(Kite);
     const login = new KiteLogin(Kite);
     const status = new KiteStatus(Kite);
+    const tour = new KiteTour(Kite);
 
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
@@ -66,6 +68,8 @@ const Kite = {
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-login', login));
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
+    ctx.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-tour', tour));
 
     ctx.subscriptions.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
@@ -187,6 +191,10 @@ const Kite = {
         });
       })
     });
+
+    if (vscode.workspace.getConfiguration('kite').showTourOnStartup) {
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.Two, 'Kite Tour');
+    }
 
     setTimeout(() => {
       vscode.window.visibleTextEditors.forEach(e => {
