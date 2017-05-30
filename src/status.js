@@ -229,7 +229,10 @@ module.exports = class KiteStatus {
         `;
         break;
       case STATES.INSTALLED:
-        if (status.kiteInstalled && status.kiteEnterpriseInstalled) {
+        if (StateController.hasManyKiteInstallation() ||      
+            StateController.hasManyKiteEnterpriseInstallation()) {
+          content = `<div class="text-danger">Kite engine is not running ${dot}<br/>You have multiple versions of Kite installed. Please launch your desired one.</div>`;
+        } else if (status.kiteInstalled && status.kiteEnterpriseInstalled) {
           content = `
             <div class="text-danger">Kite engine is not running ${dot}<br/>Which version of kite do you want to launch?</div>
             <a href="#" 

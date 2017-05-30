@@ -241,7 +241,10 @@ const Kite = {
             StateController.isKiteInstalled().then(() => true).catch(() => false),
             StateController.isKiteEnterpriseInstalled().then(() => true).catch(() => false),
           ]).then(([kiteInstalled, kiteEnterpriseInstalled]) => {
-            if (kiteInstalled && kiteEnterpriseInstalled) {
+            if (StateController.hasManyKiteInstallation() ||
+                StateController.hasManyKiteEnterpriseInstallation()) {
+              this.showErrorMessage('You have multiple versions of Kite installed. Please launch your desired one.');
+            } else if (kiteInstalled && kiteEnterpriseInstalled) {
               this.showErrorMessage('Kite is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite Enterprise', 'Launch Kite Cloud').then(item => {
                 if (item === 'Launch Kite Cloud') {
                   return StateController.runKiteAndWait(ATTEMPTS, INTERVAL)
