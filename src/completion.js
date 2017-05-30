@@ -80,7 +80,9 @@ module.exports = class KiteCompletionProvider {
         const item = new CompletionItem(c.display);
         item.sortText = fill(String(i), length, '0');
         item.insertText = c.insert;
-        item.documentation = c.documentation_text;
+        if (c.documentation_text !== '') {
+          item.documentation = 'Kite: ' + c.documentation_text;
+        }
         item.detail = c.hint;
         item.kind = kindForHint(c.hint);
         return item;

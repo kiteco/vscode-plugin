@@ -68,7 +68,7 @@ module.exports = class KiteHoverProvider {
           links.push(`[more](command:kite.more-range?${linkData})`);
         }
 
-        if (links.length) { texts.push(links.join(' ')); }
+        if (links.length) { texts.push('**Kite:** ' + links.join(' ')); }
 
         return new Hover(compact(texts));
       }
