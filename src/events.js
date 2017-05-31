@@ -37,7 +37,9 @@ module.exports = class EditorEvents {
       method: 'POST',
     }, payload))
     .then(resp => {
-      this.Kite.handle403Response(this.document, resp);
+      if (this.Kite.isGrammarSupported(this.editor)) {
+        this.Kite.handle403Response(this.document, resp);
+      } 
       Logger.logResponse(resp);
     })
     .catch(() => {

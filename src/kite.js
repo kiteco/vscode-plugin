@@ -14,6 +14,7 @@ const KiteSearch = require('./search');
 const KiteLogin = require('./login');
 const KiteStatus = require('./status');
 const KiteEditor = require('./kite-editor');
+const EditorEvents = require('./events');
 const metrics = require('./metrics');
 const Plan = require('./plan');
 const server = require('./server');
@@ -27,6 +28,7 @@ const Kite = {
   activate(ctx) 
   {
     this.kiteEditorByEditor = new Map();
+    this.eventsByEditor = new Map();
 
     const router = new KiteRouter(Kite);
     const search = new KiteSearch(Kite);
@@ -81,27 +83,27 @@ const Kite = {
     }));
 
     ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
-      if (this.isGrammarSupported(e)) {
-        this.registerEditor(e);
-        
-        const evt = this.kiteEditorByEditor.get(e);
-        evt.focus();
-      }
+      this.registerEvents(e);
+      if (this.isGrammarSupported(e)) { this.registerEditor(e); }
+
+      const evt = this.eventsByEditor.get(e);
+      evt.focus();
     }));
 
     ctx.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(e => {
-      const evt = this.kiteEditorByEditor.get(e.textEditor);
+      const evt = this.eventsByEditor.get(e.textEditor);
       evt.selectionChanged();
     }));
 
     ctx.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
       e.document && editorsForDocument(e.document).forEach(e => {
-        const evt = this.kiteEditorByEditor.get(e);
+        const evt = this.eventsByEditor.get(e);
         evt.edit();
       })
     }));
 
     ctx.subscriptions.push(vscode.workspace.onDidOpenTextDocument(doc => {
+      this.registerDocumentEvents(doc);
       if (doc.languageId === 'python') {
         this.registerDocument(doc);
       }
@@ -207,16 +209,27 @@ const Kite = {
   registerDocument(document) {
     editorsForDocument(document).forEach(e => this.registerEditor(e));
   },
+  
+  registerDocumentEvents(document) {
+    editorsForDocument(document).forEach(e => this.registerEvents(e));
+  },
+
+  registerEvents(e) {
+    if (!this.eventsByEditor.has(e)) {
+      const evt = new EditorEvents(this, e);
+      this.eventsByEditor.set(e, evt);
+
+      if (e === vscode.window.activeTextEditor) {
+        evt.focus();
+      }
+    }
+  },
 
   registerEditor(e) {
     if (!this.kiteEditorByEditor.has(e)) {
       Logger.debug('register kite editor for', e.document.fileName, e.document.languageId);
       const evt = new KiteEditor(Kite, e);
       this.kiteEditorByEditor.set(e, evt);
-
-      if (e === vscode.window.activeTextEditor) {
-        evt.focus();
-      }
     }
   },
 
