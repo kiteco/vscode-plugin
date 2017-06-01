@@ -1592,11 +1592,12 @@ form.password-less .has-password {
 .kite-tour h5 {
   font-size: 1.2em;
   margin-top: 20px;
+  margin-bottom: 10px;
 }
-.kite-tour kite-logo svg {
-  height: 1.2em;
+.kite-tour svg {
+  height: 20px;
 }
-.kite-tour kite-logo svg polygon {
+.kite-tour svg polygon {
   fill: var(--text-color-highlight);
 }
 .kite-tour section {

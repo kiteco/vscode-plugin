@@ -34,9 +34,7 @@ module.exports = class KiteTour {
     return Promise.resolve(`
     <div class="kite-tour">
       <div class="kite-tour-gutter scrollbars-visible-always">
-        ${logo}
-
-        <h5>Kite for Python is installed and ready!</h5>
+        <h5>${logo} Kite for Python is installed and ready!</h5>
 
         <p>Here's how to get completions, docs, and all the other features Kite has to offer.</p>
 
