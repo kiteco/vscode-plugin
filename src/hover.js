@@ -33,10 +33,7 @@ module.exports = class KiteHoverProvider {
         const texts = [{
             language: 'python', 
             value: `${symbolLabel(symbol)}${symbolType(symbol)}`
-          }, 
-          truncate(data.report && data.report.documentation_text),
-          truncate(symbol.synopsis),
-          truncate(symbol.value && symbol.value.length && head(symbol.value).synopsis),
+          },
         ];
 
         const links = [];
