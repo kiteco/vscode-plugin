@@ -119,18 +119,19 @@ module.exports = class KiteStatus {
     ];
     if (this.Kite.isGrammarSupported(editor)) {
       promises.push(this.Kite.projectDirForEditor(editor.document).catch(() => null));
+      promises.push(this.Kite.shouldOfferWhitelist(editor.document).catch(() => null));
     }
 
     return Promise.all(promises).then(data => this.render(...data));
   }
 
-  render(plan, status, account, syncStatus, projectDir) {
+  render(plan, status, account, syncStatus, projectDir, shouldOfferWhitelist) {
     return `
       ${this.renderSubscription(plan, status)}
       ${this.renderEmailWarning(account)}
       ${this.renderReferralsCredited(plan)}
       ${this.renderLinks()}
-      ${this.renderStatus(status, syncStatus, projectDir)}
+      ${this.renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist)}
     `;
   }
 
@@ -192,7 +193,7 @@ module.exports = class KiteStatus {
       : '';
   }
 
-  renderStatus(status, syncStatus, projectDir) {
+  renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist) {
     let content = '';
     switch (status) {
       case STATES.UNSUPPORTED:
@@ -252,9 +253,9 @@ module.exports = class KiteStatus {
           content = `
             <div class="text-warning">Kite engine is not enabled for this file ${dot}</div>
 
-            <a href='#' 
+            ${shouldOfferWhitelist ? `<a href='#' 
                onclick="requestGet('/status/whitelist?dirpath=${projectDir}').then(() => requestGet('/status/reload'))"
-               class="btn warning">Enable for ${projectDir}</a>
+               class="btn warning">Enable for ${projectDir}</a>` : ''}
             <a href="${settingsURL}" class="btn warning">Whitelist settings…</a>
           `;
         }

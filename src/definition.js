@@ -17,7 +17,7 @@ module.exports = class KiteDefinitionProvider {
     return promisifyRequest(StateController.client.request({path}))
     .then(resp => {
       this.Kite.handle403Response(document, resp);
-      Logger.logResponse(resp);
+      // Logger.logResponse(resp);
       if (resp.statusCode !== 200) {
         throw new Error(`${resp.statusCode} status at ${path}`);
       }
@@ -25,14 +25,12 @@ module.exports = class KiteDefinitionProvider {
     })
     .then(data => parseJSON(data))
     .then(data => {
-      if (data && data.report && data.report.definition) {
+      if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
         return new Location(
           vscode.Uri.file(data.report.definition.filename), 
-          new Position(data.report.definition.line, 0));
+          new Position(data.report.definition.line - 1, 0));
       }
     })
-    .catch(err => {
-      console.error(err);
-    });
+    .catch(() => null);
   }
 }
