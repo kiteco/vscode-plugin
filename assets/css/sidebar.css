@@ -1579,12 +1579,9 @@ form.password-less .has-password {
   justify-content: space-around;
   font-size: 1em;
 }
-
-.kite-tour input[type="checkbox"],
-.kite-tour .setting-title {
-  display: inline-block;
+.kite-tour p {
+  margin-bottom: 10px;
 }
-
 .kite-tour a,
 .kite-tour a:visited,
 .kite-tour a:active,
@@ -1594,10 +1591,10 @@ form.password-less .has-password {
 }
 .kite-tour h5 {
   font-size: 1.2em;
+  margin-top: 20px;
 }
 .kite-tour kite-logo svg {
-  height: 96px;
-  margin-top: 20px;
+  height: 1.2em;
 }
 .kite-tour kite-logo svg polygon {
   fill: var(--text-color-highlight);
@@ -1611,7 +1608,10 @@ form.password-less .has-password {
   padding: 0 20px;
 }
 .kite-tour section + section {
-  margin-top: 40px;
+  margin-top: 20px;
+}
+.kite-tour section + p {
+  margin-top: 20px;
 }
 .kite-tour section figure {
   flex: 0 0 auto;
@@ -1622,10 +1622,20 @@ form.password-less .has-password {
 .kite-tour section figure img {
   width: 100%;
 }
+.kite-tour .control-group {
+  line-height: 1em;
+}
 .kite-tour .kite-tour-scroll-section {
   flex: 1 1 auto;
   overflow-y: scroll;
-  margin: 40px 0;
+  margin: 10px 0;
+}
+.kite-tour input[type="checkbox"],
+.kite-tour .setting-title {
+  display: inline-block;
+}
+.kite-tour .kite-tour-scroll-section p {
+  text-align: center;
 }
 .kite-tour .kite-tour-gutter {
   max-width: 100%;
