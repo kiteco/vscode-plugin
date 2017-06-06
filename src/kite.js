@@ -192,8 +192,11 @@ const Kite = {
       })
     });
 
-    if (vscode.workspace.getConfiguration('kite').showTourOnStartup) {
+    const config = vscode.workspace.getConfiguration('kite');
+    if (config.showTourOnStartup) {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.One, 'Kite Tour');
+
+      config.update('showTourOnStartup', false, true);
     }
 
     setTimeout(() => {

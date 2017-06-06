@@ -115,23 +115,6 @@ module.exports = class KiteTour {
           href="http://localhost:46624/settings/permissions">here</a></p>
         <p>For more help topics, go to <a href="http://help.kite.com">help.kite.com</a></p>
 
-        <div class="control-group">
-          <div class="controls">
-            <div class="checkbox">
-              <label>
-                <input id="kite.showKiteTourOnStatup"
-                      type="checkbox"
-                      onchange="requestGet('/tour/' + this.checked)"
-                      class="input-checkbox"
-                      ${vscode.workspace.getConfiguration('kite').showTourOnStartup
-                        ? 'checked'
-                        : ''}>
-                <div class="setting-title">Show Kite tour on startup</div>
-              </label>
-            </div>
-          </div>
-        </div>
-
         <p>We always love feedback ❤️ <a href="mailto:feedback@kite.com">feedback@kite.com</a></p>
       </div>
     </div>
