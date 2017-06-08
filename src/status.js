@@ -171,7 +171,7 @@ module.exports = class KiteStatus {
         Please verify your email address
 
         <div class="actions">
-          <a href="https://alpha.kite.com/account/resetPassword/request?email=${account.email}">Resend email</a>
+          <a href="https://kite.com/account/resetPassword/request?email=${account.email}">Resend email</a>
         </div>
       </div>`;
   }
