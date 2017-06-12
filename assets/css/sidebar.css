@@ -1635,7 +1635,7 @@ form.password-less .has-password {
 .kite-tour .setting-title {
   display: inline-block;
 }
-.kite-tour .kite-tour-scroll-section p {
+.kite-tour .kite-tour-scroll-section > p {
   text-align: center;
 }
 .kite-tour .kite-tour-gutter {
