@@ -4,8 +4,8 @@ const vscode = require('vscode');
 const {Hover} = vscode;
 const {StateController, Logger} = require('kite-installer');
 const {hoverPath} = require('./urls');
-const {promisifyReadResponse, compact, head, truncate} = require('./utils');
-const {symbolLabel, symbolType, symbolId} = require('./data-utils');
+const {promisifyReadResponse, compact} = require('./utils');
+const {symbolName, symbolKind, symbolId} = require('./data-utils');
 
 module.exports = class KiteHoverProvider {
   constructor (Kite) {
@@ -32,20 +32,20 @@ module.exports = class KiteHoverProvider {
         const id = symbolId(symbol);
         const texts = [{
             language: 'python', 
-            value: `${symbolLabel(symbol)}${symbolType(symbol)}`
+            value: `${symbolName(symbol)}    ${symbolKind(symbol)}`
           },
         ];
 
         const links = [];
 
-        if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
-          const defData = JSON.stringify({
-            file: data.report.definition.filename,
-            line: data.report.definition.line,
-            source: 'Hover',
-          });
-          links.push(`[def](command:kite.def?${defData})`);
-        }
+        // if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
+        //   const defData = JSON.stringify({
+        //     file: data.report.definition.filename,
+        //     line: data.report.definition.line,
+        //     source: 'Hover',
+        //   });
+        //   links.push(`[def](command:kite.def?${defData})`);
+        // }
 
         if (id && id !== '') {
           const linkData = JSON.stringify({
