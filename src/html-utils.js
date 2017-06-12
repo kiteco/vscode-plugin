@@ -10,7 +10,8 @@ const {
   valueLabel, valueType, callSignature,
   memberLabel, parameterName, parameterDefault, parameterTypeLink,
 } = require('./data-utils');
-const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
+const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-small.svg')).toString();
+const logoLarge = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
 const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
 const enterpriseLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kiteenterprise.svg')).toString();
 const giftLogoPath = path.resolve(__dirname, '..', 'assets', 'images', 'icon-gift.png');
@@ -583,6 +584,7 @@ module.exports = {
   enterpriseLogoSvg,
   highlightCode,
   logo,
+  logoLarge,
   proLogoSvg,
   pluralize,
   proFeatures,
