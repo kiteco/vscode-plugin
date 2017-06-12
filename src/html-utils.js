@@ -158,6 +158,7 @@ function renderModule(data) {
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
       <section class="summary">
+        <h4>Summary</h4>
         ${valueDescription(data)}
       </section>
 
@@ -188,6 +189,7 @@ function renderFunction(data) {
       ${renderKwargs(value)}
 
       <section class="summary">
+        <h4>Summary</h4>
         ${valueDescription(data)}
       </section>
 
@@ -216,6 +218,7 @@ function renderInstance(data) {
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
       <section class="summary">
+        <h4>Summary</h4>
         ${valueDescription(data)}
       </section>
 
@@ -406,7 +409,7 @@ function additionalExamplesLink(examplesCount, data) {
 
 function renderUsages(symbol) {
   return symbol.report && symbol.report.usages && symbol.report.usages.length
-    ? section('Usages',
+    ? section('Usages from your code',
       Plan.can('usages_editor')
         ? `<ul class="usages-box">
           ${symbol.report.usages.map(renderUsage).join('')}
