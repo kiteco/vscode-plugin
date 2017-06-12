@@ -203,6 +203,7 @@ const Kite = {
 
     setTimeout(() => {
       vscode.window.visibleTextEditors.forEach(e => {
+        this.registerEvents(e);
         if (e.document.languageId === 'python') {
           this.registerEditor(e);
         }
