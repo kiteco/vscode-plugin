@@ -137,7 +137,7 @@ module.exports = class KiteStatus {
           };
         });
       }),
-      this.getUserAccountInfo().catch(() => ({})),
+      this.getUserAccountInfo().catch(() => {}).then(() => null),
       this.getStatus(editor),
     ];
     if (this.Kite.isGrammarSupported(editor)) {
@@ -153,12 +153,12 @@ module.exports = class KiteStatus {
       ${this.renderSubscription(plan, status)}
       ${this.renderEmailWarning(account)}
       ${this.renderReferralsCredited(plan)}
-      ${this.renderLinks()}
+      ${this.renderLinks(account)}
       ${this.renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist)}
     `;
   }
 
-  renderLinks() {
+  renderLinks(account) {
     let giftLink = '';
 
     if (!Plan.isActivePro()) {
@@ -166,29 +166,34 @@ module.exports = class KiteStatus {
           Plan.referralsCredited() < Plan.referralsCredits()) {
         giftLink = `<li>
           <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
-             class="kite-gift">Get free Pro! <i class="icon-kite-gift"></i></a>
+             class="kite-gift account-dependent">Get free Pro! <i class="icon-kite-gift"></i></a>
         </li>`;
-      } else {
+      } else if (!Plan.isEnterprise()) {
         giftLink = `<li>
           <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
-             class="kite-gift">Invite friends <i class="icon-kite-gift"></i></a>
+             class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
         </li>`;
       }
-    }
+    } else if (!Plan.isEnterprise()) {
+        giftLink = `<li>
+          <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
+             class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
+        </li>`;
+      }
 
     return `
-    <ul class="links">
+    <ul class="links ${account ? 'has-account' : 'no-account'}">
       ${giftLink}
-      <li><a href="https://ga.kite.com/docs/">Search Python documentation</a></li>
-      <li><a href='command:kite.web-url?"http://localhost:46624/settings"'>Settings</a></li>
-      <li><a href='command:kite.web-url?"http://localhost:46624/settings/permissions"'>Permissions</a></li>
+      <li><a href="https://ga.kite.com/docs/" class="account-dependent">Search Python documentation</a></li>
+      <li><a href='command:kite.web-url?"http://localhost:46624/settings"' class="account-dependent">Settings</a></li>
+      <li><a href='command:kite.web-url?"http://localhost:46624/settings/permissions"' class="account-dependent">Permissions</a></li>
       <li><a href="http://help.kite.com/">Help</a></li>
     </ul>
     `;
   }
 
   renderEmailWarning(account) {
-    return account.email_verified
+    return !account || account.email_verified
       ? ''
       : `<div class="kite-warning-box">
         Please verify your email address

@@ -1595,6 +1595,11 @@ form.password-less .has-password {
   text-decoration: underline;
 }
 
+.kite-status-panel .no-account a:not(.btn).account-dependent {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .kite-tour {
   display: flex;
   flex-direction: column;
