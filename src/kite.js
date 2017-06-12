@@ -13,6 +13,7 @@ const KiteRouter = require('./router');
 const KiteSearch = require('./search');
 const KiteLogin = require('./login');
 const KiteStatus = require('./status');
+const KiteTour = require('./tour');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
 const metrics = require('./metrics');
@@ -34,6 +35,7 @@ const Kite = {
     const search = new KiteSearch(Kite);
     const login = new KiteLogin(Kite);
     const status = new KiteStatus(Kite);
+    const tour = new KiteTour(Kite);
 
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
@@ -68,6 +70,8 @@ const Kite = {
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-login', login));
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
+    ctx.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-tour', tour));
 
     ctx.subscriptions.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
@@ -190,6 +194,13 @@ const Kite = {
       })
     });
 
+    const config = vscode.workspace.getConfiguration('kite');
+    if (config.showTourOnStartup) {
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.One, 'Kite Tour');
+
+      config.update('showTourOnStartup', false, true);
+    }
+
     setTimeout(() => {
       vscode.window.visibleTextEditors.forEach(e => {
         if (e.document.languageId === 'python') {
@@ -250,13 +261,43 @@ const Kite = {
           });
           break;
         case StateController.STATES.INSTALLED:
-          this.showErrorMessage('Kite is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite').then(item => {
-            if (item) {
-              return StateController.runKiteAndWait(ATTEMPTS, INTERVAL)
-              .then(() => this.checkState())
-              .catch(err => console.error(err));
+          Promise.all([
+            StateController.isKiteInstalled().then(() => true).catch(() => false),
+            StateController.isKiteEnterpriseInstalled().then(() => true).catch(() => false),
+          ]).then(([kiteInstalled, kiteEnterpriseInstalled]) => {
+            if (StateController.hasManyKiteInstallation() ||
+                StateController.hasManyKiteEnterpriseInstallation()) {
+              this.showErrorMessage('You have multiple versions of Kite installed. Please launch your desired one.');
+            } else if (kiteInstalled && kiteEnterpriseInstalled) {
+              this.showErrorMessage('Kite is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite Enterprise', 'Launch Kite Cloud').then(item => {
+                if (item === 'Launch Kite Cloud') {
+                  return StateController.runKiteAndWait(ATTEMPTS, INTERVAL)
+                  .then(() => this.checkState())
+                  .catch(err => console.error(err));
+                } else if (item === 'Launch Kite Enterprise') {
+                  return StateController.runKiteEnterpriseAndWait(ATTEMPTS, INTERVAL)
+                  .then(() => this.checkState())
+                  .catch(err => console.error(err));
+                }
+              });
+            } else if (kiteInstalled) {
+              this.showErrorMessage('Kite is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite').then(item => {
+                if (item) {
+                  return StateController.runKiteAndWait(ATTEMPTS, INTERVAL)
+                  .then(() => this.checkState())
+                  .catch(err => console.error(err));
+                }
+              });
+            } else if (kiteEnterpriseInstalled) {
+              this.showErrorMessage('Kite Enterprise is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite Enterprise').then(item => {
+                if (item) {
+                  return StateController.runKiteEnterpriseAndWait(ATTEMPTS, INTERVAL)
+                  .then(() => this.checkState())
+                  .catch(err => console.error(err));
+                }
+              });
             }
-          })
+          });
           break;
         case StateController.STATES.RUNNING:
           this.showErrorMessage('The Kite background service is running but not reachable.');
@@ -301,7 +342,9 @@ const Kite = {
   },
 
   updatePlan() {
-    if (Plan.isActivePro()) {
+    if (Plan.isEnterprise()) {
+      this.statusBarItem.text = '$(primitive-dot) Kite Enterprise';
+    } else if (Plan.isActivePro()) {
       let trialSuffix = '';
 
       if (Plan.isTrialing()) {
@@ -315,8 +358,10 @@ const Kite = {
       }
 
       this.statusBarItem.text = `$(primitive-dot) Kite Pro${trialSuffix}`;
-    } else {
+    } else if (Plan.plan) {
       this.statusBarItem.text = '$(primitive-dot) Kite Basic';
+    } else {
+      this.statusBarItem.text = '$(primitive-dot) Kite';
     }
   },
 

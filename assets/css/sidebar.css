@@ -1302,7 +1302,8 @@ a.kite-open-link svg {
   top: 0;
   pointer-events: none;
 }
-input {
+
+input:not([type="checkbox"]) {
   -webkit-appearance: none;
   appearance: none;
   background: none;
@@ -1313,13 +1314,13 @@ input {
   padding: 5px;
   color: var(--text-color-highlight);
 }
-input:focus {
+input:not([type="checkbox"]):focus {
   border:none;
   border-bottom: 1px solid var(--color-blue);
   outline: none;
 }
 
-input:-webkit-input-placeholder {
+inpu:not([type="checkbox"])t:-webkit-input-placeholder {
   color: var(--text-color-highlight);
 }
 #results {
@@ -1410,6 +1411,21 @@ form.password-less .has-password {
   border: none;
 }
 
+.kite-status-panel .btn.purple,
+.login-form .btn.purple,
+.login-form button.purple {
+  background-color: var(--color-purple);
+  color: var(--text-color-highlight);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  font-size: 1.1em;
+  border: none;
+}
+
+.kite-status-panel .btn {
+  margin-bottom: 5px;
+}
+
 .kite-status-panel a.btn[href]:hover,
 .kite-status-panel a.btn[href]:focus,
 .kite-status-panel a.btn[href]:active,
@@ -1424,22 +1440,27 @@ form.password-less .has-password {
   flex-direction: column;
   padding: 10px;
 }
+.kite-status-panel .enterprise,
 .kite-status-panel .pro {
   height: 16px;
 }
 .kite-status-panel .pro,
+.kite-status-panel .enterprise,
 .kite-status-panel .logo {
   margin-right: 5px;
   display: inline-block
 }
 .kite-status-panel .pro svg,
+.kite-status-panel .enterprise svg,
 .kite-status-panel .logo svg {
   height: 16px;
   width: auto;
 }
 .kite-status-panel .pro svg polygon,
-.kite-status-panel .logo svg polygon,
 .kite-status-panel .pro svg path,
+.kite-status-panel .enterprise svg polygon,
+.kite-status-panel .enterprise svg path,
+.kite-status-panel .logo svg polygon,
 .kite-status-panel .logo svg path {
   fill: var(--text-color-highlight);
 }
@@ -1572,4 +1593,78 @@ form.password-less .has-password {
 .kite-status-panel .kite-info-box a:focus {
   color: var(--text-color-highlight);
   text-decoration: underline;
+}
+
+.kite-tour {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 1em;
+}
+.kite-tour p {
+  margin-bottom: 10px;
+}
+.kite-tour a,
+.kite-tour a:visited,
+.kite-tour a:active,
+.kite-tour a:focus,
+.kite-tour a:hover {
+  color: var(--color-blue);
+}
+.kite-tour h5 {
+  font-size: 1.2em;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.kite-tour svg {
+  height: 20px;
+}
+.kite-tour svg polygon {
+  fill: var(--text-color-highlight);
+}
+.kite-tour section {
+  display: flex;
+  width: 640px;
+  max-width: 100%;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 20px;
+}
+.kite-tour section + section {
+  margin-top: 20px;
+}
+.kite-tour section + p {
+  margin-top: 20px;
+}
+.kite-tour section figure {
+  flex: 0 0 auto;
+  width: 220px;
+  background: var(--examples-background);
+  margin-right: 30px;
+}
+.kite-tour section figure img {
+  width: 100%;
+}
+.kite-tour .control-group {
+  line-height: 1em;
+}
+.kite-tour .kite-tour-scroll-section {
+  flex: 1 1 auto;
+  overflow-y: scroll;
+  margin: 10px 0;
+}
+.kite-tour input[type="checkbox"],
+.kite-tour .setting-title {
+  display: inline-block;
+}
+.kite-tour .kite-tour-scroll-section > p {
+  text-align: center;
+}
+.kite-tour .kite-tour-gutter {
+  max-width: 100%;
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
