@@ -54,5 +54,12 @@ ul, i {
   height: 1em;
   width: 1em;
   background-size: 100%;
+}
+
+.platform-darwin .icon-kite-gift::before {
   background-image: url('../images/icon-gift.png');
+}
+
+.platform-win32 .icon-kite-gift::before {
+  background-image: url('../images/icon-gift-windows.png');
 }

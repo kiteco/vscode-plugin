@@ -2,6 +2,7 @@
 
 const vscode = require('vscode');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const {head, compact, flatten} = require('./utils');
 const {openDocumentationInWebURL} = require('./urls');
@@ -95,7 +96,7 @@ function wrapHTML (html) {
   </style>
   ${STYLESHEETS}
   ${SCRIPTS}
-  <div class="kite">${html}</div>`
+  <div class="kite platform-${os.platform()}">${html}</div>`
 }
 
 function prependNavigation(html, steps, step) {
