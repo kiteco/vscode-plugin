@@ -205,20 +205,21 @@ module.exports = class KiteStatus {
   }
 
   renderReferralsCredited(plan) {
-    return Plan.hasReferralCredits()
-      ? `<div class="kite-info-box">
-        ${Plan.referralsCredited()}
-        ${pluralize(Plan.referralsCredited(), 'user', 'users')}
-        accepted your invite.<br/>We've credited
-        ${Plan.daysCredited()}
-        ${pluralize(Plan.daysCredited(), 'day', 'days')}
-        of Kite Pro to your account!
-        <div class="actions">
-          <a is="kite-localtoken-anchor"
-             href="http://localhost:46624/redirect/invite">Invite more people</a>
-        </div>
-      </div>`
-      : '';
+    return '';
+    // return Plan.hasReferralCredits()
+    //   ? `<div class="kite-info-box">
+    //     ${Plan.referralsCredited()}
+    //     ${pluralize(Plan.referralsCredited(), 'user', 'users')}
+    //     accepted your invite.<br/>We've credited
+    //     ${Plan.daysCredited()}
+    //     ${pluralize(Plan.daysCredited(), 'day', 'days')}
+    //     of Kite Pro to your account!
+    //     <div class="actions">
+    //       <a is="kite-localtoken-anchor"
+    //          href="http://localhost:46624/redirect/invite">Invite more people</a>
+    //     </div>
+    //   </div>`
+    //   : '';
   }
 
   renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist) {
