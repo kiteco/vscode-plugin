@@ -1299,7 +1299,8 @@ a.kite-open-link svg {
   top: 0;
   pointer-events: none;
 }
-input {
+
+input:not([type="checkbox"]) {
   -webkit-appearance: none;
   appearance: none;
   background: none;
@@ -1310,13 +1311,13 @@ input {
   padding: 5px;
   color: var(--text-color-highlight);
 }
-input:focus {
+input:not([type="checkbox"]):focus {
   border:none;
   border-bottom: 1px solid var(--color-blue);
   outline: none;
 }
 
-input:-webkit-input-placeholder {
+inpu:not([type="checkbox"])t:-webkit-input-placeholder {
   color: var(--text-color-highlight);
 }
 #results {
@@ -1589,4 +1590,78 @@ form.password-less .has-password {
 .kite-status-panel .kite-info-box a:focus {
   color: var(--text-color-highlight);
   text-decoration: underline;
+}
+
+.kite-tour {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 1em;
+}
+.kite-tour p {
+  margin-bottom: 10px;
+}
+.kite-tour a,
+.kite-tour a:visited,
+.kite-tour a:active,
+.kite-tour a:focus,
+.kite-tour a:hover {
+  color: var(--color-blue);
+}
+.kite-tour h5 {
+  font-size: 1.2em;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.kite-tour svg {
+  height: 20px;
+}
+.kite-tour svg polygon {
+  fill: var(--text-color-highlight);
+}
+.kite-tour section {
+  display: flex;
+  width: 640px;
+  max-width: 100%;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 20px;
+}
+.kite-tour section + section {
+  margin-top: 20px;
+}
+.kite-tour section + p {
+  margin-top: 20px;
+}
+.kite-tour section figure {
+  flex: 0 0 auto;
+  width: 220px;
+  background: var(--examples-background);
+  margin-right: 30px;
+}
+.kite-tour section figure img {
+  width: 100%;
+}
+.kite-tour .control-group {
+  line-height: 1em;
+}
+.kite-tour .kite-tour-scroll-section {
+  flex: 1 1 auto;
+  overflow-y: scroll;
+  margin: 10px 0;
+}
+.kite-tour input[type="checkbox"],
+.kite-tour .setting-title {
+  display: inline-block;
+}
+.kite-tour .kite-tour-scroll-section > p {
+  text-align: center;
+}
+.kite-tour .kite-tour-gutter {
+  max-width: 100%;
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

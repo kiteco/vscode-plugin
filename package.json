@@ -11,7 +11,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:python"
+    "*"
   ],
   "main": "./src/kite",
   "contributes": {
@@ -43,6 +43,11 @@
       "type": "object",
       "title": "Kite Configuration",
       "properties": {
+        "kite.showTourOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show the Kite tour on startup or not."
+        },
         "kite.sidebarDebugMode": {
           "type": "boolean",
           "default": false,
