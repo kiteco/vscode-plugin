@@ -163,10 +163,10 @@ function renderModule(data) {
       </section>
 
       ${renderMembers(value)}
+      ${renderUsages(data)}
       ${renderExamples(data)}
       ${renderLinks(data)}
       ${renderDefinition(data)}
-      ${renderUsages(data)}
       ${debugData(data)}
     </div>
   </div>
@@ -193,11 +193,11 @@ function renderFunction(data) {
         ${valueDescription(data)}
       </section>
 
+      ${renderUsages(data)}
       ${renderExamples(data)}
       ${renderLinks(data)}
       ${renderDefinition(data)}
       ${renderInvocations(value)}
-      ${renderUsages(data)}
       ${debugData(data)}
     </div>
   </div>
@@ -223,9 +223,9 @@ function renderInstance(data) {
       </section>
 
       ${renderDefinition(value)}
+      ${renderUsages(data)}
       ${renderExamples(data)}
       ${renderLinks(data)}
-      ${renderUsages(data)}
       ${debugData(data)}
     </div>
   </div>
