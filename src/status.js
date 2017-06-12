@@ -36,6 +36,25 @@ server.addRoute('GET', '/status/whitelist', (req, res, url) => {
   });
 });
 
+server.addRoute('GET', '/status/resendEmail', (req, res, url) => {
+  StateController.client.request({
+    path: '/api/account/resendVerification',
+    method: 'post',
+  })
+  .then(resp => {
+    if (resp.statusCode === 200) {
+      res.writeHead(200),
+      res.end();
+    } else {
+      throw new Error('err');
+    }
+  })
+  .catch(() => {
+    res.writeHead(500);
+    res.end();
+  });
+});
+
 module.exports = class KiteStatus {
   constructor(Kite) {
     this.Kite = Kite;
@@ -114,7 +133,7 @@ module.exports = class KiteStatus {
     const promises = [
       Plan.queryPlan().catch(() => null),
       StateController.handleState(),
-      this.getUserAccountInfo().catch(() => ({})),
+      this.getUserAccountInfo().catch(() => {}),
       this.getStatus(editor),
     ];
     if (this.Kite.isGrammarSupported(editor)) {
@@ -132,6 +151,7 @@ module.exports = class KiteStatus {
       ${this.renderReferralsCredited(plan)}
       ${this.renderLinks()}
       ${this.renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist)}
+      <script>initStatus();</script>
     `;
   }
 
@@ -165,13 +185,16 @@ module.exports = class KiteStatus {
   }
 
   renderEmailWarning(account) {
-    return account.email_verified
+    return !account || account.email_verified
       ? ''
       : `<div class="kite-warning-box">
         Please verify your email address
 
-        <div class="actions">
-          <a href="https://kite.com/account/resetPassword/request?email=${account.email}">Resend email</a>
+        <div  class="actions">
+          <a href="/foo"
+          class="resend-email"
+          data-failure="We were unable to send a verification email,<br/>please contact feedback@kite.com."
+          data-confirmation="A new verification email was sent to ${account.email}">Resend email</a>
         </div>
       </div>`;
   }
