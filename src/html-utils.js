@@ -12,6 +12,7 @@ const {
 } = require('./data-utils');
 const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
 const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
+const enterpriseLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kiteenterprise.svg')).toString();
 const giftLogoPath = path.resolve(__dirname, '..', 'assets', 'images', 'icon-gift.png');
 
 const ASSETS_PATH = path.resolve(__dirname, '..', 'assets');
@@ -158,6 +159,7 @@ function renderModule(data) {
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
       <section class="summary">
+        <h4>Summary</h4>
         ${valueDescription(data)}
       </section>
 
@@ -188,6 +190,7 @@ function renderFunction(data) {
       ${renderKwargs(value)}
 
       <section class="summary">
+        <h4>Summary</h4>
         ${valueDescription(data)}
       </section>
 
@@ -216,6 +219,7 @@ function renderInstance(data) {
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
       <section class="summary">
+        <h4>Summary</h4>
         ${valueDescription(data)}
       </section>
 
@@ -576,6 +580,7 @@ function renderInvocations(symbol) {
 
 module.exports = {
   debugData,
+  enterpriseLogoSvg,
   highlightCode,
   logo,
   proLogoSvg,

@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 const {StateController, Logger} = require('kite-installer');
 const server = require('./server');
-const {wrapHTML, debugHTML, proLogoSvg, logo, pluralize} = require('./html-utils');
+const {wrapHTML, debugHTML, proLogoSvg, enterpriseLogoSvg, logo, pluralize} = require('./html-utils');
 const Plan = require('./plan');
 const {accountPath, statusPath} = require('./urls');
 const {promisifyRequest, promisifyReadResponse, params} = require('./utils');
@@ -13,6 +13,18 @@ const dot = '<span class="dot">•</span>';
 
 server.addRoute('GET', '/status/start', (req, res, url) => {
   StateController.runKiteAndWait()
+  .then(() => {
+    res.writeHead(200),
+    res.end();
+  })
+  .catch(() => {
+    res.writeHead(500);
+    res.end();
+  });
+});
+
+server.addRoute('GET', '/status/start-enterprise', (req, res, url) => {
+  StateController.runKiteEnterpriseAndWait()
   .then(() => {
     res.writeHead(200),
     res.end();
@@ -132,7 +144,18 @@ module.exports = class KiteStatus {
     const editor = vscode.window.activeTextEditor;
     const promises = [
       Plan.queryPlan().catch(() => null),
-      StateController.handleState(),
+      StateController.handleState().then(state => {
+        return Promise.all([
+          StateController.isKiteInstalled().then(() => true, () => false),
+          StateController.isKiteEnterpriseInstalled().then(() => true, () => false),
+        ]).then(([kiteInstalled, kiteEnterpriseInstalled]) => {
+          return {
+            state,
+            kiteInstalled,
+            kiteEnterpriseInstalled,
+          };
+        });
+      }),
       this.getUserAccountInfo().catch(() => {}),
       this.getStatus(editor),
     ];
@@ -218,7 +241,7 @@ module.exports = class KiteStatus {
 
   renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist) {
     let content = '';
-    switch (status) {
+    switch (status.state) {
       case STATES.UNSUPPORTED:
         content = `<div class="text-danger">Kite engine is not available on your system ${dot}</div>`;
         break;
@@ -230,12 +253,34 @@ module.exports = class KiteStatus {
         `;
         break;
       case STATES.INSTALLED:
-        content = `
-          <div class="text-danger">Kite engine is not running ${dot}</div>
-          <a href="#" 
-             onclick="requestGet('/status/start').then(() => requestGet('/status/reload'))" 
-             class="btn error">Launch now</a>
-        `;
+        if (StateController.hasManyKiteInstallation() ||      
+            StateController.hasManyKiteEnterpriseInstallation()) {
+          content = `<div class="text-danger">Kite engine is not running ${dot}<br/>You have multiple versions of Kite installed. Please launch your desired one.</div>`;
+        } else if (status.kiteInstalled && status.kiteEnterpriseInstalled) {
+          content = `
+            <div class="text-danger">Kite engine is not running ${dot}<br/>Which version of kite do you want to launch?</div>
+            <a href="#" 
+               onclick="requestGet('/status/start-enterprise').then(() => requestGet('/status/reload'))" 
+               class="btn purple">Launch Kite Enterprise</a><br/>
+            <a href="#" 
+               onclick="requestGet('/status/start').then(() => requestGet('/status/reload'))" 
+               class="btn primary">Launch Kite cloud</a>
+          `;
+        } else if (status.kiteInstalled) {
+          content = `
+            <div class="text-danger">Kite engine is not running ${dot}</div>
+            <a href="#" 
+              onclick="requestGet('/status/start').then(() => requestGet('/status/reload'))" 
+              class="btn error">Launch now</a>
+          `;
+        } else if (status.kiteEnterpriseInstalled) {
+          content = `
+            <div class="text-danger">Kite engine is not running ${dot}</div>
+            <a href="#" 
+              onclick="requestGet('/status/start-enterprise').then(() => requestGet('/status/reload'))" 
+              class="btn error">Launch now</a>
+          `;
+        }
         break;
       case STATES.RUNNING:
         content = `
@@ -295,7 +340,11 @@ module.exports = class KiteStatus {
     let leftSide = '';
     let rightSide = '';
 
-    if (!Plan.isPro() && Plan.isActive()) {
+    if (Plan.isEnterprise()) {
+      leftSide = `<div class="enterprise">${enterpriseLogoSvg}</div>`;
+      rightSide = `<a is="kite-localtoken-anchor"
+                      href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a>`;
+    } else if (!Plan.isPro() && Plan.isActive()) {
       leftSide = `<div class="logo">${logo}</div> Kite Basic`;
 
       if (Plan.hasStartedTrial()) {
