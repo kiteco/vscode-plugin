@@ -646,6 +646,7 @@
 
 .kite h4 .sticky.fixed:hover {
   background: var(--sticky-header-hover-background);
+  text-decoration: underline;
 }
 
 .kite .type {
