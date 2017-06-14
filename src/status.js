@@ -137,7 +137,7 @@ module.exports = class KiteStatus {
           };
         });
       }),
-      this.getUserAccountInfo().catch(() => {}).then(() => null),
+      this.getUserAccountInfo().catch(() => {}),
       this.getStatus(editor),
     ];
     if (this.Kite.isGrammarSupported(editor)) {
