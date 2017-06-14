@@ -48,6 +48,12 @@ server.addRoute('GET', '/status/whitelist', (req, res, url) => {
   });
 });
 
+server.addRoute('GET', '/status/login', (req, res, url) => {
+  vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+  res.writeHead(200);
+  res.end();
+});
+
 module.exports = class KiteStatus {
   constructor(Kite) {
     this.Kite = Kite;
@@ -273,7 +279,9 @@ module.exports = class KiteStatus {
       case STATES.REACHABLE:
         content = `
           <div class="text-danger">Kite engine is not logged in ${dot}</div>
-          <a href="kite-atom-login://login" class="btn error">Login now</a>
+          <a href="#" 
+             onclick="requestGet('/status/login')"
+             class="btn error">Login now</a>
         `;
         break;
       case STATES.AUTHENTICATED:
