@@ -5,7 +5,9 @@ window.initStatus = function() {
   if (link) {
     link.addEventListener('click', (e) => {
       e.preventDefault();
-      link.innerHTML = 'Please wait…';
+      e.stopPropagation();
+
+      link.innerHTML = 'Please wait&hellip;';
       link.style.pointerEvents = 'none';
 
       window.requestGet('/status/resendEmail')
