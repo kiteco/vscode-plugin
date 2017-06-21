@@ -8,8 +8,8 @@ const parameterName = (p, prefix = '') =>
     : undefined;
 
 const parameterDefault = (p) =>
-  p && p.default_value
-    ? `=${p.default_value}`
+  p && p.default_value && p.default_value.length
+    ? `=${head(p.default_value).repr}`
     : '';
 
 const parameterType = (p, prefix = '') =>
