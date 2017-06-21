@@ -10,6 +10,10 @@ const Plan = {
       : this.isActivePro();
   },
 
+  isEnterprise() {
+    return this.plan && this.plan.active_subscription === 'enterprise';
+  },
+
   isPro() {
     return this.plan && this.plan.active_subscription === 'pro';
   },
