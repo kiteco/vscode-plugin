@@ -167,25 +167,19 @@ module.exports = class KiteStatus {
   renderLinks(account) {
     let giftLink = '';
 
-    if (!Plan.isActivePro()) {
-      if (Plan.referralsCredited() &&
-          Plan.referralsCredited() < Plan.referralsCredits()) {
+    if (!Plan.isEnterprise()) {
+      if (Plan.referralsCredited() < Plan.referralsCredits()) {
         giftLink = `<li>
           <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
              class="kite-gift account-dependent">Get free Pro! <i class="icon-kite-gift"></i></a>
         </li>`;
-      } else if (!Plan.isEnterprise()) {
+      } else {
         giftLink = `<li>
           <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
              class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
         </li>`;
       }
-    } else if (!Plan.isEnterprise()) {
-        giftLink = `<li>
-          <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
-             class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
-        </li>`;
-      }
+    }
 
     return `
     <ul class="links ${account ? 'has-account' : 'no-account'}">
