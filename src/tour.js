@@ -3,7 +3,7 @@
 const path = require('path');
 const vscode = require('vscode');
 const server = require('./server');
-const {logo, wrapHTML, debugHTML} = require('./html-utils');
+const {logoLarge, wrapHTML, debugHTML} = require('./html-utils');
 
 server.addRoute('GET', '/tour/true', (req, res, url) => {
   vscode.workspace.getConfiguration('kite').update('showTourOnStartup', true, true);
@@ -34,7 +34,7 @@ module.exports = class KiteTour {
     return Promise.resolve(`
     <div class="kite-tour">
       <div class="kite-tour-gutter scrollbars-visible-always">
-        <h5>${logo} Kite for Python is installed and ready!</h5>
+        <h5>${logoLarge} Kite for Python is installed and ready!</h5>
 
         <p>Here's how to get completions, docs, and all the other features Kite has to offer.</p>
 

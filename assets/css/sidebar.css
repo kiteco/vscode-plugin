@@ -289,9 +289,11 @@
   font-weight: 100;
   margin: 0;
   font-size: 1.1em;
+  height: 40px;
 }
 .kite h4 .sticky {
   padding: 10px 0;
+  height: 40px;
 }
 .kite h4 .sticky.fixed {
   position: fixed;
@@ -639,10 +641,12 @@
   position: fixed;
   box-sizing: border-box;
   z-index: 10;
-  pointer-events: none;
+  cursor: pointer;
 }
-.kite h4 .sticky.fixed span {
-  pointer-events: auto;
+
+.kite h4 .sticky.fixed:hover {
+  background: var(--sticky-header-hover-background);
+  text-decoration: underline;
 }
 
 .kite .type {
@@ -800,20 +804,20 @@
   top: 0.2em;
   right: 0;
 }
-.kite section.usages .section-content {
+.kite section.usages-from-your-code .section-content {
   margin: 0;
 }
-.kite section.usages .section-content .kite-pro-features {
+.kite section.usages-from-your-code .section-content .kite-pro-features {
   font-size: 1.2em;
   padding-left: 10px;
 }
-.kite section.usages .section-content .usages-box .usage-container {
+.kite section.usages-from-your-code .section-content .usages-box .usage-container {
   display: flex;
   align-items: center;
   align-content: center;
   justify-content: space-between;
 }
-.kite section.usages .section-content .usages-box .usage-bullet {
+.kite section.usages-from-your-code .section-content .usages-box .usage-bullet {
   width: 0.8em;
   height: 0.8em;
   border-radius: 50%;
@@ -822,15 +826,15 @@
   flex-grow: 0;
   flex-shrink: 0;
 }
-.kite section.usages .section-content .usages-box .usage {
+.kite section.usages-from-your-code .section-content .usages-box .usage {
   flex-grow: 1;
   padding: 0.5em;
   margin: 0;
 }
-.kite section.usages .section-content .usages-box .usage + .usage {
+.kite section.usages-from-your-code .section-content .usages-box .usage + .usage {
   margin-top: 1px;
 }
-.kite section.usages .section-content .usages-box .usage pre {
+.kite section.usages-from-your-code .section-content .usages-box .usage pre {
   margin: 0;
   background-color: transparent;
   font-family: inherit;
@@ -838,10 +842,10 @@
   overflow-x: auto;
   white-space: pre;
 }
-.kite section.usages .section-content .usages-box .usage pre code {
+.kite section.usages-from-your-code .section-content .usages-box .usage pre code {
   font-family: inherit;
 }
-.kite section.usages .section-content .usages-box .usage .links {
+.kite section.usages-from-your-code .section-content .usages-box .usage .links {
   display: inline-block;
   white-space: nowrap;
 }
@@ -1322,7 +1326,7 @@ inpu:not([type="checkbox"])t:-webkit-input-placeholder {
 }
 #results {
   overflow-y: auto;
-  max-height: 200px;
+  max-height: 120px;
 }
 #results li {
   padding: 5px;
@@ -1590,6 +1594,11 @@ form.password-less .has-password {
 .kite-status-panel .kite-info-box a:focus {
   color: var(--text-color-highlight);
   text-decoration: underline;
+}
+
+.kite-status-panel .no-account a:not(.btn).account-dependent {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .kite-tour {
