@@ -1,6 +1,7 @@
 window.StickyTitle = class StickyTitle {
   constructor(stickies, scrollContainer) {
     this.scrollContainer = scrollContainer;
+    this.titleHeight = 40;
 
     this.stickies = [].slice.call(stickies).map(title => {
       const sticky = document.createElement('div');
@@ -8,9 +9,8 @@ window.StickyTitle = class StickyTitle {
       sticky.innerHTML = title.innerHTML;
       title.innerHTML = '';
       title.appendChild(sticky);
-      sticky.parentNode.style.height = sticky.offsetHeight + 'px';
+      sticky.parentNode.style.height = this.titleHeight + 'px';
       sticky.style.width = '100%'; //scrollContainer.offsetWidth + 'px';
-      this.titleHeight = sticky.offsetHeight;
       return sticky;
     });
 
