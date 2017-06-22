@@ -30,6 +30,7 @@ const Kite = {
   {
     this.kiteEditorByEditor = new Map();
     this.eventsByEditor = new Map();
+    this.shown = {};
 
     const router = new KiteRouter(Kite);
     const search = new KiteSearch(Kite);
@@ -249,6 +250,8 @@ const Kite = {
     return StateController.handleState().then(state => {
       switch (state) {
         case StateController.STATES.UNSUPPORTED:
+          if (this.shown[state]) { return; }
+          this.shown[state] = true;
           if (!StateController.isOSSupported()) {
             metrics.track('OS unsupported');
           } else if (!StateController.isOSVersionSupported()) {
@@ -257,11 +260,15 @@ const Kite = {
           this.showErrorMessage('Sorry, the Kite engine is currently not supported on your platform');
           break;
         case StateController.STATES.UNINSTALLED:
+          if (this.shown[state]) { return; }
+          this.shown[state] = true;
           this.showErrorMessage('Kite is not installed: Grab the installer from our website', 'Get Kite').then(item => {
             if (item) { opn('https://kite.com/'); }
           });
           break;
         case StateController.STATES.INSTALLED:
+          if (this.shown[state]) { return; }
+          this.shown[state] = true;
           Promise.all([
             StateController.isKiteInstalled().then(() => true).catch(() => false),
             StateController.isKiteEnterpriseInstalled().then(() => true).catch(() => false),
@@ -301,9 +308,13 @@ const Kite = {
           });
           break;
         case StateController.STATES.RUNNING:
+          if (this.shown[state]) { return; }
+          this.shown[state] = true;
           this.showErrorMessage('The Kite background service is running but not reachable.');
           break;
         case StateController.STATES.REACHABLE:
+          if (this.shown[state]) { return; }
+          this.shown[state] = true;
           this.setStatus(state);
           this.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
             if (item) { 
