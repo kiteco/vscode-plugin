@@ -16,7 +16,7 @@ describe('KiteHoverProvider', () => {
     provider = new KiteHoverProvider(Kite);
   });
   withKiteWhitelistedPaths([__dirname], () => {
-    describe('for a python function with an id and a definition', () => {
+    describe('for a python function with a definition', () => {
       withRoutes([
         [
           o => /\/api\/buffer\/vscode\/.*\/hover/.test(o.path),
@@ -24,7 +24,7 @@ describe('KiteHoverProvider', () => {
         ]
       ]);
 
-      it('provides a representation of the function with cta links', () => {
+      it('provides a definition item', () => {
         const uri = vscode.Uri.file(fixtureURI('sample.py'));
 
         return vscode.workspace.openTextDocument(uri)
