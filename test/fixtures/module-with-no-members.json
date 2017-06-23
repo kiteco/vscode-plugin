@@ -1,0 +1,28 @@
+{
+  "part_of_syntax": "name",
+  "symbol": [
+    {
+      "id": "",
+      "name": "os",
+      "namespace": null,
+      "value": [
+        {
+          "id": "",
+          "kind": "module",
+          "repr": "external:os",
+          "type": "module",
+          "type_id": "__builtin__.module",
+          "synopsis": "This module provides a portable way of using operating system dependent functionality",
+          "detail": {
+            "members": []
+          }
+        }
+      ],
+      "synopsis": "symbol `os`"
+    }
+  ],
+  "report": {
+    "description_text": "This module provides a portable way of using operating system dependent functionality. If you just want to read or write a file see open(), if you want to manipulate paths, see the os.path module, and if you want to read all the lines in all the files on the command line see the fileinput module. For creating temporary files and directories see the tempfile module, and for high-level file and directory handling see the shutil module.",
+    "description_markdown": "This module provides a portable way of using operating system dependent functionality. If you just want to read or write a file see <a href='functions.html#open' title='open'><code>open()</code></a>, if you want to manipulate paths, see the <a href='os.path.html#module-os.path' title='os.path: Operations on pathnames.'><code>os.path</code></a> module, and if you want to read all the lines in all the files on the command line see the <a href='fileinput.html#module-fileinput' title='fileinput: Loop over standard input or a list of files.'><code>fileinput</code></a> module.  For creating temporary files and directories see the <a href='tempfile.html#module-tempfile' title='tempfile: Generate temporary files and directories.'><code>tempfile</code></a> module, and for high-level file and directory handling see the <a href='shutil.html#module-shutil' title='shutil: High-level file operations, including copying.'><code>shutil</code></a> module."
+  }
+}

@@ -1,0 +1,1602 @@
+{
+  "tokens": [
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "variable",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "10",
+            "type": "int",
+            "type_id": "__builtin__.int"
+          }
+        ]
+      },
+      "begin_bytes": 0,
+      "end_bytes": 8,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "hello",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;hello",
+            "kind": "function",
+            "repr": "hello",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          }
+        ]
+      },
+      "begin_bytes": 19,
+      "end_bytes": 24,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "print",
+        "namespace": null,
+        "value": [
+          {
+            "id": "__builtin__.print",
+            "kind": "function",
+            "repr": "print",
+            "type": "builtin_function_or_method",
+            "type_id": "__builtin__.builtin_function_or_method"
+          }
+        ]
+      },
+      "begin_bytes": 32,
+      "end_bytes": 37,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "os",
+        "namespace": null,
+        "value": [
+          {
+            "id": "os",
+            "kind": "module",
+            "repr": "os",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 62,
+      "end_bytes": 64,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "posixpath",
+        "namespace": null,
+        "value": [
+          {
+            "id": "posixpath",
+            "kind": "module",
+            "repr": "posixpath",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 72,
+      "end_bytes": 81,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "os",
+        "namespace": null,
+        "value": [
+          {
+            "id": "os",
+            "kind": "module",
+            "repr": "os",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 87,
+      "end_bytes": 89,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "matplotlib",
+        "namespace": null,
+        "value": [
+          {
+            "id": "matplotlib",
+            "kind": "module",
+            "repr": "matplotlib",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 97,
+      "end_bytes": 107,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "json",
+        "namespace": null,
+        "value": [
+          {
+            "id": "json",
+            "kind": "module",
+            "repr": "json",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 115,
+      "end_bytes": 119,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "posix",
+        "namespace": null,
+        "value": [
+          {
+            "id": "posix",
+            "kind": "module",
+            "repr": "posix",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 127,
+      "end_bytes": 132,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "csv",
+        "namespace": null,
+        "value": [
+          {
+            "id": "csv",
+            "kind": "module",
+            "repr": "csv",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 140,
+      "end_bytes": 143,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "json",
+        "namespace": null,
+        "value": [
+          {
+            "id": "json",
+            "kind": "module",
+            "repr": "json",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 145,
+      "end_bytes": 149,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "json.dumps",
+        "name": "dumps",
+        "namespace": {
+          "id": "json",
+          "kind": "module",
+          "repr": "json",
+          "type": "module",
+          "type_id": "__builtin__.module"
+        },
+        "value": [
+          {
+            "id": "json.dumps",
+            "kind": "function",
+            "repr": "dumps",
+            "type": "function",
+            "type_id": "__builtin__.function"
+          }
+        ]
+      },
+      "begin_bytes": 150,
+      "end_bytes": 155,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "posix",
+        "namespace": null,
+        "value": [
+          {
+            "id": "posix",
+            "kind": "module",
+            "repr": "posix",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 157,
+      "end_bytes": 162,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "posix.chmod",
+        "name": "chmod",
+        "namespace": {
+          "id": "posix",
+          "kind": "module",
+          "repr": "posix",
+          "type": "module",
+          "type_id": "__builtin__.module"
+        },
+        "value": [
+          {
+            "id": "posix.chmod",
+            "kind": "function",
+            "repr": "chmod",
+            "type": "builtin_function_or_method",
+            "type_id": "__builtin__.builtin_function_or_method"
+          }
+        ]
+      },
+      "begin_bytes": 163,
+      "end_bytes": 168,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "os",
+        "namespace": null,
+        "value": [
+          {
+            "id": "os",
+            "kind": "module",
+            "repr": "os",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 169,
+      "end_bytes": 171,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "os.mkdir",
+        "name": "mkdir",
+        "namespace": {
+          "id": "os",
+          "kind": "module",
+          "repr": "os",
+          "type": "module",
+          "type_id": "__builtin__.module"
+        },
+        "value": [
+          {
+            "id": "posix.mkdir",
+            "kind": "function",
+            "repr": "mkdir",
+            "type": "builtin_function_or_method",
+            "type_id": "__builtin__.builtin_function_or_method"
+          }
+        ]
+      },
+      "begin_bytes": 172,
+      "end_bytes": 177,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "csv",
+        "namespace": null,
+        "value": [
+          {
+            "id": "csv",
+            "kind": "module",
+            "repr": "csv",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 178,
+      "end_bytes": 181,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "csv.reader",
+        "name": "reader",
+        "namespace": {
+          "id": "csv",
+          "kind": "module",
+          "repr": "csv",
+          "type": "module",
+          "type_id": "__builtin__.module"
+        },
+        "value": [
+          {
+            "id": "_csv.reader",
+            "kind": "function",
+            "repr": "reader",
+            "type": "builtin_function_or_method",
+            "type_id": "__builtin__.builtin_function_or_method"
+          }
+        ]
+      },
+      "begin_bytes": 182,
+      "end_bytes": 188,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "matplotlib",
+        "namespace": null,
+        "value": [
+          {
+            "id": "matplotlib",
+            "kind": "module",
+            "repr": "matplotlib",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 189,
+      "end_bytes": 199,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "matplotlib.pyplot",
+        "name": "pyplot",
+        "namespace": {
+          "id": "matplotlib",
+          "kind": "module",
+          "repr": "matplotlib",
+          "type": "module",
+          "type_id": "__builtin__.module"
+        },
+        "value": [
+          {
+            "id": "matplotlib.pyplot",
+            "kind": "module",
+            "repr": "matplotlib.pyplot",
+            "type": "module",
+            "type_id": "__builtin__.module"
+          }
+        ]
+      },
+      "begin_bytes": 200,
+      "end_bytes": 206,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "matplotlib.pyplot.plot",
+        "name": "plot",
+        "namespace": {
+          "id": "matplotlib.pyplot",
+          "kind": "module",
+          "repr": "matplotlib.pyplot",
+          "type": "module",
+          "type_id": "__builtin__.module"
+        },
+        "value": [
+          {
+            "id": "matplotlib.pyplot.plot",
+            "kind": "function",
+            "repr": "plot",
+            "type": "function",
+            "type_id": "__builtin__.function"
+          }
+        ]
+      },
+      "begin_bytes": 207,
+      "end_bytes": 211,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "A",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A",
+            "kind": "type",
+            "repr": "A",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          }
+        ]
+      },
+      "begin_bytes": 219,
+      "end_bytes": 220,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "__init__",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A.__init__",
+            "kind": "function",
+            "repr": "__init__",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          }
+        ]
+      },
+      "begin_bytes": 230,
+      "end_bytes": 238,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "self",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:A",
+            "type": "A",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:B",
+            "type": "B",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B"
+          }
+        ]
+      },
+      "begin_bytes": 239,
+      "end_bytes": 243,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "foo",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"foo\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          }
+        ]
+      },
+      "begin_bytes": 245,
+      "end_bytes": 248,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "self",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:A",
+            "type": "A",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:B",
+            "type": "B",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B"
+          }
+        ]
+      },
+      "begin_bytes": 259,
+      "end_bytes": 263,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "",
+        "name": "foo",
+        "namespace": {
+          "id": "",
+          "kind": "invalid(5)",
+          "repr": "(instance:sample:A | instance:sample:B)",
+          "type": "",
+          "type_id": ""
+        },
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"foo\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          }
+        ]
+      },
+      "begin_bytes": 264,
+      "end_bytes": 267,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "foo",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"foo\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          }
+        ]
+      },
+      "begin_bytes": 270,
+      "end_bytes": 273,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "increment",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A.increment",
+            "kind": "function",
+            "repr": "increment",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          }
+        ]
+      },
+      "begin_bytes": 283,
+      "end_bytes": 292,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "self",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:A",
+            "type": "A",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:B",
+            "type": "B",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B"
+          }
+        ]
+      },
+      "begin_bytes": 293,
+      "end_bytes": 297,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "n",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "2",
+            "type": "int",
+            "type_id": "__builtin__.int"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"bar\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"baz\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          },
+          {
+            "id": "__builtin__.False",
+            "kind": "instance",
+            "repr": "False",
+            "type": "bool",
+            "type_id": "__builtin__.bool"
+          }
+        ]
+      },
+      "begin_bytes": 299,
+      "end_bytes": 300,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "n",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "2",
+            "type": "int",
+            "type_id": "__builtin__.int"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"bar\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"baz\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          },
+          {
+            "id": "__builtin__.False",
+            "kind": "instance",
+            "repr": "False",
+            "type": "bool",
+            "type_id": "__builtin__.bool"
+          }
+        ]
+      },
+      "begin_bytes": 318,
+      "end_bytes": 319,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "B",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B",
+            "kind": "type",
+            "repr": "B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          }
+        ]
+      },
+      "begin_bytes": 331,
+      "end_bytes": 332,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "A",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A",
+            "kind": "type",
+            "repr": "A",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          }
+        ]
+      },
+      "begin_bytes": 333,
+      "end_bytes": 334,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "__init__",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B.__init__",
+            "kind": "function",
+            "repr": "__init__",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          }
+        ]
+      },
+      "begin_bytes": 345,
+      "end_bytes": 353,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "self",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:B",
+            "type": "B",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B"
+          }
+        ]
+      },
+      "begin_bytes": 354,
+      "end_bytes": 358,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "foo",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"foo\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          }
+        ]
+      },
+      "begin_bytes": 360,
+      "end_bytes": 363,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "super",
+        "namespace": null,
+        "value": [
+          {
+            "id": "__builtin__.super",
+            "kind": "type",
+            "repr": "super",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          }
+        ]
+      },
+      "begin_bytes": 374,
+      "end_bytes": 379,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "foo",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"foo\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          }
+        ]
+      },
+      "begin_bytes": 380,
+      "end_bytes": 383,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "increment",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B.increment",
+            "kind": "function",
+            "repr": "increment",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          }
+        ]
+      },
+      "begin_bytes": 394,
+      "end_bytes": 403,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "self",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:B",
+            "type": "B",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B"
+          }
+        ]
+      },
+      "begin_bytes": 404,
+      "end_bytes": 408,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "n",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "2",
+            "type": "int",
+            "type_id": "__builtin__.int"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"bar\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"baz\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          },
+          {
+            "id": "__builtin__.False",
+            "kind": "instance",
+            "repr": "False",
+            "type": "bool",
+            "type_id": "__builtin__.bool"
+          }
+        ]
+      },
+      "begin_bytes": 410,
+      "end_bytes": 411,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "kwargs",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "<kwargs: delta>",
+            "type": "dict",
+            "type_id": "__builtin__.dict"
+          }
+        ]
+      },
+      "begin_bytes": 415,
+      "end_bytes": 421,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "kwargs",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "<kwargs: delta>",
+            "type": "dict",
+            "type_id": "__builtin__.dict"
+          }
+        ]
+      },
+      "begin_bytes": 438,
+      "end_bytes": 444,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "super",
+        "namespace": null,
+        "value": [
+          {
+            "id": "__builtin__.super",
+            "kind": "type",
+            "repr": "super",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          }
+        ]
+      },
+      "begin_bytes": 471,
+      "end_bytes": 476,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "B",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B",
+            "kind": "type",
+            "repr": "B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          }
+        ]
+      },
+      "begin_bytes": 477,
+      "end_bytes": 478,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "self",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:B",
+            "type": "B",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B"
+          }
+        ]
+      },
+      "begin_bytes": 480,
+      "end_bytes": 484,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "",
+        "name": "increment",
+        "namespace": {
+          "id": "",
+          "kind": "instance",
+          "repr": "<super: [class:sample:A]>",
+          "type": "super",
+          "type_id": "__builtin__.super"
+        },
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A.increment",
+            "kind": "function",
+            "repr": "increment",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          }
+        ]
+      },
+      "begin_bytes": 486,
+      "end_bytes": 495,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "n",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "2",
+            "type": "int",
+            "type_id": "__builtin__.int"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"bar\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "\"baz\"",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          },
+          {
+            "id": "__builtin__.False",
+            "kind": "instance",
+            "repr": "False",
+            "type": "bool",
+            "type_id": "__builtin__.bool"
+          }
+        ]
+      },
+      "begin_bytes": 496,
+      "end_bytes": 497,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "True",
+        "namespace": null,
+        "value": [
+          {
+            "id": "__builtin__.True",
+            "kind": "instance",
+            "repr": "True",
+            "type": "bool",
+            "type_id": "__builtin__.bool"
+          }
+        ]
+      },
+      "begin_bytes": 509,
+      "end_bytes": 513,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "test",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:B",
+            "type": "B",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B"
+          }
+        ]
+      },
+      "begin_bytes": 519,
+      "end_bytes": 523,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "B",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B",
+            "kind": "type",
+            "repr": "B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          }
+        ]
+      },
+      "begin_bytes": 526,
+      "end_bytes": 527,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "test",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:A",
+            "type": "A",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A"
+          }
+        ]
+      },
+      "begin_bytes": 554,
+      "end_bytes": 558,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "A",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A",
+            "kind": "type",
+            "repr": "A",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          }
+        ]
+      },
+      "begin_bytes": 561,
+      "end_bytes": 562,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "test",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:B",
+            "type": "B",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:A",
+            "type": "A",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A"
+          }
+        ]
+      },
+      "begin_bytes": 571,
+      "end_bytes": 575,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "",
+        "name": "increment",
+        "namespace": {
+          "id": "",
+          "kind": "invalid(5)",
+          "repr": "(instance:sample:B | instance:sample:A)",
+          "type": "",
+          "type_id": ""
+        },
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B.increment",
+            "kind": "function",
+            "repr": "increment",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          },
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A.increment",
+            "kind": "function",
+            "repr": "increment",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          }
+        ]
+      },
+      "begin_bytes": 576,
+      "end_bytes": 585,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "test",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:B",
+            "type": "B",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:A",
+            "type": "A",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A"
+          }
+        ]
+      },
+      "begin_bytes": 598,
+      "end_bytes": 602,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "",
+        "name": "increment",
+        "namespace": {
+          "id": "",
+          "kind": "invalid(5)",
+          "repr": "(instance:sample:B | instance:sample:A)",
+          "type": "",
+          "type_id": ""
+        },
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B.increment",
+            "kind": "function",
+            "repr": "increment",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          },
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A.increment",
+            "kind": "function",
+            "repr": "increment",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          }
+        ]
+      },
+      "begin_bytes": 603,
+      "end_bytes": 612,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "test",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:B",
+            "type": "B",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:A",
+            "type": "A",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A"
+          }
+        ]
+      },
+      "begin_bytes": 620,
+      "end_bytes": 624,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "",
+        "name": "increment",
+        "namespace": {
+          "id": "",
+          "kind": "invalid(5)",
+          "repr": "(instance:sample:B | instance:sample:A)",
+          "type": "",
+          "type_id": ""
+        },
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B.increment",
+            "kind": "function",
+            "repr": "increment",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          },
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A.increment",
+            "kind": "function",
+            "repr": "increment",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          }
+        ]
+      },
+      "begin_bytes": 625,
+      "end_bytes": 634,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "test",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:B",
+            "type": "B",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B"
+          },
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "instance:sample:A",
+            "type": "A",
+            "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A"
+          }
+        ]
+      },
+      "begin_bytes": 642,
+      "end_bytes": 646,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "attr",
+      "Symbol": {
+        "id": "",
+        "name": "increment",
+        "namespace": {
+          "id": "",
+          "kind": "invalid(5)",
+          "repr": "(instance:sample:B | instance:sample:A)",
+          "type": "",
+          "type_id": ""
+        },
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;B.increment",
+            "kind": "function",
+            "repr": "increment",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          },
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;A.increment",
+            "kind": "function",
+            "repr": "increment",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          }
+        ]
+      },
+      "begin_bytes": 647,
+      "end_bytes": 656,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "False",
+        "namespace": null,
+        "value": [
+          {
+            "id": "__builtin__.False",
+            "kind": "instance",
+            "repr": "False",
+            "type": "bool",
+            "type_id": "__builtin__.bool"
+          }
+        ]
+      },
+      "begin_bytes": 657,
+      "end_bytes": 662,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "__name__",
+        "namespace": null,
+        "value": [
+          {
+            "id": "",
+            "kind": "instance",
+            "repr": "str",
+            "type": "str",
+            "type_id": "__builtin__.str"
+          }
+        ]
+      },
+      "begin_bytes": 668,
+      "end_bytes": 676,
+      "begin_runes": 0,
+      "end_runes": 0
+    },
+    {
+      "part_of_syntax": "name",
+      "Symbol": {
+        "id": "",
+        "name": "hello",
+        "namespace": null,
+        "value": [
+          {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py;hello",
+            "kind": "function",
+            "repr": "hello",
+            "type": "FunctionType",
+            "type_id": "types.FunctionType"
+          }
+        ]
+      },
+      "begin_bytes": 696,
+      "end_bytes": 701,
+      "begin_runes": 0,
+      "end_runes": 0
+    }
+  ]
+}

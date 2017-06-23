@@ -1,0 +1,28 @@
+{
+  "part_of_syntax": "name",
+  "symbol": [
+    {
+      "id": "",
+      "name": "variable",
+      "namespace": null,
+      "value": [
+        {
+          "id": "",
+          "kind": "instance",
+          "repr": "10",
+          "class": "",
+          "class_id": "",
+          "module": "",
+          "module_id": "",
+          "synopsis": "synopsis here",
+          "detail": null
+        }
+      ],
+      "synopsis": "synopsis here"
+    }
+  ],
+  "report": {
+    "description_text": "",
+    "description_markdown": ""
+  }
+}

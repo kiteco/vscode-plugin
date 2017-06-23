@@ -1,0 +1,38 @@
+{
+  "part_of_syntax": "name",
+  "symbol": [
+    {
+      "id": "",
+      "name": "increment",
+      "namespace": null,
+      "value": [
+        {
+          "id": "sample:Test.increment",
+          "kind": "function",
+          "repr": "function:sample:Test.increment",
+          "class": "",
+          "class_id": "",
+          "module": "Test",
+          "module_id": "",
+          "synopsis": "synopsis here",
+          "detail": {
+            "language": "python",
+            "parameters": [],
+            "language_details": {
+              "Python": {
+                "language": "python",
+                "vararg": null,
+                "kwarg": null
+              }
+            }
+          }
+        }
+      ],
+      "synopsis": "synopsis here"
+    }
+  ],
+  "report": {
+    "description_text": "",
+    "description_markdown": ""
+  }
+}

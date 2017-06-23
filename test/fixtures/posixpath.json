@@ -1,0 +1,989 @@
+{
+  "part_of_syntax": "name",
+  "symbol": [
+    {
+      "id": "",
+      "name": "posixpath",
+      "namespace": null,
+      "value": [
+        {
+          "id": "",
+          "kind": "module",
+          "repr": "external:posixpath",
+          "type": "module",
+          "type_id": "__builtin__.module",
+          "synopsis": "Common operations on Posix pathnames.\nInstead of importing this module directly, import os and refer to\nthis module as os.path.  The \"os.path\" name is an alias for this\nmodule on Posix systems; on other systems (e.g. Mac, Windows),\nos.path provides the same operations in a manner specific to that\nplatform, and is an alias to another module (e.g. macpath, ntpath).\nSome of this can actually be useful on non-Posix systems too, e.g.\nfor manipulation of the pathname component of URLs.",
+          "detail": {
+            "members": [
+              {
+                "id": "posixpath.ismount",
+                "name": "ismount",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.ismount",
+                    "kind": "function",
+                    "repr": "external:posixpath.ismount",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "__builtin__.unicode",
+                "name": "_unicode",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "__builtin__.unicode",
+                    "kind": "type",
+                    "repr": "external:__builtin__.unicode",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "pathsep",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.str}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "sys",
+                "name": "sys",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "sys",
+                    "kind": "module",
+                    "repr": "external:sys",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "genericpath",
+                "name": "genericpath",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "genericpath",
+                    "kind": "module",
+                    "repr": "external:genericpath",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "genericpath.exists",
+                "name": "exists",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "genericpath.exists",
+                    "kind": "function",
+                    "repr": "external:genericpath.exists",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.expandvars",
+                "name": "expandvars",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.expandvars",
+                    "kind": "function",
+                    "repr": "external:posixpath.expandvars",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "devnull",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.str}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.expanduser",
+                "name": "expanduser",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.expanduser",
+                    "kind": "function",
+                    "repr": "external:posixpath.expanduser",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.sameopenfile",
+                "name": "sameopenfile",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.sameopenfile",
+                    "kind": "function",
+                    "repr": "external:posixpath.sameopenfile",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.islink",
+                "name": "islink",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.islink",
+                    "kind": "function",
+                    "repr": "external:posixpath.islink",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.dirname",
+                "name": "dirname",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.dirname",
+                    "kind": "function",
+                    "repr": "external:posixpath.dirname",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "genericpath.isdir",
+                "name": "isdir",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "genericpath.isdir",
+                    "kind": "function",
+                    "repr": "external:genericpath.isdir",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "genericpath.getmtime",
+                "name": "getmtime",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "genericpath.getmtime",
+                    "kind": "function",
+                    "repr": "external:genericpath.getmtime",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "extsep",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.str}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "stat",
+                "name": "stat",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "stat",
+                    "kind": "module",
+                    "repr": "external:stat",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath._joinrealpath",
+                "name": "_joinrealpath",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath._joinrealpath",
+                    "kind": "function",
+                    "repr": "external:posixpath._joinrealpath",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "supports_unicode_filenames",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.bool}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "__package__",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.NoneType}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "genericpath.commonprefix",
+                "name": "commonprefix",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "genericpath.commonprefix",
+                    "kind": "function",
+                    "repr": "external:genericpath.commonprefix",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "curdir",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.str}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "altsep",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.NoneType}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.splitdrive",
+                "name": "splitdrive",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.splitdrive",
+                    "kind": "function",
+                    "repr": "external:posixpath.splitdrive",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.realpath",
+                "name": "realpath",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.realpath",
+                    "kind": "function",
+                    "repr": "external:posixpath.realpath",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.normpath",
+                "name": "normpath",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.normpath",
+                    "kind": "function",
+                    "repr": "external:posixpath.normpath",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.join",
+                "name": "join",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.join",
+                    "kind": "function",
+                    "repr": "external:posixpath.join",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "defpath",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.str}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "genericpath.getsize",
+                "name": "getsize",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "genericpath.getsize",
+                    "kind": "function",
+                    "repr": "external:genericpath.getsize",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "_varprog",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.NoneType}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.relpath",
+                "name": "relpath",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.relpath",
+                    "kind": "function",
+                    "repr": "external:posixpath.relpath",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "pardir",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.str}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "warnings",
+                "name": "warnings",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "warnings",
+                    "kind": "module",
+                    "repr": "external:warnings",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "genericpath.getatime",
+                "name": "getatime",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "genericpath.getatime",
+                    "kind": "function",
+                    "repr": "external:genericpath.getatime",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.abspath",
+                "name": "abspath",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.abspath",
+                    "kind": "function",
+                    "repr": "external:posixpath.abspath",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.split",
+                "name": "split",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.split",
+                    "kind": "function",
+                    "repr": "external:posixpath.split",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.lexists",
+                "name": "lexists",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.lexists",
+                    "kind": "function",
+                    "repr": "external:posixpath.lexists",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.walk",
+                "name": "walk",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.walk",
+                    "kind": "function",
+                    "repr": "external:posixpath.walk",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.basename",
+                "name": "basename",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.basename",
+                    "kind": "function",
+                    "repr": "external:posixpath.basename",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "os",
+                "name": "os",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "os",
+                    "kind": "module",
+                    "repr": "external:os",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "sep",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.str}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.isabs",
+                "name": "isabs",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.isabs",
+                    "kind": "function",
+                    "repr": "external:posixpath.isabs",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "genericpath.isfile",
+                "name": "isfile",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "genericpath.isfile",
+                    "kind": "function",
+                    "repr": "external:genericpath.isfile",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "_uvarprog",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "external:{instance of __builtin__.NoneType}",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "genericpath.getctime",
+                "name": "getctime",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "genericpath.getctime",
+                    "kind": "function",
+                    "repr": "external:genericpath.getctime",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.splitext",
+                "name": "splitext",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.splitext",
+                    "kind": "function",
+                    "repr": "external:posixpath.splitext",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.samestat",
+                "name": "samestat",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.samestat",
+                    "kind": "function",
+                    "repr": "external:posixpath.samestat",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.normcase",
+                "name": "normcase",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.normcase",
+                    "kind": "function",
+                    "repr": "external:posixpath.normcase",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "posixpath.samefile",
+                "name": "samefile",
+                "namespace": {
+                  "id": "",
+                  "kind": "module",
+                  "repr": "external:posixpath",
+                  "type": "module",
+                  "type_id": "__builtin__.module"
+                },
+                "value": [
+                  {
+                    "id": "posixpath.samefile",
+                    "kind": "function",
+                    "repr": "external:posixpath.samefile",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "synopsis": "symbol `posixpath`"
+    }
+  ],
+  "report": {
+    "description_text": "Common operations on Posix pathnames.\nInstead of importing this module directly, import os and refer to\nthis module as os.path.  The \"os.path\" name is an alias for this\nmodule on Posix systems; on other systems (e.g. Mac, Windows),\nos.path provides the same operations in a manner specific to that\nplatform, and is an alias to another module (e.g. macpath, ntpath).\nSome of this can actually be useful on non-Posix systems too, e.g.\nfor manipulation of the pathname component of URLs.",
+    "description_markdown": "<body>\n\n\n<p>Common operations on Posix pathnames.</p>\n<p>Instead of importing this module directly, import os and refer to\nthis module as os.path.  The &#34;os.path&#34; name is an alias for this\nmodule on Posix systems; on other systems (e.g. Mac, Windows),\nos.path provides the same operations in a manner specific to that\nplatform, and is an alias to another module (e.g. macpath, ntpath).</p>\n<p>Some of this can actually be useful on non-Posix systems too, e.g.\nfor manipulation of the pathname component of URLs.</p>\n</body>"
+  }
+}

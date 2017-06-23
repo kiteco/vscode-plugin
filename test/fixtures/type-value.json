@@ -1,0 +1,335 @@
+{
+  "value": {
+    "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+    "kind": "type",
+    "repr": "src-class:sample.py:B",
+    "type": "type",
+    "type_id": "__builtin__.type",
+    "synopsis": "",
+    "detail": {
+      "bases": [
+        {
+          "id": "sample.py:A",
+          "name": "sample.py:A",
+          "module": "",
+          "module_id": ":Users:cedric:github:kite:spec:fixtures:sample.py:"
+        }
+      ],
+      "components": null,
+      "members": [
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__repr__",
+          "name": "__repr__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__sizeof__",
+          "name": "__sizeof__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__delattr__",
+          "name": "__delattr__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__reduce_ex__",
+          "name": "__reduce_ex__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__getattribute__",
+          "name": "__getattribute__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__hash__",
+          "name": "__hash__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.increment",
+          "name": "increment",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": [
+            {
+              "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.increment",
+              "kind": "function",
+              "repr": "src-func:sample.py:B.increment",
+              "type": "FunctionType",
+              "type_id": "types.FunctionType"
+            }
+          ]
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__dict__",
+          "name": "__dict__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__name__",
+          "name": "__name__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": [
+            {
+              "id": "",
+              "kind": "instance",
+              "repr": "\"B\"",
+              "type": "str",
+              "type_id": "__builtin__.str"
+            }
+          ]
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__format__",
+          "name": "__format__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__doc__",
+          "name": "__doc__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": [
+            {
+              "id": "",
+              "kind": "instance",
+              "repr": "str",
+              "type": "str",
+              "type_id": "__builtin__.str"
+            }
+          ]
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__subclasshook__",
+          "name": "__subclasshook__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__str__",
+          "name": "__str__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__new__",
+          "name": "__new__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__module__",
+          "name": "__module__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": [
+            {
+              "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:",
+              "kind": "module",
+              "repr": "src-module:sample.py",
+              "type": "ModuleType",
+              "type_id": "types.ModuleType"
+            }
+          ]
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__setattr__",
+          "name": "__setattr__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__class__",
+          "name": "__class__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": [
+            {
+              "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+              "kind": "type",
+              "repr": "src-class:sample.py:B",
+              "type": "type",
+              "type_id": "__builtin__.type"
+            }
+          ]
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__init__",
+          "name": "__init__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": [
+            {
+              "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__init__",
+              "kind": "function",
+              "repr": "src-func:sample.py:B.__init__",
+              "type": "FunctionType",
+              "type_id": "types.FunctionType"
+            }
+          ]
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__weakref__",
+          "name": "__weakref__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__reduce__",
+          "name": "__reduce__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": null
+        },
+        {
+          "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.__bases__",
+          "name": "__bases__",
+          "namespace": {
+            "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B",
+            "kind": "type",
+            "repr": "src-class:sample.py:B",
+            "type": "type",
+            "type_id": "__builtin__.type"
+          },
+          "value": [
+            {
+              "id": "",
+              "kind": "instance",
+              "repr": "[generic:__builtin__.type]",
+              "type": "list",
+              "type_id": "__builtin__.list"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "report": {
+    "description_text": "",
+    "description_html": ""
+  }
+}

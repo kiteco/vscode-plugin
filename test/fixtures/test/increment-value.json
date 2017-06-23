@@ -1,0 +1,79 @@
+{
+  "value": {
+    "id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B.increment",
+    "kind": "function",
+    "repr": "src-func:sample.py:B.increment",
+    "type": "FunctionType",
+    "type_id": "types.FunctionType",
+    "synopsis": "synopsis here",
+    "detail": {
+      "language": "python",
+      "parameters": [
+        {
+          "name": "n",
+          "language": "python",
+          "inferred_value": [
+            {
+              "id": "",
+              "kind": "instance",
+              "repr": "2",
+              "type": "int",
+              "type_id": "__builtin__.int"
+            }
+          ],
+          "synopsis": "n synopsis here",
+          "language_details": {
+            "Python": {
+              "default_value": [
+                {
+                  "repr": "0"
+                }
+              ],
+              "annotation": null,
+              "keyword_only": false
+            }
+          }
+        }
+      ],
+      "return_value": [
+        {
+          "id": "",
+          "kind": "instance",
+          "repr": "int",
+          "type": "int",
+          "type_id": "__builtin__.int"
+        }
+      ],
+      "language_details": {
+        "Python": {
+          "receiver": {
+            "language": "python",
+            "name": "self",
+            "inferred_value": [
+              {
+                "id": "",
+                "kind": "instance",
+                "repr": "src-instance:sample.py:B",
+                "type": "B",
+                "type_id": ":Users:cedric:github:kite:spec:fixtures:sample.py:B"
+              }
+            ],
+            "synopsis": "",
+            "language_details": {
+              "Python": {
+                "default_value": null,
+                "annotation": null,
+                "keyword_only": false
+              }
+            }
+          },
+          "return_annotation": null
+        }
+      }
+    }
+  },
+  "report": {
+    "description_text": "",
+    "description_html": ""
+  }
+}

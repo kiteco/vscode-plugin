@@ -1,0 +1,93 @@
+{
+  "part_of_syntax": "name",
+  "symbol": [
+    {
+      "id": "",
+      "name": "self",
+      "namespace": null,
+      "value": [
+        {
+          "id": "",
+          "kind": "instance",
+          "repr": "instance:sample:A",
+          "type": "sample:A",
+          "type_id": "sample:A",
+          "synopsis": "",
+          "detail": {
+            "type": [
+              {
+                "id": "",
+                "kind": "type",
+                "repr": "class:sample:A",
+                "type": "type",
+                "type_id": "__builtin__.type"
+              }
+            ]
+          }
+        },
+        {
+          "id": "",
+          "kind": "instance",
+          "repr": "instance:sample:B",
+          "type": "sample:B",
+          "type_id": "sample:B",
+          "synopsis": "",
+          "detail": {
+            "type": [
+              {
+                "id": "",
+                "kind": "type",
+                "repr": "class:sample:B",
+                "type": "type",
+                "type_id": "__builtin__.type"
+              }
+            ]
+          }
+        },
+        {
+          "id": "",
+          "kind": "instance",
+          "repr": "src-instance:sample.py:A",
+          "type": "sample.py:A",
+          "type_id": "sample.py:A",
+          "synopsis": "",
+          "detail": {
+            "type": [
+              {
+                "id": "",
+                "kind": "type",
+                "repr": "src-class:sample.py:A",
+                "type": "type",
+                "type_id": "__builtin__.type"
+              }
+            ]
+          }
+        },
+        {
+          "id": "",
+          "kind": "instance",
+          "repr": "src-instance:sample.py:B",
+          "type": "sample.py:B",
+          "type_id": "sample.py:B",
+          "synopsis": "",
+          "detail": {
+            "type": [
+              {
+                "id": "",
+                "kind": "type",
+                "repr": "src-class:sample.py:B",
+                "type": "type",
+                "type_id": "__builtin__.type"
+              }
+            ]
+          }
+        }
+      ],
+      "synopsis": "symbol `self`"
+    }
+  ],
+  "report": {
+    "description_text": "No documentation available",
+    "description_markdown": "<body><p>No documentation available</p></body>"
+  }
+}

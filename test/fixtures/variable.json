@@ -1,0 +1,36 @@
+{
+  "part_of_syntax": "name",
+  "symbol": [
+    {
+      "id": "variable",
+      "name": "variable",
+      "namespace": null,
+      "value": [
+        {
+          "id": "variable",
+          "kind": "instance",
+          "repr": "10",
+          "type": "int",
+          "type_id": "__builtin__.int",
+          "synopsis": "symbol `variable`",
+          "detail": {
+            "type": [
+              {
+                "id": "",
+                "kind": "type",
+                "repr": "generic:__builtin__.int",
+                "type": "type",
+                "type_id": "__builtin__.type"
+              }
+            ]
+          }
+        }
+      ],
+      "synopsis": "symbol `variable`"
+    }
+  ],
+  "report": {
+    "description_text": "No documentation available",
+    "description_markdown": "<body><p>No documentation available</p></body>"
+  }
+}

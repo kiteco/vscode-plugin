@@ -1,0 +1,74 @@
+{
+  "part_of_syntax": "name",
+  "symbol": [
+    {
+      "id": "",
+      "name": "foo",
+      "namespace": null,
+      "value": [
+        {
+          "id": "",
+          "kind": "instance",
+          "repr": "\"foo\"",
+          "type": "str",
+          "type_id": "__builtin__.str",
+          "synopsis": "",
+          "detail": {
+            "type": [
+              {
+                "id": "",
+                "kind": "type",
+                "repr": "generic:__builtin__.str",
+                "type": "type",
+                "type_id": "__builtin__.type"
+              }
+            ]
+          }
+        },
+        {
+          "id": "",
+          "kind": "instance",
+          "repr": "5",
+          "type": "int",
+          "type_id": "__builtin__.int",
+          "synopsis": "",
+          "detail": {
+            "type": [
+              {
+                "id": "",
+                "kind": "type",
+                "repr": "generic:__builtin__.int",
+                "type": "type",
+                "type_id": "__builtin__.type"
+              }
+            ]
+          }
+        },
+        {
+          "id": "",
+          "kind": "instance",
+          "repr": "55",
+          "type": "int",
+          "type_id": "__builtin__.int",
+          "synopsis": "",
+          "detail": {
+            "type": [
+              {
+                "id": "",
+                "kind": "type",
+                "repr": "generic:__builtin__.int",
+                "type": "type",
+                "type_id": "__builtin__.type"
+              }
+            ]
+          }
+        }
+      ],
+      "synopsis": "symbol `foo`"
+    }
+  ],
+  "report": {
+    "description_text": "No documentation available",
+    "description_markdown": "<body><p>No documentation available</p></body>"
+  }
+}

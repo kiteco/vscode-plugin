@@ -10,6 +10,7 @@ const {symbolLabel, symbolType, symbolId} = require('./data-utils');
 module.exports = class KiteHoverProvider {
   constructor (Kite) {
     this.Kite = Kite;
+    console.log(this.Kite.handle403Response);
   }
 
   provideHover(doc, pos) {
