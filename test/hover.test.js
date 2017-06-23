@@ -22,7 +22,7 @@ describe('KiteHoverProvider', () => {
     describe('for a python function with an id and a definition', () => {
       withRoutes([
         [
-          o => o.path.indexOf() !== -1,
+          o => /\/api\/buffer\/vscode\/.*\/hover/.test(o.path),
           o => fakeResponse(200, fs.readFileSync(fixtureURI('test/increment.json').toString()))
         ]
       ]);
@@ -45,7 +45,7 @@ describe('KiteHoverProvider', () => {
     describe('for a python function with no id and no definition', () => {
       withRoutes([
         [
-          o => o.path.indexOf() !== -1,
+          o => /\/api\/buffer\/vscode\/.*\/hover/.test(o.path),
           o => fakeResponse(200, fs.readFileSync(fixtureURI('test/increment-no-id-no-def.json').toString()))
         ]
       ]);
@@ -66,7 +66,7 @@ describe('KiteHoverProvider', () => {
     describe('for a python module', () => {
       withRoutes([
         [
-          o => o.path.indexOf() !== -1,
+          o => /\/api\/buffer\/vscode\/.*\/hover/.test(o.path),
           o => fakeResponse(200, fs.readFileSync(fixtureURI('os.json').toString()))
         ]
       ]);
@@ -87,7 +87,7 @@ describe('KiteHoverProvider', () => {
     describe('for an instance', () => {
       withRoutes([
         [
-          o => o.path.indexOf() !== -1,
+          o => /\/api\/buffer\/vscode\/.*\/hover/.test(o.path),
           o => fakeResponse(200, fs.readFileSync(fixtureURI('self.json').toString()))
         ]
       ]);
@@ -101,6 +101,25 @@ describe('KiteHoverProvider', () => {
 
           expect(res.contents[0].language).to.eql('python');
           expect(res.contents[0].value).to.eql('self    instance');
+        });
+      });
+    });
+
+    describe('when the endpoint returns a 404', () => {
+      withRoutes([
+        [
+          o => /\/api\/buffer\/vscode\/.*\/hover/.test(o.path),
+          o => fakeResponse(404)
+        ]
+      ]);
+
+      it('returns null', () => {
+        const uri = vscode.Uri.file(fixtureURI('sample.py'));
+
+        return vscode.workspace.openTextDocument(uri)
+        .then(doc => provider.provideHover(doc, new vscode.Position(19, 13), null))
+        .then(res => {
+          expect(res).to.be(null);
         });
       });
     });

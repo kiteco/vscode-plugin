@@ -70,9 +70,6 @@ module.exports = class KiteHoverProvider {
         return new Hover(compact(texts));
       }
     })
-    .catch(err => {
-      Logger.error(err);
-      return null;
-    });
+    .catch(err => null);
   }
 }
