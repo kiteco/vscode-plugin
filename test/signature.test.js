@@ -1,9 +1,6 @@
-/* global suite, test */
-
 const fs = require('fs');
 const expect = require('expect.js');
 const vscode = require('vscode');
-const sinon = require('sinon');
 const {fixtureURI, withRoutes, withKiteWhitelistedPaths, fakeResponse} = require('./helpers');
 
 const Kite = {
