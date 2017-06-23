@@ -39,22 +39,12 @@ module.exports = class KiteHoverProvider {
 
         const links = [];
 
-        // if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
-        //   const defData = JSON.stringify({
-        //     file: data.report.definition.filename,
-        //     line: data.report.definition.line,
-        //     source: 'Hover',
-        //   });
-        //   links.push(`[def](command:kite.def?${defData})`);
-        // }
-
         if (id && id !== '') {
           const linkData = JSON.stringify({
             id,
             source: 'Hover',
           });
 
-          
           links.push(`[web](command:kite.web?${linkData})`);
           links.push(`[more](command:kite.more?${linkData})`);
         } else {
@@ -64,6 +54,15 @@ module.exports = class KiteHoverProvider {
           });
 
           links.push(`[more](command:kite.more-range?${linkData})`);
+        }
+        
+        if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
+          const defData = JSON.stringify({
+            file: data.report.definition.filename,
+            line: data.report.definition.line,
+            source: 'Hover',
+          });
+          links.push(`[def](command:kite.def?${defData})`);
         }
 
         if (links.length) { texts.push('**Kite:** ' + links.join(' ')); }

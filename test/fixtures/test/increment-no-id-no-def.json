@@ -7,7 +7,7 @@
       "namespace": null,
       "value": [
         {
-          "id": "sample:Test.increment",
+          "id": "",
           "kind": "function",
           "type": "FunctionType",
           "type_id": "types.FunctionType",
@@ -128,10 +128,6 @@
   ],
   "report": {
     "description_text": "",
-    "description_markdown": "",
-    "definition": {
-      "filename": "sample.py",
-      "line": 50
-    }
+    "description_markdown": ""
   }
 }
