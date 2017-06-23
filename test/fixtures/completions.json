@@ -1,0 +1,18 @@
+{
+  "language": "python",
+  "completions": [
+    {
+      "display": "dumps",
+      "insert": "idumps",
+      "hint": "function",
+      "id": "json.dumps",
+      "documentation_text": "some dumps documentation"
+    }, {
+      "display": "dump",
+      "insert": "idump",
+      "hint": "function",
+      "id": "json.dump",
+      "documentation_text": "some dump documentation"
+    }
+  ]
+}

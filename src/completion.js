@@ -88,8 +88,6 @@ module.exports = class KiteCompletionProvider {
         return item;
       });
     })
-    .catch(err => {
-      return [];
-    });
+    .catch(err => []);
   }
 }
