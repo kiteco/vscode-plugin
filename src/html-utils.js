@@ -2,6 +2,7 @@
 
 const vscode = require('vscode');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const {head, compact, flatten} = require('./utils');
 const {openDocumentationInWebURL} = require('./urls');
@@ -10,7 +11,8 @@ const {
   valueLabel, valueType, callSignature,
   memberLabel, parameterName, parameterDefault, parameterTypeLink,
 } = require('./data-utils');
-const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
+const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-small.svg')).toString();
+const logoLarge = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
 const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
 const enterpriseLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kiteenterprise.svg')).toString();
 const giftLogoPath = path.resolve(__dirname, '..', 'assets', 'images', 'icon-gift.png');
@@ -94,7 +96,7 @@ function wrapHTML (html) {
   </style>
   ${STYLESHEETS}
   ${SCRIPTS}
-  <div class="kite">${html}</div>`
+  <div class="kite platform-${os.platform()}">${html}</div>`
 }
 
 function prependNavigation(html, steps, step) {
@@ -164,10 +166,10 @@ function renderModule(data) {
       </section>
 
       ${renderMembers(value)}
+      ${renderUsages(data)}
       ${renderExamples(data)}
       ${renderLinks(data)}
       ${renderDefinition(data)}
-      ${renderUsages(data)}
       ${debugData(data)}
     </div>
   </div>
@@ -194,11 +196,11 @@ function renderFunction(data) {
         ${valueDescription(data)}
       </section>
 
+      ${renderUsages(data)}
       ${renderExamples(data)}
       ${renderLinks(data)}
       ${renderDefinition(data)}
       ${renderInvocations(value)}
-      ${renderUsages(data)}
       ${debugData(data)}
     </div>
   </div>
@@ -224,9 +226,9 @@ function renderInstance(data) {
       </section>
 
       ${renderDefinition(value)}
+      ${renderUsages(data)}
       ${renderExamples(data)}
       ${renderLinks(data)}
-      ${renderUsages(data)}
       ${debugData(data)}
     </div>
   </div>
@@ -410,7 +412,7 @@ function additionalExamplesLink(examplesCount, data) {
 
 function renderUsages(symbol) {
   return symbol.report && symbol.report.usages && symbol.report.usages.length
-    ? section('Usages',
+    ? section('Usages from your code',
       Plan.can('usages_editor')
         ? `<ul class="usages-box">
           ${symbol.report.usages.map(renderUsage).join('')}
@@ -583,6 +585,7 @@ module.exports = {
   enterpriseLogoSvg,
   highlightCode,
   logo,
+  logoLarge,
   proLogoSvg,
   pluralize,
   proFeatures,

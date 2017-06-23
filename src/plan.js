@@ -23,7 +23,7 @@ const Plan = {
   },
 
   isTrialing() {
-    return this.plan && this.plan.status === 'trialing';
+    return this.plan && this.plan.status === 'trialing' && this.remainingTrialDays() > 0;
   },
 
   isActivePro() {

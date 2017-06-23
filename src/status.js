@@ -48,6 +48,32 @@ server.addRoute('GET', '/status/whitelist', (req, res, url) => {
   });
 });
 
+
+server.addRoute('GET', '/status/login', (req, res, url) => {
+  vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+  res.writeHead(200);
+  res.end();
+});
+
+server.addRoute('GET', '/status/resendEmail', (req, res, url) => {
+  StateController.client.request({
+    path: '/api/account/resendVerification',
+    method: 'post',
+  })
+  .then(resp => {
+    if (resp.statusCode === 200) {
+      res.writeHead(200),
+      res.end();
+    } else {
+      throw new Error('err');
+    }
+  })
+  .catch(() => {
+    res.writeHead(500);
+    res.end();
+  });
+});
+
 module.exports = class KiteStatus {
   constructor(Kite) {
     this.Kite = Kite;
@@ -137,7 +163,7 @@ module.exports = class KiteStatus {
           };
         });
       }),
-      this.getUserAccountInfo().catch(() => ({})),
+      this.getUserAccountInfo().catch(() => {}),
       this.getStatus(editor),
     ];
     if (this.Kite.isGrammarSupported(editor)) {
@@ -153,67 +179,71 @@ module.exports = class KiteStatus {
       ${this.renderSubscription(plan, status)}
       ${this.renderEmailWarning(account)}
       ${this.renderReferralsCredited(plan)}
-      ${this.renderLinks()}
+      ${this.renderLinks(account)}
       ${this.renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist)}
+      <script>initStatus();</script>
     `;
   }
 
-  renderLinks() {
+  renderLinks(account) {
     let giftLink = '';
 
-    if (!Plan.isActivePro()) {
-      if (Plan.referralsCredited() &&
-          Plan.referralsCredited() < Plan.referralsCredits()) {
+    if (!Plan.isEnterprise()) {
+      if (Plan.referralsCredited() < Plan.referralsCredits()) {
         giftLink = `<li>
           <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
-             class="kite-gift">Get free Pro! <i class="icon-kite-gift"></i></a>
+             class="kite-gift account-dependent">Get free Pro! <i class="icon-kite-gift"></i></a>
         </li>`;
       } else {
         giftLink = `<li>
           <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
-             class="kite-gift">Invite friends <i class="icon-kite-gift"></i></a>
+             class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
         </li>`;
       }
     }
 
     return `
-    <ul class="links">
+    <ul class="links ${account ? 'has-account' : 'no-account'}">
       ${giftLink}
-      <li><a href="https://ga.kite.com/docs/">Search Python documentation</a></li>
-      <li><a href='command:kite.web-url?"http://localhost:46624/settings"'>Settings</a></li>
-      <li><a href='command:kite.web-url?"http://localhost:46624/settings/permissions"'>Permissions</a></li>
+      <li><a href="https://ga.kite.com/docs/" class="account-dependent">Search Python documentation</a></li>
+      <li><a href='command:kite.web-url?"http://localhost:46624/settings"' class="account-dependent">Settings</a></li>
+      <li><a href='command:kite.web-url?"http://localhost:46624/settings/permissions"' class="account-dependent">Permissions</a></li>
       <li><a href="http://help.kite.com/">Help</a></li>
     </ul>
     `;
   }
 
   renderEmailWarning(account) {
-    return account.email_verified
+    return !account || account.email_verified
       ? ''
       : `<div class="kite-warning-box">
         Please verify your email address
 
-        <div class="actions">
-          <a href="https://kite.com/account/resetPassword/request?email=${account.email}">Resend email</a>
+        <div  class="actions">
+          <a href="/foo"
+          class="resend-email"
+          data-failure="We were unable to send a verification email,<br/>please contact feedback@kite.com."
+          data-confirmation="A new verification email was sent to ${account.email}">Resend email</a>
         </div>
       </div>`;
   }
 
   renderReferralsCredited(plan) {
-    return Plan.hasReferralCredits()
-      ? `<div class="kite-info-box">
-        ${Plan.referralsCredited()}
-        ${pluralize(Plan.referralsCredited(), 'user', 'users')}
-        accepted your invite.<br/>We've credited
-        ${Plan.daysCredited()}
-        ${pluralize(Plan.daysCredited(), 'day', 'days')}
-        of Kite Pro to your account!
-        <div class="actions">
-          <a is="kite-localtoken-anchor"
-             href="http://localhost:46624/redirect/invite">Invite more people</a>
-        </div>
-      </div>`
-      : '';
+    return '';
+    // return Plan.hasReferralCredits()
+    //   ? `<div class="kite-info-box">
+    //     ${Plan.referralsCredited()}
+    //     ${pluralize(Plan.referralsCredited(), 'user', 'users')}
+    //     accepted your invite.<br/>We've credited
+    //     ${Plan.daysCredited()}
+    //     ${pluralize(Plan.daysCredited(), 'day', 'days')}
+    //     of Kite Pro to your account!
+    //     <div class="actions">
+    //       <a is="kite-localtoken-anchor"
+    //          href="http://localhost:46624/redirect/invite">Invite more people</a>
+    //     </div>
+    //   </div>`
+    //   : '';
   }
 
   renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist) {
@@ -267,7 +297,9 @@ module.exports = class KiteStatus {
       case STATES.REACHABLE:
         content = `
           <div class="text-danger">Kite engine is not logged in ${dot}</div>
-          <a href="kite-atom-login://login" class="btn error">Login now</a>
+          <a href="#" 
+             onclick="requestGet('/status/login')"
+             class="btn error">Login now</a>
         `;
         break;
       case STATES.AUTHENTICATED:
