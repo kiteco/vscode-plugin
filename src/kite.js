@@ -19,7 +19,7 @@ const EditorEvents = require('./events');
 const metrics = require('./metrics');
 const Plan = require('./plan');
 const server = require('./server');
-const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, appendToken, statusPath} = require('./urls');
+const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, appendToken, statusPath, languagesPath} = require('./urls');
 const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact} = require('./utils');
 
@@ -247,7 +247,11 @@ const Kite = {
   },
 
   checkState() {
-    return StateController.handleState().then(state => {
+    return Promise.all([
+      StateController.handleState(),
+      this.getSupportedLanguages(),
+    ]).then(([state, languages]) => {
+      this.supportedLanguages = languages;
       switch (state) {
         case StateController.STATES.UNSUPPORTED:
           if (this.shown[state]) { return; }
@@ -440,7 +444,7 @@ const Kite = {
   },
 
   isGrammarSupported(e) {
-    return e && e.document.languageId === 'python';
+    return e && this.supportedLanguages.includes(e.document.languageId);
   },
 
   isEditorWhitelisted(e) {
@@ -483,6 +487,24 @@ const Kite = {
     })
     .catch(() => ({status: 'ready'}));
   }, 
+
+  getSupportedLanguages() {
+    const path = languagesPath();
+    return promisifyRequest(StateController.client.request({path}))
+    .then(resp => {
+      Logger.logResponse(resp);
+      if (resp.statusCode !== 200) {
+        return promisifyReadResponse(resp)
+        .then(data => {
+          throw new Error(`Error ${resp.statusCode}: ${data}`);
+        });
+      } else {
+        return promisifyReadResponse(resp)
+        .then(json => JSON.parse(json))
+        .catch(() => ['python']);
+      }
+    });
+  },
 
   shouldOfferWhitelist(document) {
     return this.projectDirForEditor(document)

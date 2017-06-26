@@ -3,6 +3,10 @@ const md5 = require('md5');
 const {head} = require('./utils');
 const {StateController} = require('kite-installer');
 
+function languagesPath() {
+  return '/clientapi/languages';
+}
+
 function tokensPath(editor) {
   const state = md5(editor.getText());
   const filename = editor.getPath();
@@ -186,6 +190,7 @@ module.exports = {
   openExampleInWebURL,
   openSignatureInWebURL,
   projectDirPath,
+  languagesPath,
   reportPath,
   searchPath,
   serializeRangeForPath,
