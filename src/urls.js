@@ -13,14 +13,12 @@ function tokensPath(editor) {
   const buffer = cleanPath(filename);
   return [
     `/api/buffer/vscode/${buffer}/${state}/tokens`,
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
   ].join('?');
 }
 
 function accountPath() {
   return [
     '/api/account/user',
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
   ].join('?');
 }
 
@@ -29,7 +27,6 @@ function statusPath(path) {
     '/clientapi/status',
     [
       `filename=${encodeURI(path)}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
     ].join('&'),
   ].join('?');
 }
@@ -37,7 +34,6 @@ function statusPath(path) {
 function signaturePath() {
   return [
     '/clientapi/editor/signatures',
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
   ].join('?');
 }
 
@@ -48,7 +44,6 @@ function searchPath(query, offset = 0, limit = 10) {
       `q=${encodeURI(query)}`,
       `offset=${offset}`,
       `limit=${limit}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
     ].join('&'),
   ].join('?');
 }
@@ -58,7 +53,6 @@ function projectDirPath(path) {
     '/clientapi/projectdir',
     [
       `filename=${encodeURI(path)}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
     ].join('&'),
   ].join('?');
 }
@@ -68,7 +62,6 @@ function shouldNotifyPath(path) {
     '/clientapi/permissions/notify',
     [
       `filename=${encodeURI(path)}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
     ].join('&'),
   ].join('?');
 }
@@ -76,7 +69,6 @@ function shouldNotifyPath(path) {
 function completionsPath() {
   return [
     '/clientapi/editor/completions',
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
   ].join('?');
 }
 
@@ -89,7 +81,6 @@ function reportPath(data) {
 function valueReportPath(id) {
   return [
     `/api/editor/value/${id}`,
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
   ].join('?');
 }
 
@@ -99,7 +90,6 @@ function membersPath(id, page = 0, limit = 999) {
     [
       `offset=${page}`,
       `limit=${limit}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
     ].join('&'),
   ].join('?');
 }
@@ -110,7 +100,6 @@ function usagesPath(id, page = 0, limit = 999) {
     [
       `offset=${page}`,
       `limit=${limit}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
     ].join('&'),
   ].join('?');
 }
@@ -118,21 +107,20 @@ function usagesPath(id, page = 0, limit = 999) {
 function usagePath(id) {
   return [
     `/api/editor/usages/${id}`,
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
   ].join('?');
 }
 
 function examplePath(id) {
   return [
     `/api/python/curation/${id}`,
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
   ].join('?');
 }
 function appendToken(url) {
-  const token = StateController.client.LOCAL_TOKEN;
-  return url.indexOf('?') !== -1
-    ? `${url}&localtoken=${token}`
-    : `${url}?localtoken=${token}`;
+  return url;
+  // const token = StateController.client.LOCAL_TOKEN;
+  // return url.indexOf('?') !== -1
+  //   ? `${url}&localtoken=${token}`
+  //   : `${url}?localtoken=${token}`;
 }
 function openDocumentationInWebURL(id, token = false) {
   const url = `http://localhost:46624/clientapi/desktoplogin?d=/docs/python/${escapeId(id)}`;
@@ -160,7 +148,6 @@ function hoverPath(document, range) {
     [
       `selection_begin_bytes=${start}`,
       `selection_end_bytes=${end}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
     ].join('&'),
   ].join('?');
 }

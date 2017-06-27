@@ -13,6 +13,26 @@ const head = a => a[0];
 const last = a => a[a.length - 1];
 const log = v => (console.log(v), v);
 
+const evalPath = (o, ...path) =>
+  path.reduce((m, k) => {
+    if (k === '*' && m) { k = head(Object.keys(m)); }
+    return m && typeof m[k] !== 'undefined' ? m[k] : undefined;
+  }, o);
+
+const detailLang = o =>
+  o && o.language_details
+    ? head(Object.keys(o.language_details)).toLowerCase()
+    : 'python';
+
+const detailGet = (o, k) => o[k] || evalPath(o, 'language_details', '*', k);
+
+const detailExist = (o, k) => detailGet(o, k) != null;
+
+const detailNotEmpty = (o, k) => {
+  const v = detailGet(o, k);
+  return v != null && v.length > 0;
+};
+
 const merge = (a, b) => {
   const c = {};
   for (const k in a) { c[k] = a[k]; }
@@ -89,6 +109,10 @@ module.exports = {
   head,
   last,
   log,
+  detailExist,
+  detailGet,
+  detailLang,
+  detailNotEmpty,
   parseJSON,
   promisifyReadResponse,
   promisifyRequest,

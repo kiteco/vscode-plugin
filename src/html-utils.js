@@ -4,7 +4,7 @@ const vscode = require('vscode');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const {head, compact, flatten} = require('./utils');
+const {head, compact, flatten, detailGet, detailLang, detailNotEmpty} = require('./utils');
 const {openDocumentationInWebURL} = require('./urls');
 const {
   symbolLabel, symbolType,
@@ -189,7 +189,7 @@ function renderFunction(data) {
     <div class="sections-wrapper">
       ${renderParameters(value)}
       ${renderPatterns(value)}
-      ${renderKwargs(value)}
+      ${renderLanguageSpecificArgumentsList(value)}
 
       <section class="summary">
         <h4>Summary</h4>
@@ -490,15 +490,27 @@ function renderPatterns(data) {
   return patterns;
 }
 
+function renderLanguageSpecificArgumentsList(value) {
+  const {detail} = value;
+  const lang = detailLang(detail);
+
+  switch (lang) {
+    case 'python':
+      return renderKwargs(value);
+    default:
+      return '';
+  }
+}
+
 function renderKwargs(data) {
   let kwargs = '';
   const {detail} = data;
-  if (detail && detail.kwarg_parameters && detail.kwarg_parameters.length) {
+  if (detailNotEmpty(detail, 'kwarg_parameters')) {
     kwargs = `<section class="kwargs">
-      <h4>**${detail.kwarg.name}</h4>
+      <h4>**${detailGet(detail, 'kwarg').name}</h4>
       <div class="section-content"><dl>
         ${
-          detail.kwarg_parameters
+          detailGet(detail, 'kwarg_parameters')
           .map(p => renderParameter(p))
           .map(p => `<dt>${p}</dt>`)
           .join('')
@@ -543,24 +555,55 @@ function additionalMembersLink(membersCount, value) {
 function renderParameters(value) {
   const {detail} = value;
 
-  const allParameters = compact(flatten([
-    detail ? detail.parameters : null,
-    detail ? detail.vararg : null,
-    detail ? detail.kwarg : null,
-  ]));
+  const allParameters = compact(flatten(gatherParameters(detail)));
 
-  return detail &&
-         allParameters.length /*&&
-         allParameters.some(p => p.synopsis && p.synopsis !== '')*/
+  return detail && allParameters.length
     ? section('Parameters', `
     <dl>
       ${detail.parameters
         ? detail.parameters.map(p => renderParameter(p)).join('')
         : ''}
-      ${renderParameter(detail.vararg, '*')}
-      ${renderParameter(detail.kwarg, '**')}
+      ${renderLanguageSpecificArguments(detail)}
     </dl>`)
     : '';
+}
+
+function gatherParameters(detail) {
+  const lang = detailLang(detail);
+  switch (lang) {
+    case 'python':
+      return [
+        detail ? detail.parameters : null,
+        detail ? detailGet(detail, 'vararg') : null,
+        detail ? detailGet(detail, 'kwarg') : null,
+      ];
+    case 'javascript':
+      return [
+        detail ? detail.parameters : null,
+        detail ? detailGet(detail, 'rest') : null,
+      ];
+    default:
+      return [
+        detail ? detail.parameters : null,
+      ];
+  }
+}
+
+function renderLanguageSpecificArguments(detail) {
+  const lang = detailLang(detail);
+  switch (lang) {
+    case 'python':
+      return [
+        renderParameter(detailGet(detail, 'vararg'), '*'),
+        renderParameter(detailGet(detail, 'kwarg'), '**'),
+      ].join('');
+    case 'javascript':
+      return [
+        renderParameter(detailGet(detail, 'rest'), '…'),
+      ].join('');
+    default:
+      return '';
+  }
 }
 
 function renderParameter(param, prefix = '') {

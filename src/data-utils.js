@@ -1,16 +1,27 @@
 'use strict';
 
-const {compact, flatten, head, last, uniq} = require('./utils');
+const {compact, flatten, head, last, uniq, detailGet, detailLang, detailNotEmpty} = require('./utils');
 
 const parameterName = (p, prefix = '') =>
   p
     ? `${prefix}${p.name}`
     : undefined;
 
-const parameterDefault = (p) =>
-  p && p.default_value && p.default_value.length
-    ? `=${head(p.default_value).repr}`
-    : '';
+const parameterDefault = (p) => {
+  if (!p) { return ''; }
+
+  const lang = detailLang(p);
+
+  switch (lang) {
+    case 'python':
+    case 'javascript':
+      return detailNotEmpty(p, 'default_value')
+        ? `=${head(detailGet(p, 'default_value')).repr}`
+        : '';
+    default:
+      return '';
+  }
+};
 
 const parameterType = (p, prefix = '') =>
   p.inferred_value
@@ -33,14 +44,31 @@ const parameters = (d, withType = true) =>
       : d.parameters.map(p => `${parameterName(p)}${parameterDefault(p)}`))
     : [];
 
+const gatherParameters = (detail, withType) => {
+  const lang = detailLang(detail);
+  switch (lang) {
+    case 'python':
+      return [
+        parameters(detail, withType),
+        parameterName(detailGet(detail, 'vararg'), '*'),
+        parameterName(detailGet(detail, 'kwarg'), '**'),
+      ];
+    case 'javascript':
+      return [
+        parameters(detail, withType),
+        parameterName(detailGet(detail, 'rest'), '…'),
+      ];
+    default:
+      return [
+        parameters(detail, withType),
+      ];
+  }
+};
+
 const signature = ({detail}, withType = true, current = -1) =>
   detail
     ? `(${
-      compact(flatten([
-        parameters(detail, withType),
-        parameterName(detail.vararg, '*'),
-        parameterName(detail.kwarg, '**'),
-      ]))
+      compact(flatten(gatherParameters(detail, withType)))
       .map((p, i, a) => {
         const s = i === a.length - 1 ? '' : ', ';
         return i === current
@@ -64,8 +92,8 @@ const callKwargParameter = (parameter, withType) => {
 };
 
 const callKwargParameters = (signature, withType) =>
-  signature.kwargs && signature.kwargs.length
-    ? signature.kwargs.map(p => callKwargParameter(p)).join(', ')
+  detailNotEmpty(signature, 'kwargs')
+    ? detailGet(signature, 'kwargs').map(p => callKwargParameter(p)).join(', ')
     : null;
 
 const callSignature = (data) =>

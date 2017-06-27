@@ -2,7 +2,7 @@
 const {SignatureHelp, SignatureInformation, ParameterInformation} = require('vscode');
 const {StateController, Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
-const {promisifyRequest, promisifyReadResponse, parseJSON, compact} = require('./utils');
+const {promisifyRequest, promisifyReadResponse, parseJSON, compact, detailGet, detailNotEmpty, detailLang} = require('./utils');
 const {signaturePath} = require('./urls');
 
 module.exports = class KiteSignatureProvider {
