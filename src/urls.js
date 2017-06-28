@@ -17,7 +17,7 @@ function accountPath() {
 function statusPath(path) {
   return [
     '/clientapi/status',
-    `filename=${encodeURI(path)}`,
+    `filename=${encodeURI(normalizeDriveLetter(path))}`,
   ].join('?');
 }
 
@@ -39,14 +39,14 @@ function searchPath(query, offset = 0, limit = 10) {
 function projectDirPath(path) {
   return [
     '/clientapi/projectdir',
-    `filename=${encodeURI(path.replace(/^[a-z]:/, m => m.toUpperCase()))}`,
+    `filename=${encodeURI(normalizeDriveLetter(path))}`,
   ].join('?');
 }
 
 function shouldNotifyPath(path) {
   return [
     '/clientapi/permissions/notify',
-    `filename=${encodeURI(path.replace(/^[a-z]:/, m => m.toUpperCase()))}`,
+    `filename=${encodeURI(normalizeDriveLetter(path))}`,
   ].join('?');
 }
 
@@ -127,13 +127,17 @@ function escapeId(id) {
 }
 
 function cleanPath(p) {
-  return encodeURI(p)
-  .replace(/^([a-zA-Z]):/, (m, d) => `/windows/${d.toUpperCase()}`)
+  return encodeURI(normalizeDriveLetter(p))
+  .replace(/^([a-zA-Z]):/, (m, d) => `/windows/${d}`)
   .replace(/\/|\\|%5C/g, ':');
 }
 
 function serializeRangeForPath(range) {
   return `${range.start.row}:${range.start.column}/${range.end.row}:${range.end.column}`;
+}
+
+function normalizeDriveLetter(str) {
+  return str.replace(/^[a-z]:/, m => m.toUpperCase());
 }
 
 module.exports = {
@@ -142,6 +146,7 @@ module.exports = {
   examplePath,
   hoverPath,
   membersPath,
+  normalizeDriveLetter,
   openDocumentationInWebURL,
   openExampleInWebURL,
   openSignatureInWebURL,
