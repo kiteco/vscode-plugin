@@ -39,14 +39,14 @@ function searchPath(query, offset = 0, limit = 10) {
 function projectDirPath(path) {
   return [
     '/clientapi/projectdir',
-    `filename=${encodeURI(path)}`,
+    `filename=${encodeURI(path.replace(/^[a-z]:/, m => m.toUpperCase()))}`,
   ].join('?');
 }
 
 function shouldNotifyPath(path) {
   return [
     '/clientapi/permissions/notify',
-    `filename=${encodeURI(path)}`,
+    `filename=${encodeURI(path.replace(/^[a-z]:/, m => m.toUpperCase()))}`,
   ].join('?');
 }
 
@@ -128,7 +128,7 @@ function escapeId(id) {
 
 function cleanPath(p) {
   return encodeURI(p)
-  .replace(/^([a-zA-Z]):/, '/windows/$1')
+  .replace(/^([a-zA-Z]):/, (m, d) => `/windows/${d.toUpperCase()}`)
   .replace(/\/|\\|%5C/g, ':');
 }
 
