@@ -2,8 +2,9 @@
 
 const {StateController, Logger} = require('kite-installer');
 const {MAX_PAYLOAD_SIZE, CONNECT_ERROR_LOCKOUT} = require('./constants');
-const {promisifyRequest, secondsSince, normalizeDriveLetter} = require('./utils');
-
+const {promisifyRequest, secondsSince} = require('./utils');
+const {normalizeDriveLetter} = require('./urls');
+ 
 module.exports = class EditorEvents {
   constructor(Kite, editor) {
     this.Kite = Kite;
