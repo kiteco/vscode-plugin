@@ -3,7 +3,7 @@ const {CompletionItem, CompletionItemKind} = require('vscode');
 const {StateController, Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
 const {promisifyRequest, promisifyReadResponse, parseJSON} = require('./utils');
-const {completionsPath} = require('./urls');
+const {completionsPath, normalizeDriveLetter} = require('./urls');
 
 const fill = (s, l, f = ' ') => {
   while(s.length < l) {
@@ -39,9 +39,8 @@ module.exports = class KiteCompletionProvider {
     const payload = {
       text,
       editor: 'vscode',
-      filename: document.fileName,
+      filename: normalizeDriveLetter(document.fileName),
       cursor_runes: cursorPosition,
-      localtoken: StateController.client.LOCAL_TOKEN,
     };
     Logger.debug(payload);
 
