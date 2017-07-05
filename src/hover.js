@@ -40,20 +40,19 @@ module.exports = class KiteHoverProvider {
         const links = [];
 
         if (id && id !== '') {
-          const linkData = JSON.stringify({
+          links.push(`[web](command:kite.web?${JSON.stringify({
             id,
             source: 'Hover',
-          });
-
-          links.push(`[web](command:kite.web?${linkData})`);
-          links.push(`[more](command:kite.more?${linkData})`);
-        } else {
-          const linkData = JSON.stringify({
+          })})`);
+          links.push(`[more](command:kite.more-range?${JSON.stringify({
             range,
             source: 'Hover',
-          });
-
-          links.push(`[more](command:kite.more-range?${linkData})`);
+          })})`);
+        } else {
+          links.push(`[more](command:kite.more-range?${JSON.stringify({
+            range,
+            source: 'Hover',
+          })})`);
         }
         
         if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
