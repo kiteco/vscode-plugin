@@ -5,7 +5,7 @@ const {StateController, Logger} = require('kite-installer');
 const server = require('./server');
 const {wrapHTML, debugHTML, proLogoSvg, enterpriseLogoSvg, logo, pluralize} = require('./html-utils');
 const Plan = require('./plan');
-const {accountPath, statusPath} = require('./urls');
+const {accountPath, statusPath, normalizeDriveLetter} = require('./urls');
 const {promisifyRequest, promisifyReadResponse, params} = require('./utils');
 const {MAX_FILE_SIZE} = require('./constants');
 const {STATES} = StateController;
@@ -131,7 +131,7 @@ module.exports = class KiteStatus {
       return Promise.resolve(def); 
     }
 
-    const filepath = editor.document.fileName;
+    const filepath = normalizeDriveLetter(editor.document.fileName);
     const path = statusPath(filepath);
 
     return promisifyRequest(StateController.client.request({path}))
@@ -325,7 +325,7 @@ module.exports = class KiteStatus {
             }
           }
         } else {
-          const path = encodeURI(editor.document.fileName);
+          const path = encodeURI(normalizeDriveLetter(editor.document.fileName));
           const settingsURL = `http://localhost:46624/settings/permissions?filename=${path}`;
           content = `
             <div class="text-warning">Kite engine is not enabled for this file ${dot}</div>

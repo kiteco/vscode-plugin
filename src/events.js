@@ -3,7 +3,8 @@
 const {StateController, Logger} = require('kite-installer');
 const {MAX_PAYLOAD_SIZE, CONNECT_ERROR_LOCKOUT} = require('./constants');
 const {promisifyRequest, secondsSince} = require('./utils');
-
+const {normalizeDriveLetter} = require('./urls');
+ 
 module.exports = class EditorEvents {
   constructor(Kite, editor) {
     this.Kite = Kite;
@@ -56,7 +57,7 @@ module.exports = class EditorEvents {
     const event = {
       source: 'vscode',
       action,
-      filename: document.fileName,
+      filename: normalizeDriveLetter(document.fileName),
       text: document.getText(),
     };
 

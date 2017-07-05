@@ -7,34 +7,22 @@ function tokensPath(editor) {
   const state = md5(editor.getText());
   const filename = editor.getPath();
   const buffer = cleanPath(filename);
-  return [
-    `/api/buffer/vscode/${buffer}/${state}/tokens`,
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
-  ].join('?');
+  return `/api/buffer/vscode/${buffer}/${state}/tokens`;
 }
 
 function accountPath() {
-  return [
-    '/api/account/user',
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
-  ].join('?');
+  return '/api/account/user';
 }
 
 function statusPath(path) {
   return [
     '/clientapi/status',
-    [
-      `filename=${encodeURI(path)}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
-    ].join('&'),
+    `filename=${encodeURI(normalizeDriveLetter(path))}`,
   ].join('?');
 }
 
 function signaturePath() {
-  return [
-    '/clientapi/editor/signatures',
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
-  ].join('?');
+  return '/clientapi/editor/signatures';
 }
 
 function searchPath(query, offset = 0, limit = 10) {
@@ -44,7 +32,6 @@ function searchPath(query, offset = 0, limit = 10) {
       `q=${encodeURI(query)}`,
       `offset=${offset}`,
       `limit=${limit}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
     ].join('&'),
   ].join('?');
 }
@@ -52,28 +39,19 @@ function searchPath(query, offset = 0, limit = 10) {
 function projectDirPath(path) {
   return [
     '/clientapi/projectdir',
-    [
-      `filename=${encodeURI(path)}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
-    ].join('&'),
+    `filename=${encodeURI(normalizeDriveLetter(path))}`,
   ].join('?');
 }
 
 function shouldNotifyPath(path) {
   return [
     '/clientapi/permissions/notify',
-    [
-      `filename=${encodeURI(path)}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
-    ].join('&'),
+    `filename=${encodeURI(normalizeDriveLetter(path))}`,
   ].join('?');
 }
 
 function completionsPath() {
-  return [
-    '/clientapi/editor/completions',
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
-  ].join('?');
+  return '/clientapi/editor/completions';
 }
 
 function reportPath(data) {
@@ -83,10 +61,7 @@ function reportPath(data) {
 }
 
 function valueReportPath(id) {
-  return [
-    `/api/editor/value/${id}`,
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
-  ].join('?');
+  return `/api/editor/value/${id}`;
 }
 
 function membersPath(id, page = 0, limit = 999) {
@@ -95,7 +70,6 @@ function membersPath(id, page = 0, limit = 999) {
     [
       `offset=${page}`,
       `limit=${limit}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
     ].join('&'),
   ].join('?');
 }
@@ -106,43 +80,31 @@ function usagesPath(id, page = 0, limit = 999) {
     [
       `offset=${page}`,
       `limit=${limit}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
     ].join('&'),
   ].join('?');
 }
 
 function usagePath(id) {
-  return [
-    `/api/editor/usages/${id}`,
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
-  ].join('?');
+  return `/api/editor/usages/${id}`;
 }
 
 function examplePath(id) {
-  return [
-    `/api/python/curation/${id}`,
-    `localtoken=${StateController.client.LOCAL_TOKEN}`,
-  ].join('?');
+  return `/api/python/curation/${id}`;
 }
-function appendToken(url) {
-  const token = StateController.client.LOCAL_TOKEN;
-  return url.indexOf('?') !== -1
-    ? `${url}&localtoken=${token}`
-    : `${url}?localtoken=${token}`;
-}
+
 function openDocumentationInWebURL(id, token = false) {
   const url = `http://localhost:46624/clientapi/desktoplogin?d=/docs/python/${escapeId(id)}`;
-  return token ? appendToken(url) : url;
+  return url;
 }
 
 function openSignatureInWebURL(id, token = false) {
   const url = `http://localhost:46624/clientapi/desktoplogin?d=/docs/python/${escapeId(id)}%23signature`;
-  return token ? appendToken(url) : url;
+  return url;
 }
 
 function openExampleInWebURL(id, token = false) {
   const url = `http://localhost:46624/clientapi/desktoplogin?d=/examples/python/${escapeId(id)}`;
-  return token ? appendToken(url) : url;
+  return url;
 }
 
 function hoverPath(document, range) {
@@ -156,7 +118,6 @@ function hoverPath(document, range) {
     [
       `selection_begin_bytes=${start}`,
       `selection_end_bytes=${end}`,
-      `localtoken=${StateController.client.LOCAL_TOKEN}`,
     ].join('&'),
   ].join('?');
 }
@@ -166,8 +127,8 @@ function escapeId(id) {
 }
 
 function cleanPath(p) {
-  return encodeURI(p)
-  .replace(/^([a-zA-Z]):/, '/windows/$1')
+  return encodeURI(normalizeDriveLetter(p))
+  .replace(/^([a-zA-Z]):/, (m, d) => `/windows/${d}`)
   .replace(/\/|\\|%5C/g, ':');
 }
 
@@ -175,13 +136,17 @@ function serializeRangeForPath(range) {
   return `${range.start.row}:${range.start.column}/${range.end.row}:${range.end.column}`;
 }
 
+function normalizeDriveLetter(str) {
+  return str.replace(/^[a-z]:/, m => m.toUpperCase());
+}
+
 module.exports = {
   accountPath,
-  appendToken,
   completionsPath,
   examplePath,
   hoverPath,
   membersPath,
+  normalizeDriveLetter,
   openDocumentationInWebURL,
   openExampleInWebURL,
   openSignatureInWebURL,

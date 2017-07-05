@@ -3,7 +3,7 @@ const {SignatureHelp, SignatureInformation, ParameterInformation} = require('vsc
 const {StateController, Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
 const {promisifyRequest, promisifyReadResponse, parseJSON, compact} = require('./utils');
-const {signaturePath} = require('./urls');
+const {signaturePath, normalizeDriveLetter} = require('./urls');
 
 module.exports = class KiteSignatureProvider {
   constructor(Kite) {
@@ -22,9 +22,8 @@ module.exports = class KiteSignatureProvider {
     const payload = {
       text,
       editor: 'vscode',
-      filename: document.fileName,
+      filename: normalizeDriveLetter(document.fileName),
       cursor_runes: cursorPosition,
-      localtoken: StateController.client.LOCAL_TOKEN,
     };
     Logger.debug(payload);
 
