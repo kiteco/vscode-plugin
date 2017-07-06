@@ -5,6 +5,8 @@ window.initSearch = (inputId, resultsId, viewId) => {
   let stack = Promise.resolve(); 
   let selectedItem = document.querySelector('li.selected');
 
+  console.log(selectedItem);
+
   initItemContent();
 
   input.addEventListener('input', () => {
@@ -89,13 +91,15 @@ window.initSearch = (inputId, resultsId, viewId) => {
   function scrollTo(target) {
     const containerBounds = results.getBoundingClientRect();
     const scrollTop = results.scrollTop;
-    const targetBounds = target.getBoundingClientRect();
+    const targetTop = target.offsetTop;
+    const targetBottom = targetTop + target.offsetHeight;
 
-    if (targetBounds.top < scrollTop || 
-        targetBounds.bottom > scrollTop + containerBounds.height) {
-      const top = targetBounds.top + scrollTop - containerBounds.top;
+    console.log(target, targetTop, targetBottom, scrollTop);
 
-      results.scrollTop = top;
+    if (targetTop < scrollTop) {
+      results.scrollTop = targetTop;
+    } else if (targetBottom > scrollTop + containerBounds.height) {
+      results.scrollTop = targetBottom - containerBounds.height;
     }
   }
 }
