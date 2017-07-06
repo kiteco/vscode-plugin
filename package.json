@@ -48,6 +48,10 @@
           "default": true,
           "description": "Whether to show the Kite tour on startup or not."
         },
+        "kite.pollingInterval": {
+          "type": "integer",
+          "default": 5000
+        },
         "kite.sidebarDebugMode": {
           "type": "boolean",
           "default": false,

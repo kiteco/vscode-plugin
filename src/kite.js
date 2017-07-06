@@ -213,6 +213,10 @@ const Kite = {
 
       this.checkState();
     }, 100);
+
+    this.pollingInterval = setInterval(() => {
+      this.checkState();
+    }, config.get('pollingInterval'));
   },
   
   deactivate() {
