@@ -28,7 +28,7 @@ module.exports = class KiteRouter {
   dispose() {}
 
   provideTextDocumentContent() {
-    let {authority, path} = this.navigation[this.step];
+    let {authority, path, document} = this.navigation[this.step];
     let promise
     path = path.replace(/^\//, '');
 
@@ -39,7 +39,8 @@ module.exports = class KiteRouter {
         break;
       case 'value-range':
         metrics.track(`Navigation to value report from range clicked`);
-        promise =  KiteValueReport.renderFromRange(vscode.window.activeTextEditor.document, JSON.parse(path));
+        promise =  KiteValueReport.renderFromRange(document, 
+          JSON.parse(path));
         break;
       case 'members-list':
         metrics.track(`Navigation to members list clicked`);
@@ -87,6 +88,7 @@ module.exports = class KiteRouter {
 
   registerNavigationStep(uri) {
     this.step = this.navigation.length;
+    uri.document = vscode.window.activeTextEditor && vscode.window.activeTextEditor.document
     this.navigation.push(uri);
   }
 
