@@ -13,6 +13,8 @@ const head = a => a[0];
 const last = a => a[a.length - 1];
 const log = v => (console.log(v), v);
 
+const stripTags = s => s.replace(/<[^>]+/g, '');
+
 const truncate = (s, l = 200) =>
   s && s.length > l
     ? s.slice(0, l) + '…'
@@ -89,6 +91,7 @@ module.exports = {
   stopPropagationAndDefault,
   truncate,
   uniq,
+  stripTags,
   editorsForDocument,
   params,
 };
