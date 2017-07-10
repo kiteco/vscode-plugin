@@ -66,8 +66,6 @@ module.exports = class KiteSignatureProvider {
 
       return help;
     })
-    .catch(err => {
-      return [];
-    });
+    .catch(err => null);
   }
 }

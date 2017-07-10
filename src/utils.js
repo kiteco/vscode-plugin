@@ -13,6 +13,13 @@ const head = a => a[0];
 const last = a => a[a.length - 1];
 const log = v => (console.log(v), v);
 
+const merge = (a, b) => {
+  const c = {};
+  for (const k in a) { c[k] = a[k]; }
+  for (const k in b) { c[k] = b[k]; }
+  return c;
+};
+
 const stripTags = s => s.replace(/<[^>]+/g, '');
 
 const truncate = (s, l = 200) =>
@@ -94,4 +101,5 @@ module.exports = {
   stripTags,
   editorsForDocument,
   params,
+  merge,
 };

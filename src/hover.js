@@ -10,6 +10,7 @@ const {symbolName, symbolKind, symbolId} = require('./data-utils');
 module.exports = class KiteHoverProvider {
   constructor (Kite) {
     this.Kite = Kite;
+    console.log(this.Kite.handle403Response);
   }
 
   provideHover(doc, pos) {
@@ -38,15 +39,6 @@ module.exports = class KiteHoverProvider {
 
         const links = [];
 
-        // if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
-        //   const defData = JSON.stringify({
-        //     file: data.report.definition.filename,
-        //     line: data.report.definition.line,
-        //     source: 'Hover',
-        //   });
-        //   links.push(`[def](command:kite.def?${defData})`);
-        // }
-
         if (id && id !== '') {
           links.push(`[web](command:kite.web?${JSON.stringify({
             id,
@@ -62,15 +54,21 @@ module.exports = class KiteHoverProvider {
             source: 'Hover',
           })})`);
         }
+        
+        if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
+          const defData = JSON.stringify({
+            file: data.report.definition.filename,
+            line: data.report.definition.line,
+            source: 'Hover',
+          });
+          links.push(`[def](command:kite.def?${defData})`);
+        }
 
         if (links.length) { texts.push('**Kite:** ' + links.join(' ')); }
 
         return new Hover(compact(texts));
       }
     })
-    .catch(err => {
-      Logger.error(err);
-      return null;
-    });
+    .catch(err => null);
   }
 }

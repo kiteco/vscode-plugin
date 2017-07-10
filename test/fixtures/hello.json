@@ -1,0 +1,35 @@
+{
+  "part_of_syntax": "name",
+  "symbol": [
+    {
+      "id": "",
+      "name": "hello",
+      "namespace": null,
+      "value": [
+        {
+          "id": "",
+          "kind": "function",
+          "repr": "function:sample:hello",
+          "type": "FunctionType",
+          "type_id": "types.FunctionType",
+          "synopsis": "",
+          "detail": {
+            "language": "python",
+            "parameters": [],
+            "return_value": null,
+            "language_details": {
+              "Python": {
+                "return_annotation": null
+              }
+            }
+          }
+        }
+      ],
+      "synopsis": "symbol `hello`"
+    }
+  ],
+  "report": {
+    "description_text": "",
+    "description_markdown": ""
+  }
+}

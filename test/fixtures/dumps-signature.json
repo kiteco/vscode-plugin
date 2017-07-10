@@ -1,0 +1,1307 @@
+{
+  "calls": [
+    {
+      "callee": {
+        "id": "json.dumps",
+        "kind": "function",
+        "repr": "json.dumps",
+        "type": "function",
+        "type_id": "",
+        "synopsis": "Serialize obj to a JSON formatted str using this conversion\ntable.  If ensure_ascii is False, the result may\ncontain non-ASCII characters and the return value may be a unicode\ninstance.\nThe arguments have the same meaning as in dump().\nNote\nKeys in key/value pairs of JSON are always of the type str. When\na dictionary is converted into JSON, all the keys of the dictionary are\ncoerced to strings. As a result of this, if a dictionary is converted\ninto JSON and then back into a dictionary, the dictionary may not equal\nthe original one. That is, loads(dumps(x)) != x if x has non-string\nkeys.",
+        "detail": {
+          "language": "python",
+          "parameters": [
+            {
+              "language": "python",
+              "inferred_value": null,
+              "name": "obj",
+              "synopsis": "",
+              "language_details": {
+                "Python": {
+                  "annotation": null,
+                  "default_value": null,
+                  "keyword_only": false
+                }
+              }
+            },
+            {
+              "language": "python",
+              "inferred_value": null,
+              "name": "skipkeys",
+              "synopsis": "",
+              "language_details": {
+                "Python": {
+                  "annotation": null,
+                  "default_value": null,
+                  "keyword_only": false
+                }
+              }
+            },
+            {
+              "language": "python",
+              "inferred_value": null,
+              "name": "ensure_ascii",
+              "synopsis": "",
+              "language_details": {
+                "Python": {
+                  "annotation": null,
+                  "default_value": null,
+                  "keyword_only": false
+                }
+              }
+            },
+            {
+              "language": "python",
+              "inferred_value": null,
+              "name": "check_circular",
+              "synopsis": "",
+              "language_details": {
+                "Python": {
+                  "annotation": null,
+                  "default_value": null,
+                  "keyword_only": false
+                }
+              }
+            },
+            {
+              "language": "python",
+              "inferred_value": null,
+              "name": "allow_nan",
+              "synopsis": "",
+              "language_details": {
+                "Python": {
+                  "annotation": null,
+                  "default_value": null,
+                  "keyword_only": false
+                }
+              }
+            },
+            {
+              "language": "python",
+              "inferred_value": null,
+              "name": "cls",
+              "synopsis": "",
+              "language_details": {
+                "Python": {
+                  "annotation": null,
+                  "default_value": null,
+                  "keyword_only": false
+                }
+              }
+            },
+            {
+              "language": "python",
+              "inferred_value": null,
+              "name": "indent",
+              "synopsis": "",
+              "language_details": {
+                "Python": {
+                  "annotation": null,
+                  "default_value": null,
+                  "keyword_only": false
+                }
+              }
+            },
+            {
+              "language": "python",
+              "inferred_value": null,
+              "name": "separators",
+              "synopsis": "",
+              "language_details": {
+                "Python": {
+                  "annotation": null,
+                  "default_value": null,
+                  "keyword_only": false
+                }
+              }
+            },
+            {
+              "language": "python",
+              "inferred_value": null,
+              "name": "encoding",
+              "synopsis": "",
+              "language_details": {
+                "Python": {
+                  "annotation": null,
+                  "default_value": null,
+                  "keyword_only": false
+                }
+              }
+            },
+            {
+              "language": "python",
+              "inferred_value": null,
+              "name": "default",
+              "synopsis": "",
+              "language_details": {
+                "Python": {
+                  "annotation": null,
+                  "default_value": null,
+                  "keyword_only": false
+                }
+              }
+            },
+            {
+              "language": "python",
+              "inferred_value": null,
+              "name": "sort_keys",
+              "synopsis": "",
+              "language_details": {
+                "Python": {
+                  "annotation": null,
+                  "default_value": null,
+                  "keyword_only": false
+                }
+              }
+            }
+          ],
+          "return_value": null,
+          "language_details": {
+            "Python": {
+              "return_annotation": null,
+              "kwarg": {
+                "language": "python",
+                "inferred_value": null,
+                "name": "kw",
+                "synopsis": "",
+                "language_details": {
+                  "Python": {
+                    "annotation": null,
+                    "default_value": null,
+                    "keyword_only": false
+                  }
+                }
+              },
+              "kwarg_parameters": [
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "bool",
+                      "type": "bool",
+                      "type_id": "__builtin__.bool"
+                    }
+                  ],
+                  "name": "use_decimal",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "str",
+                      "type": "str",
+                      "type_id": "__builtin__.str"
+                    }
+                  ],
+                  "name": "content_type",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "str",
+                      "type": "str",
+                      "type_id": "__builtin__.str"
+                    }
+                  ],
+                  "name": "mimetype",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": null,
+                  "name": "serializers",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "int",
+                      "type": "int",
+                      "type_id": "__builtin__.int"
+                    }
+                  ],
+                  "name": "intent",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "int",
+                      "type": "int",
+                      "type_id": "__builtin__.int"
+                    }
+                  ],
+                  "name": "double_precision",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "int",
+                      "type": "int",
+                      "type_id": "__builtin__.int"
+                    }
+                  ],
+                  "name": "index",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "NoneType",
+                      "type": "NoneType",
+                      "type_id": ""
+                    },
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "dict",
+                      "type": "dict",
+                      "type_id": "__builtin__.dict"
+                    }
+                  ],
+                  "name": "proxyMap",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "NoneType",
+                      "type": "NoneType",
+                      "type_id": ""
+                    }
+                  ],
+                  "name": "includes",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "NoneType",
+                      "type": "NoneType",
+                      "type_id": ""
+                    }
+                  ],
+                  "name": "excludes",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "int",
+                      "type": "int",
+                      "type_id": "__builtin__.int"
+                    }
+                  ],
+                  "name": "status",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "bool",
+                      "type": "bool",
+                      "type_id": "__builtin__.bool"
+                    }
+                  ],
+                  "name": "escape_forward_slashes",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "bool",
+                      "type": "bool",
+                      "type_id": "__builtin__.bool"
+                    }
+                  ],
+                  "name": "namedtuple_as_object",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "function",
+                      "type": "function",
+                      "type_id": ""
+                    }
+                  ],
+                  "name": "datetimeencoder",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "int",
+                      "type": "int",
+                      "type_id": "__builtin__.int"
+                    }
+                  ],
+                  "name": "float_round",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "list",
+                      "type": "list",
+                      "type_id": "__builtin__.list"
+                    }
+                  ],
+                  "name": "ignore_attributes",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": null,
+                  "name": "request",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "bool",
+                      "type": "bool",
+                      "type_id": "__builtin__.bool"
+                    }
+                  ],
+                  "name": "ascii",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "bool",
+                      "type": "bool",
+                      "type_id": "__builtin__.bool"
+                    }
+                  ],
+                  "name": "ensure_asscii",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "int",
+                      "type": "int",
+                      "type_id": "__builtin__.int"
+                    }
+                  ],
+                  "name": "format",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": null,
+                  "name": "model_version",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": null,
+                  "name": "logging",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "bool",
+                      "type": "bool",
+                      "type_id": "__builtin__.bool"
+                    }
+                  ],
+                  "name": "ensure_asciii",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "NoneType",
+                      "type": "NoneType",
+                      "type_id": ""
+                    }
+                  ],
+                  "name": "extra",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "dict",
+                      "type": "dict",
+                      "type_id": "__builtin__.dict"
+                    }
+                  ],
+                  "name": "model_additional",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "NoneType",
+                      "type": "NoneType",
+                      "type_id": ""
+                    }
+                  ],
+                  "name": "timezone",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "list",
+                      "type": "list",
+                      "type_id": "__builtin__.list"
+                    }
+                  ],
+                  "name": "url_args",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "bool",
+                      "type": "bool",
+                      "type_id": "__builtin__.bool"
+                    }
+                  ],
+                  "name": "camel_case",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                {
+                  "language": "python",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "dict",
+                      "type": "dict",
+                      "type_id": "__builtin__.dict"
+                    }
+                  ],
+                  "name": "url_kwargs",
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "signatures": [
+            {
+              "language": "python",
+              "args": [
+                {
+                  "name": "obj",
+                  "types": [
+                    {
+                      "examples": [
+                        "{}",
+                        "{'success': True}",
+                        "{\"message\": message}"
+                      ],
+                      "id": "__builtin__.dict",
+                      "name": "dict"
+                    },
+                    {
+                      "examples": [
+                        "\"'Invalid state parameter.'\"",
+                        "\"'Failed to upgrade the authorization code.'\"",
+                        "\"'Current user not connected.'\""
+                      ],
+                      "id": "__builtin__.str",
+                      "name": "str"
+                    },
+                    {
+                      "examples": null,
+                      "id": "...",
+                      "name": ""
+                    }
+                  ]
+                }
+              ],
+              "language_details": {
+                "Python": {
+                  "kwargs": null
+                }
+              }
+            },
+            {
+              "language": "python",
+              "args": [
+                {
+                  "name": "obj",
+                  "types": [
+                    {
+                      "examples": [
+                        "{}",
+                        "{'success': True}",
+                        "{\"message\": message}"
+                      ],
+                      "id": "__builtin__.dict",
+                      "name": "dict"
+                    },
+                    {
+                      "examples": [
+                        "\"'Invalid state parameter.'\"",
+                        "\"'Failed to upgrade the authorization code.'\"",
+                        "\"'Current user not connected.'\""
+                      ],
+                      "id": "__builtin__.str",
+                      "name": "str"
+                    },
+                    {
+                      "examples": null,
+                      "id": "...",
+                      "name": ""
+                    }
+                  ]
+                }
+              ],
+              "language_details": {
+                "Python": {
+                  "kwargs": [
+                    {
+                      "name": "indent",
+                      "types": [
+                        {
+                          "examples": [
+                            "4",
+                            "2",
+                            "1"
+                          ],
+                          "id": "__builtin__.int",
+                          "name": "int"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "language": "python",
+              "args": [
+                {
+                  "name": "obj",
+                  "types": [
+                    {
+                      "examples": [
+                        "{}",
+                        "{'success': True}",
+                        "{\"message\": message}"
+                      ],
+                      "id": "__builtin__.dict",
+                      "name": "dict"
+                    },
+                    {
+                      "examples": [
+                        "\"'Invalid state parameter.'\"",
+                        "\"'Failed to upgrade the authorization code.'\"",
+                        "\"'Current user not connected.'\""
+                      ],
+                      "id": "__builtin__.str",
+                      "name": "str"
+                    },
+                    {
+                      "examples": null,
+                      "id": "...",
+                      "name": ""
+                    }
+                  ]
+                }
+              ],
+              "language_details": {
+                "Python": {
+                  "kwargs": [
+                    {
+                      "name": "indent",
+                      "types": [
+                        {
+                          "examples": [
+                            "4",
+                            "2",
+                            "1"
+                          ],
+                          "id": "__builtin__.int",
+                          "name": "int"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "sort_keys",
+                      "types": [
+                        {
+                          "examples": [
+                            "True if pretty else False"
+                          ],
+                          "id": "__builtin__.bool",
+                          "name": "bool"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "language": "python",
+              "args": [
+                {
+                  "name": "obj",
+                  "types": [
+                    {
+                      "examples": [
+                        "{}",
+                        "{'success': True}",
+                        "{\"message\": message}"
+                      ],
+                      "id": "__builtin__.dict",
+                      "name": "dict"
+                    },
+                    {
+                      "examples": [
+                        "\"'Invalid state parameter.'\"",
+                        "\"'Failed to upgrade the authorization code.'\"",
+                        "\"'Current user not connected.'\""
+                      ],
+                      "id": "__builtin__.str",
+                      "name": "str"
+                    },
+                    {
+                      "examples": null,
+                      "id": "...",
+                      "name": ""
+                    }
+                  ]
+                }
+              ],
+              "language_details": {
+                "Python": {
+                  "kwargs": [
+                    {
+                      "name": "cls",
+                      "types": [
+                        {
+                          "examples": [
+                            "json.JSONEncoder if self.compact else DateJSONEncoder"
+                          ],
+                          "id": "__builtin__.type",
+                          "name": "type"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "language": "python",
+              "args": [
+                {
+                  "name": "obj",
+                  "types": [
+                    {
+                      "examples": [
+                        "{}",
+                        "{'success': True}",
+                        "{\"message\": message}"
+                      ],
+                      "id": "__builtin__.dict",
+                      "name": "dict"
+                    },
+                    {
+                      "examples": [
+                        "\"'Invalid state parameter.'\"",
+                        "\"'Failed to upgrade the authorization code.'\"",
+                        "\"'Current user not connected.'\""
+                      ],
+                      "id": "__builtin__.str",
+                      "name": "str"
+                    },
+                    {
+                      "examples": null,
+                      "id": "...",
+                      "name": ""
+                    }
+                  ]
+                }
+              ],
+              "language_details": {
+                "Python": {
+                  "kwargs": [
+                    {
+                      "name": "default",
+                      "types": [
+                        {
+                          "examples": null,
+                          "id": "new.function",
+                          "name": "function"
+                        },
+                        {
+                          "examples": [
+                            "lambda o: o.__dict__",
+                            "lambda o: dict((k, v) for k, v in o.__dict__.iteritems())",
+                            "lambda obj: obj.__dict__"
+                          ],
+                          "id": "__builtin__.function",
+                          "name": "function"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "signatures": [
+        {
+          "language": "python",
+          "args": [
+            {
+              "name": "obj",
+              "types": [
+                {
+                  "id": "__builtin__.dict",
+                  "name": "dict",
+                  "examples": [
+                    "{}",
+                    "{'success': True}",
+                    "{\"message\": message}"
+                  ]
+                },
+                {
+                  "id": "__builtin__.str",
+                  "name": "str",
+                  "examples": [
+                    "\"'Invalid state parameter.'\"",
+                    "\"'Failed to upgrade the authorization code.'\"",
+                    "\"'Current user not connected.'\""
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            }
+          ],
+          "language_details": {
+            "Python": {
+              "kwargs": null
+            }
+          }
+        },
+        {
+          "language": "python",
+          "args": [
+            {
+              "name": "obj",
+              "types": [
+                {
+                  "id": "__builtin__.dict",
+                  "name": "dict",
+                  "examples": [
+                    "{}",
+                    "{'success': True}",
+                    "{\"message\": message}"
+                  ]
+                },
+                {
+                  "id": "__builtin__.str",
+                  "name": "str",
+                  "examples": [
+                    "\"'Invalid state parameter.'\"",
+                    "\"'Failed to upgrade the authorization code.'\"",
+                    "\"'Current user not connected.'\""
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            }
+          ],
+          "language_details": {
+            "Python": {
+              "kwargs": [
+                {
+                  "name": "indent",
+                  "types": [
+                    {
+                      "id": "__builtin__.int",
+                      "name": "int",
+                      "examples": [
+                        "4",
+                        "2",
+                        "1"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "language": "python",
+          "args": [
+            {
+              "name": "obj",
+              "types": [
+                {
+                  "id": "__builtin__.dict",
+                  "name": "dict",
+                  "examples": [
+                    "{}",
+                    "{'success': True}",
+                    "{\"message\": message}"
+                  ]
+                },
+                {
+                  "id": "__builtin__.str",
+                  "name": "str",
+                  "examples": [
+                    "\"'Invalid state parameter.'\"",
+                    "\"'Failed to upgrade the authorization code.'\"",
+                    "\"'Current user not connected.'\""
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            }
+          ],
+          "language_details": {
+            "Python": {
+              "kwargs": [
+                {
+                  "name": "indent",
+                  "types": [
+                    {
+                      "id": "__builtin__.int",
+                      "name": "int",
+                      "examples": [
+                        "4",
+                        "2",
+                        "1"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "sort_keys",
+                  "types": [
+                    {
+                      "id": "__builtin__.bool",
+                      "name": "bool",
+                      "examples": [
+                        "True if pretty else False"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "language": "python",
+          "args": [
+            {
+              "name": "obj",
+              "types": [
+                {
+                  "id": "__builtin__.dict",
+                  "name": "dict",
+                  "examples": [
+                    "{}",
+                    "{'success': True}",
+                    "{\"message\": message}"
+                  ]
+                },
+                {
+                  "id": "__builtin__.str",
+                  "name": "str",
+                  "examples": [
+                    "\"'Invalid state parameter.'\"",
+                    "\"'Failed to upgrade the authorization code.'\"",
+                    "\"'Current user not connected.'\""
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            }
+          ],
+          "language_details": {
+            "Python": {
+              "kwargs": [
+                {
+                  "name": "cls",
+                  "types": [
+                    {
+                      "id": "__builtin__.type",
+                      "name": "type",
+                      "examples": [
+                        "json.JSONEncoder if self.compact else DateJSONEncoder"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "language": "python",
+          "args": [
+            {
+              "name": "obj",
+              "types": [
+                {
+                  "id": "__builtin__.dict",
+                  "name": "dict",
+                  "examples": [
+                    "{}",
+                    "{'success': True}",
+                    "{\"message\": message}"
+                  ]
+                },
+                {
+                  "id": "__builtin__.str",
+                  "name": "str",
+                  "examples": [
+                    "\"'Invalid state parameter.'\"",
+                    "\"'Failed to upgrade the authorization code.'\"",
+                    "\"'Current user not connected.'\""
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            }
+          ],
+          "language_details": {
+            "Python": {
+              "kwargs": [
+                {
+                  "name": "default",
+                  "types": [
+                    {
+                      "id": "new.function",
+                      "name": "function",
+                      "examples": null
+                    },
+                    {
+                      "id": "__builtin__.function",
+                      "name": "function",
+                      "examples": [
+                        "lambda o: o.__dict__",
+                        "lambda o: dict((k, v) for k, v in o.__dict__.iteritems())",
+                        "lambda obj: obj.__dict__"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "arg_index": 0,
+      "language_details": {
+        "Python": {
+          "in_kwargs": false
+        }
+      }
+    }
+  ]
+}

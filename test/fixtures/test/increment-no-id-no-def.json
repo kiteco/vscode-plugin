@@ -1,0 +1,133 @@
+{
+  "part_of_syntax": "name",
+  "symbol": [
+    {
+      "id": "",
+      "name": "increment",
+      "namespace": null,
+      "value": [
+        {
+          "id": "",
+          "kind": "function",
+          "type": "FunctionType",
+          "type_id": "types.FunctionType",
+          "repr": "function:sample:Test.increment",
+          "synopsis": "synopsis here",
+          "detail": {
+            "language": "python",
+            "parameters": [
+              {
+                "language": "python",
+                "name": "n",
+                "inferred_value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "2",
+                    "type": "int",
+                    "type_id": "__builtin__.int"
+                  }
+                ],
+                "synopsis": "n synopsis here",
+                "language_details": {
+                  "Python": {
+                    "default_value": null,
+                    "annotation": null,
+                    "keyword_only": false
+                  }
+                }
+              }
+            ],
+            "return_value": [
+              {
+                "id": "",
+                "kind": "instance",
+                "repr": "int",
+                "type": "int",
+                "type_id": "__builtin__.int"
+              }
+            ],
+            "language_details": {
+              "Python": {
+                "receiver": {
+                  "language": "python",
+                  "name": "self",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "instance:sample:Test",
+                      "type": "sample:Test",
+                      "type_id": "sample:Test"
+                    }
+                  ],
+                  "synopsis": "",
+                  "language_details": {
+                    "Python": {
+                      "default_value": null,
+                      "annotation": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                "return_annotation": null,
+                "vararg": {
+                  "language": "python",
+                  "name": "args",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "[]",
+                      "type": "list",
+                      "type_id": "__builtin__.list"
+                    }
+                  ],
+                  "synopsis": "varargs synopsis here",
+                  "language_details": {
+                    "Python": {
+                      "default_value": null,
+                      "annotation": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                "kwarg": {
+                  "language": "python",
+                  "name": "kwargs",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "{}",
+                      "type": "dict",
+                      "type_id": "__builtin__.dict"
+                    }
+                  ],
+                  "synopsis": "kwargs synopsis here",
+                  "language_details": {
+                    "Python": {
+                      "annotation": null,
+                      "default_value": null,
+                      "keyword_only": false
+                    }
+                  }
+                },
+                "discovered_kwargs": []
+              }
+            },
+            "class": "",
+            "class_id": "",
+            "module": "",
+            "module_id": ""
+          }
+        }
+      ],
+      "synopsis": "synopsis here"
+    }
+  ],
+  "report": {
+    "description_text": "",
+    "description_markdown": ""
+  }
+}

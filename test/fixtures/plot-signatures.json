@@ -1,0 +1,377 @@
+{
+  "calls": [
+    {
+      "callee": {
+        "id": "matplotlib.pyplot.plot",
+        "kind": "function",
+        "repr": "plot",
+        "type": "function",
+        "type_id": "__builtin__.function",
+        "synopsis": "Plot lines and/or markers to the\nAxes.  args is a variable length\nargument, allowing for multiple x, y pairs with an\noptional format string.  For example, each of the following is\nlegal:",
+        "detail": {
+          "language": "python",
+          "parameters": null,
+          "return_value": null,
+          "language_details": {
+            "Python": {
+              "return_annotation": null
+            }
+          }
+        }
+      },
+      "signatures": [
+        {
+          "language": "python",
+          "args": [
+            {
+              "name": "x",
+              "types": [
+                {
+                  "id": "__builtin__.list",
+                  "name": "list",
+                  "examples": [
+                    "[]",
+                    "[0, 1]",
+                    "[0,1]"
+                  ]
+                },
+                {
+                  "id": "numpy.uint64",
+                  "name": "uint64",
+                  "examples": [
+                    "self.x if x is None else x"
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            },
+            {
+              "name": "y",
+              "types": [
+                {
+                  "id": "__builtin__.list",
+                  "name": "list",
+                  "examples": [
+                    "[0, 1]",
+                    "[]",
+                    "[0,0]"
+                  ]
+                },
+                {
+                  "id": "__builtin__.str",
+                  "name": "str",
+                  "examples": [
+                    "\"'r'\"",
+                    "\"'b'\"",
+                    "\"'r-'\""
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            }
+          ],
+          "language_details": {
+            "Python": {
+              "kwargs": null
+            }
+          }
+        },
+        {
+          "language": "python",
+          "args": [
+            {
+              "name": "x",
+              "types": [
+                {
+                  "id": "__builtin__.list",
+                  "name": "list",
+                  "examples": [
+                    "[]",
+                    "[0, 1]",
+                    "[0,1]"
+                  ]
+                },
+                {
+                  "id": "numpy.uint64",
+                  "name": "uint64",
+                  "examples": [
+                    "self.x if x is None else x"
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            },
+            {
+              "name": "y",
+              "types": [
+                {
+                  "id": "__builtin__.list",
+                  "name": "list",
+                  "examples": [
+                    "[0, 1]",
+                    "[]",
+                    "[0,0]"
+                  ]
+                },
+                {
+                  "id": "__builtin__.str",
+                  "name": "str",
+                  "examples": [
+                    "\"'r'\"",
+                    "\"'b'\"",
+                    "\"'r-'\""
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            },
+            {
+              "name": "color",
+              "types": [
+                {
+                  "id": "__builtin__.str",
+                  "name": "str",
+                  "examples": [
+                    "\"'r'\"",
+                    "\"'o'\"",
+                    "\"'ro'\""
+                  ]
+                }
+              ]
+            }
+          ],
+          "language_details": {
+            "Python": {
+              "kwargs": null
+            }
+          }
+        },
+        {
+          "language": "python",
+          "args": [
+            {
+              "name": "x",
+              "types": [
+                {
+                  "id": "__builtin__.list",
+                  "name": "list",
+                  "examples": [
+                    "[]",
+                    "[0, 1]",
+                    "[0,1]"
+                  ]
+                },
+                {
+                  "id": "numpy.uint64",
+                  "name": "uint64",
+                  "examples": [
+                    "self.x if x is None else x"
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            }
+          ],
+          "language_details": {
+            "Python": {
+              "kwargs": null
+            }
+          }
+        },
+        {
+          "language": "python",
+          "args": [
+            {
+              "name": "x",
+              "types": [
+                {
+                  "id": "__builtin__.list",
+                  "name": "list",
+                  "examples": [
+                    "[]",
+                    "[0, 1]",
+                    "[0,1]"
+                  ]
+                },
+                {
+                  "id": "numpy.uint64",
+                  "name": "uint64",
+                  "examples": [
+                    "self.x if x is None else x"
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            },
+            {
+              "name": "y",
+              "types": [
+                {
+                  "id": "__builtin__.list",
+                  "name": "list",
+                  "examples": [
+                    "[0, 1]",
+                    "[]",
+                    "[0,0]"
+                  ]
+                },
+                {
+                  "id": "__builtin__.str",
+                  "name": "str",
+                  "examples": [
+                    "\"'r'\"",
+                    "\"'b'\"",
+                    "\"'r-'\""
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            }
+          ],
+          "language_details": {
+            "Python": {
+              "kwargs": [
+                {
+                  "name": "label",
+                  "types": [
+                    {
+                      "id": "__builtin__.str",
+                      "name": "str",
+                      "examples": [
+                        "\"'_nolegend_'\"",
+                        "\"'test error'\"",
+                        "\"'training error'\""
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "language": "python",
+          "args": [
+            {
+              "name": "x",
+              "types": [
+                {
+                  "id": "__builtin__.list",
+                  "name": "list",
+                  "examples": [
+                    "[]",
+                    "[0, 1]",
+                    "[0,1]"
+                  ]
+                },
+                {
+                  "id": "numpy.uint64",
+                  "name": "uint64",
+                  "examples": [
+                    "self.x if x is None else x"
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            },
+            {
+              "name": "y",
+              "types": [
+                {
+                  "id": "__builtin__.list",
+                  "name": "list",
+                  "examples": [
+                    "[0, 1]",
+                    "[]",
+                    "[0,0]"
+                  ]
+                },
+                {
+                  "id": "__builtin__.str",
+                  "name": "str",
+                  "examples": [
+                    "\"'r'\"",
+                    "\"'b'\"",
+                    "\"'r-'\""
+                  ]
+                },
+                {
+                  "id": "...",
+                  "name": "",
+                  "examples": null
+                }
+              ]
+            },
+            {
+              "name": "color",
+              "types": [
+                {
+                  "id": "__builtin__.str",
+                  "name": "str",
+                  "examples": [
+                    "\"'r'\"",
+                    "\"'o'\"",
+                    "\"'ro'\""
+                  ]
+                }
+              ]
+            }
+          ],
+          "language_details": {
+            "Python": {
+              "kwargs": [
+                {
+                  "name": "label",
+                  "types": [
+                    {
+                      "id": "__builtin__.str",
+                      "name": "str",
+                      "examples": [
+                        "\"'_nolegend_'\"",
+                        "\"'test error'\"",
+                        "\"'training error'\""
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "arg_index": 1
+    }
+  ]
+}

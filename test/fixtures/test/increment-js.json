@@ -1,0 +1,75 @@
+{
+  "part_of_syntax": "name",
+  "symbol": [
+    {
+      "id": "",
+      "name": "increment",
+      "namespace": null,
+      "value": [
+        {
+          "id": "sample:Test.increment",
+          "kind": "function",
+          "type": "FunctionType",
+          "type_id": "types.FunctionType",
+          "repr": "function:sample:Test.increment",
+          "synopsis": "synopsis here",
+          "detail": {
+            "language": "javascript",
+            "parameters": [
+              {
+                "language": "javascript",
+                "name": "n",
+                "inferred_value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "2",
+                    "type": "int",
+                    "type_id": "__builtin__.int"
+                  }
+                ],
+                "synopsis": "n synopsis here"
+              }
+            ],
+            "return_value": [
+              {
+                "id": "",
+                "kind": "instance",
+                "repr": "int",
+                "type": "int",
+                "type_id": "__builtin__.int"
+              }
+            ],
+            "language_details": {
+              "Javascript": {
+                "rest": {
+                  "language": "javascript",
+                  "name": "opts",
+                  "inferred_value": [
+                    {
+                      "id": "",
+                      "kind": "instance",
+                      "repr": "opts",
+                      "type": "array",
+                      "type_id": "__builtin__.array"
+                    }
+                  ],
+                  "synopsis": "opts synopsis here"
+                }
+              }
+            },
+            "class": "",
+            "class_id": "",
+            "module": "",
+            "module_id": ""
+          }
+        }
+      ],
+      "synopsis": "synopsis here"
+    }
+  ],
+  "report": {
+    "description_text": "",
+    "description_markdown": ""
+  }
+}

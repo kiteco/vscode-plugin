@@ -1,0 +1,220 @@
+{
+  "part_of_syntax": "name",
+  "symbol": [
+    {
+      "id": "",
+      "name": "B",
+      "namespace": null,
+      "value": [
+        {
+          "id": "",
+          "kind": "type",
+          "repr": "class:sample:B",
+          "type": "type",
+          "type_id": "__builtin__.type",
+          "synopsis": "",
+          "detail": {
+            "bases": [
+              {
+                "id": "sample:A",
+                "name": "sample:A",
+                "module": "",
+                "module_id": ""
+              }
+            ],
+            "components": null,
+            "members": [
+              {
+                "id": "",
+                "name": "__module__",
+                "namespace": null,
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "module",
+                    "repr": "module:sample",
+                    "type": "ModuleType",
+                    "type_id": "types.ModuleType"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "__delattr__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__dict__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__doc__",
+                "namespace": null,
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "str",
+                    "type": "str",
+                    "type_id": "__builtin__.str"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "__format__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__new__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__sizeof__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__subclasshook__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__hash__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__reduce__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__str__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__weakref__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__class__",
+                "namespace": null,
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "type",
+                    "repr": "class:sample:B",
+                    "type": "type",
+                    "type_id": "__builtin__.type"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "__init__",
+                "namespace": null,
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "function",
+                    "repr": "function:sample:B.__init__",
+                    "type": "FunctionType",
+                    "type_id": "types.FunctionType"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "__name__",
+                "namespace": null,
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "\"B\"",
+                    "type": "str",
+                    "type_id": "__builtin__.str"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "__getattribute__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__reduce_ex__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__setattr__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "__bases__",
+                "namespace": null,
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "instance",
+                    "repr": "[generic:__builtin__.type]",
+                    "type": "list",
+                    "type_id": "__builtin__.list"
+                  }
+                ]
+              },
+              {
+                "id": "",
+                "name": "__repr__",
+                "namespace": null,
+                "value": null
+              },
+              {
+                "id": "",
+                "name": "increment",
+                "namespace": null,
+                "value": [
+                  {
+                    "id": "",
+                    "kind": "function",
+                    "repr": "function:sample:B.increment",
+                    "type": "FunctionType",
+                    "type_id": "types.FunctionType"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "synopsis": "symbol `B`"
+    }
+  ],
+  "report": {
+    "description_text": "",
+    "description_markdown": ""
+  }
+}
