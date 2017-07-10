@@ -23,6 +23,12 @@ window.StickyTitle = class StickyTitle {
       this.scroll();
     });
 
+    this.stickies.forEach(sticky => {
+      sticky.addEventListener('mousewheel', e => {
+        scrollContainer.scrollTop += e.deltaY;
+      });
+    });
+
     this.summaryLink.addEventListener('click', e => {
       e.preventDefault();
       const summary = this.scrollContainer.querySelector('.summary');
