@@ -2,26 +2,27 @@
 
 const {compact, flatten, head, last, uniq} = require('./utils');
 
-const parameterName = (p, prefix = '') =>
+const parameterName = (p, prefix = '', w) =>
   p
-    ? `${prefix}${p.name}`
+    ? (
+      w
+        ? `<${w}>${prefix}<span class="parameter-name">${p.name}</span></${head(w.split(/\s/g))}>`
+        : `${prefix}<span class="parameter-name">${p.name}</span>`
+    )
     : undefined;
 
 const parameterDefault = (p) =>
   p && p.default_value && p.default_value.length
-    ? `=${head(p.default_value).repr}`
+    ? `=<span class="parameter-default">${head(p.default_value).repr}</span>`
     : '';
 
 const parameterType = (p, prefix = '') =>
   p.inferred_value
-    ? `${prefix}${uniq(p.inferred_value.map(v => v.type)).join(' or ')}`
-    : '';
-
-const parameterTypeLink = (p, prefix = '') =>
-  p.inferred_value
     ? `${prefix}${uniq(p.inferred_value.map(v =>
       `<a href='command:kite.navigate?"value/${v.type_id}"' class="parameter-type">${v.type}</a>`)).join(' <i>or</i> ')}`
     : '';
+
+const parameterTypeLink = parameterType
 
 const parameterValue = p =>
   `${parameterName(p)}${parameterType(p, ':')}${parameterDefault(p)}`;
@@ -35,21 +36,21 @@ const parameters = (d, withType = true) =>
 
 const signature = ({detail}, withType = true, current = -1) =>
   detail
-    ? `(${
+    ? `(<span class="signature">${
       compact(flatten([
         parameters(detail, withType),
         parameterName(detail.vararg, '*'),
-        parameterName(detail.kwarg, '**'),
+        parameterName(detail.kwarg, '**', 'a class="kwargs" href="#"'),
       ]))
       .map((p, i, a) => {
         const s = i === a.length - 1 ? '' : ', ';
         return i === current
-          ? `${p}${s}`
-          : `${p}${s}`;
+          ? `<span class="parameter parameter-highlight">${p}${s}</span>`
+          : `<span class="parameter">${p}${s}</span>`;
       })
       .join('')
-    })`
-    : '()';
+    }</span>)`
+    : '(<span class="signature"></span>)';
 
 const callParameterName = (parameter) => parameter.name;
 
@@ -103,7 +104,7 @@ const symbolLabel = (s, current) => {
 
 const memberLabel = (s) => {
   const value = s.value ? head(s.value) : {};
-  const name = s.name;
+  const name = `<span class="repr">${s.name}</span>`;
   return value.kind === 'function'
     ? name + signature(value)
     : name;
@@ -112,7 +113,7 @@ const memberLabel = (s) => {
 const wrapType = (o) => {
   const {name, id} = o || {};
   return name
-    ? name
+    ? `<a href='command:kite.navigate?"value/${id}"' class="type-value">${name}</a>`
     : null;
 };
 
@@ -120,7 +121,7 @@ const unionType = (vs, map) =>
   uniq(flatten(compact(vs.map(map))).map(wrapType)).join(' | ');
 
 const returnType = (v) =>
-  v && v.length ? ` -> ${v}` : '';
+  v && v.length ? `-> <span class="return-type">${v}</span>` : '';
 
 const symbolValue = s => head(s.value);
 

@@ -20,6 +20,8 @@ const merge = (a, b) => {
   return c;
 };
 
+const stripTags = s => s.replace(/<[^>]+/g, '');
+
 const truncate = (s, l = 200) =>
   s && s.length > l
     ? s.slice(0, l) + '…'
@@ -96,6 +98,7 @@ module.exports = {
   stopPropagationAndDefault,
   truncate,
   uniq,
+  stripTags,
   editorsForDocument,
   params,
   merge,

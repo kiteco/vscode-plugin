@@ -948,6 +948,13 @@
 .kite pre a.icon:focus {
   color: var(--color-blue);
 }
+
+.kite .expand-header .signature a.kwargs {
+  color: var(--text-color);
+  pointer-events: none;
+  text-decoration: none;
+}
+
 .kite p {
   /* Default Atom p margin is assymetrical. Overriding for sanity */
   margin: 0.5em 0;
