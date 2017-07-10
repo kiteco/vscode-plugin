@@ -1334,6 +1334,7 @@ inpu:not([type="checkbox"])t:-webkit-input-placeholder {
 #results {
   overflow-y: auto;
   max-height: 120px;
+  position: relative;
 }
 #results li {
   padding: 5px;
