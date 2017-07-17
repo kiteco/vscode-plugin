@@ -20,7 +20,7 @@ const merge = (a, b) => {
   return c;
 };
 
-const stripTags = s => s.replace(/<[^>]+/g, '');
+const stripTags = s => s.replace(/<[^>]+>/g, '');
 
 const truncate = (s, l = 200) =>
   s && s.length > l

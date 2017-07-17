@@ -81,12 +81,17 @@ const valueName = value =>
 
 const valueNameFromId = value => last(value.id.split(/[;.]/g));
 
-const valueLabel = (value, current) =>
-  value.kind === 'function'
-    ? valueName(value) + signature(value, false, current)
-    : (value.kind === 'instance'
+const valueLabel = (value, current) => {
+  if (value.kind === 'function') {
+    return valueName(value) + signature(value, false, current);
+  } else if (value.kind === 'type' && value.detail.constructor) {
+    return valueName(value) + signature({detail: value.detail.constructor}, false, current);
+  } else {
+    return (value.kind === 'instance'
       ? valueNameFromId(value)
       : valueName(value));
+  }
+};
 
 const symbolName = s => {
   const value = head(s.value);
