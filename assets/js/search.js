@@ -5,8 +5,6 @@ window.initSearch = (inputId, resultsId, viewId) => {
   let stack = Promise.resolve(); 
   let selectedItem = document.querySelector('li.selected');
 
-  console.log(selectedItem);
-
   initItemContent();
 
   input.addEventListener('input', () => {
@@ -93,8 +91,6 @@ window.initSearch = (inputId, resultsId, viewId) => {
     const scrollTop = results.scrollTop;
     const targetTop = target.offsetTop;
     const targetBottom = targetTop + target.offsetHeight;
-
-    console.log(target, targetTop, targetBottom, scrollTop);
 
     if (targetTop < scrollTop) {
       results.scrollTop = targetTop;
