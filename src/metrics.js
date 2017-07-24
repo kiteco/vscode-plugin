@@ -51,7 +51,7 @@ function track(eventName, properties) {
 function sendFeatureMetric(name) {
   const path = metricsCounterPath();
 
-  console.log('feature metric:', name);
+  Logger.debug('feature metric:', name);
 
   return StateController.client.request({
     path,
