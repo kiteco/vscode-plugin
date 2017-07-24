@@ -72,9 +72,14 @@ module.exports = class KiteRouter {
           document.querySelector('.sections-wrapper')
         );
         handleExternalLinks();
+        ${this.metricCode || ''}
       </script>`)
     .then(html => wrapHTML(html))
     .then(html => debugHTML(html))
+    .then(html => {
+      delete this.metricCode;
+      return html;
+    })
   }
 
   clearNavigation() {
@@ -102,7 +107,8 @@ module.exports = class KiteRouter {
     this.update();
   }
 
-  navigate(uri) {
+  navigate(uri, metricCode) {
+    this.metricCode = metricCode;
     this.registerNavigationStep(vscode.Uri.parse(uri));
     if (this.isSidebarOpen()) {
       this.update();

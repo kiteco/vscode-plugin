@@ -16,6 +16,7 @@ const logoLarge = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'image
 const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
 const enterpriseLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kiteenterprise.svg')).toString();
 const giftLogoPath = path.resolve(__dirname, '..', 'assets', 'images', 'icon-gift.png');
+const server = require('./server');
 
 const ASSETS_PATH = path.resolve(__dirname, '..', 'assets');
 const STYLESHEETS = fs.readdirSync(path.resolve(ASSETS_PATH, 'css'))
@@ -95,6 +96,9 @@ function wrapHTML (html) {
     }
   </style>
   ${STYLESHEETS}
+  <script>
+    window.PORT = ${server.PORT};
+  </script>
   ${SCRIPTS}
   <div class="kite platform-${os.platform()}">${html}</div>`
 }

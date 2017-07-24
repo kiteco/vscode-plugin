@@ -22,7 +22,7 @@ const server = require('./server');
 
 const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath} = require('./urls');
 const Rollbar = require('rollbar');
-const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact} = require('./utils');
+const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params} = require('./utils');
 
 const pluralize = (n, singular, plural) => n === 1 ? singular : plural;
 
@@ -60,6 +60,17 @@ const Kite = {
 
     server.addRoute('GET', '/check', (req, res) => {
       this.checkState();
+      res.writeHead(200);
+      res.end();
+    });
+
+    server.addRoute('GET', '/count', (req, res, url) => {
+      const {metric, name} = params(url);
+      if (metric === 'requested') {
+        metrics.featureRequested(name);
+      } else if (metric === 'fulfilled') {
+        metrics.featureFulfilled(name);
+      }
       res.writeHead(200);
       res.end();
     });
@@ -146,9 +157,19 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
+      metrics.featureRequested('expand_panel');
+      metrics.featureRequested('documentation');
+      server.start();
       const uri = `kite-vscode-sidebar://value/${id}`;
       router.clearNavigation();
-      router.navigate(uri);
+      router.navigate(uri, `
+        window.onload = () => {
+          window.requestGet('/count?metric=fulfilled&name=expand_panel');
+          if(document.querySelector('.summary .description:not(:empty)')) {
+            window.requestGet('/count?metric=fulfilled&name=documentation');
+          }
+        }
+      `);
     });
 
     vscode.commands.registerCommand('kite.previous', () => {
@@ -163,9 +184,19 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.more-range', ({range, source}) => {
       metrics.track(`${source} See info clicked`);
+      metrics.featureRequested('expand_panel');
+      metrics.featureRequested('documentation');
+      server.start();
       const uri = `kite-vscode-sidebar://value-range/${JSON.stringify(range)}`;
       router.clearNavigation();
-      router.navigate(uri);
+      router.navigate(uri, `
+        window.onload = () => {
+          window.requestGet('/count?metric=fulfilled&name=expand_panel');
+          if(document.querySelector('.summary .description:not(:empty)')) {
+            window.requestGet('/count?metric=fulfilled&name=documentation');
+          }
+        }
+      `);
     });
 
     vscode.commands.registerCommand('kite.navigate', (path) => {

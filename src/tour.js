@@ -117,10 +117,7 @@ module.exports = class KiteTour {
 
         <p>We always love feedback ❤️ <a href="mailto:feedback@kite.com">feedback@kite.com</a></p>
       </div>
-    </div>
-    <script>
-      window.PORT = ${server.PORT};
-    </script>`)
+    </div>`)
     .then(html => wrapHTML(html))
     .then(html => debugHTML(html));
   }
