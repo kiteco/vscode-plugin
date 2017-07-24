@@ -1299,11 +1299,11 @@ a.kite-open-link svg {
 .search-form {
   position: relative;
 }
-.kite a[href].internal_link {
+/* .kite a[href].internal_link {
   pointer-events: none;
   text-decoration: none;
   color: inherit;
-}
+} */
 .search-form i {
   position: absolute;
   right: 0;

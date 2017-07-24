@@ -78,9 +78,9 @@ function wrapHTML (html) {
 
   html = html
   .replace(/<a class="internal_link" href="#([^"]+)"/g, 
-           `<a class="internal_link" href='command:kite.navigate?"value/$1"'`)
+           `<a class="internal_link" href='command:kite.navigate?"link/python;$1"'`)
   .replace(/<a href="#([^"]+)" class="internal_link"/g, 
-           `<a href='command:kite.navigate?"value/$1"' class="internal_link"`);
+           `<a href='command:kite.navigate?"link/python;$1"' class="internal_link"`);
   return `
   <style>
     .icon-kite-gift::before {
