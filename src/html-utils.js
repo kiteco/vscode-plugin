@@ -331,6 +331,14 @@ function definitionCommand(def) {
   });
   return `command:kite.def?${defData}`;
 }
+function usageCommand(def) {
+  const defData = JSON.stringify({
+    file: def.filename,
+    line: def.line,
+    source: 'Sidebar',
+  });
+  return `command:kite.usage?${defData}`;
+}
 
 function renderDefinition(value) {
   const def = value.report && value.report.definition;
@@ -427,7 +435,7 @@ function renderUsages(symbol) {
 
 function renderUsage(usage) {
   const base = path.basename(usage.filename);
-  const url = definitionCommand(usage);
+  const url = usageCommand(usage);
 
   return `<div class="usage-container">
     <div class="usage-bullet"></div>

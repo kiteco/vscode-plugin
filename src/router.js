@@ -65,6 +65,8 @@ module.exports = class KiteRouter {
         promise =  KiteExamplesList.render(path);
         break;
       case 'example':
+        metrics.featureRequested('example');
+        this.metricCode = 'window.requestGet("/count?metric=fulfilled&name=example");'
         metrics.track(`Navigation to example clicked`);
         promise =  KiteCuratedExample.render(path);
         break;

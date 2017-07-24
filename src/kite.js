@@ -229,6 +229,20 @@ const Kite = {
       })
     });
 
+    vscode.commands.registerCommand('kite.usage', ({file, line, source}) => {
+      metrics.track(`${source} Go to usage clicked`);
+      metrics.featureRequested('usage');
+      vscode.workspace.openTextDocument(file).then(doc => {
+        metrics.featureFulfilled('usage');
+        editorsForDocument(doc).some(e => {
+          e.revealRange(new vscode.Range(
+            new vscode.Position(line - 1, 0),
+            new vscode.Position(line - 1, 100)
+          ));
+        });
+      })
+    });
+
     const config = vscode.workspace.getConfiguration('kite');
     if (config.showTourOnStartup) {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.One, 'Kite Tour');
