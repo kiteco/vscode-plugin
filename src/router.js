@@ -33,6 +33,9 @@ module.exports = class KiteRouter {
     path = path.replace(/^\//, '');
 
     switch(authority) {
+      case 'member':
+        metrics.featureRequested('top_member');
+        this.metricCode = 'window.requestGet("/count?metric=fulfilled&name=top_member");'
       case 'value':
         metrics.track(`Navigation to value report clicked`);
         promise =  KiteValueReport.render(path);

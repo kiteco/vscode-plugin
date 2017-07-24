@@ -515,7 +515,7 @@ function renderKwargs(data) {
 
 function renderMember(member) {
   const label = member.id && member.id !== ''
-    ? `<a href='command:kite.navigate?"value/${member.id}"'>${memberLabel(member)}</a>`
+    ? `<a href='command:kite.navigate?"member/${member.id}"'>${memberLabel(member)}</a>`
     : memberLabel(member);
 
   if (member.value) {
