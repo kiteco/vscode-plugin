@@ -179,7 +179,9 @@ function renderModule(data) {
   </div>
 
   <footer>
-    <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
+    <a class="kite-open-link"
+       onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
+       href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
   </footer>`;
 }
 
@@ -210,7 +212,9 @@ function renderFunction(data) {
   </div>
 
   <footer>
-    <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
+    <a class="kite-open-link" 
+       onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
+       href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
   </footer>
   `;
 }
@@ -238,7 +242,9 @@ function renderInstance(data) {
   </div>
 
   <footer>
-    <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
+    <a class="kite-open-link" 
+       onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
+       href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
   </footer>
   `;
 }

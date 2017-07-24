@@ -209,6 +209,8 @@ const Kite = {
     
     vscode.commands.registerCommand('kite.web', ({id, source}) => {
       metrics.track(`${source} Open in web clicked`);
+      metrics.featureRequested('open_in_web');
+      metrics.featureFulfilled('open_in_web');
       opn(openDocumentationInWebURL(id, true));
     });
 
