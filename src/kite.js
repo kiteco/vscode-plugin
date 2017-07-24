@@ -103,7 +103,13 @@ const Kite = {
 
     ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
       this.registerEvents(e);
+
+      if (/Code[\/\\]User[\/\\]settings.json$/.test(e.document.fileName)){
+        metrics.featureRequested('settings');
+        metrics.featureFulfilled('settings');
+      }
       if (this.isGrammarSupported(e)) { this.registerEditor(e); }
+
 
       const evt = this.eventsByEditor.get(e);
       evt.focus();
