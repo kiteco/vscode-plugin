@@ -382,7 +382,9 @@ function renderLinks(data, limit = 2) {
 function renderLink(link) {
   return `<li data-name="${link.title}">
     <i class="icon icon-so"></i>
-    <a href="${link.url}" class="link">
+    <a href="${link.url}" 
+       onclick="window.requestGet('/count?metric=requested&name=stackoverflow_example');window.requestGet('/count?metric=fulfilled&name=stackoverflow_example')"
+       class="link">
       <span class="title">${link.title}</span>
       <i class="icon icon-chevron-right"></i>
     </a>

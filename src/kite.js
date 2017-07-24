@@ -74,6 +74,8 @@ const Kite = {
       res.writeHead(200);
       res.end();
     });
+
+    server.start();
     
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-sidebar', router));
