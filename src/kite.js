@@ -186,7 +186,9 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.def', ({file, line, source}) => {
       metrics.track(`${source} Go to definition clicked`);
+      metrics.featureRequested('definition');
       vscode.workspace.openTextDocument(file).then(doc => {
+        metrics.featureFulfilled('definition');
         editorsForDocument(doc).some(e => {
           e.revealRange(new vscode.Range(
             new vscode.Position(line - 1, 0),
