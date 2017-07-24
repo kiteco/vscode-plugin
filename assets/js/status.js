@@ -2,6 +2,8 @@ window.initStatus = function() {
   const link = document.querySelector('.kite-warning-box .resend-email');
   const box = document.querySelector('.kite-warning-box');
 
+  window.requestGet('/count?metric=fulfilled&name=status_panel');
+
   if (link) {
     link.addEventListener('click', (e) => {
       e.preventDefault();

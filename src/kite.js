@@ -137,6 +137,7 @@ const Kite = {
     ctx.subscriptions.push(this.statusBarItem);
     
     vscode.commands.registerCommand('kite.status', () => {
+      metrics.featureRequested('status_panel');
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
     });
 
