@@ -2,6 +2,10 @@
 
 const {compact, flatten, head, last, uniq} = require('./utils');
 
+const idIsEmpty = (id) =>
+  !id || id === '' ||
+  (id.indexOf(';') !== -1 && id.split(';')[1] === '');
+
 const parameterName = (p, prefix = '', w) =>
   p
     ? (
@@ -17,8 +21,8 @@ const parameterDefault = (p) =>
     : '';
 
 const parameterType = (p, prefix = '') =>
-  p.inferred_value
-    ? `${prefix}${uniq(p.inferred_value.map(v =>
+  p.inferred_value && p.inferred_value
+    ? `${prefix}${uniq(compact(p.inferred_value).map(v =>
       `<a href='command:kite.navigate?"value/${v.type_id}"' class="parameter-type">${v.type}</a>`)).join(' <i>or</i> ')}`
     : '';
 
@@ -180,4 +184,5 @@ module.exports = {
   valueName,
   valueNameFromId,
   valueType,
+  idIsEmpty,
 };

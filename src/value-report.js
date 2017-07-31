@@ -48,6 +48,7 @@ module.exports = {
     .then(report => parseJSON(report))
     .then(data => reportFromHover(data))
     .then(data => this.renderData(data))
+    .catch(err => console.log(err))
   },
 
   renderData(data) {

@@ -2,15 +2,14 @@
 
 const vscode = require('vscode');
 const {Hover} = vscode;
-const {StateController, Logger} = require('kite-installer');
+const {StateController} = require('kite-installer');
 const {hoverPath} = require('./urls');
 const {promisifyReadResponse, compact} = require('./utils');
-const {symbolName, symbolKind, symbolId} = require('./data-utils');
+const {symbolName, symbolKind, symbolId, idIsEmpty} = require('./data-utils');
 
 module.exports = class KiteHoverProvider {
   constructor (Kite) {
     this.Kite = Kite;
-    console.log(this.Kite.handle403Response);
   }
 
   provideHover(doc, pos) {
@@ -39,7 +38,7 @@ module.exports = class KiteHoverProvider {
 
         const links = [];
 
-        if (id && id !== '') {
+        if (!idIsEmpty(id)) {
           links.push(`[web](command:kite.web?${JSON.stringify({
             id,
             source: 'Hover',
