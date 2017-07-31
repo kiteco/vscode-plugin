@@ -2,6 +2,10 @@
 
 const {compact, flatten, head, last, uniq} = require('./utils');
 
+const idIsEmpty = (id) =>
+  !id || id === '' ||
+  (id.indexOf(';') !== -1 && id.split(';')[1] === '');
+
 const parameterName = (p, prefix = '', w) =>
   p
     ? (
@@ -180,4 +184,5 @@ module.exports = {
   valueName,
   valueNameFromId,
   valueType,
+  idIsEmpty,
 };
