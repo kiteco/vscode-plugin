@@ -5,8 +5,6 @@ window.initSearch = (inputId, resultsId, viewId) => {
   let stack = Promise.resolve(); 
   let selectedItem = document.querySelector('li.selected');
 
-  console.log(selectedItem);
-
   initItemContent();
 
   input.addEventListener('input', () => {
@@ -17,7 +15,11 @@ window.initSearch = (inputId, resultsId, viewId) => {
       .then(() => request('GET', `http://localhost:${window.PORT}/search?text=${text}`))
       .then(res => {
         results.innerHTML = res;
-        selectNextItem();
+        if (results.childNodes.length > 0) {
+          selectNextItem();
+        } else {
+          view.innerHTML = '';
+        }
       }).catch(err => {
         console.log(err);
       });
