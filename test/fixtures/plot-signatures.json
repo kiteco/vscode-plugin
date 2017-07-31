@@ -10,7 +10,52 @@
         "synopsis": "Plot lines and/or markers to the\nAxes.  args is a variable length\nargument, allowing for multiple x, y pairs with an\noptional format string.  For example, each of the following is\nlegal:",
         "detail": {
           "language": "python",
-          "parameters": null,
+          "parameters": [
+            {
+              "name": "x",
+              "inferred_value": [
+                {
+                  "type_id": "__builtin__.list",
+                  "type": "list",
+                  "examples": [
+                    "[]",
+                    "[0, 1]",
+                    "[0,1]"
+                  ]
+                },
+                {
+                  "type_id": "numpy.uint64",
+                  "type": "uint64",
+                  "examples": [
+                    "self.x if x is None else x"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "y",
+              "inferred_value": [
+                {
+                  "type_id": "__builtin__.list",
+                  "type": "list",
+                  "examples": [
+                    "[0, 1]",
+                    "[]",
+                    "[0,0]"
+                  ]
+                },
+                {
+                  "type_id": "__builtin__.str",
+                  "type": "str",
+                  "examples": [
+                    "\"'r'\"",
+                    "\"'b'\"",
+                    "\"'r-'\""
+                  ]
+                }
+              ]
+            }
+          ],
           "return_value": null,
           "language_details": {
             "Python": {

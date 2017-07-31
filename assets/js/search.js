@@ -96,8 +96,6 @@ window.initSearch = (inputId, resultsId, viewId) => {
     const targetTop = target.offsetTop;
     const targetBottom = targetTop + target.offsetHeight;
 
-    console.log(target, targetTop, targetBottom, scrollTop);
-
     if (targetTop < scrollTop) {
       results.scrollTop = targetTop;
     } else if (targetBottom > scrollTop + containerBounds.height) {
