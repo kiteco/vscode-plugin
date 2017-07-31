@@ -23,7 +23,7 @@ const parameterDefault = (p) =>
 const parameterType = (p, prefix = '') =>
   p.inferred_value
     ? `${prefix}${uniq(p.inferred_value.map(v =>
-      `<a href='command:kite.navigate?"value/${v.type_id}"' class="parameter-type">${v.type}</a>`)).join(' <i>or</i> ')}`
+      `<a href='command:kite.navigate?"value/${v.type_id}"' class="parameter-type">${v.type}</a>`)).join('<i>|</i>')}`
     : '';
 
 const parameterTypeLink = parameterType
@@ -85,12 +85,17 @@ const valueName = value =>
 
 const valueNameFromId = value => last(value.id.split(/[;.]/g));
 
-const valueLabel = (value, current) =>
-  value.kind === 'function'
-    ? valueName(value) + signature(value, false, current)
-    : (value.kind === 'instance'
+const valueLabel = (value, current) => {
+  if (value.kind === 'function') {
+    return valueName(value) + signature(value, true, current);
+  } else if (value.kind === 'type' && value.detail.constructor) {
+    return valueName(value) + signature({detail: value.detail.constructor}, true, current);
+  } else {
+    return (value.kind === 'instance'
       ? valueNameFromId(value)
       : valueName(value));
+  }
+};
 
 const symbolName = s => {
   const value = head(s.value);
