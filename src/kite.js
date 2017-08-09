@@ -317,12 +317,14 @@ const Kite = {
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return; }
           this.shown[state] = true;
           this.setStatus(state);
-          this.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
-            if (item) { 
-              // opn('http://localhost:46624/settings'); 
-              vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
-            }
-          });
+          this.checkConnectivity().then(() => {
+            this.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
+              if (item) { 
+                // opn('http://localhost:46624/settings'); 
+                vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+              }
+            });
+          })
           return Plan.queryPlan();
         default: 
           if (this.isGrammarSupported(vscode.window.activeTextEditor)) {
@@ -543,6 +545,18 @@ const Kite = {
     .then(resp => resp.statusCode === 200)
     .catch(() => false);
   },
+
+  checkConnectivity() {
+    return new Promise((resolve, reject) => {
+      require('dns').lookup('kite.com', (err) => {
+        if (err && err.code == "ENOTFOUND") {
+          reject();
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
 }
 
 module.exports = {
