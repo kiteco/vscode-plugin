@@ -1,12 +1,9 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const vscode = require('vscode');
 const {StateController, Logger} = require('kite-installer');
 const server = require('./server');
 const {wrapHTML, debugHTML} = require('./html-utils');
-const {promisifyReadResponse, params} = require('./utils');
+const {promisifyReadResponse, params, compact, flatten} = require('./utils');
 const {searchPath} = require('./urls');
 const KiteValueReport = require('./value-report');
 
@@ -96,13 +93,30 @@ module.exports = class KiteSearch {
 
 function renderList(results) {
   lastList = results
-  return results && results.results
-    ? results.results
-      .filter(r => r.result.repr && r.result.repr.trim() !== '')
-      .map(r => 
-        lastId === r.result.id
-          ? `<li data-id="${r.result.id}" class="selected">${r.result.repr}</li>`
-          : `<li data-id="${r.result.id}">${r.result.repr}</li>`)
-      .join('')
-    : ''
+
+  if (results && results.python_results) {
+
+    const localResults = (results.python_results.local_results || {results: []}).results || []
+    const globalResults = (results.python_results.global_results || {results: []}).results || []
+    const allResults = compact(flatten([
+      localResults.map(r => {
+        r.local = true;
+        return r;
+      }),
+      globalResults.map(r => {
+        r.local = false;
+        return r;
+      }),
+    ]));
+
+    return allResults
+    .filter(r => r.result.repr && r.result.repr.trim() !== '')
+    .map(r =>
+      `<li data-id="${r.result.id}" ${lastId === r.result.id ? 'class="selected"' : ''}>
+        ${r.result.repr} ${r.local ? '<small>Local</small>' : ''}
+      </li>`
+    ).join('');
+  } else {
+    return '';
+  }
 }

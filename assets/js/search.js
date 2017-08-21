@@ -18,7 +18,11 @@ window.initSearch = (inputId, resultsId, viewId) => {
       .then(() => request('GET', `http://localhost:${window.PORT}/search?text=${text}`))
       .then(res => {
         results.innerHTML = res;
-        selectNextItem();
+        if (results.childNodes.length > 0) {
+          selectNextItem();
+        } else {
+          view.innerHTML = '';
+        }
       }).catch(err => {
         console.log(err);
       });
@@ -109,8 +113,6 @@ window.initSearch = (inputId, resultsId, viewId) => {
     const scrollTop = results.scrollTop;
     const targetTop = target.offsetTop;
     const targetBottom = targetTop + target.offsetHeight;
-
-    console.log(target, targetTop, targetBottom, scrollTop);
 
     if (targetTop < scrollTop) {
       results.scrollTop = targetTop;

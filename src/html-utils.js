@@ -7,7 +7,7 @@ const path = require('path');
 const {head, compact, flatten} = require('./utils');
 const {openDocumentationInWebURL} = require('./urls');
 const {
-  symbolLabel, symbolType,
+  symbolLabel, symbolType, idIsEmpty,
   valueLabel, valueType, callSignature,
   memberLabel, parameterName, parameterDefault, parameterTypeLink,
 } = require('./data-utils');
@@ -179,9 +179,10 @@ function renderModule(data) {
   </div>
 
   <footer>
-    <a class="kite-open-link"
-       onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
-       href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
+    ${!idIsEmpty(value.id) 
+      ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
+            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>`
+      : ''}
   </footer>`;
 }
 
@@ -212,9 +213,10 @@ function renderFunction(data) {
   </div>
 
   <footer>
-    <a class="kite-open-link" 
-       onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
-       href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
+    ${!idIsEmpty(value.id) 
+      ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
+            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>`
+      : ''}
   </footer>
   `;
 }
@@ -242,9 +244,10 @@ function renderInstance(data) {
   </div>
 
   <footer>
-    <a class="kite-open-link" 
-       onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
-       href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
+    ${!idIsEmpty(value.id) 
+      ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
+            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>`
+      : ''}
   </footer>
   `;
 }
