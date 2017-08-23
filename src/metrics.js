@@ -4,9 +4,10 @@ const os = require('os');
 const vscode = require('vscode');
 const mixpanel = require('mixpanel');
 const crypto = require('crypto');
-const {Logger} = require('kite-installer');
+const {Logger, StateController} = require('kite-installer');
 const kitePkg = require('../package.json');
 const localconfig = require('./localconfig.js');
+const {metricsCounterPath} = require('./urls');
 
 const MIXPANEL_TOKEN = 'fb6b9b336122a8b29c60f4c28dab6d03';
 
@@ -47,9 +48,35 @@ function track(eventName, properties) {
   client.track(eventName, eventData);
 }
 
+function sendFeatureMetric(name) {
+  const path = metricsCounterPath();
+
+  Logger.debug('feature metric:', name);
+
+  return StateController.client.request({
+    path,
+    method: 'POST',
+  }, JSON.stringify({
+    name,
+    value: 1,
+  })).then(resp => {
+    Logger.logResponse(resp);
+    return resp;
+  });
+}
+
+function featureRequested(name) {
+  sendFeatureMetric(`atom_${name}_requested`);
+}
+function featureFulfilled(name) {
+  sendFeatureMetric(`atom_${name}_fulfilled`);
+}
+
 module.exports = {
   track,
   distinctID,
   EDITOR_UUID,
   OS_VERSION,
+  featureRequested,
+  featureFulfilled,
 };

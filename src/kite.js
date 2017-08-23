@@ -22,7 +22,7 @@ const server = require('./server');
 
 const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath} = require('./urls');
 const Rollbar = require('rollbar');
-const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact} = require('./utils');
+const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params} = require('./utils');
 
 const pluralize = (n, singular, plural) => n === 1 ? singular : plural;
 
@@ -63,6 +63,19 @@ const Kite = {
       res.writeHead(200);
       res.end();
     });
+
+    server.addRoute('GET', '/count', (req, res, url) => {
+      const {metric, name} = params(url);
+      if (metric === 'requested') {
+        metrics.featureRequested(name);
+      } else if (metric === 'fulfilled') {
+        metrics.featureFulfilled(name);
+      }
+      res.writeHead(200);
+      res.end();
+    });
+
+    server.start();
     
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-sidebar', router));
@@ -90,7 +103,13 @@ const Kite = {
 
     ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
       this.registerEvents(e);
+
+      if (/Code[\/\\]User[\/\\]settings.json$/.test(e.document.fileName)){
+        metrics.featureRequested('settings');
+        metrics.featureFulfilled('settings');
+      }
       if (this.isGrammarSupported(e)) { this.registerEditor(e); }
+
 
       const evt = this.eventsByEditor.get(e);
       evt.focus();
@@ -124,6 +143,7 @@ const Kite = {
     ctx.subscriptions.push(this.statusBarItem);
     
     vscode.commands.registerCommand('kite.status', () => {
+      metrics.featureRequested('status_panel');
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
     });
 
@@ -146,9 +166,19 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
+      metrics.featureRequested('expand_panel');
+      metrics.featureRequested('documentation');
+      server.start();
       const uri = `kite-vscode-sidebar://value/${id}`;
       router.clearNavigation();
-      router.navigate(uri);
+      router.navigate(uri, `
+        window.onload = () => {
+          window.requestGet('/count?metric=fulfilled&name=expand_panel');
+          if(document.querySelector('.summary .description:not(:empty)')) {
+            window.requestGet('/count?metric=fulfilled&name=documentation');
+          }
+        }
+      `);
     });
 
     vscode.commands.registerCommand('kite.previous', () => {
@@ -163,9 +193,19 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.more-range', ({range, source}) => {
       metrics.track(`${source} See info clicked`);
+      metrics.featureRequested('expand_panel');
+      metrics.featureRequested('documentation');
+      server.start();
       const uri = `kite-vscode-sidebar://value-range/${JSON.stringify(range)}`;
       router.clearNavigation();
-      router.navigate(uri);
+      router.navigate(uri, `
+        window.onload = () => {
+          window.requestGet('/count?metric=fulfilled&name=expand_panel');
+          if(document.querySelector('.summary .description:not(:empty)')) {
+            window.requestGet('/count?metric=fulfilled&name=documentation');
+          }
+        }
+      `);
     });
 
     vscode.commands.registerCommand('kite.navigate', (path) => {
@@ -176,6 +216,8 @@ const Kite = {
     
     vscode.commands.registerCommand('kite.web', ({id, source}) => {
       metrics.track(`${source} Open in web clicked`);
+      metrics.featureRequested('open_in_web');
+      metrics.featureFulfilled('open_in_web');
       opn(openDocumentationInWebURL(id, true));
     });
 
@@ -186,7 +228,23 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.def', ({file, line, source}) => {
       metrics.track(`${source} Go to definition clicked`);
+      metrics.featureRequested('definition');
       vscode.workspace.openTextDocument(file).then(doc => {
+        metrics.featureFulfilled('definition');
+        editorsForDocument(doc).some(e => {
+          e.revealRange(new vscode.Range(
+            new vscode.Position(line - 1, 0),
+            new vscode.Position(line - 1, 100)
+          ));
+        });
+      })
+    });
+
+    vscode.commands.registerCommand('kite.usage', ({file, line, source}) => {
+      metrics.track(`${source} Go to usage clicked`);
+      metrics.featureRequested('usage');
+      vscode.workspace.openTextDocument(file).then(doc => {
+        metrics.featureFulfilled('usage');
         editorsForDocument(doc).some(e => {
           e.revealRange(new vscode.Range(
             new vscode.Position(line - 1, 0),

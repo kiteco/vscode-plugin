@@ -83,7 +83,6 @@ module.exports = class KiteSearch {
       <ul id="results">${renderList(lastList)}</ul>
       <div id="view">${lastView || ''}</div>
       <script>
-        window.PORT = ${server.PORT};
         initSearch('text', 'results', 'view');
       </script>
     `)

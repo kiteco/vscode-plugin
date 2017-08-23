@@ -4,11 +4,14 @@ window.initSearch = (inputId, resultsId, viewId) => {
   const view = document.getElementById(viewId);
   let stack = Promise.resolve(); 
   let selectedItem = document.querySelector('li.selected');
+  let recording = false;
 
   initItemContent();
 
   input.addEventListener('input', () => {
     const text = input.value;
+
+    startRecordMetric();
 
     if (text.trim() !== '') {
       stack = stack
@@ -30,6 +33,21 @@ window.initSearch = (inputId, resultsId, viewId) => {
       });
     }
   });
+
+  function startRecordMetric() {
+    if (!recording) {
+      recording = true;
+      window.requestGet('/count?metric=requested&name=active_search');
+
+      setTimeout(() => {
+        if (view && view.querySelector('.scroll-wrapper *')) {
+          window.requestGet('/count?metric=fulfilled&name=active_search');
+        }
+
+        recording = false;
+      }, 1000);
+    }
+  }
 
   document.body.addEventListener('click', (e) => {
     if (e.target.nodeName === 'LI' && e.target.hasAttribute('data-id')) {

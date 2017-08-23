@@ -2,6 +2,10 @@
 const md5 = require('md5');
 const {head} = require('./utils');
 
+function metricsCounterPath() {
+  return '/clientapi/metrics/counters';
+}
+
 function tokensPath(editor) {
   const state = md5(editor.getText());
   const filename = editor.getPath();
@@ -160,4 +164,5 @@ module.exports = {
   usagesPath,
   statusPath,
   valueReportPath,
+  metricsCounterPath,
 };
