@@ -25,7 +25,7 @@ const splitByLine = str => str.split('\n').reduce((m, l, i) => {
 }, []);
 
 const refLink = (content, ref) =>
-  `<a href='command:kite.navigate?"value/${ref.fully_qualified}"'>${content}</a>`;
+  `<a href='command:kite.navigate?"value/python;${ref.fully_qualified}"'>${content}</a>`;
 
 const processReferences = (line, references) => {
   const res = (references || []).reduce((o, ref) => {

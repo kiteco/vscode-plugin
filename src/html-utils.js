@@ -4,10 +4,10 @@ const vscode = require('vscode');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const {head, compact, flatten, detailGet, detailLang, detailNotEmpty} = require('./utils');
+const {head, compact, flatten, detailGet, detailLang, detailNotEmpty, getFunctionDetails, getDetails} = require('./utils');
 const {openDocumentationInWebURL} = require('./urls');
 const {
-  symbolLabel, symbolType,
+  symbolLabel, symbolType, idIsEmpty,
   valueLabel, valueType, callSignature,
   memberLabel, parameterName, parameterDefault, parameterTypeLink,
 } = require('./data-utils');
@@ -16,6 +16,7 @@ const logoLarge = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'image
 const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
 const enterpriseLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kiteenterprise.svg')).toString();
 const giftLogoPath = path.resolve(__dirname, '..', 'assets', 'images', 'icon-gift.png');
+const server = require('./server');
 
 const ASSETS_PATH = path.resolve(__dirname, '..', 'assets');
 const STYLESHEETS = fs.readdirSync(path.resolve(ASSETS_PATH, 'css'))
@@ -74,12 +75,11 @@ function debugHTML (html) {
 }
 
 function wrapHTML (html) {
-
   html = html
   .replace(/<a class="internal_link" href="#([^"]+)"/g, 
-           `<a class="internal_link" href='command:kite.navigate?"value/$1"'`)
+           `<a class="internal_link" href='command:kite.navigate?"link/python;$1"'`)
   .replace(/<a href="#([^"]+)" class="internal_link"/g, 
-           `<a href='command:kite.navigate?"value/$1"' class="internal_link"`);
+           `<a href='command:kite.navigate?"link/python;$1"' class="internal_link"`);
   return `
   <style>
     .icon-kite-gift::before {
@@ -95,6 +95,9 @@ function wrapHTML (html) {
     }
   </style>
   ${STYLESHEETS}
+  <script>
+    window.PORT = ${server.PORT};
+  </script>
   ${SCRIPTS}
   <div class="kite platform-${os.platform()}">${html}</div>`
 }
@@ -160,6 +163,13 @@ function renderModule(data) {
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
+      ${
+        value.kind === 'type'
+          ? `${renderParameters(value)}
+            ${renderPatterns(value)}
+            ${renderLanguageSpecificArgumentsList(value)}`
+          : ''
+      }
       <section class="summary">
         <h4>Summary</h4>
         ${valueDescription(data)}
@@ -175,7 +185,10 @@ function renderModule(data) {
   </div>
 
   <footer>
-    <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
+    ${!idIsEmpty(value.id) 
+      ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
+            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>`
+      : ''}
   </footer>`;
 }
 
@@ -206,7 +219,10 @@ function renderFunction(data) {
   </div>
 
   <footer>
-    <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
+    ${!idIsEmpty(value.id) 
+      ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
+            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>`
+      : ''}
   </footer>
   `;
 }
@@ -234,7 +250,10 @@ function renderInstance(data) {
   </div>
 
   <footer>
-    <a class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>
+    ${!idIsEmpty(value.id) 
+      ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
+            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>`
+      : ''}
   </footer>
   `;
 }
@@ -327,6 +346,14 @@ function definitionCommand(def) {
   });
   return `command:kite.def?${defData}`;
 }
+function usageCommand(def) {
+  const defData = JSON.stringify({
+    file: def.filename,
+    line: def.line,
+    source: 'Sidebar',
+  });
+  return `command:kite.usage?${defData}`;
+}
 
 function renderDefinition(value) {
   const def = value.report && value.report.definition;
@@ -370,7 +397,9 @@ function renderLinks(data, limit = 2) {
 function renderLink(link) {
   return `<li data-name="${link.title}">
     <i class="icon icon-so"></i>
-    <a href="${link.url}" class="link">
+    <a href="${link.url}" 
+       onclick="window.requestGet('/count?metric=requested&name=stackoverflow_example');window.requestGet('/count?metric=fulfilled&name=stackoverflow_example')"
+       class="link">
       <span class="title">${link.title}</span>
       <i class="icon icon-chevron-right"></i>
     </a>
@@ -423,7 +452,7 @@ function renderUsages(symbol) {
 
 function renderUsage(usage) {
   const base = path.basename(usage.filename);
-  const url = definitionCommand(usage);
+  const url = usageCommand(usage);
 
   return `<div class="usage-container">
     <div class="usage-bullet"></div>
@@ -437,7 +466,8 @@ function renderUsage(usage) {
 }
 
 function renderMembers(value, limit) {
-  const {members, total_members} = value.detail;
+  const detail = getDetails(value, 'type', 'module')
+  const {members, total_members} = detail;
 
   return members.length === 0
     ? ''
@@ -464,14 +494,15 @@ function stripLeadingSlash(str) {
 function renderPatterns(data) {
   let patterns = '';
   const name = data.repr;
-  if (data.detail && data.detail.signatures && data.detail.signatures.length) {
+  const detail = getFunctionDetails(data);
+  if (detail && detail.signatures && detail.signatures.length) {
     patterns = Plan.can('common_invocations_editor')
       ? `
         <section class="patterns">
         <h4>Popular Patterns</h4>
         <div class="section-content">${
           highlightCode(
-            data.detail.signatures
+            detail.signatures
             .map(s => callSignature(s))
             .map(s => `${name}(${s})`)
             .join('\n'))
@@ -481,8 +512,8 @@ function renderPatterns(data) {
           <h4>Popular Patterns</h4>
           <div class="section-content">
           ${proFeatures(
-            `To see ${data.detail.signatures.length} ${
-              pluralize(data.detail.signatures.length, 'pattern', 'patterns')
+            `To see ${detail.signatures.length} ${
+              pluralize(detail.signatures.length, 'pattern', 'patterns')
             }`
           )}</div>
         </section>`;
@@ -491,7 +522,7 @@ function renderPatterns(data) {
 }
 
 function renderLanguageSpecificArgumentsList(value) {
-  const {detail} = value;
+  const detail = getFunctionDetails(value);
   const lang = detailLang(detail);
 
   switch (lang) {
@@ -504,7 +535,7 @@ function renderLanguageSpecificArgumentsList(value) {
 
 function renderKwargs(data) {
   let kwargs = '';
-  const {detail} = data;
+  const detail = getFunctionDetails(data);
   if (detailNotEmpty(detail, 'kwarg_parameters')) {
     kwargs = `<section class="kwargs">
       <h4>**${detailGet(detail, 'kwarg').name}</h4>
@@ -523,7 +554,7 @@ function renderKwargs(data) {
 
 function renderMember(member) {
   const label = member.id && member.id !== ''
-    ? `<a href='command:kite.navigate?"value/${member.id}"'>${memberLabel(member)}</a>`
+    ? `<a href='command:kite.navigate?"member/${member.id}"'>${memberLabel(member)}</a>`
     : memberLabel(member);
 
   if (member.value) {
@@ -553,7 +584,7 @@ function additionalMembersLink(membersCount, value) {
 }
 
 function renderParameters(value) {
-  const {detail} = value;
+  const detail = getFunctionDetails(value);
 
   const allParameters = compact(flatten(gatherParameters(detail)));
 

@@ -84,7 +84,6 @@ module.exports = class KiteLogin {
       </form>
 
       <script>
-        window.PORT = ${server.PORT};
         initLogin();
       </script>
     `)

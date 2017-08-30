@@ -101,12 +101,7 @@ module.exports = class KiteStatus {
     server.start();
 
     return this.renderCurrent()
-    .then(html => `
-      <div class="kite-status-panel">${html}</div>
-      <script>
-        window.PORT = ${server.PORT};
-      </script>
-    `)
+    .then(html => `<div class="kite-status-panel">${html}</div>`)
     .then(html => wrapHTML(html))
     .then(html => debugHTML(html));
   }

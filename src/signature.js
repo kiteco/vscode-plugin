@@ -2,9 +2,9 @@
 const {SignatureHelp, SignatureInformation, ParameterInformation} = require('vscode');
 const {StateController, Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
-
-const {promisifyRequest, promisifyReadResponse, parseJSON, compact} = require('./utils');
+const {promisifyRequest, promisifyReadResponse, parseJSON, compact, stripTags, getFunctionDetails} = require('./utils');
 const {signaturePath, normalizeDriveLetter} = require('./urls');
+const {valueLabel, parameterType} = require('./data-utils');
 
 
 module.exports = class KiteSignatureProvider {
@@ -55,16 +55,19 @@ module.exports = class KiteSignatureProvider {
       const help = new SignatureHelp();
       help.activeParameter = call.arg_index;
       help.activeSignature = 0;
-      help.signatures = signatures.map(sig => {
-        const label = `${callee.repr}(${compact(sig.args.map(p => `${p.name}:${compact(p.types.map(t => t.name)).join('|')}`)).join(', ')})`
-        const info = new SignatureInformation(label);
-        info.parameters = sig.args.map(p => {
-          const label = `${p.name}:${compact(p.types.map(t => t.name)).join('|')}`
-          const param = new ParameterInformation(label);
-          return param;
-        });
-        return info;
-      }).slice(0, 1);
+
+      const label = stripTags(valueLabel(callee));
+      const sig = new SignatureInformation(label);
+      const detail = getFunctionDetails(callee);
+      sig.parameters = (detail.parameters || []).map(p => {
+        const label = p.inferred_value
+          ? `${p.name}:${stripTags(parameterType(p))}`
+          : p.name
+        const param = new ParameterInformation(label);
+        return param;
+      });
+
+      help.signatures = [sig];
 
       return help;
     })

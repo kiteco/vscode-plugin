@@ -28,18 +28,29 @@ module.exports = class KiteRouter {
   dispose() {}
 
   provideTextDocumentContent() {
-    let {authority, path} = this.navigation[this.step];
+    let {authority, path, document} = this.navigation[this.step];
     let promise
     path = path.replace(/^\//, '');
 
     switch(authority) {
+      case 'member':
+        metrics.featureRequested('top_member');
+        this.metricCode = 'window.requestGet("/count?metric=fulfilled&name=top_member");'
+        promise =  KiteValueReport.render(path);
+        break;
+      case 'link':
+        metrics.featureRequested('link');
+        this.metricCode = 'window.requestGet("/count?metric=fulfilled&name=link");'
+        promise =  KiteValueReport.render(path);
+        break;
       case 'value':
         metrics.track(`Navigation to value report clicked`);
         promise =  KiteValueReport.render(path);
         break;
       case 'value-range':
         metrics.track(`Navigation to value report from range clicked`);
-        promise =  KiteValueReport.renderFromRange(vscode.window.activeTextEditor.document, JSON.parse(path));
+        promise =  KiteValueReport.renderFromRange(document, 
+          JSON.parse(path));
         break;
       case 'members-list':
         metrics.track(`Navigation to members list clicked`);
@@ -54,6 +65,8 @@ module.exports = class KiteRouter {
         promise =  KiteExamplesList.render(path);
         break;
       case 'example':
+        metrics.featureRequested('example');
+        this.metricCode = 'window.requestGet("/count?metric=fulfilled&name=example");'
         metrics.track(`Navigation to example clicked`);
         promise =  KiteCuratedExample.render(path);
         break;
@@ -66,14 +79,22 @@ module.exports = class KiteRouter {
     .then(html => `
       ${html}
       <script>
-        const sticky = new StickyTitle(
-          document.querySelectorAll('h4'), 
-          document.querySelector('.sections-wrapper')
-        );
+        ${this.metricCode || ''}
+        const scrollContainer = document.querySelector('.sections-wrapper');
+        if (scrollContainer) {
+          const sticky = new StickyTitle(
+            document.querySelectorAll('h4'), 
+            scrollContainer
+          );
+        }
         handleExternalLinks();
       </script>`)
     .then(html => wrapHTML(html))
     .then(html => debugHTML(html))
+    .then(html => {
+      delete this.metricCode;
+      return html;
+    })
   }
 
   clearNavigation() {
@@ -87,6 +108,7 @@ module.exports = class KiteRouter {
 
   registerNavigationStep(uri) {
     this.step = this.navigation.length;
+    uri.document = vscode.window.activeTextEditor && vscode.window.activeTextEditor.document
     this.navigation.push(uri);
   }
 
@@ -100,7 +122,8 @@ module.exports = class KiteRouter {
     this.update();
   }
 
-  navigate(uri) {
+  navigate(uri, metricCode) {
+    this.metricCode = metricCode;
     this.registerNavigationStep(vscode.Uri.parse(uri));
     if (this.isSidebarOpen()) {
       this.update();

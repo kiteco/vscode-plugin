@@ -4,18 +4,25 @@ window.initSearch = (inputId, resultsId, viewId) => {
   const view = document.getElementById(viewId);
   let stack = Promise.resolve(); 
   let selectedItem = document.querySelector('li.selected');
+  let recording = false;
 
   initItemContent();
 
   input.addEventListener('input', () => {
     const text = input.value;
 
+    startRecordMetric();
+
     if (text.trim() !== '') {
       stack = stack
       .then(() => request('GET', `http://localhost:${window.PORT}/search?text=${text}`))
       .then(res => {
         results.innerHTML = res;
-        selectNextItem();
+        if (results.childNodes.length > 0) {
+          selectNextItem();
+        } else {
+          view.innerHTML = '';
+        }
       }).catch(err => {
         console.log(err);
       });
@@ -26,6 +33,21 @@ window.initSearch = (inputId, resultsId, viewId) => {
       });
     }
   });
+
+  function startRecordMetric() {
+    if (!recording) {
+      recording = true;
+      window.requestGet('/count?metric=requested&name=active_search');
+
+      setTimeout(() => {
+        if (view && view.querySelector('.scroll-wrapper *')) {
+          window.requestGet('/count?metric=fulfilled&name=active_search');
+        }
+
+        recording = false;
+      }, 1000);
+    }
+  }
 
   document.body.addEventListener('click', (e) => {
     if (e.target.nodeName === 'LI' && e.target.hasAttribute('data-id')) {
@@ -89,13 +111,13 @@ window.initSearch = (inputId, resultsId, viewId) => {
   function scrollTo(target) {
     const containerBounds = results.getBoundingClientRect();
     const scrollTop = results.scrollTop;
-    const targetBounds = target.getBoundingClientRect();
+    const targetTop = target.offsetTop;
+    const targetBottom = targetTop + target.offsetHeight;
 
-    if (targetBounds.top < scrollTop || 
-        targetBounds.bottom > scrollTop + containerBounds.height) {
-      const top = targetBounds.top + scrollTop - containerBounds.top;
-
-      results.scrollTop = top;
+    if (targetTop < scrollTop) {
+      results.scrollTop = targetTop;
+    } else if (targetBottom > scrollTop + containerBounds.height) {
+      results.scrollTop = targetBottom - containerBounds.height;
     }
   }
 }

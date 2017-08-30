@@ -23,6 +23,12 @@ window.StickyTitle = class StickyTitle {
       this.scroll();
     });
 
+    this.stickies.forEach(sticky => {
+      sticky.addEventListener('mousewheel', e => {
+        scrollContainer.scrollTop += e.deltaY;
+      });
+    });
+
     this.summaryLink.addEventListener('click', e => {
       e.preventDefault();
       const summary = this.scrollContainer.querySelector('.summary');
@@ -88,9 +94,13 @@ window.StickyTitle = class StickyTitle {
     if (this.width == null || this.height == null ||
         this.width !== this.scrollContainer.offsetWidth ||
         this.height !== this.scrollContainer.offsetHeight) {
-      requestAnimationFrame(() => this.scroll());
       this.width = this.scrollContainer.offsetWidth;
       this.height = this.scrollContainer.offsetHeight;
+      
+      this.compactMode = this.titleHeight * this.stickies.length + 200 > this.height;
+      this.scrollContainer.classList.toggle('compact', this.compactMode);
+      
+      requestAnimationFrame(() => this.scroll());
     }
   }
 
@@ -117,43 +127,48 @@ window.StickyTitle = class StickyTitle {
 
   scroll() {
     if (!this.scrollContainer) { return; }
-    const containerBounds = this.scrollContainer.getBoundingClientRect();
-    const scrollTop = this.scrollContainer.scrollTop + containerBounds.top;
-    const scrollBottom = scrollTop + containerBounds.height;
 
-    let refTop = scrollTop;
-    let refBottom = scrollBottom;
+    if (this.compactMode) {
+      this.stickies.forEach(sticky => sticky.classList.remove('fixed'));
+    } else {
+      const containerBounds = this.scrollContainer.getBoundingClientRect();
+      const scrollTop = this.scrollContainer.scrollTop + containerBounds.top;
+      const scrollBottom = scrollTop + containerBounds.height;
 
-    let stickies = this.stickies.slice();
+      let refTop = scrollTop;
+      let refBottom = scrollBottom;
 
-    stickies = stickies.filter((sticky, i) => {
-      const parentBounds = sticky.parentNode.getBoundingClientRect();
-      const parentTop = parentBounds.top + scrollTop - containerBounds.top;
+      let stickies = this.stickies.slice();
 
-      if (parentTop < refTop) {
-        sticky.classList.add('fixed');
-        sticky.style.top = (i * this.titleHeight) + 'px';
-        refTop += this.titleHeight;
-        return false;
-      }
-      return true;
-    });
+      stickies = stickies.filter((sticky, i) => {
+        const parentBounds = sticky.parentNode.getBoundingClientRect();
+        const parentTop = parentBounds.top + scrollTop - containerBounds.top;
 
-    stickies = stickies.reverse().filter((sticky, i) => {
-      const parentBounds = sticky.parentNode.getBoundingClientRect();
-      const parentBottom = parentBounds.bottom + scrollTop - containerBounds.top;
+        if (parentTop < refTop) {
+          sticky.classList.add('fixed');
+          sticky.style.top = (i * this.titleHeight) + 'px';
+          refTop += this.titleHeight;
+          return false;
+        }
+        return true;
+      });
 
-      if (parentBottom > refBottom) {
-        sticky.classList.add('fixed');
-        sticky.style.top = (containerBounds.height - ((i + 1) * this.titleHeight)) + 'px';
+      stickies = stickies.reverse().filter((sticky, i) => {
+        const parentBounds = sticky.parentNode.getBoundingClientRect();
+        const parentBottom = parentBounds.bottom + scrollTop - containerBounds.top;
 
-        refBottom -= this.titleHeight;
-        return false;
-      }
+        if (parentBottom > refBottom) {
+          sticky.classList.add('fixed');
+          sticky.style.top = (containerBounds.height - ((i + 1) * this.titleHeight)) + 'px';
 
-      return true;
-    });
+          refBottom -= this.titleHeight;
+          return false;
+        }
 
-    stickies.forEach(sticky => sticky.classList.remove('fixed'));
+        return true;
+      });
+
+      stickies.forEach(sticky => sticky.classList.remove('fixed'));
+    }
   }
 };

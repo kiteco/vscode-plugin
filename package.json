@@ -48,6 +48,10 @@
           "default": true,
           "description": "Whether to show the Kite tour on startup or not."
         },
+        "kite.pollingInterval": {
+          "type": "integer",
+          "default": 5000
+        },
         "kite.sidebarDebugMode": {
           "type": "boolean",
           "default": false,
@@ -81,7 +85,7 @@
   "dependencies": {
     "atob": "^2.0.3",
     "formidable": "^1.1.1",
-    "kite-installer": "^0.18.3",
+    "kite-installer": "^0.20.4",
     "md5": "^2.2.0",
     "opn": "^1.0.0",
     "rollbar": "*"
