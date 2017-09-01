@@ -75,7 +75,7 @@ const gatherParameters = (detail, withType) => {
 const signature = (data, withType = true, current = -1) =>{
   const detail = getFunctionDetails(data);
   return detail
-    ? `(${
+    ? `(<span class="signature">${
       compact(flatten(gatherParameters(detail, withType)))
       .map((p, i, a) => {
         const s = i === a.length - 1 ? '' : ', ';
