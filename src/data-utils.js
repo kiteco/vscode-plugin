@@ -144,9 +144,7 @@ const symbolLabel = (s, current) => {
 const memberLabel = (s) => {
   const value = s.value ? head(s.value) : {};
   const name = `<span class="repr">${s.name}</span>`;
-  return isFunctionKind(value.kind)
-    ? name + signature(value)
-    : name;
+  return isFunctionKind(value.kind) ? name + '()' : name;
 };
 
 const wrapType = (o) => {
