@@ -1,5 +1,7 @@
 const PYTHON_MODE = {language: 'python', scheme: 'file'};
 
+const JAVASCRIPT_MODE = {language: 'javascript', scheme: 'file'};
+
 // MAX_FILE_SIZE is the maximum file size to send to Kite
 const MAX_FILE_SIZE = 2 ** 20; // 1048576
 

@@ -1,10 +1,12 @@
 'use strict';
 
-const {compact, flatten, head, last, uniq} = require('./utils');
+const {compact, flatten, head, last, uniq, detailGet, detailLang, detailNotEmpty, getFunctionDetails} = require('./utils');
 
 const idIsEmpty = (id) =>
   !id || id === '' ||
   (id.indexOf(';') !== -1 && id.split(';')[1] === '');
+
+const isFunctionKind = kind => ['function', 'type'].includes(kind);
 
 const parameterName = (p, prefix = '', w) =>
   p
@@ -15,15 +17,26 @@ const parameterName = (p, prefix = '', w) =>
     )
     : undefined;
 
-const parameterDefault = (p) =>
-  p && p.default_value && p.default_value.length
-    ? `=<span class="parameter-default">${head(p.default_value).repr}</span>`
-    : '';
+const parameterDefault = (p) => {
+  if (!p) { return ''; }
+
+  const lang = detailLang(p);
+
+  switch (lang) {
+    case 'python':
+    case 'javascript':
+      return detailNotEmpty(p, 'default_value')
+        ? `=${head(detailGet(p, 'default_value')).repr}`
+        : '';
+    default:
+      return '';
+  }
+};
 
 const parameterType = (p, prefix = '') =>
   p.inferred_value && p.inferred_value
     ? `${prefix}${uniq(compact(p.inferred_value).map(v =>
-      `<a href='command:kite.navigate?"value/${v.type_id}"' class="parameter-type">${v.type}</a>`)).join(' <i>|</i> ')}`
+      `<a href='command:kite.navigate?"value/${v.type_id}"' class="parameter-type">${v.type}</a>`)).join('<i>|</i>')}`
     : '';
 
 const parameterTypeLink = parameterType
@@ -38,14 +51,32 @@ const parameters = (d, withType = true) =>
       : d.parameters.map(p => `${parameterName(p)}${parameterDefault(p)}`))
     : [];
 
-const signature = ({detail}, withType = true, current = -1) =>
-  detail
-    ? `(<span class="signature">${
-      compact(flatten([
+const gatherParameters = (detail, withType) => {
+  const lang = detailLang(detail);
+  switch (lang) {
+    case 'python':
+      return [
         parameters(detail, withType),
-        parameterName(detail.vararg, '*'),
-        parameterName(detail.kwarg, '**', 'a class="kwargs" href="#"'),
-      ]))
+        parameterName(detailGet(detail, 'vararg'), '*'),
+        parameterName(detailGet(detail, 'kwarg'), '**'),
+      ];
+    case 'javascript':
+      return [
+        parameters(detail, withType),
+        parameterName(detailGet(detail, 'rest'), '…'),
+      ];
+    default:
+      return [
+        parameters(detail, withType),
+      ];
+  }
+};
+
+const signature = (data, withType = true, current = -1) =>{
+  const detail = getFunctionDetails(data);
+  return detail
+    ? `(<span class="signature">${
+      compact(flatten(gatherParameters(detail, withType)))
       .map((p, i, a) => {
         const s = i === a.length - 1 ? '' : ', ';
         return i === current
@@ -55,6 +86,7 @@ const signature = ({detail}, withType = true, current = -1) =>
       .join('')
     }</span>)`
     : '(<span class="signature"></span>)';
+}
 
 const callParameterName = (parameter) => parameter.name;
 
@@ -69,8 +101,8 @@ const callKwargParameter = (parameter, withType) => {
 };
 
 const callKwargParameters = (signature, withType) =>
-  signature.kwargs && signature.kwargs.length
-    ? signature.kwargs.map(p => callKwargParameter(p)).join(', ')
+  detailNotEmpty(signature, 'kwargs')
+    ? detailGet(signature, 'kwargs').map(p => callKwargParameter(p)).join(', ')
     : null;
 
 const callSignature = (data) =>
@@ -86,10 +118,8 @@ const valueName = value =>
 const valueNameFromId = value => last(value.id.split(/[;.]/g));
 
 const valueLabel = (value, current) => {
-  if (value.kind === 'function') {
+  if (isFunctionKind(value.kind)) {
     return valueName(value) + signature(value, true, current);
-  } else if (value.kind === 'type' && value.detail.constructor) {
-    return valueName(value) + signature({detail: value.detail.constructor}, true, current);
   } else {
     return (value.kind === 'instance'
       ? valueNameFromId(value)
@@ -106,7 +136,7 @@ const symbolName = s => {
 
 const symbolLabel = (s, current) => {
   const value = head(s.value);
-  return value.kind === 'function'
+  return isFunctionKind(value.kind)
     ? symbolName(s) + signature(value, true, current)
     : symbolName(s);
 };
@@ -114,15 +144,16 @@ const symbolLabel = (s, current) => {
 const memberLabel = (s) => {
   const value = s.value ? head(s.value) : {};
   const name = `<span class="repr">${s.name}</span>`;
-  return value.kind === 'function'
-    ? name + signature(value)
-    : name;
+  return isFunctionKind(value.kind) ? name + '()' : name;
 };
 
 const wrapType = (o) => {
   const {name, id} = o || {};
   return name
-    ? `<a href='command:kite.navigate?"value/${id}"' class="type-value">${name}</a>`
+    ? (!idIsEmpty(id)
+      ? `<a href='command:kite.navigate?"value/${id}"' class="type-value">${name}</a>`
+      : `<span class="type-value">${name}</span>`
+    )
     : null;
 };
 
@@ -147,18 +178,20 @@ const reportFromHover = hover => {
 };
 
 const extractInstanceType = v => ({name: v.type, id: v.type_id});
-const extractFunctionType = v =>
-  v.detail && v.detail.return_value
-    ? v.detail.return_value.map(v => ({name: v.type, id: v.type_id}))
+const extractFunctionType = v => {
+  const detail = getFunctionDetails(v);
+  detail && detail.return_value
+    ? detail.return_value.map(v => ({name: v.type, id: v.type_id}))
     : null;
+};
 
 const symbolType = s =>
-  symbolKind(s) === 'function'
+  isFunctionKind(symbolKind(s))
     ? returnType(unionType(s.value, extractFunctionType))
     : `:${unionType(s.value, extractInstanceType)}`;
 
 const valueType = value =>
-  value.kind === 'function'
+  isFunctionKind(value.kind)
     ? returnType(unionType([value], extractFunctionType))
     : unionType([value], extractInstanceType);
 
@@ -190,4 +223,5 @@ module.exports = {
   valueNameFromId,
   valueType,
   idIsEmpty,
+  isFunctionKind,
 };

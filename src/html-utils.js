@@ -4,7 +4,7 @@ const vscode = require('vscode');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const {head, compact, flatten} = require('./utils');
+const {head, compact, flatten, detailGet, detailLang, detailNotEmpty, getFunctionDetails, getDetails} = require('./utils');
 const {openDocumentationInWebURL} = require('./urls');
 const {
   symbolLabel, symbolType, idIsEmpty,
@@ -75,7 +75,6 @@ function debugHTML (html) {
 }
 
 function wrapHTML (html) {
-
   html = html
   .replace(/<a class="internal_link" href="#([^"]+)"/g, 
            `<a class="internal_link" href='command:kite.navigate?"link/python;$1"'`)
@@ -164,6 +163,13 @@ function renderModule(data) {
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
+      ${
+        value.kind === 'type'
+          ? `${renderParameters(value)}
+            ${renderPatterns(value)}
+            ${renderLanguageSpecificArgumentsList(value)}`
+          : ''
+      }
       <section class="summary">
         <h4>Summary</h4>
         ${valueDescription(data)}
@@ -196,7 +202,7 @@ function renderFunction(data) {
     <div class="sections-wrapper">
       ${renderParameters(value)}
       ${renderPatterns(value)}
-      ${renderKwargs(value)}
+      ${renderLanguageSpecificArgumentsList(value)}
 
       <section class="summary">
         <h4>Summary</h4>
@@ -460,7 +466,8 @@ function renderUsage(usage) {
 }
 
 function renderMembers(value, limit) {
-  const {members, total_members} = value.detail;
+  const detail = getDetails(value, 'type', 'module')
+  const {members, total_members} = detail;
 
   return members.length === 0
     ? ''
@@ -487,14 +494,15 @@ function stripLeadingSlash(str) {
 function renderPatterns(data) {
   let patterns = '';
   const name = data.repr;
-  if (data.detail && data.detail.signatures && data.detail.signatures.length) {
+  const detail = getFunctionDetails(data);
+  if (detail && detail.signatures && detail.signatures.length) {
     patterns = Plan.can('common_invocations_editor')
       ? `
         <section class="patterns">
         <h4>Popular Patterns</h4>
         <div class="section-content">${
           highlightCode(
-            data.detail.signatures
+            detail.signatures
             .map(s => callSignature(s))
             .map(s => `${name}(${s})`)
             .join('\n'))
@@ -504,8 +512,8 @@ function renderPatterns(data) {
           <h4>Popular Patterns</h4>
           <div class="section-content">
           ${proFeatures(
-            `To see ${data.detail.signatures.length} ${
-              pluralize(data.detail.signatures.length, 'pattern', 'patterns')
+            `To see ${detail.signatures.length} ${
+              pluralize(detail.signatures.length, 'pattern', 'patterns')
             }`
           )}</div>
         </section>`;
@@ -513,15 +521,27 @@ function renderPatterns(data) {
   return patterns;
 }
 
+function renderLanguageSpecificArgumentsList(value) {
+  const detail = getFunctionDetails(value);
+  const lang = detailLang(detail);
+
+  switch (lang) {
+    case 'python':
+      return renderKwargs(value);
+    default:
+      return '';
+  }
+}
+
 function renderKwargs(data) {
   let kwargs = '';
-  const {detail} = data;
-  if (detail && detail.kwarg_parameters && detail.kwarg_parameters.length) {
+  const detail = getFunctionDetails(data);
+  if (detailNotEmpty(detail, 'kwarg_parameters')) {
     kwargs = `<section class="kwargs">
-      <h4>**${detail.kwarg.name}</h4>
+      <h4>**${detailGet(detail, 'kwarg').name}</h4>
       <div class="section-content"><dl>
         ${
-          detail.kwarg_parameters
+          detailGet(detail, 'kwarg_parameters')
           .map(p => renderParameter(p))
           .map(p => `<dt>${p}</dt>`)
           .join('')
@@ -564,26 +584,57 @@ function additionalMembersLink(membersCount, value) {
 }
 
 function renderParameters(value) {
-  const {detail} = value;
+  const detail = getFunctionDetails(value);
 
-  const allParameters = compact(flatten([
-    detail ? detail.parameters : null,
-    detail ? detail.vararg : null,
-    detail ? detail.kwarg : null,
-  ]));
+  const allParameters = compact(flatten(gatherParameters(detail)));
 
-  return detail &&
-         allParameters.length /*&&
-         allParameters.some(p => p.synopsis && p.synopsis !== '')*/
+  return detail && allParameters.length
     ? section('Parameters', `
     <dl>
       ${detail.parameters
         ? detail.parameters.map(p => renderParameter(p)).join('')
         : ''}
-      ${renderParameter(detail.vararg, '*')}
-      ${renderParameter(detail.kwarg, '**')}
+      ${renderLanguageSpecificArguments(detail)}
     </dl>`)
     : '';
+}
+
+function gatherParameters(detail) {
+  const lang = detailLang(detail);
+  switch (lang) {
+    case 'python':
+      return [
+        detail ? detail.parameters : null,
+        detail ? detailGet(detail, 'vararg') : null,
+        detail ? detailGet(detail, 'kwarg') : null,
+      ];
+    case 'javascript':
+      return [
+        detail ? detail.parameters : null,
+        detail ? detailGet(detail, 'rest') : null,
+      ];
+    default:
+      return [
+        detail ? detail.parameters : null,
+      ];
+  }
+}
+
+function renderLanguageSpecificArguments(detail) {
+  const lang = detailLang(detail);
+  switch (lang) {
+    case 'python':
+      return [
+        renderParameter(detailGet(detail, 'vararg'), '*'),
+        renderParameter(detailGet(detail, 'kwarg'), '**'),
+      ].join('');
+    case 'javascript':
+      return [
+        renderParameter(detailGet(detail, 'rest'), '…'),
+      ].join('');
+    default:
+      return '';
+  }
 }
 
 function renderParameter(param, prefix = '') {

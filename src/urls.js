@@ -6,10 +6,15 @@ function metricsCounterPath() {
   return '/clientapi/metrics/counters';
 }
 
+function languagesPath() {
+  return '/clientapi/languages';
+}
+
 function tokensPath(editor) {
   const state = md5(editor.getText());
   const filename = editor.getPath();
   const buffer = cleanPath(filename);
+
   return `/api/buffer/vscode/${buffer}/${state}/tokens`;
 }
 
@@ -154,6 +159,7 @@ module.exports = {
   openExampleInWebURL,
   openSignatureInWebURL,
   projectDirPath,
+  languagesPath,
   reportPath,
   searchPath,
   serializeRangeForPath,

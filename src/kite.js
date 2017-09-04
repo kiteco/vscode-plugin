@@ -4,7 +4,7 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const {StateController, AccountManager, Logger} = require('kite-installer');
-const {PYTHON_MODE, ATTEMPTS, INTERVAL, ERROR_COLOR, WARNING_COLOR, NOT_WHITELISTED} = require('./constants');
+const {PYTHON_MODE, JAVASCRIPT_MODE, ATTEMPTS, INTERVAL, ERROR_COLOR, WARNING_COLOR, NOT_WHITELISTED} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
@@ -19,8 +19,7 @@ const EditorEvents = require('./events');
 const metrics = require('./metrics');
 const Plan = require('./plan');
 const server = require('./server');
-
-const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath} = require('./urls');
+const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath, languagesPath} = require('./urls');
 const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params} = require('./utils');
 
@@ -96,6 +95,15 @@ const Kite = {
       vscode.languages.registerCompletionItemProvider(PYTHON_MODE, new KiteCompletionProvider(Kite), '.'));
     ctx.subscriptions.push(
       vscode.languages.registerSignatureHelpProvider(PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
+    
+    ctx.subscriptions.push(
+      vscode.languages.registerHoverProvider(JAVASCRIPT_MODE, new KiteHoverProvider(Kite)));
+    ctx.subscriptions.push(
+      vscode.languages.registerDefinitionProvider(JAVASCRIPT_MODE, new KiteDefinitionProvider(Kite)));
+    ctx.subscriptions.push(
+      vscode.languages.registerCompletionItemProvider(JAVASCRIPT_MODE, new KiteCompletionProvider(Kite), '.'));
+    ctx.subscriptions.push(
+      vscode.languages.registerSignatureHelpProvider(JAVASCRIPT_MODE, new KiteSignatureProvider(Kite), '(', ','));
 
     ctx.subscriptions.push(vscode.workspace.onDidChangeConfiguration(() => {
       Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
@@ -310,7 +318,11 @@ const Kite = {
   },
 
   checkState() {
-    return StateController.handleState().then(state => {
+    return Promise.all([
+      StateController.handleState(),
+      this.getSupportedLanguages(),
+    ]).then(([state, languages]) => {
+      this.supportedLanguages = languages;
       switch (state) {
         case StateController.STATES.UNSUPPORTED:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return; }
@@ -505,7 +517,7 @@ const Kite = {
   },
 
   isGrammarSupported(e) {
-    return e && e.document.languageId === 'python';
+    return e && this.supportedLanguages.includes(e.document.languageId);
   },
 
   isEditorWhitelisted(e) {
@@ -548,6 +560,24 @@ const Kite = {
     })
     .catch(() => ({status: 'ready'}));
   }, 
+
+  getSupportedLanguages() {
+    const path = languagesPath();
+    return promisifyRequest(StateController.client.request({path}))
+    .then(resp => {
+      Logger.logResponse(resp);
+      if (resp.statusCode !== 200) {
+        return promisifyReadResponse(resp)
+        .then(data => {
+          throw new Error(`Error ${resp.statusCode}: ${data}`);
+        });
+      } else {
+        return promisifyReadResponse(resp)
+        .then(json => JSON.parse(json))
+        .catch(() => ['python']);
+      }
+    });
+  },
 
   shouldOfferWhitelist(document) {
     return this.projectDirForEditor(document)

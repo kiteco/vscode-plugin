@@ -2,9 +2,10 @@
 const {SignatureHelp, SignatureInformation, ParameterInformation} = require('vscode');
 const {StateController, Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
-const {promisifyRequest, promisifyReadResponse, parseJSON, compact, stripTags} = require('./utils');
+const {promisifyRequest, promisifyReadResponse, parseJSON, compact, stripTags, getFunctionDetails} = require('./utils');
 const {signaturePath, normalizeDriveLetter} = require('./urls');
 const {valueLabel, parameterType} = require('./data-utils');
+
 
 module.exports = class KiteSignatureProvider {
   constructor(Kite) {
@@ -57,7 +58,8 @@ module.exports = class KiteSignatureProvider {
 
       const label = stripTags(valueLabel(callee));
       const sig = new SignatureInformation(label);
-      sig.parameters = (callee.detail.parameters || callee.detail.constructor.parameters || []).map(p => {
+      const detail = getFunctionDetails(callee);
+      sig.parameters = (detail.parameters || []).map(p => {
         const label = p.inferred_value
           ? `${p.name}:${stripTags(parameterType(p))}`
           : p.name
