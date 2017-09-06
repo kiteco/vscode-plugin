@@ -58,6 +58,8 @@ const Kite = {
     ctx.subscriptions.push(search);
     ctx.subscriptions.push(status);
 
+    this.status = status;
+
     server.addRoute('GET', '/check', (req, res) => {
       this.checkState();
       res.writeHead(200);
@@ -432,6 +434,7 @@ const Kite = {
   },
 
   setStatus(state, document) {
+    this.status.update();
     this.getStatus(document).then(status => {
       let plan, statusLabel;
 
