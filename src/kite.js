@@ -30,6 +30,7 @@ const Kite = {
   {
     this.kiteEditorByEditor = new Map();
     this.eventsByEditor = new Map();
+    this.supportedLanguages = [];
     this.shown = {};
 
     const router = new KiteRouter(Kite);
