@@ -321,12 +321,12 @@ const Kite = {
   checkState() {
     return Promise.all([
       StateController.handleState(),
-      this.getSupportedLanguages(),
+      this.getSupportedLanguages().catch(() => []),
     ]).then(([state, languages]) => {
       this.supportedLanguages = languages;
       switch (state) {
         case StateController.STATES.UNSUPPORTED:
-          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return; }
+          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           this.shown[state] = true;
           if (!StateController.isOSSupported()) {
             metrics.track('OS unsupported');
@@ -336,14 +336,14 @@ const Kite = {
           this.showErrorMessage('Sorry, the Kite engine is currently not supported on your platform');
           break;
         case StateController.STATES.UNINSTALLED:
-          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return; }
+          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           this.shown[state] = true;
           this.showErrorMessage('Kite is not installed: Grab the installer from our website', 'Get Kite').then(item => {
             if (item) { opn('https://kite.com/'); }
           });
           break;
         case StateController.STATES.INSTALLED:
-          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return; }
+          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           this.shown[state] = true;
           Promise.all([
             StateController.isKiteInstalled().then(() => true).catch(() => false),
@@ -384,12 +384,12 @@ const Kite = {
           });
           break;
         case StateController.STATES.RUNNING:
-          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return; }
+          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           this.shown[state] = true;
           this.showErrorMessage('The Kite background service is running but not reachable.');
           break;
         case StateController.STATES.REACHABLE:
-          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return; }
+          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           this.shown[state] = true;
           this.setStatus(state);
           this.checkConnectivity().then(() => {
@@ -400,13 +400,16 @@ const Kite = {
               }
             });
           })
-          return Plan.queryPlan();
+          return Plan.queryPlan().then(() => state);
         default: 
           if (this.isGrammarSupported(vscode.window.activeTextEditor)) {
             this.registerEditor(vscode.window.activeTextEditor);
           }
-          return Plan.queryPlan()
+          return Plan.queryPlan().then(() => state)
       }
+      return state;
+    })
+    .then(state => {
       this.setStatus(state, this.isGrammarSupported(vscode.window.activeTextEditor) ? vscode.window.activeTextEditor.document : null);
     })
     .catch(err => {
