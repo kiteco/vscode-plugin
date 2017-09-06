@@ -1,30 +1,22 @@
 'use strict';
 
-const {StateController, Logger} = require('kite-installer');
 const server = require('./server');
 const {wrapHTML, debugHTML} = require('./html-utils');
-const {promisifyReadResponse, params, compact, flatten} = require('./utils');
+const {params, compact, flatten} = require('./utils');
 const {searchPath} = require('./urls');
 const KiteValueReport = require('./value-report');
 
-let lastTerm, lastList, lastId, lastView;
+let lastTerm, lastList, lastId, lastView, Kite;
 
 server.addRoute('GET', '/search', (req, res, url) => { 
+  if (!Kite) { Kite = require('./kite'); }
+
   const text = params(url).text;
   const path = searchPath(text);
 
   lastTerm = text;
 
-  StateController.client.request({path}).then(resp => {
-    Logger.logResponse(resp);
-    if (resp.statusCode !== 200) {
-      return promisifyReadResponse(resp).then(data => {
-        throw new Error(`bad status ${resp.statusCode}: ${data}`);
-      });
-    }
-
-    return promisifyReadResponse(resp);
-  })
+  Kite.request({path})
   .then(data => JSON.parse(data))
   .then(data => {
     res.writeHead(200, {'Content-Type': 'text/plain'});

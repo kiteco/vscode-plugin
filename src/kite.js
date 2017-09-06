@@ -524,7 +524,11 @@ const Kite = {
   },
 
   isGrammarSupported(e) {
-    return e && this.supportedLanguages.includes(e.document.languageId);
+    return e && this.isDocumentGrammarSupported(e.document);
+  },
+  
+  isDocumentGrammarSupported(d) {
+    return d && this.supportedLanguages.includes(d.languageId);
   },
 
   isEditorWhitelisted(e) {
@@ -555,35 +559,16 @@ const Kite = {
 
     const path = statusPath(document.fileName);
 
-    return promisifyRequest(StateController.client.request({path}))
-    .then(resp => {
-      Logger.logResponse(resp);
-      if (resp.statusCode === 200) {
-        return promisifyReadResponse(resp)
-        .then(json => JSON.parse(json))
-        .catch(() => ({status: 'ready'}));
-      }
-      return {status: 'ready'};
-    })
+    return this.request({path}, null, document)
+    .then(json => JSON.parse(json))
     .catch(() => ({status: 'ready'}));
   }, 
 
   getSupportedLanguages() {
     const path = languagesPath();
-    return promisifyRequest(StateController.client.request({path}))
-    .then(resp => {
-      Logger.logResponse(resp);
-      if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp)
-        .then(data => {
-          throw new Error(`Error ${resp.statusCode}: ${data}`);
-        });
-      } else {
-        return promisifyReadResponse(resp)
-        .then(json => JSON.parse(json))
-        .catch(() => ['python']);
-      }
-    });
+    return this.request({path})
+    .then(json => JSON.parse(json))
+    .catch(() => ['python']);
   },
 
   shouldOfferWhitelist(document) {
@@ -619,19 +604,14 @@ const Kite = {
     const filepath = document.fileName;
     const path = projectDirPath(filepath);
 
-    return promisifyRequest(StateController.client.request({path}))
-    .then(resp => {
-      Logger.logResponse(resp);
-      if (resp.statusCode === 403) {
+    return this.request({path})
+    .catch(err => {
+      if (err.status === 403) {
         return null;
-      } else if (resp.statusCode === 404) {
+      } else if (err.status === 404) {
         return vscode.workspace.rootPath || os.homedir();
-      } else if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          throw new Error(`Error ${resp.statusCode}: ${data}`);
-        });
       } else {
-        return promisifyReadResponse(resp).catch(() => null);
+        throw err;
       }
     });
   },
@@ -640,9 +620,29 @@ const Kite = {
     const filepath = document.fileName;
     const path = shouldNotifyPath(filepath);
 
-    return promisifyRequest(StateController.client.request({path}))
-    .then(resp => resp.statusCode === 200)
+    return this.request({path}, null, document)
+    .then(() => true)
     .catch(() => false);
+  },
+
+  request(req, data, document) {
+    return promisifyRequest(StateController.client.request(req, data))
+    .then(resp => {
+      if (this.isDocumentGrammarSupported(document)) {
+        this.handle403Response(document, resp);
+      }
+      
+      Logger.logResponse(resp);
+      
+      if (resp.statusCode !== 200) {
+        return promisifyReadResponse(resp).then(data => {
+          const err = new Error(`bad status ${resp.statusCode}: ${data}`);
+          err.status = resp.statusCode;
+          throw err;
+        })
+      }
+      return promisifyReadResponse(resp);
+    });
   },
 
   checkConnectivity() {
@@ -661,4 +661,5 @@ const Kite = {
 module.exports = {
   activate(ctx) { Kite.activate(ctx); },
   deactivate() { Kite.deactivate(); },
+  request(...args) { return Kite.request(...args); }
 }

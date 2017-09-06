@@ -7,6 +7,7 @@ const {section, renderExample, debugData, logo} = require('./html-utils');
 const {StateController} = require('kite-installer')
 const {promisifyRequest, promisifyReadResponse, parseJSON} = require('./utils');
 const {examplePath} = require('./urls');
+let Kite
 
 const escapeHTML = str =>
   str
@@ -133,15 +134,11 @@ function processOutput(part) {
 
 module.exports = {
   render(id) {
+    if (!Kite) { Kite = require('./kite'); }
+
     const path = examplePath(id);
 
-    return promisifyRequest(StateController.client.request({path}))
-    .then(resp => {
-      if (resp.statusCode !== 200) {
-        throw new Error(`${resp.statusCode} at ${path}`);
-      }
-      return promisifyReadResponse(resp);
-    })
+    return Kite.request({path})
     .then(report => parseJSON(report))
     .then(data => {
       // console.log(JSON.stringify(data, null, 2));

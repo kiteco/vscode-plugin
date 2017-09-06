@@ -1,7 +1,6 @@
 'use strict';
 
-const {StateController} = require('kite-installer');
-const {promisifyRequest, promisifyReadResponse} = require('./utils');
+let Kite;
 
 const Plan = {
   can(feature) {
@@ -62,14 +61,9 @@ const Plan = {
   },
 
   queryPlan() {
+    if (!Kite) { Kite = require('./kite'); }
     const path = this.planPath();
-    return promisifyRequest(StateController.client.request({path}))
-    .then(resp => {
-      if (resp.statusCode !== 200) {
-        throw new Error(`${resp.statusCode} status at ${path}`);
-      }
-      return promisifyReadResponse(resp);
-    })
+    return Kite.request({path})
     .then(data => {
       this.plan = JSON.parse(data);
 

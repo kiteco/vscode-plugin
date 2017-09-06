@@ -7,20 +7,15 @@ const {valueReportPath, hoverPath} = require('./urls');
 const {renderModule, renderFunction, renderInstance} = require('./html-utils');
 const {reportFromHover} = require('./data-utils');
 const Plan = require('./plan');
+let Kite;
 
 module.exports = {
   render(id) {
+    if (!Kite) { Kite = require('./kite'); }
     const path = valueReportPath(id);
 
     return Plan.queryPlan()
-    .then(() => promisifyRequest(StateController.client.request({path})))
-    .then(resp => {
-      Logger.logResponse(resp);
-      if (resp.statusCode !== 200) {
-        throw new Error(`${resp.statusCode} at ${path}`);
-      }
-      return promisifyReadResponse(resp);
-    })
+    .then(() => Kite.request({path}))
     .then(report => parseJSON(report))
     .then(report => {
       if (report.value && report.value.id === '') { report.value.id = id; }
@@ -30,6 +25,8 @@ module.exports = {
   },
 
   renderFromRange(document, range) {
+    if (!Kite) { Kite = require('./kite'); }
+
     const [start, end] = range;
     const path = hoverPath(document, {
       start: new vscode.Position(start.line, start.character), 
@@ -37,18 +34,11 @@ module.exports = {
     });
 
     return Plan.queryPlan()
-    .then(() => promisifyRequest(StateController.client.request({path})))
-    .then(resp => {
-      Logger.logResponse(resp);
-      if (resp.statusCode !== 200) {
-        throw new Error(`${resp.statusCode} at ${path}`);
-      }
-      return promisifyReadResponse(resp);
-    })
+    .then(() => Kite.request({path}))
     .then(report => parseJSON(report))
     .then(data => reportFromHover(data))
     .then(data => this.renderData(data))
-    .catch(err => console.log(err))
+    .catch(err => console.log(err.message))
   },
 
   renderData(data) {

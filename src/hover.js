@@ -2,9 +2,8 @@
 
 const vscode = require('vscode');
 const {Hover} = vscode;
-const {StateController} = require('kite-installer');
 const {hoverPath} = require('./urls');
-const {promisifyReadResponse, compact} = require('./utils');
+const {compact} = require('./utils');
 const {symbolName, symbolKind, symbolId, idIsEmpty} = require('./data-utils');
 
 module.exports = class KiteHoverProvider {
@@ -15,16 +14,7 @@ module.exports = class KiteHoverProvider {
   provideHover(doc, pos) {
     const range = doc.getWordRangeAtPosition(pos);
     const path = hoverPath(doc, range);
-    return StateController.client.request({path})
-    .then(resp => {
-      this.Kite.handle403Response(doc, resp);
-      if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          throw new Error(`bad status ${resp.statusCode}: ${data}`);
-        })
-      }
-      return promisifyReadResponse(resp);
-    })
+    return this.Kite.request({path})
     .then(data => JSON.parse(data))
     .then(data => {
       if (data && data.symbol && data.symbol.length) {
