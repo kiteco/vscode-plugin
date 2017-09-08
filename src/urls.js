@@ -124,8 +124,8 @@ function hoverPath(document, range) {
   return [
     `/api/buffer/vscode/${buffer}/${state}/hover`,
     [
-      `selection_begin_bytes=${start}`,
-      `selection_end_bytes=${end}`,
+      `selection_begin_runes=${start}`,
+      `selection_end_runes=${end}`,
     ].join('&'),
   ].join('?');
 }
