@@ -14,15 +14,7 @@ module.exports = class KiteDefinitionProvider {
   provideDefinition(document, position, token) {
     const range = document.getWordRangeAtPosition(position);
     const path = hoverPath(document, range);
-    return promisifyRequest(StateController.client.request({path}))
-    .then(resp => {
-      this.Kite.handle403Response(document, resp);
-      // Logger.logResponse(resp);
-      if (resp.statusCode !== 200) {
-        throw new Error(`${resp.statusCode} status at ${path}`);
-      }
-      return promisifyReadResponse(resp);
-    })
+    return this.Kite.request({path}, null, document)
     .then(data => parseJSON(data))
     .then(data => {
       if (data && data.report && data.report.definition && data.report.definition.filename !== '') {

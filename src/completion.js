@@ -1,8 +1,8 @@
 'use strict';
 const {CompletionItem, CompletionItemKind} = require('vscode');
-const {StateController, Logger} = require('kite-installer');
+const {Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
-const {promisifyRequest, promisifyReadResponse, parseJSON} = require('./utils');
+const {promisifyReadResponse, parseJSON} = require('./utils');
 const {completionsPath, normalizeDriveLetter} = require('./urls');
 
 const fill = (s, l, f = ' ') => {
@@ -44,27 +44,10 @@ module.exports = class KiteCompletionProvider {
     };
     Logger.debug(payload);
 
-    return promisifyRequest(StateController.client.request({
+    return this.Kite.request({
       path: completionsPath(),
       method: 'POST',
-    }, JSON.stringify(payload)))
-    .then(resp => {
-      this.Kite.handle403Response(document, resp);
-      Logger.logResponse(resp);
-    //   Kite.handle403Response(editor, resp);
-      if (resp.statusCode === 404) {
-        // This means we had no completions for this cursor position.
-        // Do not call reject() because that will generate an error
-        // in the console and lock autocomplete-plus
-        return [];
-      } else if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          throw new Error(`Error ${resp.statusCode}: ${data}`);
-        });
-      } else {
-        return promisifyReadResponse(resp);
-      }
-    })
+    }, JSON.stringify(payload), document)
     .then(data => {
       data = parseJSON(data, {});
       const completions = data.completions || [];

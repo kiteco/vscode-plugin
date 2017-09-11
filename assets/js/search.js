@@ -24,7 +24,7 @@ window.initSearch = (inputId, resultsId, viewId) => {
           view.innerHTML = '';
         }
       }).catch(err => {
-        console.log(err);
+        console.log(err.message);
       });
     } else {
       stack = stack.then(() => {

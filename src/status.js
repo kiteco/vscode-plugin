@@ -11,6 +11,8 @@ const {MAX_FILE_SIZE} = require('./constants');
 const {STATES} = StateController;
 const dot = '<span class="dot">•</span>';
 
+let Kite;
+
 server.addRoute('GET', '/status/start', (req, res, url) => {
   StateController.runKiteAndWait()
   .then(() => {
@@ -56,17 +58,14 @@ server.addRoute('GET', '/status/login', (req, res, url) => {
 });
 
 server.addRoute('GET', '/status/resendEmail', (req, res, url) => {
-  StateController.client.request({
+  if (!Kite) { Kite = require('./kite'); }
+  Kite.request({
     path: '/api/account/resendVerification',
     method: 'post',
   })
-  .then(resp => {
-    if (resp.statusCode === 200) {
-      res.writeHead(200),
-      res.end();
-    } else {
-      throw new Error('err');
-    }
+  .then(() => {
+    res.writeHead(200),
+    res.end();
   })
   .catch(() => {
     res.writeHead(500);
@@ -109,15 +108,8 @@ module.exports = class KiteStatus {
   getUserAccountInfo() {
     const path = accountPath();
 
-    return promisifyRequest(StateController.client.request({path}))
-      .then(resp => {
-        Logger.logResponse(resp);
-        if (resp.statusCode !== 200) {
-          throw new Error(`${resp.statusCode} at ${path}`);
-        }
-        return promisifyReadResponse(resp);
-      })
-      .then(account => JSON.parse(account));
+    return this.Kite.request({path})
+    .then(account => JSON.parse(account));
   }
 
   getStatus(editor) {
@@ -129,16 +121,8 @@ module.exports = class KiteStatus {
     const filepath = normalizeDriveLetter(editor.document.fileName);
     const path = statusPath(filepath);
 
-    return promisifyRequest(StateController.client.request({path}))
-    .then(resp => {
-      Logger.logResponse(resp);
-      if (resp.statusCode === 200) {
-        return promisifyReadResponse(resp)
-        .then(json => JSON.parse(json))
-        .catch(() => def);
-      }
-      return def;
-    })
+    return this.Kite.request({path})
+    .then(json => JSON.parse(json))
     .catch(() => def);
   }
 

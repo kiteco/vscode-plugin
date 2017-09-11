@@ -4,7 +4,7 @@ const os = require('os');
 const vscode = require('vscode');
 const mixpanel = require('mixpanel');
 const crypto = require('crypto');
-const {Logger, StateController} = require('kite-installer');
+const {Logger} = require('kite-installer');
 const kitePkg = require('../package.json');
 const localconfig = require('./localconfig.js');
 const {metricsCounterPath} = require('./urls');
@@ -18,6 +18,8 @@ const client = mixpanel.init(MIXPANEL_TOKEN, {
 });
 
 const EDITOR_UUID = vscode.env.machineId;
+
+let Kite;
 
 // Generate a unique ID for this user and save it for future use.
 function distinctID() {
@@ -49,20 +51,18 @@ function track(eventName, properties) {
 }
 
 function sendFeatureMetric(name) {
+  if (!Kite) { Kite = require('./kite'); }
   const path = metricsCounterPath();
 
   Logger.debug('feature metric:', name);
 
-  return StateController.client.request({
+  return Kite.request({
     path,
     method: 'POST',
   }, JSON.stringify({
     name,
     value: 1,
-  })).then(resp => {
-    Logger.logResponse(resp);
-    return resp;
-  });
+  }));
 }
 
 function featureRequested(name) {

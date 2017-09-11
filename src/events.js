@@ -17,7 +17,6 @@ module.exports = class EditorEvents {
   }
 
   edit() {
-    // return this.Kite.checkState().then(() => this.sendEvent('edit'));
     return this.sendEvent('edit');
   }
 
@@ -34,16 +33,10 @@ module.exports = class EditorEvents {
       return;
     }
 
-    return promisifyRequest(StateController.client.request({
+    return this.Kite.request({
       path: '/clientapi/editor/event',
       method: 'POST',
-    }, payload))
-    .then(resp => {
-      if (this.Kite.isGrammarSupported(this.editor)) {
-        this.Kite.handle403Response(this.document, resp);
-      } 
-      Logger.logResponse(resp);
-    })
+    }, payload, this.document)
     .catch(() => {
       // on connection error send a metric, but not too often or we will generate too many events
       if (!this.lastErrorAt ||
