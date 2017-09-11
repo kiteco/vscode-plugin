@@ -17,7 +17,6 @@ module.exports = class EditorEvents {
   }
 
   edit() {
-    // return this.Kite.checkState().then(() => this.sendEvent('edit'));
     return this.sendEvent('edit');
   }
 

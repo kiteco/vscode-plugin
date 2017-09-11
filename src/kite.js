@@ -632,7 +632,7 @@ const Kite = {
         this.handle403Response(document, resp);
       }
       
-      Logger.logResponse(resp);
+      // Logger.logResponse(resp);
       
       if (resp.statusCode !== 200) {
         return promisifyReadResponse(resp).then(data => {
@@ -642,6 +642,10 @@ const Kite = {
         })
       }
       return promisifyReadResponse(resp);
+    })
+    .catch(err => {
+      this.checkState();
+      throw err;
     });
   },
 
