@@ -28,6 +28,8 @@ const pluralize = (n, singular, plural) => n === 1 ? singular : plural;
 const Kite = {
   activate(ctx) 
   {
+    if(process.env.NODE_ENV === 'test') { return; }
+
     this.kiteEditorByEditor = new Map();
     this.eventsByEditor = new Map();
     this.supportedLanguages = [];
