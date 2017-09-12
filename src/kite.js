@@ -114,18 +114,20 @@ const Kite = {
       Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
     }));
 
-    ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
-      this.registerEvents(e);
+    ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {      
+      if (e) {
+        this.registerEvents(e);
 
-      if (/Code[\/\\]User[\/\\]settings.json$/.test(e.document.fileName)){
-        metrics.featureRequested('settings');
-        metrics.featureFulfilled('settings');
+        if (/Code[\/\\]User[\/\\]settings.json$/.test(e.document.fileName)){
+          metrics.featureRequested('settings');
+          metrics.featureFulfilled('settings');
+        }
+        if (this.isGrammarSupported(e)) { this.registerEditor(e); }
+  
+  
+        const evt = this.eventsByEditor.get(e);
+        evt.focus();
       }
-      if (this.isGrammarSupported(e)) { this.registerEditor(e); }
-
-
-      const evt = this.eventsByEditor.get(e);
-      evt.focus();
     }));
 
     ctx.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(e => {
@@ -304,7 +306,7 @@ const Kite = {
   },
 
   registerEvents(e) {
-    if (!this.eventsByEditor.has(e)) {
+    if (e && !this.eventsByEditor.has(e) && e.document) {
       const evt = new EditorEvents(this, e);
       this.eventsByEditor.set(e, evt);
 

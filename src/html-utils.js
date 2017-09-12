@@ -155,11 +155,12 @@ function renderExamplesList(data) {
 }
 
 function renderModule(data) {
-  const {value} = data;
+  const {symbol} = data;
+  const value = head(symbol.value);
 
   return `
-  ${renderValueHeader(value)}
-  ${renderExtend(value)}
+  ${renderSymbolHeader(symbol)}
+  ${renderExtend(symbol)}
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
@@ -172,7 +173,7 @@ function renderModule(data) {
       }
       <section class="summary">
         <h4>Summary</h4>
-        ${valueDescription(data)}
+        ${symbolDescription(data)}
       </section>
 
       ${renderMembers(value)}
@@ -185,18 +186,20 @@ function renderModule(data) {
   </div>
 
   <footer>
-    ${!idIsEmpty(value.id) 
+    ${!idIsEmpty(symbol.id) 
       ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
-            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>`
+            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
       : ''}
   </footer>`;
 }
 
 function renderFunction(data) {
-  const {value} = data;
+  const {symbol} = data;
+  const value = head(symbol.value);
+
   return `
-  ${renderValueHeader(value)}
-  ${renderExtend(value)}
+  ${renderSymbolHeader(symbol)}
+  ${renderExtend(symbol)}
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
@@ -206,42 +209,43 @@ function renderFunction(data) {
 
       <section class="summary">
         <h4>Summary</h4>
-        ${valueDescription(data)}
+        ${symbolDescription(data)}
       </section>
 
       ${renderUsages(data)}
       ${renderExamples(data)}
       ${renderLinks(data)}
       ${renderDefinition(data)}
-      ${renderInvocations(value)}
+      ${renderInvocations(symbol)}
       ${debugData(data)}
     </div>
   </div>
 
   <footer>
-    ${!idIsEmpty(value.id) 
+    ${!idIsEmpty(symbol.id) 
       ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
-            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>`
+            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
       : ''}
   </footer>
   `;
 }
 
 function renderInstance(data) {
-  const {value} = data;
+  const {symbol} = data;
+  const value = head(symbol.value);
 
   return `
-  ${renderValueHeader(value)}
-  ${renderExtend(value)}
+  ${renderSymbolHeader(symbol)}
+  ${renderExtend(symbol)}
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
       <section class="summary">
         <h4>Summary</h4>
-        ${valueDescription(data)}
+        ${symbolDescription(data)}
       </section>
 
-      ${renderDefinition(value)}
+      ${renderDefinition(symbol)}
       ${renderUsages(data)}
       ${renderExamples(data)}
       ${renderLinks(data)}
@@ -250,9 +254,9 @@ function renderInstance(data) {
   </div>
 
   <footer>
-    ${!idIsEmpty(value.id) 
+    ${!idIsEmpty(symbol.id) 
       ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
-            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(value.id)}"'><span>Open in web</span>${logo}</a>`
+            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
       : ''}
   </footer>
   `;
@@ -273,14 +277,14 @@ function valueDescription(data) {
 }
 
 function symbolDescription(data) {
-  const symbol = head(data.symbol);
+  const {symbol} = data;
   const value = head(symbol.value);
 
-  return data.report &&
+  return `<div class="description">${data.report &&
          data.report.description_html &&
          data.report.description_html !== ''
     ? stripBody(data.report.description_html)
-    : (value.synopsis != '' ? value.synopsis : symbol.synopsis);
+    : (value.synopsis != '' ? value.synopsis : symbol.synopsis)}</div>`;
 }
 
 function renderSymbolHeader(symbol) {
@@ -409,7 +413,7 @@ function renderLink(link) {
 function additionalLinksLink(linksCount, data) {
   return linksCount <= 0
     ? ''
-    : `<a href='command:kite.navigate?"links-list/${data.value.id}"'
+    : `<a href='command:kite.navigate?"links-list/${data.value ? data.value.id : data.symbol.id}"'
           class="more-links">See ${linksCount} more links</a>`;
 }
 
@@ -435,7 +439,7 @@ function renderExample(example) {
 function additionalExamplesLink(examplesCount, data) {
   return examplesCount <= 0
     ? ''
-    : `<a href='command:kite.navigate?"examples-list/${data.value.id}"'
+    : `<a href='command:kite.navigate?"examples-list/${data.value ? data.value.id : data.symbol.id}"'
           class="more-examples">See ${examplesCount} more examples</a>`;
 }
 
