@@ -5,8 +5,30 @@ const path = require('path');
 const http = require('http');
 const proc = require('child_process');
 const sinon = require('sinon');
+const {StateController} = require('kite-installer');
 const Plan = require('../src/plan');
-const {merge} = require('../src/utils');
+const {merge, promisifyRequest, promisifyReadResponse} = require('../src/utils');
+
+const Kite = {
+  request(req, data) {
+    return promisifyRequest(StateController.client.request(req, data))
+    .then(resp => {
+      
+      if (resp.statusCode !== 200) {
+        return promisifyReadResponse(resp).then(data => {
+          const err = new Error(`bad status ${resp.statusCode}: ${data}`);
+          err.status = resp.statusCode;
+          throw err;
+        })
+      }
+      return promisifyReadResponse(resp);
+    })
+    .catch(err => {
+      this.checkState();
+      throw err;
+    });
+  },
+}
 
 function waitsFor(m, f, t, i) {
   if (typeof m === 'function') {
@@ -677,4 +699,6 @@ module.exports = {
   withKiteWhitelistedPaths, withKiteBlacklistedPaths, withKiteIgnoredPaths,
   withFakeServer, withRoutes, withPlan, withFakePlan,
   sleep, fixtureURI,
+
+  Kite,
 };

@@ -1,11 +1,7 @@
 const fs = require('fs');
 const expect = require('expect.js');
 const vscode = require('vscode');
-const {fixtureURI, withRoutes, withKiteWhitelistedPaths, fakeResponse} = require('./helpers');
-
-const Kite = {
-  handle403Response(){}
-}
+const {fixtureURI, withRoutes, withKiteWhitelistedPaths, fakeResponse, Kite} = require('./helpers');
 
 const KiteCompletionProvider = require('../src/completion');
 
