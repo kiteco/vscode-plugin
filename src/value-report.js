@@ -1,9 +1,8 @@
 'use strict';
 
 const vscode = require('vscode');
-const {StateController, Logger} = require('kite-installer')
-const {promisifyRequest, promisifyReadResponse, parseJSON} = require('./utils');
-const {valueReportPath, hoverPath} = require('./urls');
+const {parseJSON} = require('./utils');
+const {symbolReportPath, hoverPath} = require('./urls');
 const {renderModule, renderFunction, renderInstance} = require('./html-utils');
 const {reportFromHover} = require('./data-utils');
 const Plan = require('./plan');
@@ -12,13 +11,13 @@ let Kite;
 module.exports = {
   render(id) {
     if (!Kite) { Kite = require('./kite'); }
-    const path = valueReportPath(id);
+    const path = symbolReportPath(id);
 
     return Plan.queryPlan()
     .then(() => Kite.request({path}))
     .then(report => parseJSON(report))
     .then(report => {
-      if (report.value && report.value.id === '') { report.value.id = id; }
+      if (report.symbol && report.symbol.id === '') { report.symbol.id = id; }
       return report;
     })
     .then(data => this.renderData(data))
@@ -42,17 +41,22 @@ module.exports = {
   },
 
   renderData(data) {
-    switch(data.value.kind) {
-      case 'module':
-      case 'type':
-        return renderModule(data);
-      case 'function': 
-        return renderFunction(data);
-      case 'instance': 
-      case 'unknown': 
-        return renderInstance(data);
-      default:
-        return '';
+    try {
+      const [value] = data.symbol.value;
+      switch(value.kind) {
+        case 'module':
+        case 'type':
+          return renderModule(data);
+        case 'function': 
+          return renderFunction(data);
+        case 'instance': 
+        case 'unknown': 
+          return renderInstance(data);
+        default:
+          return '';
+      }
+    } catch (e) {
+      console.log(e.stack);
     }
   }
 }

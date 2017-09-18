@@ -170,7 +170,7 @@ const symbolKind = s => symbolValue(s).kind;
 const reportFromHover = hover => {
   const symbol = head(hover.symbol);
   const data = {
-    value: symbolValue(symbol),
+    symbol,
     report: hover.report,
   };
   if (data.value && data.value.id === '') { data.value.id = symbol.name; }

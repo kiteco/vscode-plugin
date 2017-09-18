@@ -63,13 +63,17 @@ function completionsPath() {
 }
 
 function reportPath(data) {
-  const value = head(head(data.symbol).value);
+  const symbol = head(data.symbol);
 
-  return valueReportPath(value.id);
+  return valueReportPath(symbol.id);
 }
 
 function valueReportPath(id) {
   return `/api/editor/value/${id}`;
+}
+
+function symbolReportPath(id) {
+  return `/api/editor/symbol/${id}`;
 }
 
 function membersPath(id, page = 0, limit = 999) {
@@ -170,5 +174,6 @@ module.exports = {
   usagesPath,
   statusPath,
   valueReportPath,
+  symbolReportPath,
   metricsCounterPath,
 };
