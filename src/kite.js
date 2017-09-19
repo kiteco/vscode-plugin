@@ -563,8 +563,14 @@ const Kite = {
 
     const path = statusPath(document.fileName);
 
-    return this.request({path}, null, document)
-    .then(json => JSON.parse(json))
+    return StateController.client.request({path}, null, document)
+    .then(resp => {
+      if (resp.statusCode === 200) {
+        return promisifyReadResponse(resp).then(json => JSON.parse(json));
+      } else if (resp.statusCode === 403) {
+        return {status: 'not whitelisted'}
+      }
+    })
     .catch(() => ({status: 'ready'}));
   }, 
 
