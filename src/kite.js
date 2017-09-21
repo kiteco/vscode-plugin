@@ -653,10 +653,6 @@ const Kite = {
       }
       return promisifyReadResponse(resp);
     })
-    .catch(err => {
-      this.checkState();
-      throw err;
-    });
   },
 
   checkConnectivity() {
