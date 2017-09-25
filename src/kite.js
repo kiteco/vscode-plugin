@@ -476,6 +476,9 @@ const Kite = {
           case 'syncing':
             statusLabel = 'syncing';
             break;
+          case 'not whitelisted':
+          case 'blacklisted':
+          case 'ignored':
           default: 
             statusLabel ='ready';
             break;
@@ -506,22 +509,29 @@ const Kite = {
         case StateController.STATES.REACHABLE:
           this.statusBarItem.color = WARNING_COLOR;
           break;
-        case NOT_WHITELISTED: 
-          this.statusBarItem.color = WARNING_COLOR;
-          this.statusBarItem.tooltip = 'Current path is not whitelisted';
-          break;
         default: 
-          this.statusBarItem.color = undefined;
           switch(status.status) {
-            case 'indexing':
-              this.statusBarItem.tooltip = 'Kite engine is indexing your code';
-              break;
-            case 'syncing':
-              this.statusBarItem.tooltip = 'Kite engine is syncing your code';
-              break;
-            default: 
-              this.statusBarItem.tooltip = 'Kite is ready';
-              break;
+          case 'not whitelisted':
+            this.statusBarItem.color = WARNING_COLOR;
+            this.statusBarItem.tooltip = 'Current path is not whitelisted';
+            break;
+          case 'indexing':
+            this.statusBarItem.color = undefined;
+            this.statusBarItem.tooltip = 'Kite engine is indexing your code';
+            break;
+          case 'syncing':
+            this.statusBarItem.color = undefined;
+            this.statusBarItem.tooltip = 'Kite engine is syncing your code';
+            break;
+          case 'blacklisted': 
+          case 'ignored': 
+            this.statusBarItem.color = undefined;
+            this.statusBarItem.tooltip = 'Current path is ignored by Kite';
+            break;
+          case 'ready': 
+            this.statusBarItem.color = undefined;
+            this.statusBarItem.tooltip = 'Kite is ready';
+            break;
           }
       }
     })
@@ -549,7 +559,7 @@ const Kite = {
     });
 
     if (resp.statusCode === 403) {
-      this.setStatus(NOT_WHITELISTED, document);
+      // this.setStatus(NOT_WHITELISTED, document);
       this.shouldOfferWhitelist(document)
       .then(res => { if (res) { this.warnNotWhitelisted(document, res); }})
       .catch(err => console.error(err));
@@ -630,8 +640,8 @@ const Kite = {
     const filepath = document.fileName;
     const path = shouldNotifyPath(filepath);
 
-    return this.request({path}, null, document)
-    .then(() => true)
+    return StateController.client.request({path}, null, document)
+    .then(resp => resp.statusCode !== 403)
     .catch(() => false);
   },
 
