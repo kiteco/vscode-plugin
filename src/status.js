@@ -283,13 +283,17 @@ module.exports = class KiteStatus {
         break;
       case STATES.AUTHENTICATED:
         const editor = vscode.window.activeTextEditor;
-        if (!editor || (editor && (!this.Kite.isGrammarSupported(editor) ||
-            this.Kite.isEditorWhitelisted(editor)))) {
-          if (editor && editor.document.getText().length >= MAX_FILE_SIZE) {
+        if (!editor) {
+          content = `<div>Open a supported file to see Kite's status ${dot}</div>`;
+        } else if (!this.Kite.isGrammarSupported(editor)) {
+          content = `<div>Open a supported file to see Kite's status ${dot}</div>`;
+        } else if (this.Kite.isEditorWhitelisted(editor)) {
+          if (editor.document.getText().length >= MAX_FILE_SIZE) {
             content = `
             <div class="text-warning">The current file is too large for Kite to handle ${dot}</div>`;
           } else {
             switch (syncStatus.status) {
+              case '':
               case 'ready':
                 content = `<div class="ready">Kite engine is ready and working ${dot}</div>`;
                 break;
@@ -306,16 +310,15 @@ module.exports = class KiteStatus {
         } else {
           const path = encodeURI(normalizeDriveLetter(editor.document.fileName));
           const settingsURL = `http://localhost:46624/settings/permissions?filename=${path}`;
-          content = `
-            <div class="text-warning">Kite engine is not enabled for this file ${dot}</div>
-
-            ${shouldOfferWhitelist ? `<a href='#' 
-               onclick="requestGet('/status/whitelist?dirpath=${projectDir}').then(() => requestGet('/status/reload'))"
-               class="btn warning">Enable for ${projectDir}</a>` : ''}
-            <a href="${settingsURL}" class="btn warning">Whitelist settings…</a>
-          `;
+          content = shouldOfferWhitelist
+            ? `<div class="text-warning">Kite engine is not enabled for this file ${dot}</div>
+              <a href="#"
+                 onclick="requestGet('/status/whitelist?dirpath=${projectDir}').then(() => requestGet('/status/reload'))"
+                 class="btn warning">Enable for ${projectDir}</a><br/>
+              <a href="${settingsURL}" class="btn warning">Whitelist settings…</a>`
+            : `<div>The current file is ignored by Kite ${dot}</div>
+              <a href="${settingsURL}" class="btn">Whitelist settings…</a>`;
         }
-
         break;
     }
 
