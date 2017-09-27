@@ -632,8 +632,8 @@ const Kite = {
     const filepath = document.fileName;
     const path = shouldNotifyPath(filepath);
 
-    return this.request({path}, null, document)
-    .then(() => true)
+    return StateController.client.request({path})
+    .then(resp => resp.statusCode === 200)
     .catch(() => false);
   },
 
