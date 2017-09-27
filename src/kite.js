@@ -614,14 +614,16 @@ const Kite = {
     const filepath = document.fileName;
     const path = projectDirPath(filepath);
 
-    return this.request({path})
-    .catch(err => {
-      if (err.status === 403) {
+    return StateController.client.request({path})
+    .then(resp => {
+      if (resp.statusCode === 200) {
+        return promisifyReadResponse(resp)
+      } else if (resp.statusCode === 403) {
         return null;
-      } else if (err.status === 404) {
+      } else if (resp.statusCode === 404) {
         return vscode.workspace.rootPath || os.homedir();
       } else {
-        throw err;
+        throw new Error('Invalid status');
       }
     });
   },
