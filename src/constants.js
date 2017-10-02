@@ -16,7 +16,7 @@ const INTERVAL = 2500;
 
 const ERROR_COLOR = '#ff0000';
 
-const WARNING_COLOR = '#ffcc00';
+const WARNING_COLOR = '#929497';
 
 const NOT_WHITELISTED = 7;
 

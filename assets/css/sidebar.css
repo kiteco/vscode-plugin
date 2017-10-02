@@ -1378,6 +1378,7 @@ form.password-less .has-password {
 }
 
 .kite-status-panel .btn,
+.kite-status-panel a.btn,
 .login-form .btn,
 .login-form button {
   background-color: var(--open-web-link-background);
