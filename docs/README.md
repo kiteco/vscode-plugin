@@ -43,9 +43,15 @@ You can see up to three links in the popup:
 
 ### Expand View
 
+The Kite expand view offer a more detailed view of a symbol documentation. You can use the sidebar panel to browse the members of a module or a type, or to access curated examples, Stack Overflow topics, and more.
+
 ![Kite Expand Panel](./images/kite-expand-panel.png)
 
 ### Active Search
+
+Kite's active search is available using the corresponding command from the command palette. It will open the search panel on the side.
+
+Type a module, function or symbol name and browse the results documentation in the panel.
 
 ![Kite Active Search](./images/kite-active-search.png)
 
