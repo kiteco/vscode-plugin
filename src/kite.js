@@ -244,14 +244,16 @@ const Kite = {
     vscode.commands.registerCommand('kite.def', ({file, line, source}) => {
       metrics.track(`${source} Go to definition clicked`);
       metrics.featureRequested('definition');
-      vscode.workspace.openTextDocument(file).then(doc => {
+      vscode.workspace.openTextDocument(vscode.Uri.file(file))
+      .then(doc => {
+        return vscode.window.showTextDocument(doc);
+      })
+      .then(e => {
         metrics.featureFulfilled('definition');
-        editorsForDocument(doc).some(e => {
-          e.revealRange(new vscode.Range(
-            new vscode.Position(line - 1, 0),
-            new vscode.Position(line - 1, 100)
-          ));
-        });
+        e.revealRange(new vscode.Range(
+          new vscode.Position(line - 1, 0),
+          new vscode.Position(line - 1, 100)
+        ));
       })
     });
 
