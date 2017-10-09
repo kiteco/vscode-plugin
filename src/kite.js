@@ -614,7 +614,7 @@ const Kite = {
         return item 
           ? StateController.whitelistPath(res)
             .then(() => Logger.debug('whitelisted'))
-          : StateController.blacklistPath(res)
+          : StateController.blacklistPath(document.fileName)
             .then(() => Logger.debug('blacklisted'));
       });
     } else {
