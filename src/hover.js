@@ -53,7 +53,11 @@ module.exports = class KiteHoverProvider {
           links.push(`[def](command:kite.def?${defData})`);
         }
 
-        if (links.length) { texts.push('**Kite:** ' + links.join(' ')); }
+        if (links.length) { 
+          const md = new vscode.MarkdownString('**Kite:** ' + links.join(' '))
+          md.isTrusted = true;
+          texts.push(md); 
+        }
 
         return new Hover(compact(texts));
       }
