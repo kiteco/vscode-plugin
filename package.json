@@ -21,6 +21,10 @@
         "title": "Kite Active Search"
       },
       {
+        "command": "kite.install",
+        "title": "Kite Install"
+      },
+      {
         "command": "kite.open-settings",
         "title": "Open Kite Settings"
       },
