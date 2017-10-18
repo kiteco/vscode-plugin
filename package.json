@@ -37,6 +37,10 @@
         "title": "Kite: Docs for cursor"
       },
       {
+        "command": "kite.install",
+        "title": "Kite Install"
+      },
+      {
         "command": "kite.open-settings",
         "title": "Kite: Settings"
       },

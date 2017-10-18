@@ -12,6 +12,7 @@ const KiteDefinitionProvider = require('./definition');
 const KiteRouter = require('./router');
 const KiteSearch = require('./search');
 const KiteLogin = require('./login');
+const KiteInstall = require('./install');
 const KiteStatus = require('./status');
 const KiteTour = require('./tour');
 const KiteEditor = require('./kite-editor');
@@ -39,6 +40,7 @@ const Kite = {
     const router = new KiteRouter(Kite);
     const search = new KiteSearch(Kite);
     const login = new KiteLogin(Kite);
+    const install = new KiteInstall(Kite);
     const status = new KiteStatus(Kite);
     const tour = new KiteTour(Kite);
 
@@ -88,6 +90,8 @@ const Kite = {
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-search', search));
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-login', login));
+    ctx.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-install', install));
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
     ctx.subscriptions.push(
@@ -176,6 +180,11 @@ const Kite = {
     
     vscode.commands.registerCommand('kite.login', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+    }); 
+    
+    vscode.commands.registerCommand('kite.install', () => {
+      AccountManager.initClient('alpha.kite.com', -1, true);
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
     }); 
 
     vscode.commands.registerCommand('kite.open-settings', () => {

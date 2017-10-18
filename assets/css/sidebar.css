@@ -1391,6 +1391,8 @@ form.password-less .has-password {
 
 .kite-status-panel .btn,
 .kite-status-panel a.btn,
+.install .btn,
+.install button,
 .login-form .btn,
 .login-form button {
   background-color: var(--open-web-link-background);
@@ -1406,6 +1408,7 @@ form.password-less .has-password {
 }
 
 .kite-status-panel .btn.primary,
+.install .btn.primary,
 .login-form .btn.primary,
 .login-form button.primary {
   background-color: var(--color-blue);
@@ -1417,6 +1420,7 @@ form.password-less .has-password {
 }
 
 .kite-status-panel .btn.warning,
+.install .btn.warning,
 .login-form .btn.warning,
 .login-form button.warning {
   background-color: var(--color-orange);
@@ -1428,6 +1432,7 @@ form.password-less .has-password {
 }
 
 .kite-status-panel .btn.error,
+.install .btn.error,
 .login-form .btn.error,
 .login-form button.error {
   background-color: var(--color-red);
@@ -1439,6 +1444,7 @@ form.password-less .has-password {
 }
 
 .kite-status-panel .btn.purple,
+.install .btn.purple,
 .login-form .btn.purple,
 .login-form button.purple {
   background-color: var(--color-purple);
@@ -1456,6 +1462,9 @@ form.password-less .has-password {
 .kite-status-panel a.btn[href]:hover,
 .kite-status-panel a.btn[href]:focus,
 .kite-status-panel a.btn[href]:active,
+.install a.btn[href]:hover,
+.install a.btn[href]:focus,
+.install a.btn[href]:active,
 .login-form a.btn[href]:hover,
 .login-form a.btn[href]:focus,
 .login-form a.btn[href]:active {
