@@ -38,13 +38,22 @@ server.addRoute('POST', '/install/emit', (req, res, url) => {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('');
 
-    const event = fields.event;
+    const event = fields.event; 
     delete fields.event;
 
-    console.log(event, fields);
     instance.installFlow.emit(event, fields);
   });
 });
+
+server.addRoute('GET', '/install/progress', (req, res, url) => {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end(instance && 
+          instance.installFlow && 
+          instance.installFlow.state && 
+          instance.installFlow.state.download 
+    ? String(instance.installFlow.state.download.ratio)
+    : '-1');
+})
 
 function inputEmailView (state) { 
   return `
@@ -123,7 +132,9 @@ function whitelistView(state) {
          href="#"
          onclick="submitEvent('did-skip-whitelist')">Add Later</a>
     </div>
-  </form>`; 
+  </form>
+  
+  <script>initDownloadProgress();</script>`; 
 }
 function installEndView(state) { 
   return `
@@ -145,7 +156,7 @@ function installEndView(state) {
           <li>2x documentation coverage</li>
         </ul>
       </div>
-      <!--<div class="description-screenshot"><img src="${screenshot}"></div>-->
+      <!--<div class="description-screenshot"><img src="$\{screenshot\}"></div>-->
     </div>
     <p>
       Kite is under active development. Expect many new features
@@ -238,21 +249,15 @@ module.exports = class KiteInstall {
 
   provideTextDocumentContent() {
     if (!this.installFlow) {
-      // server.start();
+      server.start();
 
       this.installFlow = this.flow();
       this.installFlow.observeState(state => {
         if (!state.download || state.download.done) {
-          console.log('state changed')
           this.update();
-        } else {
-          console.log('downloading', state.download.ratio);
         }
       });
-      this.installFlow.onDidChangeCurrentStep(() => {
-        console.log('step changed')
-        this.update();
-      });
+      this.installFlow.onDidChangeCurrentStep(() => this.update());
       
       setTimeout(() => {
         this.installFlow.start()
@@ -261,17 +266,24 @@ module.exports = class KiteInstall {
       }, 500);
     }
     const view = this.installFlow.getCurrentStepView();
+    const {state} = this.installFlow;
 
     return Promise.resolve(`
     <div class="install">
-      ${view ? view(this.installFlow.state) : 'install'}
-      
-      <pre><code>${JSON.stringify(this.installFlow.state, null, 2)}</code></pre>
-
-      <script>
-        window.state = ${JSON.stringify(this.installFlow.state, null, 2)};
-        initInstall();
-      </script>
+      <div class="logo">${logo}</div>
+      <div class="progress-indicators">
+        <div class="download-kite hidden">
+          <progress max='100' value="0" class="inline-block"></progress>
+          <span class="inline-block">Downloading Kite</span>
+        </div>
+        <div class="install-kite ${state.install && !state.install.done ? '' : 'hidden'}">
+          <span class="inline-block">Installing Kite</span>
+        </div>
+        <div class="run-kite ${state.running && !state.running.done ? '' : 'hidden'}">
+          <span class="inline-block">Starting Kite</span>
+        </div>
+      </div>
+      <div class="content">${view ? view(this.installFlow.state) : 'install'}</div>
     </div>`)
     .then(html => wrapHTML(html))
     .then(html => debugHTML(html))
