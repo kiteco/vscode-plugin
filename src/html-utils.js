@@ -172,11 +172,7 @@ function renderModule(data) {
             ${renderLanguageSpecificArgumentsList(value)}`
           : ''
       }
-      <section class="summary">
-        <h4>Summary</h4>
-        ${symbolDescription(data)}
-      </section>
-
+      ${renderDocs(data)}
       ${renderMembers(value)}
       ${renderUsages(data)}
       ${renderExamples(data)}
@@ -208,16 +204,11 @@ function renderFunction(data) {
       ${renderPatterns(value)}
       ${renderLanguageSpecificArgumentsList(value)}
       ${renderReturnType(symbol)}
-
-      <section class="summary">
-        <h4>Summary</h4>
-        ${symbolDescription(data)}
-      </section>
-
+      ${renderDocs(data)}
       ${renderUsages(data)}
       ${renderExamples(data)}
-      ${renderLinks(data)}
       ${renderDefinition(data)}
+      ${renderLinks(data)}
       ${renderInvocations(symbol)}
       ${debugData(data)}
     </div>
@@ -242,11 +233,7 @@ function renderInstance(data) {
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
-      <section class="summary">
-        <h4>Summary</h4>
-        ${symbolDescription(data)}
-      </section>
-
+      ${renderDocs(data)}
       ${renderDefinition(symbol)}
       ${renderUsages(data)}
       ${renderExamples(data)}
@@ -262,6 +249,16 @@ function renderInstance(data) {
       : ''}
   </footer>
   `;
+}
+
+function renderDocs(data) {
+  const description = symbolDescription(data);
+  return description && description.trim() !== '' 
+    ? `<section class="summary">
+      <h4>Docs</h4>
+      <div class="description">${description}</div>
+    </section>`
+    : '';
 }
 
 function stripBody(html) {
@@ -282,11 +279,11 @@ function symbolDescription(data) {
   const {symbol} = data;
   const value = head(symbol.value);
 
-  return `<div class="description">${data.report &&
+  return data.report &&
          data.report.description_html &&
          data.report.description_html !== ''
     ? stripBody(data.report.description_html)
-    : (value.synopsis != '' ? value.synopsis : symbol.synopsis)}</div>`;
+    : (value.synopsis != '' ? value.synopsis : symbol.synopsis);
 }
 
 function renderSymbolHeader(symbol) {
@@ -452,7 +449,7 @@ function additionalExamplesLink(examplesCount, data) {
 
 function renderUsages(symbol) {
   return symbol.report && symbol.report.usages && symbol.report.usages.length
-    ? section('Usages from your code',
+    ? section('Examples from your code',
       Plan.can('usages_editor')
         ? `<ul class="usages-box">
           ${symbol.report.usages.map(renderUsage).join('')}
