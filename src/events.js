@@ -1,7 +1,7 @@
 'use strict';
 
 const {StateController, Logger} = require('kite-installer');
-const {MAX_PAYLOAD_SIZE, CONNECT_ERROR_LOCKOUT} = require('./constants');
+const {MAX_FILE_SIZE, CONNECT_ERROR_LOCKOUT} = require('./constants');
 const {promisifyRequest, secondsSince} = require('./utils');
 const {normalizeDriveLetter} = require('./urls');
  
@@ -25,13 +25,15 @@ module.exports = class EditorEvents {
   }
 
   sendEvent(action) {
-    const event = this.makeEvent(action, this.document, this.editor.selection);
+    const event = this.document.getText().length > MAX_FILE_SIZE
+      ? {
+        source: 'vscode',
+        action: 'skip',
+        filename: normalizeDriveLetter(this.document.fileName),
+      }
+      : this.makeEvent(action, this.document, this.editor.selection);
+    
     const payload = JSON.stringify(event);
-
-    if (payload.length > MAX_PAYLOAD_SIZE) {
-      Logger.warn('unable to send message because length exceeded limit');
-      return;
-    }
 
     return this.Kite.request({
       path: '/clientapi/editor/event',
