@@ -254,9 +254,9 @@ function renderInstance(data) {
 function renderDocs(data) {
   const description = symbolDescription(data);
   return description && description.trim() !== '' 
-    ? `<section class="summary">
+    ? `<section class="summary collapsible collapse">
       <h4>Docs</h4>
-      <div class="description">${description}</div>
+      <div class="section-content description">${description}</div>
     </section>`
     : '';
 }
@@ -545,7 +545,7 @@ function renderKwargs(data) {
   let kwargs = '';
   const detail = getFunctionDetails(data);
   if (detailNotEmpty(detail, 'kwarg_parameters')) {
-    kwargs = `<section class="kwargs">
+    kwargs = `<section class="kwargs collapsible collapse">
       <h4>**${detailGet(detail, 'kwarg').name}</h4>
       <div class="section-content"><dl>
         ${

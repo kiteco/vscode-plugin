@@ -347,19 +347,19 @@
 .kite section.summary {
   margin: 0 0 15px;
 }
-.kite section.summary.collapsible.collapse .description {
+.kite section.collapsible.collapse > div {
   max-height: 250px;
   position: relative;
   overflow: hidden;
 }
 
-.kite section.summary.collapsible.collapse .description {
+.kite section.collapsible.collapse > div {
   max-height: 250px;
   position: relative;
   overflow: hidden;
 }
 
-.kite section.summary.collapsible.collapse.overflow .description::after {
+.kite section.collapsible.collapse.overflow > div::after {
   content: '';
   position: absolute;
   height: 30px;
