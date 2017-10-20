@@ -200,8 +200,8 @@ function renderFunction(data) {
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
-      ${renderParameters(value)}
       ${renderPatterns(value)}
+      ${renderParameters(value)}
       ${renderLanguageSpecificArgumentsList(value)}
       ${renderReturnType(symbol)}
       ${renderDocs(data)}
