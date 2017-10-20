@@ -158,6 +158,7 @@ function renderExamplesList(data) {
 function renderModule(data) {
   const {symbol} = data;
   const value = head(symbol.value);
+  const kind = value.kind;
 
   return `
   ${renderSymbolHeader(symbol)}
@@ -173,7 +174,7 @@ function renderModule(data) {
             ${renderLanguageSpecificArgumentsList(value)}`
           : ''
       }
-      ${renderMembers(value)}
+      ${renderMembers(value, kind)}
       ${renderDocs(data)}
       ${renderUsages(data)}
       ${renderExamples(data)}
@@ -474,24 +475,26 @@ function renderUsage(usage) {
   </div>`;
 }
 
-function renderMembers(value, limit) {
+function renderMembers(value, kind, limit) {
   const detail = getDetails(value, 'type', 'module')
   const {members, total_members} = detail;
 
+  const title = kind === 'type' ? 'Top attributes' : 'Top members'
+  
   return members.length === 0
     ? ''
     : (limit != null
-      ? section('Top members', `
+      ? section(title, `
         <ul>
           ${members.slice(0, limit).map(m => renderMember(m)).join('')}
         </ul>
-        ${additionalMembersLink(total_members - limit, value)}`)
-      : section('Top members', `
+        ${additionalMembersLink(total_members - limit, value, kind)}`)
+      : section(title, `
         <ul>
           ${members.map(m => renderMember(m)).join('')}
         </ul>
         ${total_members > members.length
-          ? additionalMembersLink(total_members - members.length, value)
+          ? additionalMembersLink(total_members - members.length, value, kind)
           : ''
         }`));
 }
@@ -585,11 +588,11 @@ function renderMember(member) {
 
 }
 
-function additionalMembersLink(membersCount, value) {
+function additionalMembersLink(membersCount, value, kind) {
   return membersCount <= 0
     ? ''
     : `<a href='command:kite.navigate?"members-list/${value.id}"'
-          class="more-members">See ${membersCount} more members</a>`;
+          class="more-members">See ${membersCount} more ${kind == 'type' ? 'attributes' : 'members'}</a>`;
 }
 
 function renderParameters(value) {
