@@ -172,12 +172,12 @@ function renderModule(data) {
             ${renderLanguageSpecificArgumentsList(value)}`
           : ''
       }
-      ${renderDocs(data)}
       ${renderMembers(value)}
+      ${renderDocs(data)}
       ${renderUsages(data)}
       ${renderExamples(data)}
-      ${renderLinks(data)}
       ${renderDefinition(data)}
+      ${renderLinks(data)}
       ${debugData(data)}
     </div>
   </div>
