@@ -10,6 +10,7 @@ const {
   symbolLabel, symbolType, idIsEmpty,
   valueLabel, valueType, callSignature,
   memberLabel, parameterName, parameterDefault, parameterTypeLink,
+  symbolReturnType,
 } = require('./data-utils');
 const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-small.svg')).toString();
 const logoLarge = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
@@ -206,6 +207,7 @@ function renderFunction(data) {
       ${renderParameters(value)}
       ${renderPatterns(value)}
       ${renderLanguageSpecificArgumentsList(value)}
+      ${renderReturnType(symbol)}
 
       <section class="summary">
         <h4>Summary</h4>
@@ -357,6 +359,11 @@ function usageCommand(def) {
     source: 'Sidebar',
   });
   return `command:kite.usage?${defData}`;
+}
+
+function renderReturnType(symbol) {
+  const ret = symbolReturnType(symbol);
+  return ret !== '' ? section('Returns', ret) : '';
 }
 
 function renderDefinition(value) {

@@ -157,7 +157,7 @@ const wrapType = (o) => {
     : null;
 };
 
-const unionType = (vs, map) =>
+const unionType = (vs, map) => 
   uniq(flatten(compact(vs.map(map))).map(wrapType)).join(' | ');
 
 const returnType = (v) =>
@@ -180,15 +180,14 @@ const reportFromHover = hover => {
 const extractInstanceType = v => ({name: v.type, id: v.type_id});
 const extractFunctionType = v => {
   const detail = getFunctionDetails(v);
-  detail && detail.return_value
+  return detail && detail.return_value
     ? detail.return_value.map(v => ({name: v.type, id: v.type_id}))
-    : null;
+    : [];
 };
 
 const symbolType = s => unionType(s.value, extractInstanceType);
-  // isFunctionKind(symbolKind(s))
-  //   ? returnType(unionType(s.value, extractFunctionType))
-  //   : `:${unionType(s.value, extractInstanceType)}`;
+
+const symbolReturnType = s => unionType(s.value, extractFunctionType);
 
 const valueType = value =>
   isFunctionKind(value.kind)
@@ -224,4 +223,5 @@ module.exports = {
   valueType,
   idIsEmpty,
   isFunctionKind,
+  symbolReturnType,
 };
