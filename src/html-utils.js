@@ -167,8 +167,9 @@ function renderModule(data) {
     <div class="sections-wrapper">
       ${
         value.kind === 'type'
-          ? `${renderParameters(value)}
-            ${renderPatterns(value)}
+          ? `
+            ${renderPatterns(value, 'Popular Constructor Patterns')}
+            ${renderParameters(value)}
             ${renderLanguageSpecificArgumentsList(value)}`
           : ''
       }
@@ -499,7 +500,7 @@ function stripLeadingSlash(str) {
   return str.replace(/^\//, '');
 }
 
-function renderPatterns(data) {
+function renderPatterns(data, title='Popular Patterns') {
   let patterns = '';
   const name = data.repr;
   const detail = getFunctionDetails(data);
@@ -507,7 +508,7 @@ function renderPatterns(data) {
     patterns = Plan.can('common_invocations_editor')
       ? `
         <section class="patterns">
-        <h4>Popular Patterns</h4>
+        <h4>${title}</h4>
         <div class="section-content">${
           highlightCode(
             detail.signatures
