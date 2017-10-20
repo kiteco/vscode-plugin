@@ -236,9 +236,9 @@ function renderInstance(data) {
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
       ${renderDocs(data)}
-      ${renderDefinition(symbol)}
       ${renderUsages(data)}
       ${renderExamples(data)}
+      ${renderDefinition(symbol)}
       ${renderLinks(data)}
       ${debugData(data)}
     </div>
