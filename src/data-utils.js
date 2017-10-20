@@ -185,10 +185,10 @@ const extractFunctionType = v => {
     : null;
 };
 
-const symbolType = s =>
-  isFunctionKind(symbolKind(s))
-    ? returnType(unionType(s.value, extractFunctionType))
-    : `:${unionType(s.value, extractInstanceType)}`;
+const symbolType = s => unionType(s.value, extractInstanceType);
+  // isFunctionKind(symbolKind(s))
+  //   ? returnType(unionType(s.value, extractFunctionType))
+  //   : `:${unionType(s.value, extractInstanceType)}`;
 
 const valueType = value =>
   isFunctionKind(value.kind)
