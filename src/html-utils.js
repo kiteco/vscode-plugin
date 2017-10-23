@@ -390,6 +390,7 @@ function renderLinksList(data) {
   const links = (data.report && data.report.links) || [];
   return `
     <div class="links-list">
+      <h3>Links for <code>${data.value.repr}</code></h3>
       <ul>${links.map(m => renderLink(m)).join('')}</ul>
     </div>
     ${debugData(data)}
