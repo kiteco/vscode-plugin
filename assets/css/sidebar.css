@@ -285,6 +285,16 @@
   right: 0;
   bottom: 0;
 }
+
+.kite h3 {
+  font-weight: 100;
+  margin: 0;
+  font-size: 1.4em;
+  margin-bottom: 1em;
+  margin-top: 0.5em;
+  color: var(--text-color-highlight);
+}
+
 .kite h4 {
   font-weight: 100;
   margin: 0;

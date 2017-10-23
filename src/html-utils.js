@@ -149,6 +149,7 @@ function renderExamplesList(data) {
 
   return `
     <div class="examples-list">
+      <h3>Examples for <code>${data.value.repr}</code></h3>
       <ul>${examples.map(m => renderExample(m)).join('')}</ul>
     </div>
     ${debugData(data)}
