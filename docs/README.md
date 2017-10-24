@@ -2,9 +2,9 @@
 
 This extension adds support for Kite in Visual Studio Code and adds the features:
 
-- Completion Lists
-- Signature Help
-- Quick Info
+- Completions
+- Function Signatures
+- Expanded Info
 - Goto Definition 
 
 ## How to install this extension
@@ -17,7 +17,7 @@ When starting VSCode with Kite for the first time, a brief tour about Kite will 
 
 ![Kite Tour](./images/kite-tour.png)
 
-This tour will only be displayed once, if you want to see it again on next startup you can activate the `kite.showTourOnStartup` setting.
+This tour will only be displayed once. If you want to see it again on next startup you can activate the `kite.showTourOnStartup` setting.
 
 ### Status Bar
 
