@@ -440,7 +440,8 @@ const Kite = {
     }
   },
 
-  setStatus(state, document) {
+  setStatus(state = this.lastState, document) {
+    this.lastState = state;
     this.status.update();
     this.getStatus(document).then(status => {
       let plan, statusLabel;

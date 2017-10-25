@@ -10,9 +10,9 @@ function languagesPath() {
   return '/clientapi/languages';
 }
 
-function tokensPath(editor) {
-  const state = md5(editor.getText());
-  const filename = editor.getPath();
+function tokensPath(document) {
+  const state = md5(document.getText());
+  const filename = document.fileName;
   const buffer = cleanPath(filename);
 
   return `/api/buffer/vscode/${buffer}/${state}/tokens`;
