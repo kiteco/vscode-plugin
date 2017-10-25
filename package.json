@@ -18,7 +18,7 @@
     "commands": [
       {
         "command": "kite.search",
-        "title": "Kite Active Search"
+        "title": "Kite: Search"
       },
       {
         "command": "kite.open-settings",
