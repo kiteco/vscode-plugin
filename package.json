@@ -29,6 +29,10 @@
         "title": "Kite: Help"
       },
       {
+        "command": "kite.docs-for-cursor",
+        "title": "Kite: Docs for cursor"
+      },
+      {
         "command": "kite.open-settings",
         "title": "Kite: Settings"
       },

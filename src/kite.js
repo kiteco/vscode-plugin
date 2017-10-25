@@ -138,7 +138,9 @@ const Kite = {
     ctx.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
       e.document && editorsForDocument(e.document).forEach(e => {
         const evt = this.eventsByEditor.get(e);
+        const ke = this.kiteEditorByEditor.get(e);
         evt.edit();
+        ke.tokensList.updateTokens();
       })
     }));
 
@@ -259,6 +261,28 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.help', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.One, 'Kite Tour');
+    });
+    
+    vscode.commands.registerCommand('kite.docs-for-cursor', () => {
+      const editor = vscode.window.activeTextEditor;
+
+      if (editor && this.isGrammarSupported(editor)) {
+        const kiteEditor = this.kiteEditorByEditor.get(editor);
+        const pos = editor.selection.active;
+        const {document} = editor;
+
+        const token = kiteEditor.tokensList.tokenAtPosition(pos);
+
+        if (token) {
+          vscode.commands.executeCommand('kite.more-range', {
+            range: new vscode.Range(
+              document.positionAt(token.begin_bytes),
+              document.positionAt(token.end_bytes)
+            ),
+            source: 'Command',
+          });
+        }
+      }
     });
 
     vscode.commands.registerCommand('kite.usage', ({file, line, source}) => {

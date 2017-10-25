@@ -11,9 +11,6 @@ module.exports = class KiteEditor {
     this.tokensList = new TokensList(this.editor);
 
     this.tokensList.updateTokens()
-    .then(() => {
-      console.log('tokens fetched', this.tokensList.tokens);
-    })
   }
 
   isWhitelisted() {
