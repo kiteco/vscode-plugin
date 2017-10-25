@@ -25,6 +25,10 @@
         "title": "Kite: Status"
       },
       {
+        "command": "kite.help",
+        "title": "Kite: Help"
+      },
+      {
         "command": "kite.open-settings",
         "title": "Kite: Settings"
       },

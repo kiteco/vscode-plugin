@@ -257,6 +257,10 @@ const Kite = {
       })
     });
 
+    vscode.commands.registerCommand('kite.help', () => {
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.One, 'Kite Tour');
+    });
+
     vscode.commands.registerCommand('kite.usage', ({file, line, source}) => {
       metrics.track(`${source} Go to usage clicked`);
       metrics.featureRequested('usage');
