@@ -21,12 +21,16 @@
         "title": "Kite: Search"
       },
       {
+        "command": "kite.status",
+        "title": "Kite: Status"
+      },
+      {
         "command": "kite.open-settings",
-        "title": "Open Kite Settings"
+        "title": "Kite: Settings"
       },
       {
         "command": "kite.open-permissions",
-        "title": "Open Kite Permissions"
+        "title": "Kite: Permissions"
       }
     ],
     "menus": {
