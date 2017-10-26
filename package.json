@@ -44,6 +44,12 @@
     "menus": {
       "editor/context": [
         {
+          "command": "kite.docs-for-cursor"
+        },
+        {
+          "command": "kite.search"
+        },
+        {
           "command": "kite.open-settings"
         },
         {
