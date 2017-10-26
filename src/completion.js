@@ -1,5 +1,5 @@
 'use strict';
-const {CompletionItem, CompletionItemKind} = require('vscode');
+const {CompletionItem, CompletionItemKind, MarkdownString} = require('vscode');
 const {Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
 const {promisifyReadResponse, parseJSON} = require('./utils');
@@ -63,9 +63,15 @@ module.exports = class KiteCompletionProvider {
         item.sortText = fill(String(i), length, '0');
         item.insertText = c.insert;
         if (c.documentation_text !== '') {
-          item.documentation = 'Kite: ' + c.documentation_text;
+          item.documentation = new MarkdownString(`Kite docs
+
+**${c.symbol.value[0].repr}** _${c.hint}_
+
+${c.documentation_text}
+
+          `);
         }
-        item.detail = c.hint;
+        // item.detail = c.hint;
         item.kind = kindForHint(c.hint);
         return item;
       });
