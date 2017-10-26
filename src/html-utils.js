@@ -83,6 +83,14 @@ function wrapHTML (html) {
            `<a href='command:kite.navigate?"link/python;$1"' class="internal_link"`);
   return `
   <style>
+    html {
+      font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
+    }
+    
+    pre, code, .code {
+      font-family: ${vscode.workspace.getConfiguration('editor').get('fontFamily')};
+      font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
+    }
     .icon-kite-gift::before {
       content: '';
       display: inline-block;
@@ -579,7 +587,7 @@ function renderMember(member) {
 
     return `<li data-name="${member.name}">
     <div class="split-line">
-    <span class="name">${label}</span>
+    <span class="name code">${label}</span>
     <span class="type">${type}</span>
     </div>
     ${description}
@@ -655,7 +663,7 @@ function renderParameter(param, prefix = '') {
   return !param
     ? ''
     : `<dt class="split-line">
-      <span class="name">${parameterName(param, prefix)}${parameterDefault(param)}</span>
+      <span class="name code">${parameterName(param, prefix)}${parameterDefault(param)}</span>
       <span class="type">${parameterTypeLink(param)}</span>
     </dt>
     <dd>${param.synopsis}</dd>

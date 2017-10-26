@@ -949,7 +949,6 @@
 }
 .kite pre {
   color: var(--text-color-highlight);
-  font-size: inherit;
   margin-bottom: 5px;
 }
 .kite pre a.icon,
