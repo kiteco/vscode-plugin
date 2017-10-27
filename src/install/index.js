@@ -253,11 +253,15 @@ module.exports = class KiteInstall {
 
       this.installFlow = this.flow();
       this.installFlow.observeState(state => {
+        console.log(state);
         if (!state.download || state.download.done) {
           this.update();
         }
       });
-      this.installFlow.onDidChangeCurrentStep(() => this.update());
+      this.installFlow.onDidChangeCurrentStep(step => {
+        console.log('step changed, new:', step.name);
+        this.update()
+      });
       
       setTimeout(() => {
         this.installFlow.start()
