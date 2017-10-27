@@ -54,11 +54,11 @@ function sendFeatureMetric(name) {
 }
 
 function featureRequested(name) {
-  sendFeatureMetric(`atom_${name}_requested`);
+  sendFeatureMetric(`vscode_${name}_requested`);
 }
 
 function featureFulfilled(name) {
-  sendFeatureMetric(`atom_${name}_fulfilled`);
+  sendFeatureMetric(`vscode_${name}_fulfilled`);
 }
 
 function track(event, properties = {}) {
