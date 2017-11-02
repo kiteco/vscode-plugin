@@ -6,13 +6,27 @@
       "insert": "idumps",
       "hint": "function",
       "id": "json.dumps",
-      "documentation_text": "some dumps documentation"
+      "documentation_text": "some dumps documentation",
+      "symbol": {
+        "value": [
+          {
+            "repr": "json.dumps"
+          }
+        ]
+      }
     }, {
       "display": "dump",
       "insert": "idump",
       "hint": "function",
       "id": "json.dump",
-      "documentation_text": "some dump documentation"
+      "documentation_text": "some dump documentation",
+      "symbol": {
+        "value": [
+          {
+            "repr": "json.dump"
+          }
+        ]
+      }
     }
   ]
 }
