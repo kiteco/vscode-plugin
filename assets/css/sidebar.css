@@ -124,9 +124,11 @@
 
 .kite footer {
   display: block;
-  text-align: right;
   flex: 0 0 auto;
-  padding: 10px 0;
+  display: flex;
+  padding: 10px;
+  margin: 0 -10px;
+  justify-content: space-between;
 }
 
 .auto-cursor {
@@ -1176,69 +1178,31 @@ figcaption + .example-wrapper pre.output {
   margin-bottom: 5px;
 }
 
-a.kite-open-link {
-  display: inline-block;
+a[href].kite-open-link {
+  display: block;
   transition: 125ms opacity;
   margin-right: 0.5em;
   text-decoration: none;
+  margin: -10px;
+  padding: 10px;
+  color: var(--text-color);
 }
 
-a.kite-open-link,
-a.kite-open-link:active,
-a.kite-open-link:focus,
-a.kite-open-link:visited {
-  color: var(--color-blue);
-  text-decoration: none;
+a[href].kite-open-link:hover {
+  background: var(--color-blue);
+  color: var(--text-color-highlight);
 }
-a.kite-open-link span,
-a.kite-open-link:active span,
-a.kite-open-link:focus span,
-a.kite-open-link:visited span {
-  color: var(--text-color);
-  opacity: 0.6;
+
+a[href].kite-open-link:hover svg polygon {
+  fill: var(--text-color-highlight);
 }
-a.kite-open-link:hover,
-a.kite-open-link:active:hover,
-a.kite-open-link:focus:hover,
-a.kite-open-link:visited:hover {
-  text-decoration: none;
-}
-a.kite-open-link:hover span,
-a.kite-open-link:active:hover span,
-a.kite-open-link:focus:hover span,
-a.kite-open-link:visited:hover span {
-  text-decoration: none;
-  opacity: 1;
-}
+
 a.kite-open-link > * {
   pointer-events: none;
 }
-a.kite-open-link i {
-  font-style: normal;
-  font-weight: normal;
-}
-a.kite-open-link span {
-  background-color: var(--open-web-link-background);
-  color: var(--open-web-link-color);
-  padding: 0.25em 0.5em;
-  border-radius: 0.25em;
-}
-a.kite-open-link span i,
-a.kite-open-link span kbd {
-  display: inline-block;
-  vertical-align: middle;
-}
-a.kite-open-link kbd {
-  font-size: 1.2em;
-  font-weight: lighter;
-  font-family: sans-serif;
-  margin-left: 0.5em;
-  background-color: transparent;
-  padding: 0;
-}
 
-a.kite-open-link {
-  display: inline-block;
+a.kite-open-link svg {
+  margin-left: 0.5em;
 }
 
 svg {
@@ -1251,10 +1215,6 @@ svg polygon {
   fill: var(--text-color-highlight);
 }
 
-a.kite-open-link svg {
-  opacity: 0.5;
-  margin-left: 0.5em;
-}
 
 .search-form {
   position: relative;
