@@ -105,7 +105,9 @@ window.initSearch = (inputId, resultsId, viewId) => {
     //     document.querySelector('.sections-wrapper')
     //   );
     // }
+    createJumpTo();
     handleExternalLinks();
+    handleCollapsibles();
   }
 
   function scrollTo(target) {

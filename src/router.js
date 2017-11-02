@@ -87,7 +87,9 @@ module.exports = class KiteRouter {
         //     scrollContainer
         //   );
         // }
+        createJumpTo();
         handleExternalLinks();
+        handleCollapsibles();
       </script>`)
     .then(html => wrapHTML(html))
     .then(html => debugHTML(html))

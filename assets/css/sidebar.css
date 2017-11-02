@@ -49,6 +49,11 @@
   color: var(--color-green);
 }
 
+a[data-action="collapse"],
+a[data-action="expand"] {
+  margin: -10px 10px 20px;
+}
+
 .kite section.summary:empty {
   display: none;
 }
@@ -129,6 +134,39 @@
   padding: 10px;
   margin: 0 -10px;
   justify-content: space-between;
+}
+
+.kite footer .actions a {
+  background: var(--button-background);
+  color: var(--text-color-highlight);
+  text-decoration: none;
+  display: inline-block;
+  padding: 0.2em 0.5em;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  font-weight: 100;
+}
+
+.kite footer .actions a span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.kite footer .actions a svg {
+  height: 1em;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.kite footer .actions a svg polygon,
+.kite footer .actions a svg path {
+  fill: var(--text-color-highlight);
+}
+
+.kite footer .actions a:hover {
+  background: var(--color-blue);
+  color: var(--text-color-highlight);
 }
 
 .auto-cursor {
@@ -783,7 +821,6 @@
 }
 .kite section.examples-from-your-code .section-content .kite-pro-features {
   font-size: 1.2em;
-  padding-left: 10px;
 }
 .kite section.examples-from-your-code .section-content .usages-box .usage-container {
   display: flex;
