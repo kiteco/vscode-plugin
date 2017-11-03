@@ -285,6 +285,16 @@
   right: 0;
   bottom: 0;
 }
+
+.kite h3 {
+  font-weight: 100;
+  margin: 0;
+  font-size: 1.4em;
+  margin-bottom: 1em;
+  margin-top: 0.5em;
+  color: var(--text-color-highlight);
+}
+
 .kite h4 {
   font-weight: 100;
   margin: 0;
@@ -347,19 +357,19 @@
 .kite section.summary {
   margin: 0 0 15px;
 }
-.kite section.summary.collapsible.collapse .description {
+.kite section.collapsible.collapse > div {
   max-height: 250px;
   position: relative;
   overflow: hidden;
 }
 
-.kite section.summary.collapsible.collapse .description {
+.kite section.collapsible.collapse > div {
   max-height: 250px;
   position: relative;
   overflow: hidden;
 }
 
-.kite section.summary.collapsible.collapse.overflow .description::after {
+.kite section.collapsible.collapse.overflow > div::after {
   content: '';
   position: absolute;
   height: 30px;

@@ -2,6 +2,11 @@ const PYTHON_MODE = {language: 'python', scheme: 'file'};
 
 const JAVASCRIPT_MODE = {language: 'javascript', scheme: 'file'};
 
+const SUPPORTED_EXTENSIONS = {
+  javascript: fileName => /\.js$/.test(fileName),
+  python: fileName => /\.py$/.test(fileName),
+}
+
 // MAX_FILE_SIZE is the maximum file size to send to Kite
 const MAX_FILE_SIZE = 2 ** 20; // 1048576
 
@@ -21,13 +26,14 @@ const WARNING_COLOR = '#929497';
 const NOT_WHITELISTED = 7;
 
 module.exports = {
-    ATTEMPTS, 
-    INTERVAL,
-    PYTHON_MODE,
-    MAX_PAYLOAD_SIZE,
-    MAX_FILE_SIZE,
-    CONNECT_ERROR_LOCKOUT,
-    ERROR_COLOR,
-    WARNING_COLOR,
-    NOT_WHITELISTED,
+  ATTEMPTS, 
+  INTERVAL,
+  PYTHON_MODE,
+  MAX_PAYLOAD_SIZE,
+  MAX_FILE_SIZE,
+  CONNECT_ERROR_LOCKOUT,
+  ERROR_COLOR,
+  WARNING_COLOR,
+  NOT_WHITELISTED,
+  SUPPORTED_EXTENSIONS,
 };

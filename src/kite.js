@@ -4,7 +4,7 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const {StateController, AccountManager, Logger} = require('kite-installer');
-const {PYTHON_MODE, JAVASCRIPT_MODE, ATTEMPTS, INTERVAL, ERROR_COLOR, WARNING_COLOR, NOT_WHITELISTED} = require('./constants');
+const {PYTHON_MODE, JAVASCRIPT_MODE, ATTEMPTS, INTERVAL, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
@@ -545,7 +545,9 @@ const Kite = {
   },
   
   isDocumentGrammarSupported(d) {
-    return d && this.supportedLanguages.includes(d.languageId);
+    return d &&
+           this.supportedLanguages.includes(d.languageId) && 
+           SUPPORTED_EXTENSIONS[d.languageId](d.fileName);
   },
 
   isEditorWhitelisted(e) {

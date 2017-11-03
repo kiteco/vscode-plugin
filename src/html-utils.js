@@ -10,6 +10,7 @@ const {
   symbolLabel, symbolType, idIsEmpty,
   valueLabel, valueType, callSignature,
   memberLabel, parameterName, parameterDefault, parameterTypeLink,
+  symbolReturnType,
 } = require('./data-utils');
 const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-small.svg')).toString();
 const logoLarge = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
@@ -148,6 +149,7 @@ function renderExamplesList(data) {
 
   return `
     <div class="examples-list">
+      <h3>Examples for <code>${data.value.repr}</code></h3>
       <ul>${examples.map(m => renderExample(m)).join('')}</ul>
     </div>
     ${debugData(data)}
@@ -157,6 +159,7 @@ function renderExamplesList(data) {
 function renderModule(data) {
   const {symbol} = data;
   const value = head(symbol.value);
+  const kind = value.kind;
 
   return `
   ${renderSymbolHeader(symbol)}
@@ -166,21 +169,18 @@ function renderModule(data) {
     <div class="sections-wrapper">
       ${
         value.kind === 'type'
-          ? `${renderParameters(value)}
-            ${renderPatterns(value)}
+          ? `
+            ${renderPatterns(value, 'Popular Constructor Patterns')}
+            ${renderParameters(value)}
             ${renderLanguageSpecificArgumentsList(value)}`
           : ''
       }
-      <section class="summary">
-        <h4>Summary</h4>
-        ${symbolDescription(data)}
-      </section>
-
-      ${renderMembers(value)}
+      ${renderMembers(value, kind)}
+      ${renderDocs(data)}
       ${renderUsages(data)}
       ${renderExamples(data)}
-      ${renderLinks(data)}
       ${renderDefinition(data)}
+      ${renderLinks(data)}
       ${debugData(data)}
     </div>
   </div>
@@ -203,19 +203,15 @@ function renderFunction(data) {
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
-      ${renderParameters(value)}
       ${renderPatterns(value)}
+      ${renderParameters(value)}
       ${renderLanguageSpecificArgumentsList(value)}
-
-      <section class="summary">
-        <h4>Summary</h4>
-        ${symbolDescription(data)}
-      </section>
-
+      ${renderReturnType(symbol)}
+      ${renderDocs(data)}
       ${renderUsages(data)}
       ${renderExamples(data)}
-      ${renderLinks(data)}
       ${renderDefinition(data)}
+      ${renderLinks(data)}
       ${renderInvocations(symbol)}
       ${debugData(data)}
     </div>
@@ -240,14 +236,10 @@ function renderInstance(data) {
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
-      <section class="summary">
-        <h4>Summary</h4>
-        ${symbolDescription(data)}
-      </section>
-
-      ${renderDefinition(symbol)}
+      ${renderDocs(data)}
       ${renderUsages(data)}
       ${renderExamples(data)}
+      ${renderDefinition(symbol)}
       ${renderLinks(data)}
       ${debugData(data)}
     </div>
@@ -260,6 +252,16 @@ function renderInstance(data) {
       : ''}
   </footer>
   `;
+}
+
+function renderDocs(data) {
+  const description = symbolDescription(data);
+  return description && description.trim() !== '' 
+    ? `<section class="summary collapsible collapse">
+      <h4>Docs</h4>
+      <div class="section-content description">${description}</div>
+    </section>`
+    : '';
 }
 
 function stripBody(html) {
@@ -280,11 +282,11 @@ function symbolDescription(data) {
   const {symbol} = data;
   const value = head(symbol.value);
 
-  return `<div class="description">${data.report &&
+  return data.report &&
          data.report.description_html &&
          data.report.description_html !== ''
     ? stripBody(data.report.description_html)
-    : (value.synopsis != '' ? value.synopsis : symbol.synopsis)}</div>`;
+    : (value.synopsis != '' ? value.synopsis : symbol.synopsis);
 }
 
 function renderSymbolHeader(symbol) {
@@ -359,6 +361,11 @@ function usageCommand(def) {
   return `command:kite.usage?${defData}`;
 }
 
+function renderReturnType(symbol) {
+  const ret = symbolReturnType(symbol);
+  return ret !== '' ? section('Returns', ret) : '';
+}
+
 function renderDefinition(value) {
   const def = value.report && value.report.definition;
   if (def && def.filename && def.filename.trim() !== '') {
@@ -383,6 +390,7 @@ function renderLinksList(data) {
   const links = (data.report && data.report.links) || [];
   return `
     <div class="links-list">
+      <h3>Links about <code>${data.value.repr}</code></h3>
       <ul>${links.map(m => renderLink(m)).join('')}</ul>
     </div>
     ${debugData(data)}
@@ -445,7 +453,7 @@ function additionalExamplesLink(examplesCount, data) {
 
 function renderUsages(symbol) {
   return symbol.report && symbol.report.usages && symbol.report.usages.length
-    ? section('Usages from your code',
+    ? section('Examples from your code',
       Plan.can('usages_editor')
         ? `<ul class="usages-box">
           ${symbol.report.usages.map(renderUsage).join('')}
@@ -469,24 +477,26 @@ function renderUsage(usage) {
   </div>`;
 }
 
-function renderMembers(value, limit) {
+function renderMembers(value, kind, limit) {
   const detail = getDetails(value, 'type', 'module')
   const {members, total_members} = detail;
 
+  const title = kind === 'type' ? 'Top attributes' : 'Top members'
+  
   return members.length === 0
     ? ''
     : (limit != null
-      ? section('Top members', `
+      ? section(title, `
         <ul>
           ${members.slice(0, limit).map(m => renderMember(m)).join('')}
         </ul>
-        ${additionalMembersLink(total_members - limit, value)}`)
-      : section('Top members', `
+        ${additionalMembersLink(total_members - limit, value, kind)}`)
+      : section(title, `
         <ul>
           ${members.map(m => renderMember(m)).join('')}
         </ul>
         ${total_members > members.length
-          ? additionalMembersLink(total_members - members.length, value)
+          ? additionalMembersLink(total_members - members.length, value, kind)
           : ''
         }`));
 }
@@ -495,7 +505,7 @@ function stripLeadingSlash(str) {
   return str.replace(/^\//, '');
 }
 
-function renderPatterns(data) {
+function renderPatterns(data, title='Popular Patterns') {
   let patterns = '';
   const name = data.repr;
   const detail = getFunctionDetails(data);
@@ -503,7 +513,7 @@ function renderPatterns(data) {
     patterns = Plan.can('common_invocations_editor')
       ? `
         <section class="patterns">
-        <h4>Popular Patterns</h4>
+        <h4>${title}</h4>
         <div class="section-content">${
           highlightCode(
             detail.signatures
@@ -541,7 +551,7 @@ function renderKwargs(data) {
   let kwargs = '';
   const detail = getFunctionDetails(data);
   if (detailNotEmpty(detail, 'kwarg_parameters')) {
-    kwargs = `<section class="kwargs">
+    kwargs = `<section class="kwargs collapsible collapse">
       <h4>**${detailGet(detail, 'kwarg').name}</h4>
       <div class="section-content"><dl>
         ${
@@ -580,11 +590,11 @@ function renderMember(member) {
 
 }
 
-function additionalMembersLink(membersCount, value) {
+function additionalMembersLink(membersCount, value, kind) {
   return membersCount <= 0
     ? ''
     : `<a href='command:kite.navigate?"members-list/${value.id}"'
-          class="more-members">See ${membersCount} more members</a>`;
+          class="more-members">See ${membersCount} more ${kind == 'type' ? 'attributes' : 'members'}</a>`;
 }
 
 function renderParameters(value) {

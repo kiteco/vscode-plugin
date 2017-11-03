@@ -14,11 +14,6 @@ window.StickyTitle = class StickyTitle {
       return sticky;
     });
 
-    this.summaryLink = document.createElement('a');
-    this.summaryLink.href = '#';
-    this.summaryLink.dataset.action = 'expand';
-    this.summaryLink.innerHTML = 'show more&hellip;';
-
     scrollContainer.addEventListener('scroll', e => {
       this.scroll();
     });
@@ -27,21 +22,6 @@ window.StickyTitle = class StickyTitle {
       sticky.addEventListener('mousewheel', e => {
         scrollContainer.scrollTop += e.deltaY;
       });
-    });
-
-    this.summaryLink.addEventListener('click', e => {
-      e.preventDefault();
-      const summary = this.scrollContainer.querySelector('.summary');
-      if (this.summaryLink.dataset.action === 'expand') {
-        this.summaryLink.dataset.action = 'collapse';
-        this.summaryLink.innerHTML = 'show less&hellip;';
-        summary.classList.remove('collapse');
-      } else {
-        this.summaryLink.dataset.action = 'expand';
-        this.summaryLink.innerHTML = 'show more&hellip;';
-        summary.classList.add('collapse');
-      }
-      this.scroll();
     });
 
     this.scrollContainer.addEventListener('click', (e) => {
@@ -53,10 +33,7 @@ window.StickyTitle = class StickyTitle {
       })
     });
 
-    this.collapsible = true;
-    const summary = this.scrollContainer.querySelector('.summary');
-    summary.classList.add('collapsible');
-    this.collapseSummary();
+    this.handleCollapsibles();
 
     window.addEventListener('resize', () => {
       this.measureWidthAndHeight();
@@ -66,26 +43,44 @@ window.StickyTitle = class StickyTitle {
     this.measureWidthAndHeight();
   }
 
-  collapseSummary() {
-    const summary = this.scrollContainer.querySelector('.summary');
+  handleCollapsibles() {
+    [].slice.call(this.scrollContainer.querySelectorAll('.collapsible')).forEach(collapsible => {
+      const content = collapsible.querySelector('.section-content');
 
-    if (this.collapsible) {
-      const description = summary.querySelector('.description');
+      let summaryLink = collapsible.querySelector('a[data-action="expand"]') 
+      if (!summaryLink) {
+        summaryLink = document.createElement('a');
+        summaryLink.href = '#';
+        summaryLink.dataset.action = 'expand';
+        summaryLink.innerHTML = 'show more&hellip;';
 
-      summary.classList.add('collapse');
-      if (description.scrollHeight > description.offsetHeight) {
-        summary.classList.add('overflow');
-        summary.appendChild(this.summaryLink);
+        summaryLink.addEventListener('click', e => {
+          e.preventDefault();
+          if (summaryLink.dataset.action === 'expand') {
+            summaryLink.dataset.action = 'collapse';
+            summaryLink.innerHTML = 'show less&hellip;';
+            collapsible.classList.remove('collapse');
+          } else {
+            summaryLink.dataset.action = 'expand';
+            summaryLink.innerHTML = 'show more&hellip;';
+            collapsible.classList.add('collapse');
+          }
+          this.scroll();
+        });
+      }
+
+      collapsible.classList.add('collapse');
+      if (content.scrollHeight > content.offsetHeight) {
+        collapsible.classList.add('overflow');
+        collapsible.appendChild(summaryLink);
       } else {
-        summary.classList.remove('overflow');
-        if (this.summaryLink.parentNode) {
-          summary.removeChild(this.summaryLink);
+        collapsible.classList.remove('overflow');
+        if (summaryLink.parentNode) {
+          collapsible.removeChild(summaryLink);
         }
       }
-    } else {
-      summary.classList.remove('collapse');
-      summary.classList.remove('overflow');
-    }
+    })
+
 
     this.scroll();
   }
