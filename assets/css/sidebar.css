@@ -1716,6 +1716,8 @@ form.password-less .has-password {
 
 .install {
   position: relative;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .install .logo {
@@ -1732,7 +1734,7 @@ form.password-less .has-password {
 }
 
 .install header {
-  height: 3em;
+  height: 2em;
   padding: 0 30px 0 0;
 }
 

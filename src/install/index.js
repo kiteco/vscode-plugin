@@ -70,7 +70,6 @@ function inputEmailView (state) {
             placeholder="enter your email"
             value="${state.account ? state.account.email || '' : ''}"></input>
     <button class="btn btn-primary btn-block">Continue</button>
-    <div class="status ${state.error ? 'text-danger' : 'hidden'}">${state.error ? state.error.message : ''}</div>
   </form>`; 
 }
 function loginView(state) { 
@@ -100,7 +99,6 @@ function loginView(state) {
           href="#"
           onclick="submitEvent('did-forgot-password')">Forgot password</a>
     </div>
-    <div class="status ${state.error ? 'text-danger' : 'hidden'}">${state.error ? state.error.message : ''}</div>
   </form>`;
 }
 function whitelistView(state) { 
@@ -274,8 +272,7 @@ module.exports = class KiteInstall {
     const view = this.installFlow.getCurrentStepView() || this.lastView;
     const {state} = this.installFlow;
 
-    const persistingView = view === this.lastView;
-    console.log(persistingView);
+    const persistingView = view === this.lastView && !state.error;
 
     this.lastView = view;
 
@@ -298,6 +295,7 @@ module.exports = class KiteInstall {
             <span class="inline-block">Starting Kite</span>
           </div>
         </div>
+        <div class="status ${state.error ? 'text-danger' : 'hidden'}">${state.error ? state.error.message : ''}</div>
       </header>
       <div class="content ${persistingView ? 'disabled' : ''}">${view ? view(this.installFlow.state) : 'install'}</div>
     </div>`)
