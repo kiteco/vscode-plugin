@@ -13,6 +13,7 @@ const {
   symbolReturnType,
 } = require('./data-utils');
 const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-small.svg')).toString();
+const spinner = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'spinner.svg')).toString();
 const logoLarge = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
 const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
 const enterpriseLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kiteenterprise.svg')).toString();
@@ -687,6 +688,7 @@ module.exports = {
   enterpriseLogoSvg,
   highlightCode,
   logo,
+  spinner,
   logoLarge,
   proLogoSvg,
   pluralize,

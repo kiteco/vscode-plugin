@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 const formidable = require('formidable');
 const server = require('../server');
-const {wrapHTML, debugHTML, logo} = require('../html-utils');
+const {wrapHTML, debugHTML, logo, spinner} = require('../html-utils');
 const {promisifyReadResponse} = require('../utils');
 const {
   install: { 
@@ -67,6 +67,7 @@ function inputEmailView (state) {
     <input class="input-text" 
             name="email" 
             type="email" 
+            placeholder="enter your email"
             value="${state.account ? state.account.email || '' : ''}"></input>
     <button class="btn btn-primary btn-block">Continue</button>
     <div class="status ${state.error ? 'text-danger' : 'hidden'}">${state.error ? state.error.message : ''}</div>
@@ -88,6 +89,7 @@ function loginView(state) {
     <input class='input-text'   
             name="password" 
             type="password"
+            placeholder="password"
             value="${state.account ? state.account.password || '' : ''}"></input>
     <button class="btn btn-primary btn-block" type="submit">Sign in</button>
     <div class="secondary-actions">
@@ -269,25 +271,35 @@ module.exports = class KiteInstall {
         .catch(err => console.log(err));
       }, 500);
     }
-    const view = this.installFlow.getCurrentStepView();
+    const view = this.installFlow.getCurrentStepView() || this.lastView;
     const {state} = this.installFlow;
+
+    const persistingView = view === this.lastView;
+    console.log(persistingView);
+
+    this.lastView = view;
 
     return Promise.resolve(`
     <div class="install">
-      <div class="logo">${logo}</div>
-      <div class="progress-indicators">
-        <div class="download-kite hidden">
-          <progress max='100' value="0" class="inline-block"></progress>
-          <span class="inline-block">Downloading Kite</span>
+      <header>
+        <div class="logo">${logo}</div>
+        <div class="progress-indicators">
+          <div class="download-kite ${state.download && !state.download.done ? '' : 'hidden'}">
+            <progress max='100' 
+                      value="${state.download ? Math.round(state.download.ratio * 100) : 0}"></progress>
+            <span>Downloading Kite</span>
+          </div>
+          <div class="install-kite ${state.install && !state.install.done ? '' : 'hidden'}">
+            ${spinner}
+            <span class="inline-block">Installing Kite</span>
+          </div>
+          <div class="run-kite ${state.running && !state.running.done ? '' : 'hidden'}">
+            ${spinner}
+            <span class="inline-block">Starting Kite</span>
+          </div>
         </div>
-        <div class="install-kite ${state.install && !state.install.done ? '' : 'hidden'}">
-          <span class="inline-block">Installing Kite</span>
-        </div>
-        <div class="run-kite ${state.running && !state.running.done ? '' : 'hidden'}">
-          <span class="inline-block">Starting Kite</span>
-        </div>
-      </div>
-      <div class="content">${view ? view(this.installFlow.state) : 'install'}</div>
+      </header>
+      <div class="content ${persistingView ? 'disabled' : ''}">${view ? view(this.installFlow.state) : 'install'}</div>
     </div>`)
     .then(html => wrapHTML(html))
     .then(html => debugHTML(html))
