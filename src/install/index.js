@@ -61,15 +61,15 @@ function inputEmailView (state) {
 
   <form novalidate 
         action="http://localhost:${server.PORT}/install/emit" 
-        method="POST"
-        onsubmit="request(this.method, this.action, new FormData(this))">
-    <input type="hidden" name="event" value="did-submit-email"></input>
+        method="POST">
+    <input type="hidden" name="event"></input>
     <input class="input-text" 
             name="email" 
             type="email" 
             placeholder="enter your email"
             value="${state.account ? state.account.email || '' : ''}"></input>
-    <button class="btn btn-primary btn-block">Continue</button>
+    <button class="btn btn-primary btn-block" 
+            onclick="return submitEvent('did-submit-email')"">Continue</button>
   </form>`; 
 }
 function loginView(state) { 
@@ -78,9 +78,8 @@ function loginView(state) {
   
   <form novalidate
         action="http://localhost:${server.PORT}/install/emit" 
-        method="POST"
-        onsubmit="request(this.method, this.action, new FormData(this))">
-    <input type="hidden" name="event" value="did-submit-credentials"></input>
+        method="POST">
+    <input type="hidden" name="event"></input>
     <input class='input-text' 
             name="email" 
             type="email"
@@ -90,14 +89,15 @@ function loginView(state) {
             type="password"
             placeholder="password"
             value="${state.account ? state.account.password || '' : ''}"></input>
-    <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+    <button class="btn btn-primary btn-block"
+            onclick="return submitEvent('did-submit-credentials')">Sign in</button>
     <div class="secondary-actions">
       <a class="back" 
           href="#"
-          onclick="submitEvent('did-click-back')">Back</a>
+          onclick="return submitEvent('did-click-back')">Back</a>
       <a class="reset-password secondary-cta"
           href="#"
-          onclick="submitEvent('did-forgot-password')">Forgot password</a>
+          onclick="return submitEvent('did-forgot-password')">Forgot password</a>
     </div>
   </form>`;
 }
@@ -123,14 +123,14 @@ function whitelistView(state) {
 
   <form novalidate
         action="http://localhost:${server.PORT}/install/emit" 
-        method="POST"
-        onsubmit="request(this.method, this.action, new FormData(this))">
-    <input type="hidden" name="event" value="did-whitelist"></input>
+        method="POST">
+    <input type="hidden" name="event"></input>
     <div class="actions">
-      <button class="btn btn-primary">Enable access for ${state.path}</button>
+      <button class="btn btn-primary"
+              onclick="return submitEvent('did-whitelist')">Enable access for ${state.path}</button>
       <a class="skip secondary-cta"
          href="#"
-         onclick="submitEvent('did-skip-whitelist')">Add Later</a>
+         onclick="return submitEvent('did-skip-whitelist')">Add Later</a>
     </div>
   </form>
   
