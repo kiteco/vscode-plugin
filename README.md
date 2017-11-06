@@ -15,7 +15,7 @@ This extension is automatically installed by Kite when you select Visual Studio 
 
 When starting VSCode with Kite for the first time, a brief tour about Kite will be displayed in the active pane.
 
-![Kite Tour](./images/kite-tour.png)
+![Kite Tour](./docs/images/kite-tour.png)
 
 This tour will only be displayed once. If you want to see it again on next startup you can activate the `kite.showTourOnStartup` setting.
 
@@ -23,17 +23,17 @@ This tour will only be displayed once. If you want to see it again on next start
 
 The Kite icon in the status bar displays the state of Kite for the current file. Clicking on the icon will open the status panel with additional information.
 
-![kite status bar](./images/kite-status-bar.png)
+![kite status bar](./docs/images/kite-status-bar.png)
 
 The icon in the status bar can take three different colors:
 
-- blue: The Kite Engine is available and functioning properly.<br/>![kite status ready](./images/kite-status-ready.png)
-- gray: There's either no open file or, if there's an active file, the file is either not supported or not whitelisted.<br/>![kite status not whitelisted](./images/kite-status-non-whitelisted.png)
-- red: Something went wrong when the plugin tried to contact the Kite service on your computer. Depending on the issue, the status panel can offer actions to solve the problem.<br/>![kite status not running](./images/kite-status-not-running.png)
+- blue: The Kite Engine is available and functioning properly.<br/>![kite status ready](./docs/images/kite-status-ready.png)
+- gray: There's either no open file or, if there's an active file, the file is either not supported or not whitelisted.<br/>![kite status not whitelisted](./docs/images/kite-status-non-whitelisted.png)
+- red: Something went wrong when the plugin tried to contact the Kite service on your computer. Depending on the issue, the status panel can offer actions to solve the problem.<br/>![kite status not running](./docs/images/kite-status-not-running.png)
 
 ### Quick Info
 
-![kite hover](./images/kite-hover.png)
+![kite hover](./docs/images/kite-hover.png)
 
 Hovering your mouse over a symbol will show you a popup with up to three links:
 
@@ -45,7 +45,7 @@ Hovering your mouse over a symbol will show you a popup with up to three links:
 
 The expanded view offers a more detailed view of a symbol. You can use the sidebar panel to browse the members of a module or a type, or to access curated examples, StackOverflow topics, and more.
 
-![Kite Expand Panel](./images/kite-expand-panel.png)
+![Kite Expand Panel](./docs/images/kite-expand-panel.png)
 
 ### Active Search
 
@@ -53,7 +53,7 @@ Active search is available using the corresponding command from the command pale
 
 Type a module, function or symbol name and browse the results in the panel.
 
-![Kite Active Search](./images/kite-active-search.png)
+![Kite Active Search](./docs/images/kite-active-search.png)
 
 ### Commands
 
