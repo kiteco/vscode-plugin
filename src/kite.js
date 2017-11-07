@@ -636,7 +636,11 @@ const Kite = {
       } else if (resp.statusCode === 403) {
         return null;
       } else if (resp.statusCode === 404) {
-        return vscode.workspace.rootPath || os.homedir();
+        return (
+          vscode.workspace.workspaceFolders 
+            ? vscode.workspace.workspaceFolders[0].uri.fsPath 
+            : vscode.workspace.rootPath
+        ) || os.homedir();
       } else {
         throw new Error('Invalid status');
       }
