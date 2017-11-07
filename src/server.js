@@ -6,7 +6,7 @@ const {Logger} = require('kite-installer');
 const {head, last} = require('./utils');
 
 module.exports = {
-  PORT: 45667,
+  PORT: process.env.NODE_ENV === 'development' ? 45668 : 45667,
   routes: [],
   addRoute(method, route, handle) {
     this.routes.push([method, route, handle]);
