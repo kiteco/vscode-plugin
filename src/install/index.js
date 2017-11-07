@@ -1,6 +1,8 @@
 'use strict';
 
+const os = require('os');
 const vscode = require('vscode');
+const {workspace} = vscode;
 const formidable = require('formidable');
 const server = require('../server');
 const {wrapHTML, debugHTML, logo, spinner} = require('../html-utils');
@@ -244,7 +246,9 @@ module.exports = class KiteInstall {
           }),
         },
       ], {name: 'termination'}),
-    ]);
+    ], {
+      path: (workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : workspace.rootPath) || os.homedir()
+    });
   }
 
   provideTextDocumentContent() {
