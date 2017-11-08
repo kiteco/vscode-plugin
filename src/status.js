@@ -184,7 +184,7 @@ module.exports = class KiteStatus {
     return `
     <ul class="links ${account ? 'has-account' : 'no-account'}">
       ${giftLink}
-      <li><a href="https://ga.kite.com/docs/" class="account-dependent">Search Python documentation</a></li>
+      <li><a href="localhost:46624/clientapi/desktoplogin?d=/docs" class="account-dependent">Search Python documentation</a></li>
       <li><a href='command:kite.web-url?"http://localhost:46624/settings"' class="account-dependent">Settings</a></li>
       <li><a href='command:kite.web-url?"http://localhost:46624/settings/permissions"' class="account-dependent">Permissions</a></li>
       <li><a href="http://help.kite.com/">Help</a></li>
