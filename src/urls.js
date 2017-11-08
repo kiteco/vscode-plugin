@@ -105,12 +105,12 @@ function examplePath(id) {
 }
 
 function openDocumentationInWebURL(id, token = false) {
-  const url = `http://localhost:46624/clientapi/desktoplogin?d=/docs/python/${escapeId(id)}`;
+  const url = `http://localhost:46624/clientapi/desktoplogin?d=/docs/${escapeId(id)}`;
   return url;
 }
 
 function openSignatureInWebURL(id, token = false) {
-  const url = `http://localhost:46624/clientapi/desktoplogin?d=/docs/python/${escapeId(id)}%23signature`;
+  const url = `http://localhost:46624/clientapi/desktoplogin?d=/docs/${escapeId(id)}%23signature`;
   return url;
 }
 
