@@ -8,6 +8,12 @@ const KiteValueReport = require('./value-report');
 
 let lastTerm, lastList, lastId, lastView, Kite;
 
+const GETTING_STARTED = [
+  'json',
+  'requests.get',
+  'matplotlib.pyplot.plot',
+];
+
 server.addRoute('GET', '/search', (req, res, url) => { 
   if (!Kite) { Kite = require('./kite'); }
 
@@ -75,7 +81,7 @@ module.exports = class KiteSearch {
       <ul id="results">${renderList(lastList)}</ul>
       <div id="view">${lastView || ''}</div>
       <script>
-        initSearch('text', 'results', 'view');
+        initSearch('text', 'results', 'view', ${JSON.stringify(this.searchHistory)}, ${JSON.stringify(GETTING_STARTED)});
       </script>
     `)
     .then(html => wrapHTML(html))

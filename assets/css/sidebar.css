@@ -1645,3 +1645,15 @@ form.password-less .has-password {
   flex-direction: column;
   align-items: center;
 }
+
+ul p.grim {
+  opacity: 0.7;
+  padding: 10px 0 0;
+  font-size: 1.2em;
+}
+
+#view h4 {
+  text-transform: uppercase;
+  color: var(--text-color-highlight);
+  margin: 0 0 20px;
+}

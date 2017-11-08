@@ -1,4 +1,4 @@
-window.initSearch = (inputId, resultsId, viewId) => {
+window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) => {
   const input = document.getElementById(inputId);
   const results = document.getElementById(resultsId);
   const view = document.getElementById(viewId);
@@ -28,12 +28,41 @@ window.initSearch = (inputId, resultsId, viewId) => {
       });
     } else {
       stack = stack.then(() => {
-        results.innerHTML = '';
-        view.innerHTML = '';
+        clearSearch();
       });
     }
   });
 
+  document.body.addEventListener('click', (e) => {
+    if (e.target.nodeName === 'LI' && e.target.hasAttribute('data-id')) {
+      input.value = e.target.getAttribute('data-id');
+      selectItem(e.target);
+    }
+  });
+
+  document.body.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp') {
+      selectPreviousItem();
+    } else if (e.key === 'ArrowDown') {
+      selectNextItem();
+    }
+  });
+
+  if (!document.querySelector('li')) {
+    clearSearch();
+  }
+  
+  function clearSearch() {
+    results.innerHTML = '<p class="grim">Type any identifier above to search docs, popular patterns, signatures and more.</p>';
+    view.innerHTML = `
+    <h4>${searchHistory ? 'Search History' : 'Examples to get you started'}</h4>
+    <ul class="history">${
+      (searchHistory ? searchHistory : gettingStarted)
+      .map(i => `<li data-id="${i}">${i}</li>`)
+      .join('')
+    }</ul>`;
+  }
+  
   function startRecordMetric() {
     if (!recording) {
       recording = true;
@@ -48,19 +77,6 @@ window.initSearch = (inputId, resultsId, viewId) => {
       }, 1000);
     }
   }
-
-  document.body.addEventListener('click', (e) => {
-    if (e.target.nodeName === 'LI' && e.target.hasAttribute('data-id')) {
-      selectItem(e.target);
-    }
-  });
-  document.body.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowUp') {
-      selectPreviousItem();
-    } else if (e.key === 'ArrowDown') {
-      selectNextItem();
-    }
-  })
 
   function selectNextItem() {
     if (results.childNodes.length === 0) { return; }
