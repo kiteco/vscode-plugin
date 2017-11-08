@@ -4,7 +4,8 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const {Logger} = require('kite-installer');
-const configPath = path.join(os.homedir(), '.kite', 'kite-config.json');
+const configDir = path.join(os.homedir(), '.kite');
+const configPath = path.join(configDir, 'kite-config.json');
 
 var config = null;
 
@@ -20,6 +21,7 @@ var config = null;
 
 function persist() {
   var str = JSON.stringify(config, null, 2); // serialize with whitespace for human readability
+  if (!fs.existsSync(configDir)) { fs.mkdirSync(configDir) }
   fs.writeFile(configPath, str, 'utf8', (err) => {
     if (err) {
       Logger.error(`failed to persist localconfig to ${ configPath }`, err);

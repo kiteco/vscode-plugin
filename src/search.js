@@ -1,10 +1,14 @@
 'use strict';
 
+const formidable = require('formidable');
 const server = require('./server');
 const {wrapHTML, debugHTML} = require('./html-utils');
 const {params, compact, flatten} = require('./utils');
 const {searchPath} = require('./urls');
 const KiteValueReport = require('./value-report');
+const localconfig = require('./localconfig');
+
+let history = localconfig.get('searchHistory');
 
 let lastTerm, lastList, lastId, lastView, Kite;
 
@@ -50,6 +54,35 @@ server.addRoute('GET', '/view', (req, res, url) => {
   });
 });
 
+server.addRoute('POST', '/search/stack', (req, res, url) => {
+  const form = new formidable.IncomingForm();
+  form.parse(req, (err, fields) => {
+    if (err) {
+      res.writeHead(500, {'Content-Type': 'text/plain'});
+      return res.end(err.stack);
+    }
+
+    const {q} = fields
+
+    try {
+      if (history && !history.includes(q)) {
+        history.unshift(q);
+        history = history.slice(0,5)
+        localconfig.set('searchHistory', history);
+      } else if (!history) {
+        history = [q];
+        localconfig.set('searchHistory', history);
+      }
+  
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+      res.end(JSON.stringify(history));
+    } catch (err) {
+      res.writeHead(500, {'Content-Type': 'text/plain'});
+      return res.end(err.stack);
+    }
+  });
+});
+
 module.exports = class KiteSearch {
   constructor(Kite) {
     this.Kite = Kite;
@@ -81,7 +114,7 @@ module.exports = class KiteSearch {
       <ul id="results">${renderList(lastList)}</ul>
       <div id="view">${lastView || ''}</div>
       <script>
-        initSearch('text', 'results', 'view', ${JSON.stringify(this.searchHistory)}, ${JSON.stringify(GETTING_STARTED)});
+        initSearch('text', 'results', 'view', ${JSON.stringify(history)}, ${JSON.stringify(GETTING_STARTED)});
       </script>
     `)
     .then(html => wrapHTML(html))

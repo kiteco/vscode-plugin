@@ -5,12 +5,13 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
   let stack = Promise.resolve(); 
   let selectedItem = document.querySelector('li.selected');
   let recording = false;
-
+  let historyTimeout;
+  
   initItemContent();
-
+  
   input.addEventListener('input', () => {
     const text = input.value;
-
+    
     startRecordMetric();
 
     if (text.trim() !== '') {
@@ -107,10 +108,17 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
   }
 
   function loadItem(id) {
+    clearTimeout(historyTimeout);
     view.style.display = '';
     request('GET', `http://localhost:${window.PORT}/view?id=${id}`).then(html => {
       view.innerHTML = html;
       initItemContent();
+
+      historyTimeout = setTimeout(() => {
+        requestPost('/search/stack', {q: input.value}).then(data => {
+          searchHistory = JSON.parse(data);
+        });
+      }, 1000);
     });
   }
 

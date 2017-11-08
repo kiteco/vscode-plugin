@@ -25,3 +25,11 @@ window.request = function request (method, url, data) {
 window.requestGet = function requestGet(path) {
   return request('GET', `http://localhost:${window.PORT}${path}`);
 };
+
+window.requestPost = function requestGet(path, data) {
+  const formData = new FormData();
+  for (const key in data) {
+    formData.set(key, data[key]);
+  }
+  return request('POST', `http://localhost:${window.PORT}${path}`, formData);
+};
