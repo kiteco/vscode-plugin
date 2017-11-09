@@ -111,7 +111,7 @@ module.exports = class KiteSearch {
         <i class="icon icon-search"></i>
       </div>
 
-      <ul id="results">${renderList(lastList)}</ul>
+      <div id="results"><ul>${renderList(lastList)}</ul></div>
       <div id="view">${lastView || ''}</div>
       <script>
         initSearch('text', 'results', 'view', ${JSON.stringify(history)}, ${JSON.stringify(GETTING_STARTED)});

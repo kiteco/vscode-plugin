@@ -1,6 +1,7 @@
 window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) => {
   const input = document.getElementById(inputId);
   const results = document.getElementById(resultsId);
+  const resultsList = results.querySelector('ul');
   const view = document.getElementById(viewId);
   let stack = Promise.resolve(); 
   let selectedItem = document.querySelector('li.selected');
@@ -14,18 +15,20 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     const text = input.value;
     
     startRecordMetric();
+    results.classList.remove('has-results');
 
     if (text.trim() !== '') {
       stack = stack
       .then(() => request('GET', `http://localhost:${window.PORT}/search?text=${text}`))
       .then(res => {
-        results.innerHTML = res;
-        if (results.childNodes.length > 0) {
+        resultsList.innerHTML = res;
+        if (resultsList.childNodes.length > 0) {
           selectNextItem();
         } else {
-          results.innerHTML = '<p class="no-results">No results available</p>'
+          resultsList.innerHTML = '<p class="no-results">No results available</p>'
           view.innerHTML = '';
         }
+        results.classList.toggle('has-results', resultsList.scrollHeight > resultsList.offsetHeight)
       }).catch(err => {
         console.log(err.message);
       });
@@ -56,7 +59,7 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
   }
   
   function clearSearch() {
-    results.innerHTML = '<p class="grim">Type any identifier above to search docs, popular patterns, signatures and more.</p>';
+    resultsList.innerHTML = '<p class="grim">Type any identifier above to search docs, popular patterns, signatures and more.</p>';
     view.innerHTML = `
     <h4>${searchHistory ? 'Search History' : 'Examples to get you started'}</h4>
     <ul class="history">${
@@ -82,22 +85,22 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
   }
 
   function selectNextItem() {
-    if (results.childNodes.length === 0) { return; }
+    if (resultsList.childNodes.length === 0) { return; }
 
     if (selectedItem && selectedItem.nextSibling) {
       selectItem(selectedItem.nextSibling);
     } else {
-      selectItem(results.firstChild);
+      selectItem(resultsList.firstChild);
     }
   }
 
   function selectPreviousItem() {
-    if (results.childNodes.length === 0) { return; }
+    if (resultsList.childNodes.length === 0) { return; }
 
     if (selectedItem && selectedItem.previousSibling) {
       selectItem(selectedItem.previousSibling);
     } else {
-      selectItem(results.lastChild);
+      selectItem(resultsList.lastChild);
     }
   }
 
@@ -140,15 +143,15 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
   }
 
   function scrollTo(target) {
-    const containerBounds = results.getBoundingClientRect();
-    const scrollTop = results.scrollTop;
+    const containerBounds = resultsList.getBoundingClientRect();
+    const scrollTop = resultsList.scrollTop;
     const targetTop = target.offsetTop;
     const targetBottom = targetTop + target.offsetHeight;
 
     if (targetTop < scrollTop) {
-      results.scrollTop = targetTop;
+      resultsList.scrollTop = targetTop;
     } else if (targetBottom > scrollTop + containerBounds.height) {
-      results.scrollTop = targetBottom - containerBounds.height;
+      resultsList.scrollTop = targetBottom - containerBounds.height;
     }
   }
 }
