@@ -129,10 +129,10 @@ function whitelistView(state) {
     <input type="hidden" name="event"></input>
     <div class="actions">
       <button class="btn btn-primary"
-              onclick="return submitEvent('did-whitelist')">Enable access for ${state.path}</button>
+              onclick="document.querySelector('.content').classList.add('disabled'); return submitEvent('did-whitelist')">Enable access for ${state.path}</button>
       <a class="skip secondary-cta"
          href="#"
-         onclick="return submitEvent('did-skip-whitelist')">Add Later</a>
+         onclick="document.querySelector('.content').classList.add('disabled'); return submitEvent('did-skip-whitelist')">Add Later</a>
     </div>
   </form>
   
@@ -143,7 +143,6 @@ function installEndView(state) {
   <div class="welcome-to-kite">
     <div class="welcome-title">
       <h3>Welcome to Kite!</h3>
-      <div class="title-logo">${logo}</div>
     </div>
     <div class="warning">
       Kite is still indexing some of your Python code. You\’ll see your completions improve over the next few minutes.
