@@ -10,6 +10,7 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
   initItemContent();
   
   input.addEventListener('input', () => {
+    clearTimeout(historyTimeout);
     const text = input.value;
     
     startRecordMetric();
@@ -22,6 +23,7 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
         if (results.childNodes.length > 0) {
           selectNextItem();
         } else {
+          results.innerHTML = '<p class="no-results">No results available</p>'
           view.innerHTML = '';
         }
       }).catch(err => {
@@ -109,16 +111,19 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
 
   function loadItem(id) {
     clearTimeout(historyTimeout);
+
     view.style.display = '';
     request('GET', `http://localhost:${window.PORT}/view?id=${id}`).then(html => {
-      view.innerHTML = html;
-      initItemContent();
+      if (html.trim() !== '') {
+        view.innerHTML = html;
+        initItemContent();
 
-      historyTimeout = setTimeout(() => {
-        requestPost('/search/stack', {q: input.value}).then(data => {
-          searchHistory = JSON.parse(data);
-        });
-      }, 1000);
+        historyTimeout = setTimeout(() => {
+          requestPost('/search/stack', {q: input.value}).then(data => {
+            searchHistory = JSON.parse(data);
+          });
+        }, 1000);
+      }
     });
   }
 

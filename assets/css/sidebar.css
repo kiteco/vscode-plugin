@@ -1293,12 +1293,29 @@ inpu:not([type="checkbox"])t:-webkit-input-placeholder {
   max-height: 120px;
   position: relative;
 }
+#results p.grim {
+  opacity: 0.7;
+  padding: 10px;
+  font-size: 1.2em;
+}
+
+#results p.no-results {
+  background: var(--examples-background);
+  height: 120px;
+  padding: 20px;
+  margin: 0;
+  text-align: center;
+}
+
 #results li {
   padding: 5px;
+  background: var(--examples-background);
 }
+
 #results li + li {
   margin: 0;
 }
+
 #results li.selected {
   background: var(--button-background);
 }
@@ -1306,6 +1323,8 @@ inpu:not([type="checkbox"])t:-webkit-input-placeholder {
 #results li small {
   opacity: 0.75;
   margin-left: 0.5em;
+  float: right;
+  text-transform: uppercase;
 }
 #view {
   flex: 1 1 auto;
@@ -1644,12 +1663,6 @@ form.password-less .has-password {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-ul p.grim {
-  opacity: 0.7;
-  padding: 10px 0 0;
-  font-size: 1.2em;
 }
 
 #view h4 {
