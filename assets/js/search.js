@@ -41,7 +41,7 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
 
   document.body.addEventListener('click', (e) => {
     if (e.target.nodeName === 'LI' && e.target.hasAttribute('data-id')) {
-      input.value = e.target.getAttribute('data-id');
+      input.value = e.target.textContent.trim();
       selectItem(e.target);
     }
   });
