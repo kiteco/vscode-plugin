@@ -7,6 +7,8 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
   let selectedItem = document.querySelector('li.selected');
   let recording = false;
   let historyTimeout;
+
+  input.focus();
   
   initItemContent();
   
