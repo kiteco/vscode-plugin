@@ -1340,6 +1340,7 @@ inpu:not([type="checkbox"])t:-webkit-input-placeholder {
 
 #results li {
   padding: 5px;
+  cursor: pointer;
 }
 
 #results li + li {
@@ -1361,6 +1362,11 @@ inpu:not([type="checkbox"])t:-webkit-input-placeholder {
   display: flex;
   flex-direction: column;
 }
+
+#view .history li {
+  cursor: pointer;
+}
+
 #view:not(:empty) {
   border-top: 1px solid var(--examples-output-background);
   padding-top: 10px;
