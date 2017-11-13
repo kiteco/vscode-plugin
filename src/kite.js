@@ -238,7 +238,7 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.web-url', (url) => {
       metrics.track(`Open in web clicked`);
-      opn(url);
+      opn(url.replace(/;/g, '%3B'));
     });
 
     vscode.commands.registerCommand('kite.def', ({file, line, source}) => {
