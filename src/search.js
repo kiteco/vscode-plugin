@@ -104,6 +104,7 @@ module.exports = class KiteSearch {
 
   provideTextDocumentContent() {
     server.start();
+    history = localconfig.get('searchHistory');
 
     return Promise.resolve(`
       <div class="search-form">

@@ -63,9 +63,9 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
   function clearSearch() {
     resultsList.innerHTML = '<p class="grim">Type any identifier above to search docs, popular patterns, signatures and more.</p>';
     view.innerHTML = `
-    <h4>${searchHistory ? 'Search History' : 'Examples to get you started'}</h4>
+    <h4>${searchHistory && searchHistory.length ? 'Search History' : 'Examples to get you started'}</h4>
     <ul class="history">${
-      (searchHistory ? searchHistory : gettingStarted)
+      ((searchHistory && searchHistory.length) ? searchHistory : gettingStarted)
       .map(i => `<li data-id="${i}">${i}</li>`)
       .join('')
     }</ul>`;

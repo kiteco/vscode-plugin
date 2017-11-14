@@ -16,6 +16,7 @@ const KiteStatus = require('./status');
 const KiteTour = require('./tour');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
+const localconfig = require('./localconfig');
 const metrics = require('./metrics');
 const Plan = require('./plan');
 const server = require('./server');
@@ -167,6 +168,10 @@ const Kite = {
     vscode.commands.registerCommand('kite.search', () => {
       search.clearCache();
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-search://search', vscode.ViewColumn.Two, 'Kite Search');
+    }); 
+    
+    vscode.commands.registerCommand('kite.reset-search-history', () => {
+      localconfig.set('searchHistory', []);
     }); 
     
     vscode.commands.registerCommand('kite.login', () => {

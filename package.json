@@ -21,6 +21,10 @@
         "title": "Kite: Search"
       },
       {
+        "command": "kite.reset-search-history",
+        "title": "Kite: Reset Search History"
+      },
+      {
         "command": "kite.status",
         "title": "Kite: Status"
       },
