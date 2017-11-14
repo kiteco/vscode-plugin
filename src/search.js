@@ -2,7 +2,7 @@
 
 const formidable = require('formidable');
 const server = require('./server');
-const {wrapHTML, debugHTML} = require('./html-utils');
+const {wrapHTML, debugHTML, handleInternalLinks} = require('./html-utils');
 const {params, compact, flatten} = require('./utils');
 const {searchPath} = require('./urls');
 const KiteValueReport = require('./value-report');
@@ -46,7 +46,7 @@ server.addRoute('GET', '/view', (req, res, url) => {
   KiteValueReport.render(id).then(html => {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     lastView = html;
-    res.end(html);
+    res.end(handleInternalLinks(html));
   })
   .catch(err => {
     res.writeHead(500, {'Content-Type': 'text/plain'});

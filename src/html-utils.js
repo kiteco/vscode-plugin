@@ -75,12 +75,15 @@ function debugHTML (html) {
   return html;
 }
 
-function wrapHTML (html) {
-  html = html
+function handleInternalLinks(html) {
+  return html
   .replace(/<a class="internal_link" href="#([^"]+)"/g, 
-           `<a class="internal_link" href='command:kite.navigate?"link/python;$1"'`)
+  `<a class="internal_link" href='command:kite.navigate?"link/python;$1"'`)
   .replace(/<a href="#([^"]+)" class="internal_link"/g, 
-           `<a href='command:kite.navigate?"link/python;$1"' class="internal_link"`);
+    `<a href='command:kite.navigate?"link/python;$1"' class="internal_link"`);
+} 
+
+function wrapHTML (html) {
   return `
   <style>
     html {
@@ -108,7 +111,7 @@ function wrapHTML (html) {
     window.PORT = ${server.PORT};
   </script>
   ${SCRIPTS}
-  <div class="kite platform-${os.platform()}">${html}</div>`
+  <div class="kite platform-${os.platform()}">${handleInternalLinks(html)}</div>`
 }
 
 function prependNavigation(html, steps, step) {
@@ -675,8 +678,8 @@ function renderParameter(param, prefix = '') {
 
 function renderInvocations(symbol) {
   return '';
-//   return section('Invocations', `<pre><code>Counter.increment(10)
-// Counter.increment(10, foo='bar')</code></pre>`);
+  //   return section('Invocations', `<pre><code>Counter.increment(10)
+  // Counter.increment(10, foo='bar')</code></pre>`);
 }
 
 module.exports = {
@@ -688,6 +691,7 @@ module.exports = {
   proLogoSvg,
   pluralize,
   proFeatures,
+  handleInternalLinks,
   renderDefinition,
   renderExample,
   renderExamples,
