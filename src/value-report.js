@@ -17,6 +17,7 @@ module.exports = {
     .then(() => Kite.request({path}))
     .then(report => parseJSON(report))
     .then(report => {
+      console.log(report);
       if (report.symbol && report.symbol.id === '') { report.symbol.id = id; }
       return report;
     })
