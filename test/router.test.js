@@ -6,7 +6,7 @@ const expect = require('expect.js');
 const KiteRouter = require('../src/router');
 const {fixtureURI, withRoutes, withKiteWhitelistedPaths, fakeResponse, Kite} = require('./helpers');
 
-describe('router', () => {
+describe.only('router', () => {
   jsdom();
 
   let router;
@@ -20,7 +20,7 @@ describe('router', () => {
       withRoutes([
         [
           o => /\/api\/editor\/symbol\//.test(o.path),
-          o => fakeResponse(200, fs.readFileSync(fixtureURI('os.json').toString()))
+          o => fakeResponse(200, fs.readFileSync(fixtureURI('module-os.json').toString()))
         ]
       ])
 
@@ -28,6 +28,7 @@ describe('router', () => {
         router.registerNavigationStep(vscode.Uri.parse('kite-vscode-sidebar://member/python;json'));
         
         return router.provideTextDocumentContent().then(html => {
+          document.body.innerHTML = html;
           console.log(html);
         });
       });
