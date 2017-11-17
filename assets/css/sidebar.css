@@ -1777,7 +1777,15 @@ form.password-less .has-password {
   opacity: 0.6;
   pointer-events: none;
 }
-#view h4 {
+
+.install .actions {
+  margin-top: 10px;
+}
+
+.install .actions .secondary-cta {
+  float: right;
+  margin-top: 5px;
+}#view h4 {
   text-transform: uppercase;
   color: var(--text-color-highlight);
   margin: 0 0 20px;

@@ -105,7 +105,7 @@ function loginView(state) {
 }
 function whitelistView(state) { 
   return `
-  <p class="email">
+  <p class="email ${state.account.hasPassword ? 'hidden' : ''}">
     Great we've sent you an email to ${state.account.email}.
     Remember to set your password later!
   </p>
@@ -300,7 +300,7 @@ module.exports = class KiteInstall {
         </div>
         <div class="status ${state.error ? 'text-danger' : 'hidden'}">${state.error ? state.error.message : ''}</div>
       </header>
-      <div class="content ${persistingView ? 'disabled' : ''}">${view ? view(this.installFlow.state) : 'install'}</div>
+      <div class="content ${persistingView || (view === whitelistView && state.whitelist) ? 'disabled' : ''}">${view ? view(this.installFlow.state) : 'install'}</div>
     </div>`)
     .then(html => wrapHTML(html))
     .then(html => debugHTML(html))
