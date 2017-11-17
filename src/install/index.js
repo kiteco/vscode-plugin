@@ -247,6 +247,9 @@ module.exports = class KiteInstall {
       ], {name: 'termination'}),
     ], {
       path: (workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : workspace.rootPath) || os.homedir()
+    }, {
+      failureStep: 'termination',
+      title: 'Kite Install',
     });
   }
 
@@ -293,7 +296,7 @@ module.exports = class KiteInstall {
             ${spinner}
             <span class="inline-block">Installing Kite</span>
           </div>
-          <div class="run-kite ${state.running && !state.running.done ? '' : 'hidden'}">
+          <div class="run-kite ${state.running && view !== installEndView ? '' : 'hidden'}">
             ${spinner}
             <span class="inline-block">Starting Kite</span>
           </div>
