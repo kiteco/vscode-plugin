@@ -1733,6 +1733,10 @@ form.password-less .has-password {
   float: right;
 }
 
+.secondary-actions * {
+  margin-left: 10px;
+}
+
 .install header {
   height: 2em;
   padding: 0 30px 0 0;
