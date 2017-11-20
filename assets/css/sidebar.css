@@ -1773,7 +1773,8 @@ form.password-less .has-password {
   color: var(--text-color-highlight);
 }
 
-.install .content.disabled {
+.install .content.disabled a:not(.no-disable), 
+.install .content.disabled button:not(.no-disable) {
   opacity: 0.6;
   pointer-events: none;
 }

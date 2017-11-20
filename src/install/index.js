@@ -8,7 +8,7 @@ const server = require('../server');
 const {wrapHTML, debugHTML, logo, spinner} = require('../html-utils');
 const {promisifyReadResponse} = require('../utils');
 const {
-  install: { 
+  install: {
     Authenticate,
     BranchStep,
     CheckEmail,
@@ -22,14 +22,14 @@ const {
     ParallelSteps,
     VoidStep,
     Whitelist,
-    WhitelistChoice, 
+    WhitelistChoice,
   }
 } =  require('kite-installer');
 const URI = 'kite-vscode-install://install';
 
 let instance;
 
-server.addRoute('POST', '/install/emit', (req, res, url) => { 
+server.addRoute('POST', '/install/emit', (req, res, url) => {
   const form = new formidable.IncomingForm();
 
   form.parse(req, (err, fields) => {
@@ -40,7 +40,7 @@ server.addRoute('POST', '/install/emit', (req, res, url) => {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('');
 
-    const event = fields.event; 
+    const event = fields.event;
     delete fields.event;
 
     instance.installFlow.emit(event, fields);
@@ -49,52 +49,52 @@ server.addRoute('POST', '/install/emit', (req, res, url) => {
 
 server.addRoute('GET', '/install/progress', (req, res, url) => {
   res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end(instance && 
-          instance.installFlow && 
-          instance.installFlow.state && 
-          instance.installFlow.state.download 
+  res.end(instance &&
+          instance.installFlow &&
+          instance.installFlow.state &&
+          instance.installFlow.state.download
     ? String(instance.installFlow.state.download.ratio)
     : '-1');
 })
 
-function inputEmailView (state) { 
+function inputEmailView (state) {
   return `
-  <p>Great! Create an account with your email address.</p>
+  <p>To install Kite, first create an account with your email address.</p>
 
-  <form novalidate 
-        action="http://localhost:${server.PORT}/install/emit" 
+  <form novalidate
+        action="http://localhost:${server.PORT}/install/emit"
         method="POST">
     <input type="hidden" name="event"></input>
-    <input class="input-text" 
-            name="email" 
-            type="email" 
+    <input class="input-text"
+            name="email"
+            type="email"
             placeholder="enter your email"
             value="${state.account ? state.account.email || '' : ''}"></input>
-    <button class="btn btn-primary btn-block" 
+    <button class="btn btn-primary btn-block"
             onclick="return submitEvent('did-submit-email')"">Continue</button>
-  </form>`; 
+  </form>`;
 }
-function loginView(state) { 
+function loginView(state) {
   return `
   <p>It seems like you already have a Kite account. Sign in with your login info.</p>
-  
+
   <form novalidate
-        action="http://localhost:${server.PORT}/install/emit" 
+        action="http://localhost:${server.PORT}/install/emit"
         method="POST">
     <input type="hidden" name="event"></input>
-    <input class='input-text' 
-            name="email" 
+    <input class='input-text'
+            name="email"
             type="email"
               value="${state.account ? state.account.email || '' : ''}"></input>
-    <input class='input-text'   
-            name="password" 
+    <input class='input-text'
+            name="password"
             type="password"
             placeholder="password"
             value="${state.account ? state.account.password || '' : ''}"></input>
     <button class="btn btn-primary btn-block"
             onclick="return submitEvent('did-submit-credentials')">Sign in</button>
     <div class="secondary-actions">
-      <a class="back" 
+      <a class="back"
           href="#"
           onclick="return submitEvent('did-click-back')">Back</a>
       <a class="reset-password secondary-cta"
@@ -103,7 +103,7 @@ function loginView(state) {
     </div>
   </form>`;
 }
-function whitelistView(state) { 
+function whitelistView(state) {
   return `
   <p class="email ${state.account.hasPassword ? 'hidden' : ''}">
     Great we've sent you an email to ${state.account.email}.
@@ -120,11 +120,11 @@ function whitelistView(state) {
   <p>
     You can restrict access to individual files or entire directories
     at any time. You can also remove unwanted data from the cloud freely.
-    <a href="http://help.kite.com/category/30-security-privacy">Click here to learn more</a>
+    <a href="http://help.kite.com/category/30-security-privacy" class="no-disable">Click here to learn more</a>
   </p>
 
   <form novalidate
-        action="http://localhost:${server.PORT}/install/emit" 
+        action="http://localhost:${server.PORT}/install/emit"
         method="POST">
     <input type="hidden" name="event"></input>
     <div class="actions">
@@ -135,10 +135,10 @@ function whitelistView(state) {
          onclick="document.querySelector('.content').classList.add('disabled'); return submitEvent('did-skip-whitelist')">Add Later</a>
     </div>
   </form>
-  
-  <script>initDownloadProgress();</script>`; 
+
+  <script>initDownloadProgress();</script>`;
 }
-function installEndView(state) { 
+function installEndView(state) {
   return `
   <div class="welcome-to-kite">
     <div class="welcome-title">
@@ -164,13 +164,13 @@ function installEndView(state) {
       in the coming months, including formatted documentation,
       jump to definition, function call signatures, and many more</p>
     <p class="feedback">Send us feedback at <a href="mailto:feedback@kite.com">feedback@kite.com</a></p>
-  </div>`; 
+  </div>`;
 }
-function installErrorView(state) { 
+function installErrorView(state) {
   return `<div class="status">
     <h4>${install.state.error.message}</h4>
     <pre>${install.state.error.stack}</pre>
-  </div>`; 
+  </div>`;
 }
 
 module.exports = class KiteInstall {
@@ -180,8 +180,8 @@ module.exports = class KiteInstall {
     instance = this;
   }
 
-  get onDidChange() { 
-    return this.didChangeEmitter.event; 
+  get onDidChange() {
+    return this.didChangeEmitter.event;
   }
 
   update() {
@@ -268,7 +268,7 @@ module.exports = class KiteInstall {
         console.log('step changed, new:', step.name);
         this.update()
       });
-      
+
       setTimeout(() => {
         this.installFlow.start()
         .then(res => console.log(res))
@@ -288,7 +288,7 @@ module.exports = class KiteInstall {
         <div class="logo">${logo}</div>
         <div class="progress-indicators">
           <div class="download-kite ${state.download && !state.download.done ? '' : 'hidden'}">
-            <progress max='100' 
+            <progress max='100'
                       value="${state.download ? Math.round(state.download.ratio * 100) : 0}"></progress>
             <span>Downloading Kite</span>
           </div>
