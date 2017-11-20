@@ -1786,8 +1786,13 @@ form.password-less .has-password {
 .install .actions .secondary-cta {
   float: right;
   margin-top: 5px;
-}#view h4 {
+}
+
+#view h4 {
   text-transform: uppercase;
   color: var(--text-color-highlight);
+}
+
+.install .status {
   margin: 0 0 20px;
 }

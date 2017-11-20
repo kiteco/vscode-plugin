@@ -169,9 +169,20 @@ function installEndView(state) {
 }
 function installErrorView(state) {
   return `<div class="status">
-    <h4>${install.state.error.message}</h4>
-    <pre>${install.state.error.stack}</pre>
+    <h4>${getErrorMessage(state.error)}</h4>
+    <pre>${state.error.stack}</pre>
   </div>`;
+}
+
+function getErrorMessage(error) {
+  switch (error.message) {
+    case 'bad_state 2': 
+      return 'Kite is already installed';
+      case 'bad_state 3': 
+      return 'Kite is already running';
+    default: 
+      return error.message;
+  }
 }
 
 module.exports = class KiteInstall {
@@ -302,7 +313,7 @@ module.exports = class KiteInstall {
             <span class="inline-block">Starting Kite</span>
           </div>
         </div>
-        <div class="status ${state.error ? 'text-danger' : 'hidden'}">${state.error ? state.error.message : ''}</div>
+        <div class="status ${state.error ? 'text-danger' : 'hidden'}">${state.error ? getErrorMessage(state.error) : ''}</div>
       </header>
       <div class="content ${persistingView || (view === whitelistView && state.whitelist) ? 'disabled' : ''}">${view ? view(this.installFlow.state) : 'install'}</div>
     </div>`)
