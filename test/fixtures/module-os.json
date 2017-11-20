@@ -1,12 +1,12 @@
 {
   "part_of_syntax": "name",
   "symbol": {
-    "id": "",
+    "id": "python;os",
     "name": "os",
     "namespace": null,
     "value": [
       {
-        "id": "",
+        "id": "python;os",
         "kind": "module",
         "repr": "external:os",
         "type": "module",
