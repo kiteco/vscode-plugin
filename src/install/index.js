@@ -120,8 +120,9 @@ function whitelistView(state) {
   <p>
     You can restrict access to individual files or entire directories
     at any time. You can also remove unwanted data from the cloud freely.
-    <a href="http://help.kite.com/category/30-security-privacy" class="no-disable">Click here to learn more</a>
   </p>
+  
+  <p><strong><a href="http://help.kite.com/category/30-security-privacy" class="no-disable">Click here to learn more</a></strong></p>
 
   <form novalidate
         action="http://localhost:${server.PORT}/install/emit"
