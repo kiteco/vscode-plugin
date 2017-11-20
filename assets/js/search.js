@@ -16,6 +16,34 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     clearTimeout(historyTimeout);
     const text = input.value;
     
+    doSearch(text);
+  });
+
+  document.body.addEventListener('click', (e) => {
+    if (e.target.nodeName === 'LI') {
+      if (e.target.hasAttribute('data-id')) {
+        input.value = e.target.textContent.trim();
+        selectItem(e.target);
+      } else if (e.target.hasAttribute('data-search')) {
+        input.value = e.target.getAttribute('data-search');
+        doSearch(e.target.getAttribute('data-search'));
+      }
+    }
+  });
+
+  document.body.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp') {
+      selectPreviousItem();
+    } else if (e.key === 'ArrowDown') {
+      selectNextItem();
+    }
+  });
+
+  if (!document.querySelector('li')) {
+    clearSearch();
+  }
+
+  function doSearch(text) {
     startRecordMetric();
     results.classList.remove('has-results');
 
@@ -39,25 +67,6 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
         clearSearch();
       });
     }
-  });
-
-  document.body.addEventListener('click', (e) => {
-    if (e.target.nodeName === 'LI' && e.target.hasAttribute('data-id')) {
-      input.value = e.target.textContent.trim();
-      selectItem(e.target);
-    }
-  });
-
-  document.body.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowUp') {
-      selectPreviousItem();
-    } else if (e.key === 'ArrowDown') {
-      selectNextItem();
-    }
-  });
-
-  if (!document.querySelector('li')) {
-    clearSearch();
   }
   
   function clearSearch() {
@@ -66,7 +75,7 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     <h4>${searchHistory && searchHistory.length ? 'Search History' : 'Examples to get you started'}</h4>
     <ul class="history">${
       ((searchHistory && searchHistory.length) ? searchHistory : gettingStarted)
-      .map(i => `<li data-id="${i}">${i}</li>`)
+      .map(i => `<li data-search="${i}">${i}</li>`)
       .join('')
     }</ul>`;
   }
