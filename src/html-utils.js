@@ -270,7 +270,8 @@ function renderInstance(data) {
 }
 
 function renderDocs(data) {
-  const description = symbolDescription(data);
+  const description = stripBody(symbolDescription(data));
+
   return description && description.trim() !== '' 
     ? `<section class="summary collapsible collapse">
       <h4>Docs</h4>
@@ -280,7 +281,7 @@ function renderDocs(data) {
 }
 
 function stripBody(html) {
-  return (html || '').replace(/<body>/, '').replace(/<\/body>/, '');
+  return (html || '').replace(/<\/?body>/g, '');
 }
 
 function valueDescription(data) {
@@ -721,4 +722,6 @@ module.exports = {
   wrapHTML,
   debugHTML,
   prependNavigation,
+  stripBody,
+  stripLeadingSlash,
 };
