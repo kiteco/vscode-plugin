@@ -284,6 +284,10 @@ function stripBody(html) {
   return (html || '').replace(/<\/?body>/g, '');
 }
 
+function asArray(list) {
+  return [].slice.call(list);
+}
+
 function valueDescription(data) {
   const {value} = data;
 
@@ -724,4 +728,5 @@ module.exports = {
   prependNavigation,
   stripBody,
   stripLeadingSlash,
+  asArray,
 };
