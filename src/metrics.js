@@ -54,27 +54,26 @@ function featureFulfilled(name) {
   sendFeatureMetric(`atom_${name}_fulfilled`);
 }
 
-function track(event, props = {}) {
+function track(event, properties = {}) {
   const e = {
     event,
     userId: '0',
-    user_id: distinctID(),
-    sent_at: Math.floor(new Date().getTime() / 1000),
-    source: 'vscode',
+    properties
   };
-
-  for (const k in props) { e[k] = props[k]; }
-
+  
   Logger.debug('segment:', e);
-
+  
   if (process.env.NODE_ENV !== 'test') { ANALYTICS.track(e); }
 }
 
 function trackHealth(value) {
   track('kited_health', {
-    value,
+    user_id: distinctID(),
+    sent_at: Math.floor(new Date().getTime() / 1000),
+    source: 'vscode',
     os_name: getOsName(),
     plugin_version: kitePkg.version,
+    value,
   });
 }
 
