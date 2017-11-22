@@ -1,13 +1,15 @@
 const expect = require('expect.js');
-const {stripBody} = require('../src/html-utils');
+const {stripBody, asArray} = require('../src/html-utils');
 
-const textContent = selector => document.querySelector(selector).textContent.trim().replace(/\s+/g, ' ');
+const textContent = node => node.textContent.trim().replace(/\s+/g, ' ');
+const selectorContent = selector => textContent(document.querySelector(selector));
 
 module.exports.textContent = textContent;
+module.exports.selectorContent = selectorContent;
 
 module.exports.hasHeaderSection = (content) => {
   it('renders a symbol header', () => {
-    expect(textContent('.expand-header')).to.eql(content);
+    expect(selectorContent('.expand-header')).to.eql(content);
   });
 }
 
@@ -37,14 +39,40 @@ module.exports.hasDocsSection = (docs) => {
   });
 }
 
-module.exports.hasExamplesSection = (examples, id) => {
-  it(`renders a list of ${examples} examples`, () => {
+module.exports.hasExamplesSection = (count, id, examples) => {
+  it(`renders a list of ${count} examples`, () => {
     const section = document.querySelector('section.examples');
-    expect(section.querySelectorAll('li').length).to.eql(examples);
+    const lis =  section.querySelectorAll('li');
+    expect(lis.length).to.eql(count);
 
-    const link = section.querySelector('.more-examples')
+    asArray(lis).forEach((li, i) => {
+      expect(textContent(li)).to.eql(examples[i].title);
+    });
 
-    expect(link).not.to.be(null);
-    expect(link.href).to.eql(`command:kite.navigate?%22examples-list/${id}%22`);
+    if (examples.length > count) {
+      const link = section.querySelector('.more-examples');
+  
+      expect(link).not.to.be(null);
+      expect(link.href).to.eql(`command:kite.navigate?%22examples-list/${id}%22`);
+    }
+  });
+}
+
+module.exports.hasLinksSection = (count, id, links) => {
+  it(`renders a list of ${count} links`, () => {
+    const section = document.querySelector('section.links');
+    const lis = section.querySelectorAll('li');
+    expect(lis.length).to.eql(count);
+
+    asArray(lis).forEach((li, i) => {
+      expect(textContent(li)).to.eql(links[i].title);
+    });
+
+    if (links.length > count) {
+      const link = section.querySelector('.more-links');
+  
+      expect(link).not.to.be(null);
+      expect(link.href).to.eql(`command:kite.navigate?%22links-list/${id}%22`);
+    }
   });
 }
