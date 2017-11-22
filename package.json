@@ -83,6 +83,7 @@
     "test": "node ./node_modules/vscode/bin/test"
   },
   "dependencies": {
+    "analytics-node": "^3.1.1",
     "atob": "^2.0.3",
     "formidable": "^1.1.1",
     "kite-installer": "^0.23.0",

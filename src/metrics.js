@@ -2,22 +2,21 @@
 
 const os = require('os');
 const vscode = require('vscode');
-const mixpanel = require('mixpanel');
 const crypto = require('crypto');
 const {Logger} = require('kite-installer');
 const kitePkg = require('../package.json');
 const localconfig = require('./localconfig.js');
 const {metricsCounterPath} = require('./urls');
-
-const MIXPANEL_TOKEN = 'fb6b9b336122a8b29c60f4c28dab6d03';
+const Segment = require('analytics-node');
 
 const OS_VERSION = os.type() + ' ' + os.release();
 
-const client = mixpanel.init(MIXPANEL_TOKEN, {
-  protocol: 'https',
-});
-
 const EDITOR_UUID = vscode.env.machineId;
+
+const ANALYTICS = new Segment(
+  process.env.NODE_ENV === 'development'
+  ? 'tlsFlkyXKAyTtbIYMsx8slXJxDQv8Izn'
+  : 'qVSY2vJjokB4bKys6A8ypGQZUTQoXFop');
 
 let Kite;
 
@@ -30,24 +29,6 @@ function distinctID() {
     localconfig.set('distinctID', id);
   }
   return id;
-}
-
-// Send an event to mixpanel
-function track(eventName, properties) {
-  eventName = `vscode - ${eventName}`;
-
-  var eventData = {
-    distinct_id: distinctID(),
-    editor_uuid: EDITOR_UUID,
-    editor: 'vscode',
-    kite_plugin_version: kitePkg.version,
-    os: OS_VERSION,
-  };
-  for (var key in properties || {}) {
-    eventData[key] = properties[key];
-  }
-  Logger.debug('mixpanel:', eventName, eventData);
-  client.track(eventName, eventData);
 }
 
 function sendFeatureMetric(name) {
@@ -68,15 +49,48 @@ function sendFeatureMetric(name) {
 function featureRequested(name) {
   sendFeatureMetric(`atom_${name}_requested`);
 }
+
 function featureFulfilled(name) {
   sendFeatureMetric(`atom_${name}_fulfilled`);
 }
 
+function track(event, props = {}) {
+  const e = {
+    event,
+    userId: '0',
+    user_id: distinctID(),
+    sent_at: Math.floor(new Date().getTime() / 1000),
+    source: 'vscode',
+  };
+
+  for (const k in props) { e[k] = props[k]; }
+
+  Logger.debug('segment:', e);
+
+  if (process.env.NODE_ENV !== 'test') { ANALYTICS.track(e); }
+}
+
+function trackHealth(value) {
+  track('kited_health', {
+    value,
+    os_name: getOsName(),
+    plugin_version: kitePkg.version,
+  });
+}
+
+function getOsName() {
+  switch (os.platform()) {
+    case 'darwin': return 'macos';
+    case 'win32': return 'windows';
+    default: return '';
+  }
+}
+
 module.exports = {
-  track,
   distinctID,
   EDITOR_UUID,
   OS_VERSION,
   featureRequested,
   featureFulfilled,
+  track: trackHealth,
 };
