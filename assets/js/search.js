@@ -47,13 +47,16 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     startRecordMetric();
     results.classList.remove('has-results');
 
+    console.log('stack search for', text);
+
     if (text.trim() !== '') {
       stack = stack
       .then(() => request('GET', `http://localhost:${window.PORT}/search?text=${text}`))
       .then(res => {
         resultsList.innerHTML = res;
+        console.log('got results for', text);
         if (resultsList.childNodes.length > 0) {
-          selectNextItem();
+          return selectNextItem();
         } else {
           resultsList.innerHTML = '<p class="no-results">No results available</p>'
           view.innerHTML = '';
@@ -64,6 +67,7 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
       });
     } else {
       stack = stack.then(() => {
+        console.log('clearing search');
         clearSearch();
       });
     }
@@ -99,9 +103,9 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     if (resultsList.childNodes.length === 0) { return; }
 
     if (selectedItem && selectedItem.nextSibling) {
-      selectItem(selectedItem.nextSibling);
+      return selectItem(selectedItem.nextSibling);
     } else {
-      selectItem(resultsList.firstChild);
+      return selectItem(resultsList.firstChild);
     }
   }
 
@@ -109,9 +113,9 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     if (resultsList.childNodes.length === 0) { return; }
 
     if (selectedItem && selectedItem.previousSibling) {
-      selectItem(selectedItem.previousSibling);
+      return selectItem(selectedItem.previousSibling);
     } else {
-      selectItem(resultsList.lastChild);
+      return selectItem(resultsList.lastChild);
     }
   }
 
@@ -119,15 +123,17 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     selectedItem && selectedItem.classList.remove('selected');
     selectedItem = item;
     selectedItem.classList.add('selected');
-    loadItem(item.getAttribute('data-id'));
-    scrollTo(item);
+    return loadItem(item.getAttribute('data-id'))
+    .then(() => {
+      scrollTo(item);
+    });
   }
 
   function loadItem(id) {
     clearTimeout(historyTimeout);
 
     view.style.display = '';
-    request('GET', `http://localhost:${window.PORT}/view?id=${id}`).then(html => {
+    return request('GET', `http://localhost:${window.PORT}/view?id=${id}`).then(html => {
       if (html.trim() !== '') {
         view.innerHTML = html;
         initItemContent();
