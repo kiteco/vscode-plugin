@@ -75,14 +75,25 @@ function debugHTML (html) {
   return html;
 }
 
-function wrapHTML (html) {
-  html = html
+function handleInternalLinks(html) {
+  return html
   .replace(/<a class="internal_link" href="#([^"]+)"/g, 
-           `<a class="internal_link" href='command:kite.navigate?"link/python;$1"'`)
+  `<a class="internal_link" href='command:kite.navigate?"link/python;$1"'`)
   .replace(/<a href="#([^"]+)" class="internal_link"/g, 
-           `<a href='command:kite.navigate?"link/python;$1"' class="internal_link"`);
+    `<a href='command:kite.navigate?"link/python;$1"' class="internal_link"`);
+} 
+
+function wrapHTML (html) {
   return `
   <style>
+    html {
+      font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
+    }
+    
+    pre, code, .code {
+      font-family: ${vscode.workspace.getConfiguration('editor').get('fontFamily')};
+      font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
+    }
     .icon-kite-gift::before {
       content: '';
       display: inline-block;
@@ -100,7 +111,7 @@ function wrapHTML (html) {
     window.PORT = ${server.PORT};
   </script>
   ${SCRIPTS}
-  <div class="kite platform-${os.platform()}">${html}</div>`
+  <div class="kite platform-${os.platform()}">${handleInternalLinks(html)}</div>`
 }
 
 function prependNavigation(html, steps, step) {
@@ -186,6 +197,7 @@ function renderModule(data) {
   </div>
 
   <footer>
+    <div class="actions"></div>
     ${!idIsEmpty(symbol.id) 
       ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
             class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
@@ -218,6 +230,7 @@ function renderFunction(data) {
   </div>
 
   <footer>
+    <div class="actions"></div>
     ${!idIsEmpty(symbol.id) 
       ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
             class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
@@ -246,6 +259,7 @@ function renderInstance(data) {
   </div>
 
   <footer>
+    <div class="actions"></div>
     ${!idIsEmpty(symbol.id) 
       ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
             class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
@@ -579,7 +593,7 @@ function renderMember(member) {
 
     return `<li data-name="${member.name}">
     <div class="split-line">
-    <span class="name">${label}</span>
+    <span class="name code">${label}</span>
     <span class="type">${type}</span>
     </div>
     ${description}
@@ -655,7 +669,7 @@ function renderParameter(param, prefix = '') {
   return !param
     ? ''
     : `<dt class="split-line">
-      <span class="name">${parameterName(param, prefix)}${parameterDefault(param)}</span>
+      <span class="name code">${parameterName(param, prefix)}${parameterDefault(param)}</span>
       <span class="type">${parameterTypeLink(param)}</span>
     </dt>
     <dd>${param.synopsis}</dd>
@@ -664,8 +678,8 @@ function renderParameter(param, prefix = '') {
 
 function renderInvocations(symbol) {
   return '';
-//   return section('Invocations', `<pre><code>Counter.increment(10)
-// Counter.increment(10, foo='bar')</code></pre>`);
+  //   return section('Invocations', `<pre><code>Counter.increment(10)
+  // Counter.increment(10, foo='bar')</code></pre>`);
 }
 
 module.exports = {
@@ -677,6 +691,7 @@ module.exports = {
   proLogoSvg,
   pluralize,
   proFeatures,
+  handleInternalLinks,
   renderDefinition,
   renderExample,
   renderExamples,

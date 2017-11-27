@@ -16,6 +16,7 @@ const KiteStatus = require('./status');
 const KiteTour = require('./tour');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
+const localconfig = require('./localconfig');
 const metrics = require('./metrics');
 const Plan = require('./plan');
 const server = require('./server');
@@ -124,7 +125,6 @@ const Kite = {
         }
         if (this.isGrammarSupported(e)) { this.registerEditor(e); }
   
-  
         const evt = this.eventsByEditor.get(e);
         evt.focus();
       }
@@ -133,12 +133,15 @@ const Kite = {
     ctx.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(e => {
       const evt = this.eventsByEditor.get(e.textEditor);
       evt.selectionChanged();
+      this.setStatusBarLabel();
     }));
 
     ctx.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
       e.document && editorsForDocument(e.document).forEach(e => {
         const evt = this.eventsByEditor.get(e);
+        const ke = this.kiteEditorByEditor.get(e);
         evt.edit();
+        ke.tokensList.updateTokens();
       })
     }));
 
@@ -165,6 +168,10 @@ const Kite = {
     vscode.commands.registerCommand('kite.search', () => {
       search.clearCache();
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-search://search', vscode.ViewColumn.Two, 'Kite Search');
+    }); 
+    
+    vscode.commands.registerCommand('kite.reset-search-history', () => {
+      localconfig.set('searchHistory', []);
     }); 
     
     vscode.commands.registerCommand('kite.login', () => {
@@ -255,6 +262,32 @@ const Kite = {
           new vscode.Position(line - 1, 100)
         ));
       })
+    });
+
+    vscode.commands.registerCommand('kite.help', () => {
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.One, 'Kite Tour');
+    });
+    
+    vscode.commands.registerCommand('kite.docs-for-cursor', () => {
+      const editor = vscode.window.activeTextEditor;
+
+      if (editor && this.isGrammarSupported(editor)) {
+        const kiteEditor = this.kiteEditorByEditor.get(editor);
+        const pos = editor.selection.active;
+        const {document} = editor;
+
+        const token = kiteEditor.tokensList.tokenAtPosition(pos);
+
+        if (token) {
+          vscode.commands.executeCommand('kite.more-range', {
+            range: new vscode.Range(
+              document.positionAt(token.begin_bytes),
+              document.positionAt(token.end_bytes)
+            ),
+            source: 'Command',
+          });
+        }
+      }
     });
 
     vscode.commands.registerCommand('kite.usage', ({file, line, source}) => {
@@ -457,103 +490,125 @@ const Kite = {
     }
   },
 
-  setStatus(state, document) {
+  setStatusBarLabel() {
+    const state = this.lastState;
+    const status = this.lastStatus;
+
+    let plan, statusLabel;
+    
+    if (Plan.isActivePro()) {
+      let trialSuffix = '';
+
+      if (Plan.isTrialing()) {
+        const days = Plan.remainingTrialDays();
+        trialSuffix = [
+          ' Trial:',
+          days,
+          pluralize(days, 'day', 'days'),
+          'left',
+        ].join(' ');
+      }
+
+      plan = `$(primitive-dot) Kite Pro${trialSuffix}`;
+    } else if (Plan.isEnterprise()) {
+      plan = `$(primitive-dot) Kite Enterprise`;
+    } else if (Plan.plan) {
+      plan = '$(primitive-dot) Kite Basic';
+    } else {
+      plan = '$(primitive-dot) Kite';
+    }
+    
+    if (state === StateController.STATES.INSTALLED) {
+      statusLabel = 'not running';
+    } else if (state === StateController.STATES.REACHABLE) {
+      statusLabel = 'not logged in';
+    } else if(!Plan.isEnterprise() && !Plan.isTrialing()) {
+      switch(status.status) {
+        case 'indexing':
+          statusLabel = 'indexing';
+          break;
+        case 'syncing':
+          statusLabel = 'syncing';
+          break;
+        case 'not whitelisted':
+        case 'blacklisted':
+        case 'ignored':
+        default: 
+          const editor = vscode.window.activeTextEditor;
+          if (editor) {
+            const ke = this.kiteEditorByEditor.get(editor);
+            if (ke) {
+              const token = ke.tokensList.tokenAtPosition(editor.selection.active);
+              if (token) {
+                statusLabel = 'Docs available';
+              }
+            }
+          } 
+          if (!statusLabel) {
+            statusLabel ='ready';
+          }
+
+          break;
+      }
+    } else {
+      statusLabel = null;
+    }
+
+    this.statusBarItem.text = compact([plan, statusLabel]).join(': ')
+    
+    switch (state) {
+      case StateController.STATES.UNSUPPORTED:
+        this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
+        this.statusBarItem.color = ERROR_COLOR;
+        break;
+      case StateController.STATES.UNINSTALLED:
+        this.statusBarItem.tooltip = 'Kite engine is not installed';
+        this.statusBarItem.color = ERROR_COLOR;
+        break;
+      case StateController.STATES.INSTALLED:
+        this.statusBarItem.tooltip = 'Kite engine is not running';
+        this.statusBarItem.color = ERROR_COLOR;
+        break;
+      case StateController.STATES.RUNNING:
+        this.statusBarItem.tooltip = 'Kite engine is not reachable';
+        this.statusBarItem.color = ERROR_COLOR;
+        break;
+      case StateController.STATES.REACHABLE:
+        this.statusBarItem.color = WARNING_COLOR;
+        break;
+      default: 
+        switch(status.status) {
+        case 'not whitelisted':
+          this.statusBarItem.color = WARNING_COLOR;
+          this.statusBarItem.tooltip = 'Current path is not whitelisted';
+          break;
+        case 'indexing':
+          this.statusBarItem.color = undefined;
+          this.statusBarItem.tooltip = 'Kite engine is indexing your code';
+          break;
+        case 'syncing':
+          this.statusBarItem.color = undefined;
+          this.statusBarItem.tooltip = 'Kite engine is syncing your code';
+          break;
+        case 'blacklisted': 
+        case 'ignored': 
+          this.statusBarItem.color = undefined;
+          this.statusBarItem.tooltip = 'Current path is ignored by Kite';
+          break;
+        case 'ready': 
+          this.statusBarItem.color = undefined;
+          this.statusBarItem.tooltip = 'Kite is ready';
+          break;
+        }
+    }
+  },
+
+  setStatus(state = this.lastState, document) {
+    this.lastState = state;
     this.status.update();
     this.getStatus(document).then(status => {
-      let plan, statusLabel;
-
-      if (Plan.isActivePro()) {
-        let trialSuffix = '';
-
-        if (Plan.isTrialing()) {
-          const days = Plan.remainingTrialDays();
-          trialSuffix = [
-            ' Trial:',
-            days,
-            pluralize(days, 'day', 'days'),
-            'left',
-          ].join(' ');
-        }
-
-        plan = `$(primitive-dot) Kite Pro${trialSuffix}`;
-      } else if (Plan.isEnterprise()) {
-        plan = `$(primitive-dot) Kite Enterprise`;
-      } else if (Plan.plan) {
-        plan = '$(primitive-dot) Kite Basic';
-      } else {
-        plan = '$(primitive-dot) Kite';
-      }
-      
-      if (state === StateController.STATES.INSTALLED) {
-        statusLabel = 'not running';
-      } else if (state === StateController.STATES.REACHABLE) {
-        statusLabel = 'not logged in';
-      } else if(!Plan.isEnterprise() && !Plan.isTrialing()) {
-        switch(status.status) {
-          case 'indexing':
-            statusLabel = 'indexing';
-            break;
-          case 'syncing':
-            statusLabel = 'syncing';
-            break;
-          case 'not whitelisted':
-          case 'blacklisted':
-          case 'ignored':
-          default: 
-            statusLabel ='ready';
-            break;
-        }
-      } else {
-        statusLabel = null;
-      }
-
-      this.statusBarItem.text = compact([plan, statusLabel]).join(': ')
-      
-      switch (state) {
-        case StateController.STATES.UNSUPPORTED:
-          this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
-          this.statusBarItem.color = ERROR_COLOR;
-          break;
-        case StateController.STATES.UNINSTALLED:
-          this.statusBarItem.tooltip = 'Kite engine is not installed';
-          this.statusBarItem.color = ERROR_COLOR;
-          break;
-        case StateController.STATES.INSTALLED:
-          this.statusBarItem.tooltip = 'Kite engine is not running';
-          this.statusBarItem.color = ERROR_COLOR;
-          break;
-        case StateController.STATES.RUNNING:
-          this.statusBarItem.tooltip = 'Kite engine is not reachable';
-          this.statusBarItem.color = ERROR_COLOR;
-          break;
-        case StateController.STATES.REACHABLE:
-          this.statusBarItem.color = WARNING_COLOR;
-          break;
-        default: 
-          switch(status.status) {
-          case 'not whitelisted':
-            this.statusBarItem.color = WARNING_COLOR;
-            this.statusBarItem.tooltip = 'Current path is not whitelisted';
-            break;
-          case 'indexing':
-            this.statusBarItem.color = undefined;
-            this.statusBarItem.tooltip = 'Kite engine is indexing your code';
-            break;
-          case 'syncing':
-            this.statusBarItem.color = undefined;
-            this.statusBarItem.tooltip = 'Kite engine is syncing your code';
-            break;
-          case 'blacklisted': 
-          case 'ignored': 
-            this.statusBarItem.color = undefined;
-            this.statusBarItem.tooltip = 'Current path is ignored by Kite';
-            break;
-          case 'ready': 
-            this.statusBarItem.color = undefined;
-            this.statusBarItem.tooltip = 'Kite is ready';
-            break;
-          }
-      }
+      this.lastStatus = status;
+      this.setStatusBarLabel();
     })
   },
 

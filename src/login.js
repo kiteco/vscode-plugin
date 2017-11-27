@@ -73,7 +73,7 @@ module.exports = class KiteLogin {
         </div>
         <div>
           <a class="reset-password pull-right has-password"
-             href="#">Reset Password</a>
+             href="https://kite.com/reset-password">Reset Password</a>
           <a class="signup pull-right"
              href="https://kite.com/">Signup</a>
           <button type="submit" class="primary has-password">Sign into Kite</button>

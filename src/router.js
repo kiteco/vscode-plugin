@@ -80,14 +80,16 @@ module.exports = class KiteRouter {
       ${html}
       <script>
         ${this.metricCode || ''}
-        const scrollContainer = document.querySelector('.sections-wrapper');
-        if (scrollContainer) {
-          const sticky = new StickyTitle(
-            document.querySelectorAll('h4'), 
-            scrollContainer
-          );
-        }
+        // const scrollContainer = document.querySelector('.sections-wrapper');
+        // if (scrollContainer) {
+        //   const sticky = new StickyTitle(
+        //     document.querySelectorAll('h4'), 
+        //     scrollContainer
+        //   );
+        // }
+        createJumpTo();
         handleExternalLinks();
+        handleCollapsibles();
       </script>`)
     .then(html => wrapHTML(html))
     .then(html => debugHTML(html))

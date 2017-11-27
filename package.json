@@ -18,19 +18,41 @@
     "commands": [
       {
         "command": "kite.search",
-        "title": "Kite Active Search"
+        "title": "Kite: Search"
+      },
+      {
+        "command": "kite.reset-search-history",
+        "title": "Kite: Reset Search History"
+      },
+      {
+        "command": "kite.status",
+        "title": "Kite: Status"
+      },
+      {
+        "command": "kite.help",
+        "title": "Kite: Help"
+      },
+      {
+        "command": "kite.docs-for-cursor",
+        "title": "Kite: Docs for cursor"
       },
       {
         "command": "kite.open-settings",
-        "title": "Open Kite Settings"
+        "title": "Kite: Settings"
       },
       {
         "command": "kite.open-permissions",
-        "title": "Open Kite Permissions"
+        "title": "Kite: Permissions"
       }
     ],
     "menus": {
       "editor/context": [
+        {
+          "command": "kite.docs-for-cursor"
+        },
+        {
+          "command": "kite.search"
+        },
         {
           "command": "kite.open-settings"
         },
