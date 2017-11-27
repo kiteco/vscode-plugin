@@ -86,6 +86,7 @@
     "analytics-node": "^3.1.1",
     "atob": "^2.0.3",
     "formidable": "^1.1.1",
+    "getmac": "^1.2.1",
     "kite-installer": "^0.23.0",
     "md5": "^2.2.0",
     "opn": "^1.0.0",

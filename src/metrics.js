@@ -20,6 +20,13 @@ const ANALYTICS = new Segment(
 
 let Kite;
 
+let macaddress;
+
+require('getmac').getMac((err, mac) => {
+  if (err) { throw err; }
+  macaddress = mac;
+});
+
 // Generate a unique ID for this user and save it for future use.
 function distinctID() {
   var id = localconfig.get('distinctID');
@@ -61,14 +68,14 @@ function track(event, properties = {}) {
     properties
   };
   
-  Logger.debug('segment:', e);
+  Logger.debug('segment:', e);)
   
-  if (process.env.NODE_ENV !== 'test') { ANALYTICS.track(e); }
+  if (process.env.NODE_ENV !== 'test' && macaddress) { ANALYTICS.track(e); }
 }
 
 function trackHealth(value) {
   track('kited_health', {
-    user_id: distinctID(),
+    user_id: macaddress,
     sent_at: Math.floor(new Date().getTime() / 1000),
     source: 'vscode',
     os_name: getOsName(),
