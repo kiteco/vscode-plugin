@@ -682,6 +682,11 @@ function withFakePlan(description, plan, block) {
   });
 }
 
+function log(v) {
+  console.log(v);
+  return v;
+}
+
 module.exports = {
   fakeProcesses, fakeRequestMethod, fakeResponse, fakeKiteInstallPaths,
 
@@ -700,5 +705,5 @@ module.exports = {
   withFakeServer, withRoutes, withPlan, withFakePlan,
   sleep, fixtureURI,
 
-  Kite,
+  Kite, log,
 };

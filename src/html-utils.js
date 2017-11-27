@@ -52,7 +52,7 @@ function proFeatures(message) {
 }
 
 function debugHTML (html) {
-  if (vscode.workspace.getConfiguration('kite').sidebarDebugMode) {
+  if (vscode.workspace.getConfiguration('kite').sidebarDebugMode && process.env.NODE_ENV !== 'test') {
     fs.writeFileSync(path.resolve(__dirname, '..', 'sample.html'), `
       <!doctype html>
       <html class="vscode-dark">
@@ -82,9 +82,16 @@ function handleInternalLinks(html) {
   `<a class="internal_link" href='command:kite.navigate?"link/python;$1"'`)
   .replace(/<a href="#([^"]+)" class="internal_link"/g, 
     `<a href='command:kite.navigate?"link/python;$1"' class="internal_link"`);
+<<<<<<< HEAD
 } 
 
 function wrapHTML (html) {
+=======
+}
+
+function wrapHTML (html) {
+  html = handleInternalLinks(html);
+>>>>>>> :construction: more test coverage
   return `
   <style>
     html {
@@ -282,6 +289,10 @@ function renderDocs(data) {
 
 function stripBody(html) {
   return (html || '').replace(/<\/?body>/g, '');
+}
+
+function stripTBody(html) {
+  return (html || '').replace(/<\/?tbody>/g, '');
 }
 
 function asArray(list) {
@@ -577,7 +588,6 @@ function renderKwargs(data) {
         ${
           detailGet(detail, 'kwarg_parameters')
           .map(p => renderParameter(p))
-          .map(p => `<dt>${p}</dt>`)
           .join('')
         }
       </dl></div>
@@ -729,4 +739,6 @@ module.exports = {
   stripBody,
   stripLeadingSlash,
   asArray,
+  handleInternalLinks,
+  stripTBody,
 };
