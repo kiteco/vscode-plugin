@@ -68,7 +68,7 @@ function track(event, properties = {}) {
     properties
   };
   
-  Logger.debug('segment:', e);)
+  Logger.debug('segment:', e);
   
   if (process.env.NODE_ENV !== 'test' && macaddress) { ANALYTICS.track(e); }
 }
