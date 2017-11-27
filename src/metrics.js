@@ -16,7 +16,7 @@ const EDITOR_UUID = vscode.env.machineId;
 const ANALYTICS = new Segment(
   process.env.NODE_ENV === 'development'
   ? 'tlsFlkyXKAyTtbIYMsx8slXJxDQv8Izn'
-  : 'qVSY2vJjokB4bKys6A8ypGQZUTQoXFop');
+  : 'hZHSUR8FABnNidGOa3WnYAtHyBBsaoGA');
 
 let Kite;
 
