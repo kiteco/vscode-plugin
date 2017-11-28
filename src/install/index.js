@@ -128,7 +128,7 @@ function whitelistView(state) {
         action="http://localhost:${server.PORT}/install/emit"
         method="POST">
     <input type="hidden" name="event"></input>
-    <div class="actions">
+    <div class="actions ${state.whitelist ? 'disabled' : ''}">
       <button class="btn btn-primary"
               onclick="document.querySelector('.content').classList.add('disabled'); return submitEvent('did-whitelist')">Enable access for ${state.path}</button>
       <a class="skip secondary-cta"
@@ -271,13 +271,11 @@ module.exports = class KiteInstall {
 
       this.installFlow = this.flow();
       this.installFlow.observeState(state => {
-        console.log(state);
         if (!state.download || state.download.done) {
           this.update();
         }
       });
       this.installFlow.onDidChangeCurrentStep(step => {
-        console.log('step changed, new:', step.name);
         this.update()
       });
 
@@ -290,7 +288,7 @@ module.exports = class KiteInstall {
     const view = this.installFlow.getCurrentStepView() || this.lastView;
     const {state} = this.installFlow;
 
-    const persistingView = view === this.lastView && !state.error;
+    const persistingView = view === this.lastView && !state.error && view !== whitelistView;
 
     this.lastView = view;
 
@@ -315,7 +313,7 @@ module.exports = class KiteInstall {
         </div>
         <div class="status ${state.error ? 'text-danger' : 'hidden'}">${state.error ? getErrorMessage(state.error) : ''}</div>
       </header>
-      <div class="content ${persistingView || (view === whitelistView && state.whitelist) ? 'disabled' : ''}">${view ? view(this.installFlow.state) : 'install'}</div>
+      <div class="content ${persistingView ? 'disabled' : ''}">${view ? view(this.installFlow.state) : 'install'}</div>
     </div>`)
     .then(html => wrapHTML(html))
     .then(html => debugHTML(html))
