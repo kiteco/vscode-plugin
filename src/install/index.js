@@ -6,7 +6,7 @@ const {workspace} = vscode;
 const formidable = require('formidable');
 const server = require('../server');
 const {wrapHTML, debugHTML, logo, spinner} = require('../html-utils');
-const {promisifyReadResponse} = require('../utils');
+
 const {
   install: {
     Authenticate,
@@ -26,6 +26,8 @@ const {
   }
 } =  require('kite-installer');
 const URI = 'kite-vscode-install://install';
+
+const screenshot = '';
 
 let instance;
 
@@ -146,11 +148,11 @@ function installEndView(state) {
       <h3>Welcome to Kite!</h3>
     </div>
     <div class="warning">
-      Kite is still indexing some of your Python code. You\’ll see your completions improve over the next few minutes.
+      Kite is still indexing some of your Python code. You’ll see your completions improve over the next few minutes.
     </div>
     <div class="description">
       <div class="content">
-        <p>You\'ll see Kite completions when writing Python in any Kite-enabled directory.</p>
+        <p>Kite is still indexing your Python code. You can start coding now and you’ll see your completions improve over the next few minutes.</p>
         <p><strong>Kite provides the best Python completions in the world.</strong></p>
         <ul>
           <li>1.5x more completions than local engine</li>
@@ -158,7 +160,7 @@ function installEndView(state) {
           <li>2x documentation coverage</li>
         </ul>
       </div>
-      <!--<div class="description-screenshot"><img src="$\{screenshot\}"></div>-->
+      <!--<div class="description-screenshot"><img src="${screenshot}"></div>-->
     </div>
     <p>
       Kite is under active development. Expect many new features
