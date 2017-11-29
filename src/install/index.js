@@ -201,6 +201,11 @@ module.exports = class KiteInstall {
   }
 
   dispose() {}
+  
+  reset() {
+    delete this.installFlow;
+    delete this.lastView;
+  }
 
   flow() {
     return new Install([

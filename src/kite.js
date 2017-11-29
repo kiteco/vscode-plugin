@@ -62,6 +62,7 @@ const Kite = {
     ctx.subscriptions.push(router);
     ctx.subscriptions.push(search);
     ctx.subscriptions.push(status);
+    ctx.subscriptions.push(install);
 
     this.status = status;
 
@@ -183,6 +184,7 @@ const Kite = {
     }); 
     
     vscode.commands.registerCommand('kite.install', () => {
+      install.reset();
       AccountManager.initClient('alpha.kite.com', -1, true);
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
     }); 
