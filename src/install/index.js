@@ -147,9 +147,6 @@ function installEndView(state) {
     <div class="welcome-title">
       <h3>Welcome to Kite!</h3>
     </div>
-    <div class="warning">
-      Kite is still indexing some of your Python code. You’ll see your completions improve over the next few minutes.
-    </div>
     <div class="description">
       <div class="content">
         <p>Kite is still indexing your Python code. You can start coding now and you’ll see your completions improve over the next few minutes.</p>
