@@ -65,6 +65,7 @@ const Kite = {
     ctx.subscriptions.push(install);
 
     this.status = status;
+    this.install = install;
 
     server.addRoute('GET', '/check', (req, res) => {
       this.checkState();
@@ -407,9 +408,12 @@ const Kite = {
         case StateController.STATES.UNINSTALLED:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           this.shown[state] = true;
-          this.showErrorMessage('Kite is not installed: Grab the installer from our website', 'Get Kite').then(item => {
-            if (item) { opn('https://kite.com/'); }
-          });
+          // this.showErrorMessage('Kite is not installed: Grab the installer from our website', 'Get Kite').then(item => {
+          //   if (item) { opn('https://kite.com/'); }
+          // });
+          this.install.reset();
+          AccountManager.initClient('alpha.kite.com', -1, true);
+          vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
           break;
         case StateController.STATES.INSTALLED:
           break;
