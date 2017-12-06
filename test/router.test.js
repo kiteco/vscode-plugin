@@ -8,7 +8,7 @@ const {
   hasArgumentsSection, hasUsagesSection,
 } = require('./section-helpers');
 
-describe.only('router', () => {
+describe('router', () => {
   jsdom();
 
   let router;
