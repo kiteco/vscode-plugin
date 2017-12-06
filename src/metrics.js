@@ -70,9 +70,11 @@ function track(event, properties = {}) {
     properties
   };
   
-  Logger.debug('segment:', e);
-  
-  if (process.env.NODE_ENV !== 'test' && macaddress) { ANALYTICS.track(e); }
+  if(process.env.NODE_ENV !== 'test') {
+    Logger.debug('segment:', e);
+    
+    if (macaddress) { ANALYTICS.track(e); }
+  }
 }
 
 function trackHealth(value) {

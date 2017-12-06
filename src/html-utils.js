@@ -88,13 +88,17 @@ function wrapHTML (html) {
   html = handleInternalLinks(html);
   return `
   <style>
-    html {
-      font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
-    }
-    
-    pre, code, .code {
-      font-family: ${vscode.workspace.getConfiguration('editor').get('fontFamily')};
-      font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
+    ${ 
+      process.env.NODE_ENV !== 'test'
+        ? `html {
+          font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
+        }
+        
+        pre, code, .code {
+          font-family: ${vscode.workspace.getConfiguration('editor').get('fontFamily')};
+          font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
+        }`
+        : ''
     }
     .icon-kite-gift::before {
       content: '';
