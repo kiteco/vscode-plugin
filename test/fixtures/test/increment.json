@@ -130,6 +130,10 @@
   ],
   "report": {
     "description_text": "Some description",
-    "description_html": "Some HTML description"
+    "description_html": "Some HTML description",
+    "definition": {
+      "filename": "sample.py",
+      "line": 50
+    }
   }
 }
