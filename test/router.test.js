@@ -1,7 +1,9 @@
+const expect = require('expect.js');
 const vscode = require('vscode');
 const jsdom = require('mocha-jsdom');
 const KiteRouter = require('../src/router');
 const {fixtureURI, withRoutes, withKiteWhitelistedPaths, fakeResponse, log} = require('./helpers');
+const {asArray} = require('../src/html-utils');
 
 const {
   hasMembersSection, hasDocsSection, hasHeaderSection, hasExamplesSection, hasLinksSection,
@@ -388,6 +390,46 @@ describe('router', () => {
         hasExamplesSection(2, source.symbol[0].id, source.report.examples);
         
         hasLinksSection(2, source.symbol[0].id, source.report.links);
+      });
+    });
+
+    describe('members-list route', () => {
+      const source = require(fixtureURI('module-os-members.json'));
+      
+      withRoutes([
+        [
+          o => /\/api\/editor\/value\//.test(o.path),
+          o => fakeResponse(200, JSON.stringify(source))
+        ]
+      ]);
+
+      beforeEach(() => {
+        router.registerNavigationStep(vscode.Uri.parse('kite-vscode-sidebar://members-list/python;foo'));
+        
+        return router.provideTextDocumentContent()
+        .then(html => document.body.innerHTML = html);
+      });
+
+      it('renders as many members as there is in the list', () => {
+        const lis = document.querySelectorAll('li');
+        expect(lis.length).to.eql(source.members.length);
+
+        asArray(lis).forEach((li, i) => {
+          const a = li.querySelector('a');
+
+          expect(a.href).to.eql(`command:kite.navigate?%22member/${source.members[i].id}%22`);
+          expect(li.querySelector('.type').textContent).to.eql(source.members[i].value[0].kind);
+
+          if (source.members[i].value[0].synopsis) {
+            expect(li.querySelector('p').textContent).to.eql(source.members[i].value[0].synopsis);
+          }
+
+          if (source.members[i].value[0].kind === 'function') {
+            expect(a.textContent).to.eql(`${source.members[i].name}()`);
+          } else {
+            expect(a.textContent).to.eql(source.members[i].name);
+          }
+        })
       });
     });
   });
