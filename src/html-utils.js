@@ -82,16 +82,10 @@ function handleInternalLinks(html) {
   `<a class="internal_link" href='command:kite.navigate?"link/python;$1"'`)
   .replace(/<a href="#([^"]+)" class="internal_link"/g, 
     `<a href='command:kite.navigate?"link/python;$1"' class="internal_link"`);
-<<<<<<< HEAD
-} 
-
-function wrapHTML (html) {
-=======
 }
 
 function wrapHTML (html) {
   html = handleInternalLinks(html);
->>>>>>> :construction: more test coverage
   return `
   <style>
     html {

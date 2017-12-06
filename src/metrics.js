@@ -38,28 +38,6 @@ function distinctID() {
   return id;
 }
 
-<<<<<<< HEAD
-=======
-// Send an event to mixpanel
-function track(eventName, properties) {
-  if (process.env.NODE_ENV === 'test') { return; }
-  eventName = `vscode - ${eventName}`;
-
-  var eventData = {
-    distinct_id: distinctID(),
-    editor_uuid: EDITOR_UUID,
-    editor: 'vscode',
-    kite_plugin_version: kitePkg.version,
-    os: OS_VERSION,
-  };
-  for (var key in properties || {}) {
-    eventData[key] = properties[key];
-  }
-  Logger.debug('mixpanel:', eventName, eventData);
-  client.track(eventName, eventData);
-}
-
->>>>>>> Suppress logging and metrics in tests
 function sendFeatureMetric(name) {
   if (process.env.NODE_ENV === 'test') { return; }
 
