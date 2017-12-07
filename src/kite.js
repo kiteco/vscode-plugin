@@ -12,6 +12,7 @@ const KiteDefinitionProvider = require('./definition');
 const KiteRouter = require('./router');
 const KiteSearch = require('./search');
 const KiteLogin = require('./login');
+const KiteInstall = require('./install');
 const KiteStatus = require('./status');
 const KiteTour = require('./tour');
 const KiteEditor = require('./kite-editor');
@@ -39,6 +40,7 @@ const Kite = {
     const router = new KiteRouter(Kite);
     const search = new KiteSearch(Kite);
     const login = new KiteLogin(Kite);
+    const install = new KiteInstall(Kite);
     const status = new KiteStatus(Kite);
     const tour = new KiteTour(Kite);
 
@@ -60,8 +62,10 @@ const Kite = {
     ctx.subscriptions.push(router);
     ctx.subscriptions.push(search);
     ctx.subscriptions.push(status);
+    ctx.subscriptions.push(install);
 
     this.status = status;
+    this.install = install;
 
     server.addRoute('GET', '/check', (req, res) => {
       this.checkState();
@@ -88,6 +92,8 @@ const Kite = {
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-search', search));
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-login', login));
+    ctx.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-install', install));
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
     ctx.subscriptions.push(
@@ -176,6 +182,12 @@ const Kite = {
     
     vscode.commands.registerCommand('kite.login', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+    }); 
+    
+    vscode.commands.registerCommand('kite.install', () => {
+      install.reset();
+      AccountManager.initClient('alpha.kite.com', -1, true);
+      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
     }); 
 
     vscode.commands.registerCommand('kite.open-settings', () => {
@@ -396,9 +408,12 @@ const Kite = {
         case StateController.STATES.UNINSTALLED:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           this.shown[state] = true;
-          this.showErrorMessage('Kite is not installed: Grab the installer from our website', 'Get Kite').then(item => {
-            if (item) { opn('https://kite.com/'); }
-          });
+          // this.showErrorMessage('Kite is not installed: Grab the installer from our website', 'Get Kite').then(item => {
+          //   if (item) { opn('https://kite.com/'); }
+          // });
+          this.install.reset();
+          AccountManager.initClient('alpha.kite.com', -1, true);
+          vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
           break;
         case StateController.STATES.INSTALLED:
           break;

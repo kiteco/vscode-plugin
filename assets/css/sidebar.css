@@ -7,6 +7,10 @@
     --font-size
 */
 
+* {
+  box-sizing: border-box;
+}
+
 .auto-cursor {
   cursor: default;
 }
@@ -1391,6 +1395,8 @@ form.password-less .has-password {
 
 .kite-status-panel .btn,
 .kite-status-panel a.btn,
+.install .btn,
+.install button,
 .login-form .btn,
 .login-form button {
   background-color: var(--open-web-link-background);
@@ -1406,6 +1412,7 @@ form.password-less .has-password {
 }
 
 .kite-status-panel .btn.primary,
+.install .btn.primary,
 .login-form .btn.primary,
 .login-form button.primary {
   background-color: var(--color-blue);
@@ -1417,6 +1424,7 @@ form.password-less .has-password {
 }
 
 .kite-status-panel .btn.warning,
+.install .btn.warning,
 .login-form .btn.warning,
 .login-form button.warning {
   background-color: var(--color-orange);
@@ -1428,6 +1436,7 @@ form.password-less .has-password {
 }
 
 .kite-status-panel .btn.error,
+.install .btn.error,
 .login-form .btn.error,
 .login-form button.error {
   background-color: var(--color-red);
@@ -1439,6 +1448,7 @@ form.password-less .has-password {
 }
 
 .kite-status-panel .btn.purple,
+.install .btn.purple,
 .login-form .btn.purple,
 .login-form button.purple {
   background-color: var(--color-purple);
@@ -1456,6 +1466,9 @@ form.password-less .has-password {
 .kite-status-panel a.btn[href]:hover,
 .kite-status-panel a.btn[href]:focus,
 .kite-status-panel a.btn[href]:active,
+.install a.btn[href]:hover,
+.install a.btn[href]:focus,
+.install a.btn[href]:active,
 .login-form a.btn[href]:hover,
 .login-form a.btn[href]:focus,
 .login-form a.btn[href]:active {
@@ -1701,8 +1714,85 @@ form.password-less .has-password {
   align-items: center;
 }
 
+.install {
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.install .logo {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.install input {
+  margin-bottom: 10px;
+}
+.install .secondary-actions {
+  float: right;
+}
+
+.secondary-actions * {
+  margin-left: 10px;
+}
+
+.install header {
+  height: 2em;
+  padding: 0 30px 0 0;
+}
+
+.install progress {
+  width: 100%;
+  height: 8px;
+  margin: 0;  
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+}
+
+.install progress::-webkit-progress-bar {
+  background: var(--examples-output-background);
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset
+}
+.install progress::-webkit-progress-value {
+  background: var(--color-blue);
+  border-radius: 4px;
+}
+
+.install .progress-indicators span {
+  font-size: 0.8em;
+}
+
+.install .progress-indicators svg path {
+  fill: var(--color-blue);
+}
+
+.install .content {
+  color: var(--text-color-highlight);
+}
+
+.install .disabled a:not(.no-disable), 
+.install .disabled button:not(.no-disable) {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.install .actions {
+  margin-top: 20px;
+}
+
+.install .actions .secondary-cta {
+  float: right;
+  margin-top: 5px;
+}
+
 #view h4 {
   text-transform: uppercase;
   color: var(--text-color-highlight);
+}
+
+.install .status {
   margin: 0 0 20px;
 }
