@@ -1,143 +1,143 @@
 {
-  "name": "kite",
-  "displayName": "kite",
-  "description": "Python programming copilot — Kite shows cloud-powered completions, documentation, and examples.",
-  "version": "0.0.1",
-  "publisher": "Kiteco",
-  "engines": {
-    "vscode": "^1.10.0"
-  },
-  "icon": "logo.png",
-  "galleryBanner": {
-    "color": "#363b44",
-    "theme": "light"
-  },
-  "author": {
-    "name": "Kite"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kiteco/vscode-plugin.git"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "*"
-  ],
-  "main": "./src/kite",
-  "contributes": {
-    "commands": [
-      {
-        "command": "kite.search",
-        "title": "Kite: Search"
-      },
-      {
-        "command": "kite.reset-search-history",
-        "title": "Kite: Reset Search History"
-      },
-      {
-        "command": "kite.status",
-        "title": "Kite: Status"
-      },
-      {
-        "command": "kite.help",
-        "title": "Kite: Help"
-      },
-      {
-        "command": "kite.docs-for-cursor",
-        "title": "Kite: Docs for cursor"
-      },
-      {
-        "command": "kite.install",
-        "title": "Kite Install"
-      },
-      {
-        "command": "kite.open-settings",
-        "title": "Kite: Settings"
-      },
-      {
-        "command": "kite.open-permissions",
-        "title": "Kite: Permissions"
-      }
-    ],
-    "menus": {
-      "editor/context": [
-        {
-          "command": "kite.docs-for-cursor"
-        },
-        {
-          "command": "kite.search"
-        },
-        {
-          "command": "kite.open-settings"
-        },
-        {
-          "command": "kite.open-permissions"
-        }
-      ]
+    "name": "kite",
+    "displayName": "kite",
+    "description": "Python programming copilot — Kite shows cloud-powered completions, documentation, and examples.",
+    "version": "0.0.1",
+    "publisher": "kite",
+    "engines": {
+        "vscode": "^1.10.0"
     },
-    "configuration": {
-      "type": "object",
-      "title": "Kite Configuration",
-      "properties": {
-        "kite.showTourOnStartup": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether to show the Kite tour on startup or not."
+    "icon": "logo.png",
+    "galleryBanner": {
+        "color": "#363b44",
+        "theme": "light"
+    },
+    "author": {
+        "name": "Kite"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kiteco/vscode-plugin.git"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./src/kite",
+    "contributes": {
+        "commands": [
+            {
+                "command": "kite.search",
+                "title": "Kite: Search"
+            },
+            {
+                "command": "kite.reset-search-history",
+                "title": "Kite: Reset Search History"
+            },
+            {
+                "command": "kite.status",
+                "title": "Kite: Status"
+            },
+            {
+                "command": "kite.help",
+                "title": "Kite: Help"
+            },
+            {
+                "command": "kite.docs-for-cursor",
+                "title": "Kite: Docs for cursor"
+            },
+            {
+                "command": "kite.install",
+                "title": "Kite Install"
+            },
+            {
+                "command": "kite.open-settings",
+                "title": "Kite: Settings"
+            },
+            {
+                "command": "kite.open-permissions",
+                "title": "Kite: Permissions"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "kite.docs-for-cursor"
+                },
+                {
+                    "command": "kite.search"
+                },
+                {
+                    "command": "kite.open-settings"
+                },
+                {
+                    "command": "kite.open-permissions"
+                }
+            ]
         },
-        "kite.pollingInterval": {
-          "type": "integer",
-          "default": 5000
-        },
-        "kite.sidebarDebugMode": {
-          "type": "boolean",
-          "default": false,
-          "description": "When enabled, each time a view is rendered in the kite sidebar the sample.html file will be updated with the sidebar content. It allows for quick inspection in a real browser."
-        },
-        "kite.developerMode": {
-          "type": "boolean",
-          "default": false,
-          "description": "Displays JSON data used by a view"
-        },
-        "kite.loggingLevel": {
-          "type": "string",
-          "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
-          "description": "The verbosity level of Kite's logs."
+        "configuration": {
+            "type": "object",
+            "title": "Kite Configuration",
+            "properties": {
+                "kite.showTourOnStartup": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to show the Kite tour on startup or not."
+                },
+                "kite.pollingInterval": {
+                    "type": "integer",
+                    "default": 5000
+                },
+                "kite.sidebarDebugMode": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When enabled, each time a view is rendered in the kite sidebar the sample.html file will be updated with the sidebar content. It allows for quick inspection in a real browser."
+                },
+                "kite.developerMode": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Displays JSON data used by a view"
+                },
+                "kite.loggingLevel": {
+                    "type": "string",
+                    "default": "info",
+                    "enum": [
+                        "silly",
+                        "verbose",
+                        "debug",
+                        "info",
+                        "warning",
+                        "error"
+                    ],
+                    "description": "The verbosity level of Kite's logs."
+                }
+            }
         }
-      }
+    },
+    "scripts": {
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test"
+    },
+    "dependencies": {
+        "analytics-node": "^3.1.1",
+        "atob": "^2.0.3",
+        "formidable": "^1.1.1",
+        "getmac": "^1.2.1",
+        "kite-installer": "^1.0.0",
+        "md5": "^2.2.0",
+        "opn": "^1.0.0",
+        "rollbar": "*"
+    },
+    "devDependencies": {
+        "@types/mocha": "^2.2.32",
+        "@types/node": "^6.0.40",
+        "eslint": "^3.6.0",
+        "expect.js": "^0.3.1",
+        "mocha": "^2.3.3",
+        "sinon": "^2.3.5",
+        "typescript": "^2.0.3",
+        "vscode": "^1.0.0"
     }
-  },
-  "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test"
-  },
-  "dependencies": {
-    "analytics-node": "^3.1.1",
-    "atob": "^2.0.3",
-    "formidable": "^1.1.1",
-    "getmac": "^1.2.1",
-    "kite-installer": "^1.0.0",
-    "md5": "^2.2.0",
-    "opn": "^1.0.0",
-    "rollbar": "*"
-  },
-  "devDependencies": {
-    "@types/mocha": "^2.2.32",
-    "@types/node": "^6.0.40",
-    "eslint": "^3.6.0",
-    "expect.js": "^0.3.1",
-    "mocha": "^2.3.3",
-    "sinon": "^2.3.5",
-    "typescript": "^2.0.3",
-    "vscode": "^1.0.0"
-  }
 }
