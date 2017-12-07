@@ -1,11 +1,23 @@
 {
   "name": "kite",
   "displayName": "kite",
-  "description": "kite integration",
+  "description": "Python programming copilot — Kite shows cloud-powered completions, documentation, and examples.",
   "version": "0.0.1",
   "publisher": "Kiteco",
   "engines": {
     "vscode": "^1.10.0"
+  },
+  "icon": "logo.png",
+  "galleryBanner": {
+    "color": "#363b44",
+    "theme": "light"
+  },
+  "author": {
+    "name": "Kite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kiteco/vscode-plugin.git"
   },
   "categories": [
     "Other"
