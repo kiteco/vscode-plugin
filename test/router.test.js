@@ -432,5 +432,65 @@ describe('router', () => {
         })
       });
     });
+
+    describe('examples-list route', () => {
+      const source = require(fixtureURI('module-os-value.json'));
+      
+      withRoutes([
+        [
+          o => /\/api\/editor\/value\//.test(o.path),
+          o => fakeResponse(200, JSON.stringify(source))
+        ]
+      ]);
+
+      beforeEach(() => {
+        router.registerNavigationStep(vscode.Uri.parse('kite-vscode-sidebar://examples-list/python;foo'));
+        
+        return router.provideTextDocumentContent()
+        .then(html => document.body.innerHTML = html);
+      });
+
+      it('renders as many examples as there is in the list', () => {
+        const lis = document.querySelectorAll('li');
+        expect(lis.length).to.eql(source.report.examples.length);
+
+        asArray(lis).forEach((li, i) => {
+          const a = li.querySelector('a');
+
+          expect(a.href).to.eql(`command:kite.navigate?%22example/${source.report.examples[i].id}%22`);
+          expect(a.textContent.trim()).to.eql(source.report.examples[i].title);
+        })
+      });
+    });
+
+    describe('links-list route', () => {
+      const source = require(fixtureURI('module-os-value.json'));
+      
+      withRoutes([
+        [
+          o => /\/api\/editor\/value\//.test(o.path),
+          o => fakeResponse(200, JSON.stringify(source))
+        ]
+      ]);
+
+      beforeEach(() => {
+        router.registerNavigationStep(vscode.Uri.parse('kite-vscode-sidebar://links-list/python;foo'));
+        
+        return router.provideTextDocumentContent()
+        .then(html => document.body.innerHTML = html);
+      });
+
+      it('renders as many examples as there is in the list', () => {
+        const lis = document.querySelectorAll('li');
+        expect(lis.length).to.eql(source.report.links.length);
+
+        asArray(lis).forEach((li, i) => {
+          const a = li.querySelector('a');
+
+          expect(a.href).to.eql(source.report.links[i].url);
+          expect(a.textContent.trim()).to.eql(source.report.links[i].title);
+        })
+      });
+    });
   });
 });
