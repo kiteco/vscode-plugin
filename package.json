@@ -10,7 +10,7 @@
     "icon": "logo.png",
     "galleryBanner": {
         "color": "#363b44",
-        "theme": "light"
+        "theme": "dark"
     },
     "author": {
         "name": "Kite"
