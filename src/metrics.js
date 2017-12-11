@@ -98,5 +98,6 @@ module.exports = {
   OS_VERSION,
   featureRequested,
   featureFulfilled,
-  track: trackHealth,
+  trackHealth,
+  track: () => {}
 };
