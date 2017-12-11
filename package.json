@@ -3,7 +3,7 @@
     "displayName": "kite",
     "description": "Python programming copilot — Kite shows cloud-powered completions, documentation, and examples.",
     "version": "0.0.1",
-    "publisher": "kite",
+    "publisher": "kiteco",
     "engines": {
         "vscode": "^1.10.0"
     },
