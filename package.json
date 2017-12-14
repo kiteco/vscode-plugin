@@ -9,8 +9,8 @@
     },
     "icon": "logo.png",
     "galleryBanner": {
-        "color": "#363b44",
-        "theme": "dark"
+        "color": "#ffffff",
+        "theme": "light"
     },
     "author": {
         "name": "Kite"
