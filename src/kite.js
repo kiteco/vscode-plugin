@@ -524,11 +524,11 @@ const Kite = {
         ].join(' ');
       }
 
-      plan = `$(primitive-dot) Kite Pro${trialSuffix}`;
+      plan = `$(primitive-dot) Kite ${trialSuffix}`;
     } else if (Plan.isEnterprise()) {
-      plan = `$(primitive-dot) Kite Enterprise`;
+      plan = `$(primitive-dot) Kite`;
     } else if (Plan.plan) {
-      plan = '$(primitive-dot) Kite Basic';
+      plan = '$(primitive-dot) Kite';
     } else {
       plan = '$(primitive-dot) Kite';
     }
@@ -555,7 +555,7 @@ const Kite = {
             if (ke) {
               const token = ke.tokensList.tokenAtPosition(editor.selection.active);
               if (token) {
-                statusLabel = 'Docs available';
+                statusLabel = 'Docs available at cursor';
               }
             }
           } 

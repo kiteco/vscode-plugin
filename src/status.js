@@ -168,16 +168,23 @@ module.exports = class KiteStatus {
     let giftLink = '';
 
     if (!Plan.isEnterprise()) {
-      if (Plan.referralsCredited() < Plan.referralsCredits()) {
-        giftLink = `<li>
-          <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
-             class="kite-gift account-dependent">Get free Pro! <i class="icon-kite-gift"></i></a>
-        </li>`;
-      } else {
+      if (Plan.isPro()) {
         giftLink = `<li>
           <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
              class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
         </li>`;
+      } else {
+        if (Plan.referralsCredited() < Plan.referralsCredits()) {
+          giftLink = `<li>
+            <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
+               class="kite-gift account-dependent">Get free Pro! <i class="icon-kite-gift"></i></a>
+          </li>`;
+        } else {
+          giftLink = `<li>
+            <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
+               class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
+          </li>`;
+        }
       }
     }
 
