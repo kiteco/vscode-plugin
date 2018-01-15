@@ -5,9 +5,11 @@ const path = require('path');
 const http = require('http');
 const proc = require('child_process');
 const sinon = require('sinon');
-const {StateController} = require('kite-installer');
+const {StateController, Logger} = require('kite-installer');
 const Plan = require('../src/plan');
 const {merge, promisifyRequest, promisifyReadResponse} = require('../src/utils');
+
+Logger.LEVEL = Logger.LEVELS.ERROR;
 
 const Kite = {
   request(req, data) {
