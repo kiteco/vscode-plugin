@@ -149,6 +149,7 @@
         "mocha-jsdom": "^1.1.0",
         "sinon": "^2.3.5",
         "typescript": "^2.0.3",
-        "vscode": "^1.0.0"
+        "vscode": "^1.0.0",
+        "widjet-test-utils": "^1.8.0"
     }
 }
