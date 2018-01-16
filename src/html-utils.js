@@ -538,7 +538,7 @@ function renderPatterns(data, title='Popular Patterns') {
           }</div>
         </section>`
       : `<section class="patterns">
-          <h4>Popular Patterns</h4>
+          <h4>${title}</h4>
           <div class="section-content">
           ${proFeatures(
             `To see ${detail.signatures.length} ${
