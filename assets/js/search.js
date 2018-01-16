@@ -47,14 +47,11 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     startRecordMetric();
     results.classList.remove('has-results');
 
-    console.log('stack search for', text);
-
     if (text.trim() !== '') {
       stack = stack
       .then(() => request('GET', `http://localhost:${window.PORT}/search?text=${text}`))
       .then(res => {
         resultsList.innerHTML = res;
-        console.log('got results for', text);
         if (resultsList.childNodes.length > 0) {
           return selectNextItem();
         } else {
@@ -67,7 +64,6 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
       });
     } else {
       stack = stack.then(() => {
-        console.log('clearing search');
         clearSearch();
       });
     }
@@ -154,9 +150,9 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     //     document.querySelector('.sections-wrapper')
     //   );
     // }
-    createJumpTo();
-    handleExternalLinks();
-    handleCollapsibles();
+    window.createJumpTo();
+    window.handleExternalLinks();
+    window.handleCollapsibles();
   }
 
   function scrollTo(target) {
