@@ -323,6 +323,18 @@ const Kite = {
       config.update('showTourOnStartup', false, true);
     }
 
+    if (config.editorMetricsEnabled === 'undefined') {
+      vscode.window.showInformationMessage(
+        `Allow Kite to send information to our servers about the status of the Kite application`,
+        `Yes`,
+        `No`
+      ).then(item => {
+        if (item) {
+          config.update('editorMetricsEnabled', item.toLowerCase(), true);
+        }
+      });
+    }
+
     setTimeout(() => {
       vscode.window.visibleTextEditors.forEach(e => {
         this.registerEvents(e);

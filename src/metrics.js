@@ -74,14 +74,16 @@ function track(event, properties = {}) {
 }
 
 function trackHealth(value) {
-  track('kited_health', {
-    user_id: macaddress,
-    sent_at: Math.floor(new Date().getTime() / 1000),
-    source: 'vscode',
-    os_name: getOsName(),
-    plugin_version: kitePkg.version,
-    value,
-  });
+  if (vscode.workspace.getConfiguration('kite').editorMetricsEnabled === 'yes') {
+    track('kited_health', {
+      user_id: macaddress,
+      sent_at: Math.floor(new Date().getTime() / 1000),
+      source: 'vscode',
+      os_name: getOsName(),
+      plugin_version: kitePkg.version,
+      value,
+    });
+  }
 }
 
 function getOsName() {

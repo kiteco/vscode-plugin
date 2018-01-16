@@ -90,6 +90,15 @@
                     "type": "integer",
                     "default": 5000
                 },
+                "kite.editorMetricsEnabled": {
+                    "type": "string",
+                    "default": "undefined",
+                    "enum": [
+                        "undefined",
+                        "no",
+                        "yes"
+                    ]
+                },
                 "kite.sidebarDebugMode": {
                     "type": "boolean",
                     "default": false,
