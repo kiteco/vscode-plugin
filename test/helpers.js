@@ -64,6 +64,15 @@ function sleep(duration) {
   return waitsFor(`${duration}ms`, () => { return new Date() - t > duration; });
 }
 
+function delay(duration, block) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      block();
+      resolve();
+    }, duration);
+  });
+}
+
 function fakeStdStream() {
   let streamCallback;
   function stream(data) {
@@ -705,7 +714,7 @@ module.exports = {
   withKiteAuthenticated, withKiteNotAuthenticated,
   withKiteWhitelistedPaths, withKiteBlacklistedPaths, withKiteIgnoredPaths,
   withFakeServer, withRoutes, withPlan, withFakePlan,
-  sleep, fixtureURI,
+  sleep, delay, fixtureURI,
 
   Kite, log,
 };

@@ -1,4 +1,4 @@
-window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) => {
+window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted, historyTimeoutDuration = 1000) => {
   const input = document.getElementById(inputId);
   const results = document.getElementById(resultsId);
   const resultsList = results.querySelector('ul');
@@ -49,7 +49,7 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
 
     if (text.trim() !== '') {
       stack = stack
-      .then(() => request('GET', `http://localhost:${window.PORT}/search?text=${text}`))
+      .then(() => window.requestGet(`/search?text=${text}`))
       .then(res => {
         resultsList.innerHTML = res;
         if (resultsList.childNodes.length > 0) {
@@ -60,7 +60,7 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
         }
         results.classList.toggle('has-results', resultsList.scrollHeight > resultsList.offsetHeight)
       }).catch(err => {
-        console.log(err.message);
+        console.log(err.message, err.stack);
       });
     } else {
       stack = stack.then(() => {
@@ -129,16 +129,16 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     clearTimeout(historyTimeout);
 
     view.style.display = '';
-    return request('GET', `http://localhost:${window.PORT}/view?id=${id}`).then(html => {
+    return window.requestGet(`/view?id=${id}`).then(html => {
       if (html.trim() !== '') {
         view.innerHTML = html;
         initItemContent();
 
         historyTimeout = setTimeout(() => {
-          requestPost('/search/stack', {q: input.value}).then(data => {
+          window.requestPost('/search/stack', {q: input.value}).then(data => {
             searchHistory = JSON.parse(data);
           });
-        }, 1000);
+        }, historyTimeoutDuration);
       }
     });
   }
