@@ -2,7 +2,7 @@
     "name": "kite",
     "displayName": "kite",
     "description": "Python programming copilot — Kite shows cloud-powered completions, documentation, and examples.",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "publisher": "kiteco",
     "engines": {
         "vscode": "^1.10.0"
