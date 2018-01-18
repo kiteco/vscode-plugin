@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const {keydown, createEvent, click} = require('widjet-test-utils/events');
 const {delay} = require('../helpers');
 
-describe.only('initSearch', () => {
+describe('initSearch', () => {
   let clock, form, results, view, input;
 
   jsdom();
