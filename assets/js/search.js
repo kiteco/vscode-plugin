@@ -116,6 +116,7 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted, 
   }
 
   function selectItem(item) {
+    if (!item.classList) { return; }
     selectedItem && selectedItem.classList.remove('selected');
     selectedItem = item;
     selectedItem.classList.add('selected');
