@@ -317,10 +317,19 @@ const Kite = {
     });
 
     const config = vscode.workspace.getConfiguration('kite');
-    if (config.showTourOnStartup) {
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.One, 'Kite Tour');
-
-      config.update('showTourOnStartup', false, true);
+    if (config.showDocsNotificationOnStartup) {
+      vscode.window.showInformationMessage('Kite is now integrated with VS Code', 'Learn how to use Kite', "Don't show this again").then(item => {
+        if (item) { 
+          switch(item) {
+            case 'Learn how to use Kite':
+              opn('http://help.kite.com/category/46-vs-code-integration');
+              break;
+            case "Don't show this again":
+              config.update('showDocsNotificationOnStartup', false, true);
+              break;
+          }
+        }
+      });
     }
 
     setTimeout(() => {

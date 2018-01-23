@@ -81,10 +81,10 @@
             "type": "object",
             "title": "Kite Configuration",
             "properties": {
-                "kite.showTourOnStartup": {
+                "kite.showDocsNotificationOnStartup": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether to show the Kite tour on startup or not."
+                    "description": "Whether to show the Kite docs notification on startup or not."
                 },
                 "kite.pollingInterval": {
                     "type": "integer",
