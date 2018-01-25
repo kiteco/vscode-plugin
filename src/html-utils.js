@@ -52,7 +52,7 @@ function proFeatures(message) {
 }
 
 function debugHTML (html) {
-  if (vscode.workspace.getConfiguration('kite').sidebarDebugMode) {
+  if (vscode.workspace.getConfiguration('kite').sidebarDebugMode && process.env.NODE_ENV !== 'test') {
     fs.writeFileSync(path.resolve(__dirname, '..', 'sample.html'), `
       <!doctype html>
       <html class="vscode-dark">
@@ -82,18 +82,23 @@ function handleInternalLinks(html) {
   `<a class="internal_link" href='command:kite.navigate?"link/python;$1"'`)
   .replace(/<a href="#([^"]+)" class="internal_link"/g, 
     `<a href='command:kite.navigate?"link/python;$1"' class="internal_link"`);
-} 
+}
 
 function wrapHTML (html) {
+  html = handleInternalLinks(html);
   return `
   <style>
-    html {
-      font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
-    }
-    
-    pre, code, .code {
-      font-family: ${vscode.workspace.getConfiguration('editor').get('fontFamily')};
-      font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
+    ${ 
+      process.env.NODE_ENV !== 'test'
+        ? `html {
+          font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
+        }
+        
+        pre, code, .code {
+          font-family: ${vscode.workspace.getConfiguration('editor').get('fontFamily')};
+          font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
+        }`
+        : ''
     }
     .icon-kite-gift::before {
       content: '';
@@ -270,7 +275,8 @@ function renderInstance(data) {
 }
 
 function renderDocs(data) {
-  const description = symbolDescription(data);
+  const description = stripBody(symbolDescription(data));
+
   return description && description.trim() !== '' 
     ? `<section class="summary collapsible collapse">
       <h4>Docs</h4>
@@ -280,7 +286,15 @@ function renderDocs(data) {
 }
 
 function stripBody(html) {
-  return (html || '').replace(/<body>/, '').replace(/<\/body>/, '');
+  return (html || '').replace(/<\/?body>/g, '');
+}
+
+function stripTBody(html) {
+  return (html || '').replace(/<\/?tbody>/g, '');
+}
+
+function asArray(list) {
+  return [].slice.call(list);
 }
 
 function valueDescription(data) {
@@ -572,7 +586,6 @@ function renderKwargs(data) {
         ${
           detailGet(detail, 'kwarg_parameters')
           .map(p => renderParameter(p))
-          .map(p => `<dt>${p}</dt>`)
           .join('')
         }
       </dl></div>
@@ -721,4 +734,9 @@ module.exports = {
   wrapHTML,
   debugHTML,
   prependNavigation,
+  stripBody,
+  stripLeadingSlash,
+  asArray,
+  handleInternalLinks,
+  stripTBody,
 };

@@ -5,9 +5,11 @@ const path = require('path');
 const http = require('http');
 const proc = require('child_process');
 const sinon = require('sinon');
-const {StateController} = require('kite-installer');
+const {StateController, Logger} = require('kite-installer');
 const Plan = require('../src/plan');
 const {merge, promisifyRequest, promisifyReadResponse} = require('../src/utils');
+
+Logger.LEVEL = Logger.LEVELS.ERROR;
 
 const Kite = {
   request(req, data) {
@@ -60,6 +62,15 @@ function waitsFor(m, f, t, i) {
 function sleep(duration) {
   const t = new Date();
   return waitsFor(`${duration}ms`, () => { return new Date() - t > duration; });
+}
+
+function delay(duration, block) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      block();
+      resolve();
+    }, duration);
+  });
 }
 
 function fakeStdStream() {
@@ -682,6 +693,11 @@ function withFakePlan(description, plan, block) {
   });
 }
 
+function log(v) {
+  console.log(v);
+  return v;
+}
+
 module.exports = {
   fakeProcesses, fakeRequestMethod, fakeResponse, fakeKiteInstallPaths,
 
@@ -698,7 +714,7 @@ module.exports = {
   withKiteAuthenticated, withKiteNotAuthenticated,
   withKiteWhitelistedPaths, withKiteBlacklistedPaths, withKiteIgnoredPaths,
   withFakeServer, withRoutes, withPlan, withFakePlan,
-  sleep, fixtureURI,
+  sleep, delay, fixtureURI,
 
-  Kite,
+  Kite, log,
 };

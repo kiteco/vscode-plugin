@@ -39,6 +39,8 @@ function distinctID() {
 }
 
 function sendFeatureMetric(name) {
+  if (process.env.NODE_ENV === 'test') { return; }
+
   if (!Kite) { Kite = require('./kite'); }
   const path = metricsCounterPath();
 
@@ -68,9 +70,11 @@ function track(event, properties = {}) {
     properties
   };
   
-  Logger.debug('segment:', e);
-  
-  if (process.env.NODE_ENV !== 'test' && macaddress) { ANALYTICS.track(e); }
+  if(process.env.NODE_ENV !== 'test') {
+    Logger.debug('segment:', e);
+    
+    if (macaddress) { ANALYTICS.track(e); }
+  }
 }
 
 function trackHealth(value) {

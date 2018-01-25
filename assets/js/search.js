@@ -1,4 +1,4 @@
-window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) => {
+window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted, historyTimeoutDuration = 1000) => {
   const input = document.getElementById(inputId);
   const results = document.getElementById(resultsId);
   const resultsList = results.querySelector('ul');
@@ -47,14 +47,11 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     startRecordMetric();
     results.classList.remove('has-results');
 
-    console.log('stack search for', text);
-
     if (text.trim() !== '') {
       stack = stack
-      .then(() => request('GET', `http://localhost:${window.PORT}/search?text=${text}`))
+      .then(() => window.requestGet(`/search?text=${text}`))
       .then(res => {
         resultsList.innerHTML = res;
-        console.log('got results for', text);
         if (resultsList.childNodes.length > 0) {
           return selectNextItem();
         } else {
@@ -63,11 +60,10 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
         }
         results.classList.toggle('has-results', resultsList.scrollHeight > resultsList.offsetHeight)
       }).catch(err => {
-        console.log(err.message);
+        console.log(err.message, err.stack);
       });
     } else {
       stack = stack.then(() => {
-        console.log('clearing search');
         clearSearch();
       });
     }
@@ -120,6 +116,7 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
   }
 
   function selectItem(item) {
+    if (!item.classList) { return; }
     selectedItem && selectedItem.classList.remove('selected');
     selectedItem = item;
     selectedItem.classList.add('selected');
@@ -133,16 +130,16 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     clearTimeout(historyTimeout);
 
     view.style.display = '';
-    return request('GET', `http://localhost:${window.PORT}/view?id=${id}`).then(html => {
+    return window.requestGet(`/view?id=${id}`).then(html => {
       if (html.trim() !== '') {
         view.innerHTML = html;
         initItemContent();
 
         historyTimeout = setTimeout(() => {
-          requestPost('/search/stack', {q: input.value}).then(data => {
+          window.requestPost('/search/stack', {q: input.value}).then(data => {
             searchHistory = JSON.parse(data);
           });
-        }, 1000);
+        }, historyTimeoutDuration);
       }
     });
   }
@@ -154,9 +151,9 @@ window.initSearch = (inputId, resultsId, viewId, searchHistory, gettingStarted) 
     //     document.querySelector('.sections-wrapper')
     //   );
     // }
-    createJumpTo();
-    handleExternalLinks();
-    handleCollapsibles();
+    window.createJumpTo();
+    window.handleExternalLinks();
+    window.handleCollapsibles();
   }
 
   function scrollTo(target) {
