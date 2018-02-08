@@ -154,7 +154,7 @@ const Kite = {
         const evt = this.eventsByEditor.get(e);
         const ke = this.kiteEditorByEditor.get(e);
         evt.edit();
-        ke.tokensList.updateTokens();
+        ke && ke.tokensList.updateTokens();
       })
     }));
 
