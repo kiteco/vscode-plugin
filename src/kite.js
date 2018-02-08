@@ -24,6 +24,7 @@ const server = require('./server');
 const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath, languagesPath} = require('./urls');
 const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params} = require('./utils');
+const {version} = require('../package.json');
 
 const pluralize = (n, singular, plural) => n === 1 ? singular : plural;
 
@@ -51,6 +52,12 @@ const Kite = {
     
     Rollbar.init('4ca1bfd4721544e487c76583478a436a');
     Rollbar.handleUncaughtExceptions('4ca1bfd4721544e487c76583478a436a');
+    Rollbar.configure({
+      environment: process.env.NODE_ENV,
+      editor: 'vscode',
+      kite_plugin_version: version,
+      os: os.type() + ' ' + os.release(),
+    });
 
     AccountManager.initClient(
       StateController.client.hostname,
@@ -357,11 +364,17 @@ const Kite = {
 
     this.pollingInterval = setInterval(() => {
       this.checkState();
-    }, config.get('pollingInterval'));
+    }, config.get('pollingInterval') || 5000);
 
     // We monitor kited health
     setInterval(checkHealth, 60 * 1000 * 10);
     checkHealth();
+
+    process.on('uncaughtException', function (err) {
+      if (err.stack.indexOf('kite') > -1) {
+        Rollbar.error(err);
+      }
+    });
 
     function checkHealth() {
       StateController.handleState().then(state => {
