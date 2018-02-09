@@ -6,7 +6,6 @@ const {Logger} = require('kite-installer');
 const {head, last} = require('./utils');
 
 module.exports = {
-  PORT: process.env.NODE_ENV === 'development' ? 45668 : 45667,
   routes: [],
   addRoute(method, route, handle) {
     this.routes.push([method, route, handle]);
@@ -38,9 +37,11 @@ module.exports = {
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
     });
     
-    this.server.listen(this.PORT);
-    this.started = true;
-    Logger.debug(`Server started on port ${this.PORT}`);
+    this.server.listen(0, () => {
+      this.PORT = this.server.address().port;
+      this.started = true;
+      Logger.debug(`Server started on port ${this.PORT}`);
+    });
   },
 
   stop() {
