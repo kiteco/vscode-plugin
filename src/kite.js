@@ -428,6 +428,11 @@ const Kite = {
       this.getSupportedLanguages().catch(() => []),
     ]).then(([state, languages]) => {
       this.supportedLanguages = languages;
+      
+      if (state > StateController.STATES.INSTALLED) {
+        localconfig.set('wasInstalled', true);
+      }
+
       switch (state) {
         case StateController.STATES.UNSUPPORTED:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
@@ -442,55 +447,14 @@ const Kite = {
         case StateController.STATES.UNINSTALLED:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           this.shown[state] = true;
-          // this.showErrorMessage('Kite is not installed: Grab the installer from our website', 'Get Kite').then(item => {
-          //   if (item) { opn('https://kite.com/'); }
-          // });
-          this.install.reset();
-          AccountManager.initClient('alpha.kite.com', -1, true);
-          vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
+          if (!localconfig.get('wasInstalled', false)) {
+            this.install.reset();
+            AccountManager.initClient('alpha.kite.com', -1, true);
+            vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
+          }
           break;
         case StateController.STATES.INSTALLED:
           break;
-          // if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
-          // this.shown[state] = true;
-          // Promise.all([
-          //   StateController.isKiteInstalled().then(() => true).catch(() => false),
-          //   StateController.isKiteEnterpriseInstalled().then(() => true).catch(() => false),
-          // ]).then(([kiteInstalled, kiteEnterpriseInstalled]) => {
-          //   if (StateController.hasManyKiteInstallation() ||
-          //       StateController.hasManyKiteEnterpriseInstallation()) {
-          //     this.showErrorMessage('You have multiple versions of Kite installed. Please launch your desired one.');
-          //   } else if (kiteInstalled && kiteEnterpriseInstalled) {
-          //     this.showErrorMessage('Kite is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite Enterprise', 'Launch Kite Cloud').then(item => {
-          //       if (item === 'Launch Kite Cloud') {
-          //         return StateController.runKiteAndWait(ATTEMPTS, INTERVAL)
-          //         .then(() => this.checkState())
-          //         .catch(err => console.error(err));
-          //       } else if (item === 'Launch Kite Enterprise') {
-          //         return StateController.runKiteEnterpriseAndWait(ATTEMPTS, INTERVAL)
-          //         .then(() => this.checkState())
-          //         .catch(err => console.error(err));
-          //       }
-          //     });
-          //   } else if (kiteInstalled) {
-          //     this.showErrorMessage('Kite is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite').then(item => {
-          //       if (item) {
-          //         return StateController.runKiteAndWait(ATTEMPTS, INTERVAL)
-          //         .then(() => this.checkState())
-          //         .catch(err => console.error(err));
-          //       }
-          //     });
-          //   } else if (kiteEnterpriseInstalled) {
-          //     this.showErrorMessage('Kite Enterprise is not running: Start the Kite background service to get Python completions, documentation, and examples.', 'Launch Kite Enterprise').then(item => {
-          //       if (item) {
-          //         return StateController.runKiteEnterpriseAndWait(ATTEMPTS, INTERVAL)
-          //         .then(() => this.checkState())
-          //         .catch(err => console.error(err));
-          //       }
-          //     });
-          //   }
-          // });
-          // break;
         case StateController.STATES.RUNNING:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           this.shown[state] = true;
