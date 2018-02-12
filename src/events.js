@@ -1,8 +1,7 @@
 'use strict';
 
-const {StateController, Logger} = require('kite-installer');
 const {MAX_FILE_SIZE, CONNECT_ERROR_LOCKOUT} = require('./constants');
-const {promisifyRequest, secondsSince} = require('./utils');
+const {secondsSince} = require('./utils');
 const {normalizeDriveLetter} = require('./urls');
  
 module.exports = class EditorEvents {
@@ -25,13 +24,14 @@ module.exports = class EditorEvents {
   }
 
   sendEvent(action) {
-    const event = this.document.getText().length > MAX_FILE_SIZE
+    const content = this.document.getText();
+    const event = content.length > MAX_FILE_SIZE
       ? {
         source: 'vscode',
         action: 'skip',
         filename: normalizeDriveLetter(this.document.fileName),
       }
-      : this.makeEvent(action, this.document, this.editor.selection);
+      : this.makeEvent(action, this.document, content, this.editor.selection);
     
     const payload = JSON.stringify(event);
 
@@ -49,12 +49,12 @@ module.exports = class EditorEvents {
     });
   }
 
-  makeEvent(action, document, selection) {
+  makeEvent(action, document, text, selection) {
     const event = {
       source: 'vscode',
+      text,
       action,
       filename: normalizeDriveLetter(document.fileName),
-      text: document.getText(),
     };
 
     if (selection) {
