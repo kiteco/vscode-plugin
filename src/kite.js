@@ -51,12 +51,13 @@ const Kite = {
     metrics.track('activated');
     
     Rollbar.init('4ca1bfd4721544e487c76583478a436a');
-    Rollbar.handleUncaughtExceptions('4ca1bfd4721544e487c76583478a436a');
     Rollbar.configure({
-      environment: process.env.NODE_ENV,
-      editor: 'vscode',
-      kite_plugin_version: version,
-      os: os.type() + ' ' + os.release(),
+      payload: {
+        environment: process.env.NODE_ENV,
+        editor: 'vscode',
+        kite_plugin_version: version,
+        os: os.type() + ' ' + os.release(),
+      },
     });
 
     AccountManager.initClient(
