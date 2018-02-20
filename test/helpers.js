@@ -714,7 +714,7 @@ module.exports = {
   withKiteAuthenticated, withKiteNotAuthenticated,
   withKiteWhitelistedPaths, withKiteBlacklistedPaths, withKiteIgnoredPaths,
   withFakeServer, withRoutes, withPlan, withFakePlan,
-  sleep, delay, fixtureURI,
+  sleep, delay, fixtureURI, waitsFor,
 
   Kite, log,
 };
