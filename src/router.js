@@ -8,7 +8,7 @@ const KiteLinksList = require('./links-list');
 const KiteCuratedExample = require('./curated-example');
 const metrics = require('./metrics');
 const {wrapHTML, debugHTML, prependNavigation} = require('./html-utils');
-const URI = 'kite-vscode-sidebar://sidebar'
+const URI = vscode.Uri.parse('kite-vscode-sidebar://sidebar');
 
 module.exports = class KiteRouter {
   constructor() {
