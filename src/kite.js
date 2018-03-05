@@ -33,6 +33,22 @@ const Kite = {
   {
     if(process.env.NODE_ENV === 'test') { return; }
 
+    const rollbar = new Rollbar({
+      accessToken: '4ca1bfd4721544e487c76583478a436a',
+      payload: {
+        environment: process.env.NODE_ENV,
+        editor: 'vscode',
+        kite_plugin_version: version,
+        os: os.type() + ' ' + os.release(),
+      },
+    });
+
+    process.on('uncaughtException', function (err) {
+      if (err.stack.indexOf('kite') > -1) {
+        rollbar.error(err);
+      }
+    });
+
     this.kiteEditorByEditor = new Map();
     this.eventsByEditor = new Map();
     this.supportedLanguages = [];
@@ -49,15 +65,6 @@ const Kite = {
 
     // send the activated event
     metrics.track('activated');
-    
-    Rollbar.init('4ca1bfd4721544e487c76583478a436a');
-    Rollbar.handleUncaughtExceptions('4ca1bfd4721544e487c76583478a436a');
-    Rollbar.configure({
-      environment: process.env.NODE_ENV,
-      editor: 'vscode',
-      kite_plugin_version: version,
-      os: os.type() + ' ' + os.release(),
-    });
 
     AccountManager.initClient(
       StateController.client.hostname,
@@ -369,12 +376,6 @@ const Kite = {
     // We monitor kited health
     setInterval(checkHealth, 60 * 1000 * 10);
     checkHealth();
-
-    process.on('uncaughtException', function (err) {
-      if (err.stack.indexOf('kite') > -1) {
-        Rollbar.error(err);
-      }
-    });
 
     function checkHealth() {
       StateController.handleState().then(state => {

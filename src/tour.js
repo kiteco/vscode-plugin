@@ -110,9 +110,9 @@ module.exports = class KiteTour {
           <p>Kite is your Coding Copilot.</p>
         </div>
 
-        <p>To manage Kite's permissions, click <a
+        <p><a
           is="kite-localtoken-anchor"
-          href="http://localhost:46624/settings/permissions">here</a></p>
+          href="http://localhost:46624/settings/permissions">Manage Kite permissions</a></p>
         <p>For more help topics, go to <a href="http://help.kite.com">help.kite.com</a></p>
 
         <p>We always love feedback ❤️ <a href="mailto:feedback@kite.com">feedback@kite.com</a></p>
