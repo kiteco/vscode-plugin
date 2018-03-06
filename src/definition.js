@@ -12,8 +12,7 @@ module.exports = class KiteDefinitionProvider {
   }
 
   provideDefinition(document, position, token) {
-    const range = document.getWordRangeAtPosition(position);
-    const path = hoverPath(document, range);
+    const path = hoverPath(document, position);
     return this.Kite.request({path}, null, document)
     .then(data => parseJSON(data))
     .then(data => {

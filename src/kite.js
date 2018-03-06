@@ -256,6 +256,23 @@ const Kite = {
       `);
     });
 
+    vscode.commands.registerCommand('kite.more-position', ({position, source}) => {
+      metrics.track(`${source} See info clicked`);
+      metrics.featureRequested('expand_panel');
+      metrics.featureRequested('documentation');
+      server.start();
+      const uri = `kite-vscode-sidebar://value-position/${JSON.stringify(position)}`;
+      router.clearNavigation();
+      router.navigate(uri, `
+        window.onload = () => {
+          window.requestGet('/count?metric=fulfilled&name=expand_panel');
+          if(document.querySelector('.summary .description:not(:empty)')) {
+            window.requestGet('/count?metric=fulfilled&name=documentation');
+          }
+        }
+      `);
+    });
+
     vscode.commands.registerCommand('kite.navigate', (path) => {
       const uri = `kite-vscode-sidebar://${path}`;
       router.chopNavigation();

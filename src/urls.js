@@ -1,4 +1,5 @@
 'use strict';
+const vscode = require('vscode');
 const md5 = require('md5');
 const {head} = require('./utils');
 
@@ -119,18 +120,15 @@ function openExampleInWebURL(id, token = false) {
   return url;
 }
 
-function hoverPath(document, range) {
+function hoverPath(document, position) {
+  position = new vscode.Position(position.line, position.character);
   const state = md5(document.getText());
   const filename = document.fileName;
   const buffer = cleanPath(filename);
-  const start = document.offsetAt(range.start);
-  const end = document.offsetAt(range.end);
+  const pos = document.offsetAt(position);
   return [
     `/api/buffer/vscode/${buffer}/${state}/hover`,
-    [
-      `selection_begin_runes=${start}`,
-      `selection_end_runes=${end}`,
-    ].join('&'),
+    `cursor_runes=${pos}`,
   ].join('?');
 }
 

@@ -36,39 +36,42 @@ module.exports = class KiteRouter {
       case 'member':
         metrics.featureRequested('top_member');
         this.metricCode = 'window.requestGet("/count?metric=fulfilled&name=top_member");'
-        promise =  KiteValueReport.render(path);
+        promise = KiteValueReport.render(path);
         break;
       case 'link':
         metrics.featureRequested('link');
         this.metricCode = 'window.requestGet("/count?metric=fulfilled&name=link");'
-        promise =  KiteValueReport.render(path);
+        promise = KiteValueReport.render(path);
         break;
       case 'value':
         metrics.track(`Navigation to value report clicked`);
-        promise =  KiteValueReport.render(path);
+        promise = KiteValueReport.render(path);
         break;
       case 'value-range':
         metrics.track(`Navigation to value report from range clicked`);
-        promise =  KiteValueReport.renderFromRange(document, 
-          JSON.parse(path));
+        promise = KiteValueReport.renderFromRange(document, JSON.parse(path));
+        break;
+      case 'value-position':
+        metrics.track(`Navigation to value report from position clicked`);
+        promise = KiteValueReport.renderFromPosition(document, JSON.parse(path));
         break;
       case 'members-list':
         metrics.track(`Navigation to members list clicked`);
-        promise =  KiteMembersList.render(path);
+        promise = KiteMembersList.render(path);
         break;
       case 'links-list':
         metrics.track(`Navigation to links list clicked`);
-        promise =  KiteLinksList.render(path);
+        promise = KiteLinksList.render(path);
         break;
       case 'examples-list':
         metrics.track(`Navigation to examples list clicked`);
-        promise =  KiteExamplesList.render(path);
+        promise = KiteExamplesList.render(path);
         break;
       case 'example':
         metrics.featureRequested('example');
         this.metricCode = 'window.requestGet("/count?metric=fulfilled&name=example");'
         metrics.track(`Navigation to example clicked`);
-        promise =  KiteCuratedExample.render(path);
+        promise = KiteCuratedExample.render(path);
         break;
       default:
         promise = Promise.resolve(`Unknown route '${authority}/${path}'`)
