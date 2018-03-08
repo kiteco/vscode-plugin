@@ -61,25 +61,23 @@ module.exports = class KiteEditor {
               this.document.positionAt(text.length)
             ), data.new_buffer);
           })
-          .then(applied => {
-            console.log('corrections applied', applied)
-          });
-        }
-        //   this.buffer.setTextViaDiff(data.new_buffer);
-        //   this.fixesHistory.unshift(new Fix(data.diffs));
+          .then(() => {
+            this.fixesHistory.unshift(new Fix(data.diffs));
+            const config = vscode.workspace.getConfiguration('kite');
 
-        //   if (atom.config.get('kite.openAutocorrectSidebarOnSave') &&
-        //      !this.Kite.isAutocorrectSidebarVisible()) {
-        //     this.Kite.toggleAutocorrectSidebar(true);
-        //   } else if (this.Kite.isAutocorrectSidebarVisible()) {
-        //     this.Kite.autocorrectSidebar.renderDiffs(this.Kite.autocorrectSidebar.getCurrentEditorCorrectionsHistory());
-        //     status.textContent = '';
-        //   } else {
-        //     status.textContent = `${fixes} ${fixes === 1 ? 'error' : 'errors'} fixed`;
-        //   }
-        // } else {
-        //   status.textContent = '';
-        // }
+            if(this.Kite.autocorrect.isSidebarOpen) {
+              this.Kite.autocorrect.update()
+            } else if(config.openAutocorrectSidebarOnSave) {
+              this.Kite.autocorrect.open()
+              this.Kite.autocorrectStatusBarItem.hide();
+            } else {
+              this.Kite.autocorrectStatusBarItem.text = `${fixes} ${fixes === 1 ? 'error' : 'errors'} fixed`;
+              this.Kite.autocorrectStatusBarItem.show();
+            }
+          });
+        } else {
+          this.Kite.autocorrectStatusBarItem.hide();
+        }
       }),
     ]).catch((err) => {
       console.log(err);
@@ -193,5 +191,12 @@ module.exports = class KiteEditor {
       os_name: metrics.getOsName(),
       plugin_version: metrics.version,
     };
+  }
+}
+
+class Fix {
+  constructor(diffs) {
+    this.diffs = diffs;
+    this.timestamp = new Date();
   }
 }

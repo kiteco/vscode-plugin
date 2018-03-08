@@ -109,6 +109,11 @@
                     "default": false,
                     "description": "Displays JSON data used by a view"
                 },
+                "kite.openAutocorrectSidebarOnSave": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Makes the autocorrect sidebar appears on save when enabled."
+                },
                 "kite.loggingLevel": {
                     "type": "string",
                     "default": "info",

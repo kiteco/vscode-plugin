@@ -15,6 +15,7 @@ const KiteLogin = require('./login');
 const KiteInstall = require('./install');
 const KiteStatus = require('./status');
 const KiteTour = require('./tour');
+const KiteAutocorrect = require('./autocorrect');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
 const localconfig = require('./localconfig');
@@ -60,6 +61,7 @@ const Kite = {
     const install = new KiteInstall(Kite);
     const status = new KiteStatus(Kite);
     const tour = new KiteTour(Kite);
+    const autocorrect = new KiteAutocorrect(Kite);
 
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
@@ -77,9 +79,11 @@ const Kite = {
     ctx.subscriptions.push(search);
     ctx.subscriptions.push(status);
     ctx.subscriptions.push(install);
+    ctx.subscriptions.push(autocorrect);
 
     this.status = status;
     this.install = install;
+    this.autocorrect = autocorrect;
 
     server.addRoute('GET', '/check', (req, res) => {
       this.checkState('/check route');
@@ -112,6 +116,8 @@ const Kite = {
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-tour', tour));
+    ctx.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-autocorrect', autocorrect));
 
     ctx.subscriptions.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
@@ -132,7 +138,7 @@ const Kite = {
       vscode.languages.registerSignatureHelpProvider(JAVASCRIPT_MODE, new KiteSignatureProvider(Kite), '(', ','));
 
     ctx.subscriptions.push(vscode.workspace.onWillSaveTextDocument((e) => {
-      const kiteEditor = this.kiteEditorByEditor.get(editorsForDocument(e.document)[0]);
+      const kiteEditor = this.kiteEditorByEditor.get(e.document.fileName);
       if(this.isDocumentGrammarSupported(e.document) && kiteEditor && kiteEditor.isWhitelisted) {
         e.waitUntil(kiteEditor.onWillSave())
       }
@@ -159,7 +165,7 @@ const Kite = {
     }));
 
     ctx.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(e => {
-      const evt = this.eventsByEditor.get(e.textEditor);
+      const evt = this.eventsByEditor.get(e.textEditor.document.fileName);
       evt.selectionChanged();
       this.setStatusBarLabel();
     }));
@@ -184,6 +190,9 @@ const Kite = {
     this.statusBarItem.command = 'kite.status';
     this.statusBarItem.show();
 
+    this.autocorrectStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+    this.autocorrectStatusBarItem.command = 'kite.show-autocorrect';
+
     ctx.subscriptions.push(this.statusBarItem);
 
     vscode.commands.registerCommand('kite.status', () => {
@@ -202,8 +211,12 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.login', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
-    });
-
+    }); 
+    
+    vscode.commands.registerCommand('kite.show-autocorrect', () => {
+      autocorrect.open();
+    }); 
+    
     vscode.commands.registerCommand('kite.install', () => {
       install.reset();
       AccountManager.initClient('alpha.kite.com', -1, true);
@@ -426,9 +439,9 @@ const Kite = {
   },
 
   registerEvents(e) {
-    if (e && !this.eventsByEditor.has(e) && e.document) {
+    if (e && e.document && !this.eventsByEditor.has(e.document.fileName)) {
       const evt = new EditorEvents(this, e);
-      this.eventsByEditor.set(e, evt);
+      this.eventsByEditor.set(e.document.fileName, evt);
 
       if (e === vscode.window.activeTextEditor) {
         evt.focus();
@@ -437,10 +450,10 @@ const Kite = {
   },
 
   registerEditor(e) {
-    if (!this.kiteEditorByEditor.has(e)) {
+    if (!this.kiteEditorByEditor.has(e.document.fileName)) {
       Logger.debug('register kite editor for', e.document.fileName, e.document.languageId);
       const evt = new KiteEditor(Kite, e);
-      this.kiteEditorByEditor.set(e, evt);
+      this.kiteEditorByEditor.set(e.document.fileName, evt);
     }
   },
 
@@ -664,7 +677,7 @@ const Kite = {
   },
 
   isEditorWhitelisted(e) {
-    const ke = this.kiteEditorByEditor.get(e);
+    const ke = this.kiteEditorByEditor.get(e.document.fileName);
     return ke && ke.isWhitelisted();
   },
 
@@ -672,7 +685,7 @@ const Kite = {
     // for the moment a 404 response is sent for non-whitelisted file by
     // the tokens endpoint
     editorsForDocument(document).forEach(e => {
-      const ke = this.kiteEditorByEditor.get(e);
+      const ke = this.kiteEditorByEditor.get(e.document.fileName);
       if (ke) { ke.whitelisted = resp.statusCode !== 403 }
     });
 
