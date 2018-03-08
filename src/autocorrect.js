@@ -5,16 +5,54 @@ const server = require('./server');
 
 const URI = vscode.Uri.parse('kite-vscode-autocorrect://autocorrect');
 const {wrapHTML, debugHTML} = require('./html-utils');
+let instance;
 
-server.addRoute('GET', '/status/login', (req, res, url) => {
-  vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
-  res.writeHead(200);
-  res.end();
+server.addRoute('GET', '/autocorrect/feedback/ok', (req, res, url) => {
+  try {
+    const kiteEditor = instance.lastKiteEditor
+  
+    if(kiteEditor && kiteEditor.fixesHistory) {
+      kiteEditor.postAutocorrectFeedbackData(kiteEditor.lastCorrectionsData, 1).then(() => {
+        kiteEditor.lastCorrectionsData.feedbackSent = 1
+        instance.update();
+      });
+    }
+  
+    res.writeHead(200);
+    res.end();
+  } catch(err) {
+    console.log(err)
+    res.writeHead(500);
+    res.end();
+  }
+});
+
+server.addRoute('GET', '/autocorrect/feedback/ko', (req, res, url) => {
+  try {
+    const kiteEditor = instance.lastKiteEditor
+
+    if(kiteEditor && kiteEditor.fixesHistory) {
+      kiteEditor.postAutocorrectFeedbackData(kiteEditor.lastCorrectionsData, -1).then(() => {
+        kiteEditor.lastCorrectionsData.feedbackSent = -1
+        instance.update();
+      });
+    }
+
+    res.writeHead(200);
+    res.end();
+  } catch(err) {
+    console.log(err)
+    res.writeHead(500);
+    res.end();
+  }
 });
 
 module.exports = class KiteAutocorrect {
   constructor(Kite) {
+    server.start();
+
     this.Kite = Kite;
+    instance = this;
     this.didChangeEmitter = new vscode.EventEmitter();
     vscode.window.onDidChangeActiveTextEditor(e => {
       this.update();
@@ -26,11 +64,11 @@ module.exports = class KiteAutocorrect {
       }
     });
   }
-
+  
   get onDidChange() {
     return this.didChangeEmitter.event; 
   }
-
+  
   open() {
     if (this.isSidebarOpen) {
       this.update();
@@ -51,8 +89,9 @@ module.exports = class KiteAutocorrect {
   provideTextDocumentContent() {
     const kiteEditor = this.Kite.kiteEditorByEditor.get(vscode.window.activeTextEditor.document.fileName)
 
-    console.log('update', kiteEditor != null)
     if(kiteEditor && kiteEditor.fixesHistory) {
+
+      this.lastKiteEditor = kiteEditor
       
       return Promise.resolve(`
       <div class="kite-autocorrect-sidebar">
@@ -61,6 +100,7 @@ module.exports = class KiteAutocorrect {
           <div class="content">${this.renderDiffs([
             kiteEditor.fixesHistory,
             vscode.window.activeTextEditor.document.fileName,
+            kiteEditor,
           ])}</div>
           <footer>
             <label>
@@ -77,7 +117,7 @@ module.exports = class KiteAutocorrect {
     }
   }
 
-  renderDiffs([history, filename] = []) {
+  renderDiffs([history, filename, kiteEditor] = []) {
     if (history) {
       const diffsHTML = history.map(fix =>
         `<div class="diff">
@@ -98,9 +138,13 @@ module.exports = class KiteAutocorrect {
               '</code>',
             ].join('')
           ).join('')}
-          <div class="feedback-actions">
-            <a class="thumb-down">👎</a>
-            <a class="thumb-up">👍</a>
+          <div class="feedback-actions ${kiteEditor.lastCorrectionsData.feedbackSent ? 'feedback-sent' : ''}">
+            <a class="thumb-down ${kiteEditor.lastCorrectionsData.feedbackSent == -1 ? 'clicked' : ''}"
+               href="#"
+               onclick="requestGet('/autocorrect/feedback/ko')">👎</a>
+            <a class="thumb-up ${kiteEditor.lastCorrectionsData.feedbackSent == 1 ? 'clicked' : ''}" 
+               href="#"
+               onclick="requestGet('/autocorrect/feedback/ok')">👍</a>
           </div>
         </div>`
       ).join('');
