@@ -131,6 +131,13 @@ const Kite = {
     ctx.subscriptions.push(
       vscode.languages.registerSignatureHelpProvider(JAVASCRIPT_MODE, new KiteSignatureProvider(Kite), '(', ','));
 
+    ctx.subscriptions.push(vscode.workspace.onWillSaveTextDocument((e) => {
+      const kiteEditor = this.kiteEditorByEditor.get(editorsForDocument(e.document)[0]);
+      if(this.isDocumentGrammarSupported(e.document) && kiteEditor && kiteEditor.isWhitelisted) {
+        e.waitUntil(kiteEditor.onWillSave())
+      }
+    }));
+
     ctx.subscriptions.push(vscode.workspace.onDidChangeConfiguration(() => {
       Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
     }));

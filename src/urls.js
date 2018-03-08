@@ -26,6 +26,22 @@ function signaturePath() {
   return '/clientapi/editor/signatures';
 }
 
+function autocorrectPath() {
+  return '/clientapi/editor/autocorrect';
+}
+
+function autocorrectMetricsPath() {
+  return '/clientapi/editor/autocorrect/metrics';
+}
+
+function autocorrectFeedbackPath() {
+  return '/clientapi/editor/autocorrect/feedback';
+}
+
+function onSaveValidationPath() {
+  return '/clientapi/editor/autocorrect/validation/on-save';
+}
+
 function searchPath(query, offset = 0, limit = 10) {
   return [
     '/api/editor/search',
@@ -144,25 +160,29 @@ function normalizeDriveLetter(str) {
 
 module.exports = {
   accountPath,
+  autocorrectFeedbackPath,
+  autocorrectMetricsPath,
+  autocorrectPath,
   completionsPath,
   examplePath,
   hoverPath,
+  languagesPath,
   membersPath,
+  metricsCounterPath,
   normalizeDriveLetter,
+  onSaveValidationPath,
   openDocumentationInWebURL,
   openExampleInWebURL,
   openSignatureInWebURL,
   projectDirPath,
-  languagesPath,
   reportPath,
   searchPath,
   serializeRangeForPath,
   shouldNotifyPath,
   signaturePath,
+  statusPath,
+  symbolReportPath,
   usagePath,
   usagesPath,
-  statusPath,
   valueReportPath,
-  symbolReportPath,
-  metricsCounterPath,
 };
