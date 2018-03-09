@@ -87,10 +87,11 @@ module.exports = class KiteAutocorrect {
   }
 
   provideTextDocumentContent() {
-    const kiteEditor = this.Kite.kiteEditorByEditor.get(vscode.window.activeTextEditor.document.fileName)
+    const kiteEditor = vscode.window.activeTextEditor 
+      ? this.Kite.kiteEditorByEditor.get(vscode.window.activeTextEditor.document.fileName)
+      : this.lastKiteEditor
 
     if(kiteEditor && kiteEditor.fixesHistory) {
-
       this.lastKiteEditor = kiteEditor
       
       return Promise.resolve(`
@@ -99,7 +100,7 @@ module.exports = class KiteAutocorrect {
         <div class="kite-column">
           <div class="content">${this.renderDiffs([
             kiteEditor.fixesHistory,
-            vscode.window.activeTextEditor.document.fileName,
+            kiteEditor.document.fileName,
             kiteEditor,
           ])}</div>
           <footer>
