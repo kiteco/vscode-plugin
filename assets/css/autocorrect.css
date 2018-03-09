@@ -1,6 +1,6 @@
 .kite-autocorrect-sidebar footer {
   background: transparent !important;
-  padding: 0 !important;
+  padding: 0 10px !important;
 }
 .kite-autocorrect-sidebar .content {
   flex: 1 1 auto;

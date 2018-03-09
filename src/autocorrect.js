@@ -7,6 +7,32 @@ const URI = vscode.Uri.parse('kite-vscode-autocorrect://autocorrect');
 const {wrapHTML, debugHTML} = require('./html-utils');
 let instance;
 
+server.addRoute('GET', '/autocorrect/toggle/on', (req, res, url) => {
+  try {
+    const config = vscode.workspace.getConfiguration('kite');
+    config.update('openAutocorrectSidebarOnSave', true, true);  
+    res.writeHead(200);
+    res.end();
+  } catch(err) {
+    console.log(err)
+    res.writeHead(500);
+    res.end();
+  }
+});
+
+server.addRoute('GET', '/autocorrect/toggle/off', (req, res, url) => {
+  try {
+    const config = vscode.workspace.getConfiguration('kite');
+    config.update('openAutocorrectSidebarOnSave',false, true);  
+    res.writeHead(200);
+    res.end();
+  } catch(err) {
+    console.log(err)
+    res.writeHead(500);
+    res.end();
+  }
+});
+
 server.addRoute('GET', '/autocorrect/feedback/ok', (req, res, url) => {
   try {
     const kiteEditor = instance.lastKiteEditor
@@ -93,6 +119,7 @@ module.exports = class KiteAutocorrect {
 
     if(kiteEditor && kiteEditor.fixesHistory) {
       this.lastKiteEditor = kiteEditor
+      const config = vscode.workspace.getConfiguration('kite');
       
       return Promise.resolve(`
       <div class="kite-autocorrect-sidebar">
@@ -105,7 +132,9 @@ module.exports = class KiteAutocorrect {
           ])}</div>
           <footer>
             <label>
-              <input type="checkbox"></input>
+              <input type="checkbox"
+                     onchange="requestGet('/autocorrect/toggle/' + (this.checked ? 'on' : 'off'))"
+                     ${config.openAutocorrectSidebarOnSave ? 'checked' : ''}></input>
               Show this panel on every save
             </label>
           </footer>
