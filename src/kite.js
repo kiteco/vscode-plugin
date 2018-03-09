@@ -450,10 +450,13 @@ const Kite = {
   },
 
   registerEditor(e) {
-    if (!this.kiteEditorByEditor.has(e.document.fileName)) {
+    if (this.kiteEditorByEditor.has(e.document.fileName)) {
+      const ke = this.kiteEditorByEditor.get(e.document.fileName);
+      ke.editor = e
+    } else { 
       Logger.debug('register kite editor for', e.document.fileName, e.document.languageId);
-      const evt = new KiteEditor(Kite, e);
-      this.kiteEditorByEditor.set(e.document.fileName, evt);
+      const ke = new KiteEditor(Kite, e);
+      this.kiteEditorByEditor.set(e.document.fileName, ke);
     }
   },
 

@@ -30,12 +30,17 @@ module.exports = class KiteEditor {
   isWhitelisted() {
     return this.whitelisted;
   }
-
+  
   onWillSave() {
     if (!md5) { md5 = require('md5'); }
     
     const requestStartTime = new Date();
-
+    const config = vscode.workspace.getConfiguration('kite');
+    
+    if (!config.enableAutocorrect) {
+      return Promise.resolve(); 
+    }
+    
     return Promise.all([
       this.postSaveValidationData(),
       this.getAutocorrectData()
@@ -63,7 +68,6 @@ module.exports = class KiteEditor {
           })
           .then(() => {
             this.fixesHistory.unshift(new Fix(data.diffs));
-            const config = vscode.workspace.getConfiguration('kite');
 
             if(this.Kite.autocorrect.isSidebarOpen) {
               this.Kite.autocorrect.update()
@@ -74,6 +78,8 @@ module.exports = class KiteEditor {
               this.Kite.autocorrectStatusBarItem.text = `${fixes} ${fixes === 1 ? 'error' : 'errors'} fixed`;
               this.Kite.autocorrectStatusBarItem.show();
             }
+          }, (err) => {
+            console.log(err)
           });
         } else {
           this.Kite.autocorrectStatusBarItem.hide();
