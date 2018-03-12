@@ -91,7 +91,7 @@ module.exports = class KiteStatus {
   }
 
   update() {
-    this.didChangeEmitter.fire('kite-vscode-status://status');
+    this.didChangeEmitter.fire(vscode.Uri.parse('kite-vscode-status://status'));
   }
 
   dispose() {}
