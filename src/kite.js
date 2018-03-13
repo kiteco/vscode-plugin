@@ -137,13 +137,14 @@ const Kite = {
 
     ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {      
       if (e) {
-        this.registerEvents(e);
-
         if (/Code[\/\\]User[\/\\]settings.json$/.test(e.document.fileName)){
           metrics.featureRequested('settings');
           metrics.featureFulfilled('settings');
         }
-        if (this.isGrammarSupported(e)) { this.registerEditor(e); }
+        if (this.isGrammarSupported(e)) { 
+          this.registerEvents(e);
+          this.registerEditor(e); 
+        }
   
         const evt = this.eventsByEditor.get(e);
         evt.focus();
@@ -166,8 +167,8 @@ const Kite = {
     }));
 
     ctx.subscriptions.push(vscode.workspace.onDidOpenTextDocument(doc => {
-      this.registerDocumentEvents(doc);
       if (doc.languageId === 'python') {
+        this.registerDocumentEvents(doc);
         this.registerDocument(doc);
       }
     }));
@@ -377,8 +378,8 @@ const Kite = {
 
     setTimeout(() => {
       vscode.window.visibleTextEditors.forEach(e => {
-        this.registerEvents(e);
         if (e.document.languageId === 'python') {
+          this.registerEvents(e);
           this.registerEditor(e);
         }
       })
