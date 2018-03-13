@@ -28,10 +28,24 @@ module.exports = {
 
     const [start, end] = range;
     const path = hoverPath(document, {
-      start: new vscode.Position(start.line, start.character), 
-      end: new vscode.Position(end.line, end.character)
+      line: Math.round((start.line + end.line) / 2), 
+      character: Math.round((start.character + end.character) / 2)
     });
 
+    return Plan.queryPlan()
+    .then(() => Kite.request({path}))
+    .then(report => parseJSON(report))
+    .then(data => reportFromHover(data))
+    .then(data => this.renderData(data))
+    .catch(err => console.log(err.message))
+  },
+  
+  renderFromPosition(document, position) {
+    if (!Kite) { Kite = require('./kite'); }
+
+    
+    const path = hoverPath(document, position);
+    
     return Plan.queryPlan()
     .then(() => Kite.request({path}))
     .then(report => parseJSON(report))

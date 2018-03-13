@@ -30,7 +30,7 @@ describe('KiteHoverProvider', () => {
           expect(res.contents[0].language).to.eql('python');
           expect(res.contents[0].value).to.eql('Test.increment    function');
 
-          expect(res.contents[1].value).to.eql(`**Kite:** [web](command:kite.web?{"id":"sample:Test.increment","source":"Hover"}) [more](command:kite.more-range?{"range":[{"line":19,"character":6},{"line":19,"character":11}],"source":"Hover"}) [def](command:kite.def?{"file":"sample.py","line":50,"source":"Hover"})`);
+          expect(res.contents[1].value).to.eql(`**Kite:** [web](command:kite.web?{"id":"sample:Test.increment","source":"Hover"}) [more](command:kite.more-position?{"position":{"line":19,"character":13},"source":"Hover"}) [def](command:kite.def?{"file":"sample.py","line":50,"source":"Hover"})`);
         });
       });
     });
@@ -51,7 +51,7 @@ describe('KiteHoverProvider', () => {
         .then(res => {
 
           expect(res.contents.length).to.eql(2);
-          expect(res.contents[1].value).to.eql(`**Kite:** [more](command:kite.more-range?{"range":[{"line":19,"character":6},{"line":19,"character":11}],"source":"Hover"})`);
+          expect(res.contents[1].value).to.eql(`**Kite:** [more](command:kite.more-position?{"position":{"line":19,"character":13},"source":"Hover"})`);
         });
       });
     });

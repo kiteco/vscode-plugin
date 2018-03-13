@@ -11,9 +11,8 @@ module.exports = class KiteHoverProvider {
     this.Kite = Kite;
   }
 
-  provideHover(doc, pos) {
-    const range = doc.getWordRangeAtPosition(pos);
-    const path = hoverPath(doc, range);
+  provideHover(doc, position) {
+    const path = hoverPath(doc, position);
     return this.Kite.request({path})
     .then(data => JSON.parse(data))
     .then(data => {
@@ -33,13 +32,13 @@ module.exports = class KiteHoverProvider {
             id,
             source: 'Hover',
           })})`);
-          links.push(`[more](command:kite.more-range?${JSON.stringify({
-            range,
+          links.push(`[more](command:kite.more-position?${JSON.stringify({
+            position,
             source: 'Hover',
           })})`);
         } else {
-          links.push(`[more](command:kite.more-range?${JSON.stringify({
-            range,
+          links.push(`[more](command:kite.more-position?${JSON.stringify({
+            position,
             source: 'Hover',
           })})`);
         }
