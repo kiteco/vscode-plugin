@@ -25,7 +25,7 @@ const {
     WhitelistChoice,
   }
 } =  require('kite-installer');
-const URI = 'kite-vscode-install://install';
+const URI = vscode.Uri.parse('kite-vscode-install://install');
 
 const screenshot = '';
 
