@@ -6,7 +6,7 @@ const {fixtureURI, withRoutes, withKiteWhitelistedPaths, fakeResponse, log} = re
 const {asArray} = require('../src/html-utils');
 
 const {
-  hasMembersSection, hasDocsSection, hasHeaderSection, hasExamplesSection, hasLinksSection,
+  hasMembersSection, hasDocsSection, hasHeaderSection, hasExamplesSection,
   hasArgumentsSection, hasUsagesSection,
 } = require('./section-helpers');
 
@@ -44,8 +44,6 @@ describe('router', () => {
         hasDocsSection(source.report.description_html);
         
         hasExamplesSection(2, source.symbol.id, source.report.examples);
-        
-        hasLinksSection(2, source.symbol.id, source.report.links);
       });
 
       describe('for a type', () => {
@@ -100,8 +98,6 @@ describe('router', () => {
         hasUsagesSection(source.report.usages);
   
         hasExamplesSection(2, source.symbol.id, source.report.examples);
-        
-        hasLinksSection(2, source.symbol.id, source.report.links);
       });
 
       describe('for an instance', () => {
@@ -153,8 +149,6 @@ describe('router', () => {
         hasDocsSection(source.report.description_html);
         
         hasExamplesSection(2, source.symbol.id, source.report.examples);
-        
-        hasLinksSection(2, source.symbol.id, source.report.links);
       });
 
       describe('for a type', () => {
@@ -209,8 +203,6 @@ describe('router', () => {
         hasUsagesSection(source.report.usages);
   
         hasExamplesSection(2, source.symbol.id, source.report.examples);
-        
-        hasLinksSection(2, source.symbol.id, source.report.links);
       });
 
       describe('for an instance', () => {
@@ -262,8 +254,6 @@ describe('router', () => {
         hasDocsSection(source.report.description_html);
         
         hasExamplesSection(2, source.symbol.id, source.report.examples);
-        
-        hasLinksSection(2, source.symbol.id, source.report.links);
       });
 
       describe('for a type', () => {
@@ -318,8 +308,6 @@ describe('router', () => {
         hasUsagesSection(source.report.usages);
   
         hasExamplesSection(2, source.symbol.id, source.report.examples);
-        
-        hasLinksSection(2, source.symbol.id, source.report.links);
       });
 
       describe('for an instance', () => {
@@ -388,8 +376,6 @@ describe('router', () => {
         hasUsagesSection(source.report.usages);
   
         hasExamplesSection(2, source.symbol[0].id, source.report.examples);
-        
-        hasLinksSection(2, source.symbol[0].id, source.report.links);
       });
     });
 

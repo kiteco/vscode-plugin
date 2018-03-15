@@ -197,7 +197,6 @@ function renderModule(data) {
       ${renderUsages(data)}
       ${renderExamples(data)}
       ${renderDefinition(data)}
-      ${renderLinks(data)}
       ${debugData(data)}
     </div>
   </div>
@@ -229,7 +228,6 @@ function renderFunction(data) {
       ${renderUsages(data)}
       ${renderExamples(data)}
       ${renderDefinition(data)}
-      ${renderLinks(data)}
       ${renderInvocations(symbol)}
       ${debugData(data)}
     </div>
@@ -259,7 +257,6 @@ function renderInstance(data) {
       ${renderUsages(data)}
       ${renderExamples(data)}
       ${renderDefinition(symbol)}
-      ${renderLinks(data)}
       ${debugData(data)}
     </div>
   </div>
