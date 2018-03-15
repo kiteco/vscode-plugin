@@ -565,7 +565,9 @@ const Kite = {
       plan = '$(primitive-dot) Kite';
     }
     
-    if (state === StateController.STATES.INSTALLED) {
+    if (state === StateController.STATES.UNINSTALLED) {
+      statusLabel = 'not installed';
+    } else if (state === StateController.STATES.INSTALLED) {
       statusLabel = 'not running';
     } else if (state === StateController.STATES.REACHABLE) {
       statusLabel = 'not logged in';
