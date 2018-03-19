@@ -123,25 +123,11 @@ module.exports = class KiteSearch {
   }
 }
 
-function renderList(results) {
-  lastList = results
+function renderList(data) {
+  lastList = data
 
-  if (results && results.python_results) {
-
-    const localResults = (results.python_results.local_results || {results: []}).results || []
-    const globalResults = (results.python_results.global_results || {results: []}).results || []
-    const allResults = compact(flatten([
-      localResults.map(r => {
-        r.local = true;
-        return r;
-      }),
-      globalResults.map(r => {
-        r.local = false;
-        return r;
-      }),
-    ]));
-
-    return allResults
+  if (data && data.results) {
+    return data.results
     .filter(r => r.result.repr && r.result.repr.trim() !== '')
     .map(r =>
       `<li data-id="${r.result.id}" ${lastId === r.result.id ? 'class="selected"' : ''}>
