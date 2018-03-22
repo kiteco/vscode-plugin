@@ -7,14 +7,15 @@ const {promisifyRequest, promisifyReadResponse, parseJSON, editorsForDocument} =
 const {hoverPath} = require('./urls');
 
 module.exports = class KiteDefinitionProvider {
-  constructor(Kite) {
+  constructor(Kite, isTest) {
     this.Kite = Kite;
+    this.isTest = isTest;
   }
 
   provideDefinition(document, position, token) {
     // hueristic - based on how editors are registered for whitelisting based on
     // documents, it should be sufficient to see if just one passes the check below
-    if (editorsForDocument(document).some(e => this.Kite.isEditorWhitelisted(e))) {
+    if (this.isTest || editorsForDocument(document).some(e => this.Kite.isEditorWhitelisted(e))) {
       const path = hoverPath(document, position);
       return this.Kite.request({path}, null, document)
       .then(data => parseJSON(data))

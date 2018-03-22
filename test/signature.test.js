@@ -9,7 +9,7 @@ describe('KiteSignatureProvider', () => {
   let provider;
 
   beforeEach(() => {
-    provider = new KiteSignatureProvider(Kite);
+    provider = new KiteSignatureProvider(Kite, true);
   });
   withKiteWhitelistedPaths([__dirname], () => {
     describe('for a python function with a signature', () => {

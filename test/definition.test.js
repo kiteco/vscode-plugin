@@ -9,7 +9,7 @@ describe('KiteDefinitionProvider', () => {
   let provider;
 
   beforeEach(() => {
-    provider = new KiteDefinitionProvider(Kite);
+    provider = new KiteDefinitionProvider(Kite, true);
   });
   withKiteWhitelistedPaths([__dirname], () => {
     describe('when the endpoints returns a definition', () => {

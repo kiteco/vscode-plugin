@@ -24,13 +24,14 @@ const kindForHint = hint => {
 }
 
 module.exports = class KiteCompletionProvider {
-  constructor(Kite) {
+  constructor(Kite, isTest) {
     this.Kite = Kite;
+    this.isTest = isTest;
   }
   provideCompletionItems(document, position, token) {
     // hueristic - based on how editors are registered for whitelisting based on
     // documents, it should be sufficient to see if just one passes the check below
-    if (editorsForDocument(document).some(e => this.Kite.isEditorWhitelisted(e))) {
+    if (this.isTest || editorsForDocument(document).some(e => this.Kite.isEditorWhitelisted(e))) {
       const text = document.getText();
 
       if (text.length > MAX_FILE_SIZE) {

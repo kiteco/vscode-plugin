@@ -7,14 +7,15 @@ const {compact, editorsForDocument} = require('./utils');
 const {symbolName, symbolKind, symbolId, idIsEmpty} = require('./data-utils');
 
 module.exports = class KiteHoverProvider {
-  constructor (Kite) {
+  constructor (Kite, isTest) {
     this.Kite = Kite;
+    this.isTest = isTest;
   }
 
   provideHover(doc, position) {
     // hueristic - based on how editors are registered for whitelisting based on
     // documents, it should be sufficient to see if just one passes the check below
-    if (editorsForDocument(doc).some(e => this.Kite.isEditorWhitelisted(e))) {
+    if (this.isTest || editorsForDocument(doc).some(e => this.Kite.isEditorWhitelisted(e))) {
       const path = hoverPath(doc, position);
       return this.Kite.request({path})
       .then(data => JSON.parse(data))
