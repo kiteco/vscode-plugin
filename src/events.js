@@ -13,15 +13,21 @@ module.exports = class EditorEvents {
   }
 
   focus() {
-    return this.Kite.checkState('focus').then(() => this.send('focus'));
+    return this.Kite.isEditorWhitelisted(this.editor) ?
+      this.Kite.checkState('focus').then(() => this.send('focus')) :
+      Promise.resolve();
   }
 
   edit() {
-    return this.send('edit');
+    return this.Kite.isEditorWhitelisted(this.editor) ?
+      this.send('edit') :
+      Promise.resolve();
   }
 
   selectionChanged() {
-    return this.Kite.checkState('selectionChanged').then(() => this.send('selection'));
+    return this.Kite.isEditorWhitelisted(this.editor) ? 
+      this.Kite.checkState('selectionChanged').then(() => this.send('selection')) :
+      Promise.resolve();
   }
 
   send(action) {
