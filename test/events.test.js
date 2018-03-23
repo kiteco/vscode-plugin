@@ -30,7 +30,7 @@ describe('EditorEvents', () => {
         },
       }
 
-      events = new EditorEvents(Kite, editor, true);
+      events = new EditorEvents(Kite, editor);
     });
   });
 

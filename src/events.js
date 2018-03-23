@@ -5,30 +5,23 @@ const {secondsSince} = require('./utils');
 const {normalizeDriveLetter} = require('./urls');
  
 module.exports = class EditorEvents {
-  constructor(Kite, editor, isTest) {
+  constructor(Kite, editor) {
     this.Kite = Kite;
     this.editor = editor;
     this.document = editor.document;
-    this.isTest = isTest;
     this.reset();
   }
 
   focus() {
-    return this.isTest || this.Kite.isEditorWhitelisted(this.editor) ?
-      this.Kite.checkState('focus').then(() => this.send('focus')) :
-      Promise.resolve();
+    return this.Kite.checkState('focus').then(() => this.send('focus'));
   }
 
   edit() {
-    return this.isTest || this.Kite.isEditorWhitelisted(this.editor) ?
-      this.send('edit') :
-      Promise.resolve();
+    return this.send('edit');
   }
 
   selectionChanged() {
-    return this.isTest || this.Kite.isEditorWhitelisted(this.editor) ? 
-      this.Kite.checkState('selectionChanged').then(() => this.send('selection')) :
-      Promise.resolve();
+    return this.Kite.checkState('selectionChanged').then(() => this.send('selection'));
   }
 
   send(action) {
