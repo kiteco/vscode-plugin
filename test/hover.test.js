@@ -9,7 +9,7 @@ describe('KiteHoverProvider', () => {
   let provider;
 
   beforeEach(() => {
-    provider = new KiteHoverProvider(Kite);
+    provider = new KiteHoverProvider(Kite, true);
   });
   withKiteWhitelistedPaths([__dirname], () => {
     describe('for a python function with a definition', () => {

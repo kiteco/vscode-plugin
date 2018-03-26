@@ -9,7 +9,7 @@ describe('KiteCompletionProvider', () => {
   let provider;
 
   beforeEach(() => {
-    provider = new KiteCompletionProvider(Kite);
+    provider = new KiteCompletionProvider(Kite, true);
   });
   withKiteWhitelistedPaths([__dirname], () => {
     describe('when the endpoints returns some completions', () => {
