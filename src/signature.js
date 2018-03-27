@@ -13,7 +13,7 @@ module.exports = class KiteSignatureProvider {
     this.isTest = isTest;
   }
 
-  provideSignatureHelp(document, position, token) {
+  provideSignatureHelp(document, position) {
     // hueristic - based on how editors are registered for whitelisting based on
     // documents, it should be sufficient to see if just one passes the check below
     if(this.isTest || editorsForDocument(document).some(e => this.Kite.isEditorWhitelisted(e))) {

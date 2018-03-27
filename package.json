@@ -45,10 +45,6 @@
                 "title": "Kite: Help"
             },
             {
-                "command": "kite.docs-for-cursor",
-                "title": "Kite: Docs for cursor"
-            },
-            {
                 "command": "kite.install",
                 "title": "Kite Install"
             },
@@ -63,9 +59,6 @@
         ],
         "menus": {
             "editor/context": [
-                {
-                    "command": "kite.docs-for-cursor"
-                },
                 {
                     "command": "kite.search"
                 },
