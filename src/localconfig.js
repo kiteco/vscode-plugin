@@ -4,27 +4,39 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const {Logger} = require('kite-installer');
-const configDir = path.join(os.homedir(), '.kite');
-const configPath = path.join(configDir, 'kite-config.json');
+const legacyConfigDir = path.join(os.homedir(), '.kite');
+const legacyConfigPath = path.join(legacyConfigDir, 'kite-config.json');
 
-var config = null;
+const configDir = os.platform() === 'win32' 
+  ? path.join(process.env.LOCALAPPDATA, 'Kite')
+  : path.join(os.homedir(), '.kite');
 
-(function() {
-  try {
-    Logger.verbose(`initializing localconfig from ${ configPath }...`);
-    var str = fs.readFileSync(configPath, {encoding: 'utf8'});
-    config = JSON.parse(str);
-  } catch (err) {
-    config = {};
+const configPath = path.join(configDir, 'kite-vscode-config.json');
+
+let config = null;
+
+try {
+  if(fs.existsSync(legacyConfigPath)) {
+    Logger.verbose(`initializing localconfig from legacy path ${legacyConfigPath}.`);
+    config = JSON.parse(fs.readFileSync(legacyConfigPath, {encoding: 'utf8'}));
+    fs.unlinkSync(legacyConfigPath);
+    if (fs.readdirSync(legacyConfigDir).length === 0) {
+      fs.rmdirSync(legacyConfigDir)
+    }
+  } else {
+    Logger.verbose(`initializing localconfig from ${configPath}.`);
+    config = JSON.parse(fs.readFileSync(configPath, {encoding: 'utf8'}));
   }
-})();
+} catch (err) {
+  config = {};
+}
 
 function persist() {
-  var str = JSON.stringify(config, null, 2); // serialize with whitespace for human readability
+  const str = JSON.stringify(config, null, 2); // serialize with whitespace for human readability
   if (!fs.existsSync(configDir)) { fs.mkdirSync(configDir) }
   fs.writeFile(configPath, str, 'utf8', (err) => {
     if (err) {
-      Logger.error(`failed to persist localconfig to ${ configPath }`, err);
+      Logger.error(`failed to persist localconfig to ${configPath}`, err);
     }
   });
 }
