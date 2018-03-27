@@ -541,29 +541,7 @@ const Kite = {
     const state = this.lastState;
     const status = this.lastStatus;
 
-    let plan, statusLabel;
-    
-    if (Plan.isActivePro()) {
-      let trialSuffix = '';
-
-      if (Plan.isTrialing()) {
-        const days = Plan.remainingTrialDays();
-        trialSuffix = [
-          ' Trial:',
-          days,
-          pluralize(days, 'day', 'days'),
-          'left',
-        ].join(' ');
-      }
-
-      plan = `$(primitive-dot) Kite ${trialSuffix}`;
-    } else if (Plan.isEnterprise()) {
-      plan = `$(primitive-dot) Kite`;
-    } else if (Plan.plan) {
-      plan = '$(primitive-dot) Kite';
-    } else {
-      plan = '$(primitive-dot) Kite';
-    }
+    let statusLabel;
     
     if (state === StateController.STATES.UNINSTALLED) {
       statusLabel = 'not installed';
@@ -603,7 +581,10 @@ const Kite = {
       statusLabel = null;
     }
 
-    this.statusBarItem.text = compact([plan, statusLabel]).join(': ')
+    this.statusBarItem.text = compact([
+      '$(primitive-dot) Kite', 
+      statusLabel,
+    ]).join(': ')
     
     switch (state) {
       case StateController.STATES.UNSUPPORTED:
