@@ -517,6 +517,7 @@ const Kite = {
     const state = this.lastState;
     const status = this.lastStatus;
 
+<<<<<<< HEAD
     let plan;
     
     if (Plan.isActivePro()) {
@@ -546,6 +547,9 @@ const Kite = {
     
     statusLabelPromise.then(label => {
       this.statusBarItem.text = compact([plan, label]).join(': ')
+=======
+    let statusLabel;
+>>>>>>> master
     
       switch (state) {
         case StateController.STATES.UNSUPPORTED:
@@ -595,10 +599,23 @@ const Kite = {
     })
   },
 
+<<<<<<< HEAD
   getDocsAvailabilityLabel(state, status) {
     let statusLabel = 'ready';
     let hoverPromise;
     switch(state) {
+=======
+    this.statusBarItem.text = compact([
+      '$(primitive-dot) Kite', 
+      statusLabel,
+    ]).join(': ')
+    
+    switch (state) {
+      case StateController.STATES.UNSUPPORTED:
+        this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
+        this.statusBarItem.color = ERROR_COLOR;
+        break;
+>>>>>>> master
       case StateController.STATES.UNINSTALLED:
         statusLabel = 'not installed';
         break;
