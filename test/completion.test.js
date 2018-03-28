@@ -24,7 +24,7 @@ describe('KiteCompletionProvider', () => {
         const uri = vscode.Uri.file(fixtureURI('sample.py'));
 
         return vscode.workspace.openTextDocument(uri)
-        .then(doc => provider.provideCompletionItems(doc, new vscode.Position(19, 13)))
+        .then(doc => provider.provideCompletionItems(doc, new vscode.Position(19, 13), null))
         .then(res => {
           expect(res.length).to.eql(2);
 
@@ -51,7 +51,7 @@ describe('KiteCompletionProvider', () => {
         const uri = vscode.Uri.file(fixtureURI('sample.py'));
 
         return vscode.workspace.openTextDocument(uri)
-        .then(doc => provider.provideCompletionItems(doc, new vscode.Position(19, 13)))
+        .then(doc => provider.provideCompletionItems(doc, new vscode.Position(19, 13), null))
         .then(res => {
           expect(res).to.eql([]);
         });

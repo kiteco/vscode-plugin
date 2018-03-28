@@ -24,7 +24,7 @@ describe('KiteSignatureProvider', () => {
         const uri = vscode.Uri.file(fixtureURI('sample.py'));
 
         return vscode.workspace.openTextDocument(uri)
-        .then(doc => provider.provideSignatureHelp(doc, new vscode.Position(19, 13)))
+        .then(doc => provider.provideSignatureHelp(doc, new vscode.Position(19, 13), null))
         .then(res => {
           expect(res.signatures.length).to.eql(1);
           expect(res.signatures[0].label).to.eql('plot(x:list|uint64, y:list|str)');
@@ -50,7 +50,7 @@ describe('KiteSignatureProvider', () => {
         const uri = vscode.Uri.file(fixtureURI('sample.py'));
 
         return vscode.workspace.openTextDocument(uri)
-        .then(doc => provider.provideSignatureHelp(doc, new vscode.Position(19, 13)))
+        .then(doc => provider.provideSignatureHelp(doc, new vscode.Position(19, 13), null))
         .then(res => {
           expect(res).to.be(null);
         });

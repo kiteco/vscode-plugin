@@ -310,6 +310,26 @@ const Kite = {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.One, 'Kite Tour');
     });
 
+    vscode.commands.registerCommand('kite.docs-for-cursor', () => {
+      const editor = vscode.window.activeTextEditor;
+
+      if (editor && this.isGrammarSupported(editor)) {
+        const pos = editor.selection.active;
+        const {document} = editor;
+
+        const path = hoverPath(document, pos)
+        StateController.client.request({path})
+          .then(resp => {
+            if(resp.statusCode === 200) {
+              vscode.commands.executeCommand('kite.more-position', {
+                position: pos,
+                source: 'Command',
+              })
+            }
+          })
+      }
+    });
+
     vscode.commands.registerCommand('kite.usage', ({file, line, source}) => {
       metrics.track(`${source} Go to usage clicked`);
       metrics.featureRequested('usage');
@@ -517,39 +537,10 @@ const Kite = {
     const state = this.lastState;
     const status = this.lastStatus;
 
-<<<<<<< HEAD
-    let plan;
-    
-    if (Plan.isActivePro()) {
-      let trialSuffix = '';
-
-      if (Plan.isTrialing()) {
-        const days = Plan.remainingTrialDays();
-        trialSuffix = [
-          ' Trial:',
-          days,
-          pluralize(days, 'day', 'days'),
-          'left',
-        ].join(' ');
-      }
-
-      plan = `$(primitive-dot) Kite ${trialSuffix}`;
-    } else if (Plan.isEnterprise()) {
-      plan = `$(primitive-dot) Kite`;
-    } else if (Plan.plan) {
-      plan = '$(primitive-dot) Kite';
-    } else {
-      plan = '$(primitive-dot) Kite';
-    }
-    const statusLabelPromise = Plan.isEnterprise() || Plan.isTrialing() ?
-      Promise.resolve(null) :
-      this.getDocsAvailabilityLabel(state, status);
+    const statusLabelPromise = this.getDocsAvailabilityLabel(state, status);
     
     statusLabelPromise.then(label => {
-      this.statusBarItem.text = compact([plan, label]).join(': ')
-=======
-    let statusLabel;
->>>>>>> master
+      this.statusBarItem.text = compact(['$(primitive-dot) Kite', label]).join(': ')
     
       switch (state) {
         case StateController.STATES.UNSUPPORTED:
@@ -599,23 +590,10 @@ const Kite = {
     })
   },
 
-<<<<<<< HEAD
   getDocsAvailabilityLabel(state, status) {
     let statusLabel = 'ready';
     let hoverPromise;
     switch(state) {
-=======
-    this.statusBarItem.text = compact([
-      '$(primitive-dot) Kite', 
-      statusLabel,
-    ]).join(': ')
-    
-    switch (state) {
-      case StateController.STATES.UNSUPPORTED:
-        this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
-        this.statusBarItem.color = ERROR_COLOR;
-        break;
->>>>>>> master
       case StateController.STATES.UNINSTALLED:
         statusLabel = 'not installed';
         break;

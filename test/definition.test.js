@@ -24,7 +24,7 @@ describe('KiteDefinitionProvider', () => {
         const uri = vscode.Uri.file(fixtureURI('sample.py'));
 
         return vscode.workspace.openTextDocument(uri)
-        .then(doc => provider.provideDefinition(doc, new vscode.Position(19, 13)))
+        .then(doc => provider.provideDefinition(doc, new vscode.Position(19, 13), null))
         .then(res => {
           expect(res.uri.path).to.eql('/sample.py');
           expect(res.range.start.line).to.eql(49);
@@ -47,7 +47,7 @@ describe('KiteDefinitionProvider', () => {
         const uri = vscode.Uri.file(fixtureURI('sample.py'));
 
         return vscode.workspace.openTextDocument(uri)
-        .then(doc => provider.provideDefinition(doc, new vscode.Position(19, 13)))
+        .then(doc => provider.provideDefinition(doc, new vscode.Position(19, 13), null))
         .then(res => {
           expect(res).to.eql(null);
         });

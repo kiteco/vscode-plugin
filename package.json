@@ -45,6 +45,10 @@
                 "title": "Kite: Help"
             },
             {
+                "command": "kite.docs-for-cursor",
+                "title": "Kite: Docs for cursor"
+            },  
+            {
                 "command": "kite.install",
                 "title": "Kite Install"
             },
@@ -67,6 +71,9 @@
                 },
                 {
                     "command": "kite.open-permissions"
+                },
+                {
+                    "command": "kite.docs-for-cursor"
                 }
             ]
         },
