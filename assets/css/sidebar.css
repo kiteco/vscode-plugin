@@ -444,7 +444,7 @@ a[data-action="expand"] {
   display: block;
   margin-top: 10px;
 }
-.kite section.examples a.more-examples {
+.kite section.how-to a.more-examples {
   display: block;
   margin-top: 10px;
 }
@@ -461,25 +461,25 @@ a[data-action="expand"] {
 .kite ul li + li {
   margin-top: 10px;
 }
-.kite section.examples ul li {
+.kite section.how-to ul li {
   position: relative;
 }
-.kite section.examples ul li > .icon {
+.kite section.how-to ul li > .icon {
   position: absolute;
   top: 0;
 }
-.kite section.examples ul li > a,
-.kite section.examples ul li > span {
+.kite section.how-to ul li > a,
+.kite section.how-to ul li > span {
   padding-left: 1.5em;
   padding-right: 1.5em;
   display: inline-block;
 }
-.kite section.examples ul li > a span,
-.kite section.examples ul li > span span {
+.kite section.how-to ul li > a span,
+.kite section.how-to ul li > span span {
   display: inline-block;
 }
-.kite section.examples ul li > a .icon,
-.kite section.examples ul li > span .icon {
+.kite section.how-to ul li > a .icon,
+.kite section.how-to ul li > span .icon {
   position: absolute;
   top: 0;
   right: 0;
@@ -753,27 +753,27 @@ a[data-action="expand"] {
   display: block;
   margin-top: 10px;
 }
-.kite section.examples a.more-examples {
+.kite section.how-to a.more-examples {
   display: block;
   margin-top: 10px;
 }
-.kite section.examples ul li {
+.kite section.how-to ul li {
   position: relative;
 }
-.kite section.examples ul li > .icon {
+.kite section.how-to ul li > .icon {
   position: absolute;
 }
-.kite section.examples ul li > a,
-.kite section.examples ul li > span {
+.kite section.how-to ul li > a,
+.kite section.how-to ul li > span {
   padding-left: 1.5em;
   padding-right: 1.5em;
 }
-.kite section.examples ul li > a span,
-.kite section.examples ul li > span span {
+.kite section.how-to ul li > a span,
+.kite section.how-to ul li > span span {
   display: inline-block;
 }
-.kite section.examples ul li > a .icon,
-.kite section.examples ul li > span .icon {
+.kite section.how-to ul li > a .icon,
+.kite section.how-to ul li > span .icon {
   position: absolute;
   right: 0;
 }

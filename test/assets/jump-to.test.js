@@ -72,7 +72,7 @@ describe('createJumpTo', () => {
       expect(actions.textContent).to.eql('Jump to  How to');
 
       const link = actions.querySelector('a');
-      expect(link.getAttribute('onclick')).to.eql("jumpTo('.examples'); return false;");
+      expect(link.getAttribute('onclick')).to.eql("jumpTo('.how-to'); return false;");
     });
   });
 

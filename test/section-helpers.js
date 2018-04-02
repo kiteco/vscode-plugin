@@ -51,7 +51,7 @@ function testInternalLinks(html) {
 
 module.exports.hasExamplesSection = (count, id, examples) => {
   it(`renders a list of ${count} examples`, () => {
-    const section = document.querySelector('section.examples');
+    const section = document.querySelector('section.how-to');
     const lis =  section.querySelectorAll('li');
     expect(lis.length).to.eql(count);
 
