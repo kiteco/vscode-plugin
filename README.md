@@ -4,8 +4,9 @@ This extension adds support for Kite in Visual Studio Code and adds the features
 
 - Completions
 - Function Signatures
-- Expanded Info
-- Goto Definition
+- Hover info and Sidebar
+- Go to Definition
+- Search
 
 ## How to install this extension
 
