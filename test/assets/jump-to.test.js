@@ -69,7 +69,7 @@ describe('createJumpTo', () => {
 
     it('creates a link in the footer to jump to the examples', () => {
       const actions = document.querySelector('footer .actions');
-      expect(actions.textContent).to.eql('Jump to  Examples');
+      expect(actions.textContent).to.eql('Jump to  How to');
 
       const link = actions.querySelector('a');
       expect(link.getAttribute('onclick')).to.eql("jumpTo('.examples'); return false;");
