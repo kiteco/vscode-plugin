@@ -87,7 +87,7 @@ module.exports = class KiteStatus {
   }
 
   get onDidChange() {
-    return this.didChangeEmitter.event; 
+    return this.didChangeEmitter.event;
   }
 
   update() {
@@ -191,11 +191,11 @@ module.exports = class KiteStatus {
     return `
     <ul class="links ${account ? 'has-account' : 'no-account'}">
       ${giftLink}
-      <li><a href='command:kite.web-url?"http://localhost:46624/clientapi/desktoplogin?d=/docs"' 
-             class="account-dependent">Search Python documentation</a></li>
-      <li><a href='command:kite.web-url?"http://localhost:46624/settings"' 
+      <li><a href='command:kite.web-url?"http://localhost:46624/clientapi/desktoplogin?d=/docs"'
+             class="account-dependent">Kite Search</a></li>
+      <li><a href='command:kite.web-url?"http://localhost:46624/settings"'
              class="account-dependent">Settings</a></li>
-      <li><a href='command:kite.web-url?"http://localhost:46624/settings/permissions"' 
+      <li><a href='command:kite.web-url?"http://localhost:46624/settings/permissions"'
              class="account-dependent">Permissions</a></li>
       <li><a href="http://help.kite.com/category/46-vs-code-integration">Help</a></li>
     </ul>

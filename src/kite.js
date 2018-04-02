@@ -29,7 +29,7 @@ const {version} = require('../package.json');
 const pluralize = (n, singular, plural) => n === 1 ? singular : plural;
 
 const Kite = {
-  activate(ctx) 
+  activate(ctx)
   {
     if(process.env.NODE_ENV === 'test') { return; }
 
@@ -99,7 +99,7 @@ const Kite = {
     });
 
     server.start();
-    
+
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-sidebar', router));
     ctx.subscriptions.push(
@@ -121,7 +121,7 @@ const Kite = {
       vscode.languages.registerCompletionItemProvider(PYTHON_MODE, new KiteCompletionProvider(Kite), '.'));
     ctx.subscriptions.push(
       vscode.languages.registerSignatureHelpProvider(PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
-    
+
     ctx.subscriptions.push(
       vscode.languages.registerHoverProvider(JAVASCRIPT_MODE, new KiteHoverProvider(Kite)));
     ctx.subscriptions.push(
@@ -135,17 +135,17 @@ const Kite = {
       Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
     }));
 
-    ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {      
+    ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
       if (e) {
         if (/Code[\/\\]User[\/\\]settings.json$/.test(e.document.fileName)){
           metrics.featureRequested('settings');
           metrics.featureFulfilled('settings');
         }
-        if (this.isGrammarSupported(e)) { 
+        if (this.isGrammarSupported(e)) {
           this.registerEvents(e);
-          this.registerEditor(e); 
+          this.registerEditor(e);
         }
-  
+
         const evt = this.eventsByEditor.get(e);
         evt.focus();
       }
@@ -180,7 +180,7 @@ const Kite = {
     this.statusBarItem.show();
 
     ctx.subscriptions.push(this.statusBarItem);
-    
+
     vscode.commands.registerCommand('kite.status', () => {
       metrics.featureRequested('status_panel');
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
@@ -189,21 +189,21 @@ const Kite = {
     vscode.commands.registerCommand('kite.search', () => {
       search.clearCache();
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-search://search', vscode.ViewColumn.Two, 'Kite Search');
-    }); 
-    
+    });
+
     vscode.commands.registerCommand('kite.reset-search-history', () => {
       localconfig.set('searchHistory', []);
-    }); 
-    
+    });
+
     vscode.commands.registerCommand('kite.login', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
-    }); 
-    
+    });
+
     vscode.commands.registerCommand('kite.install', () => {
       install.reset();
       AccountManager.initClient('alpha.kite.com', -1, true);
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
-    }); 
+    });
 
     vscode.commands.registerCommand('kite.open-settings', () => {
       opn('http://localhost:46624/settings');
@@ -279,7 +279,7 @@ const Kite = {
       router.chopNavigation();
       router.navigate(uri);
     });
-    
+
     vscode.commands.registerCommand('kite.web', ({id, source}) => {
       metrics.track(`${source} Open in web clicked`);
       metrics.featureRequested('open_in_web');
@@ -311,7 +311,7 @@ const Kite = {
     vscode.commands.registerCommand('kite.help', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.One, 'Kite Tour');
     });
-    
+
     vscode.commands.registerCommand('kite.docs-for-cursor', () => {
       const editor = vscode.window.activeTextEditor;
 
@@ -351,7 +351,7 @@ const Kite = {
     const config = vscode.workspace.getConfiguration('kite');
     if (config.showDocsNotificationOnStartup) {
       vscode.window.showInformationMessage('Kite is now integrated with VS Code', 'Learn how to use Kite', "Don't show this again").then(item => {
-        if (item) { 
+        if (item) {
           switch(item) {
             case 'Learn how to use Kite':
               opn('http://help.kite.com/category/46-vs-code-integration');
@@ -408,7 +408,7 @@ const Kite = {
       });
     }
   },
-  
+
   deactivate() {
     // send the activated event
     metrics.track('deactivated');
@@ -417,7 +417,7 @@ const Kite = {
   registerDocument(document) {
     editorsForDocument(document).forEach(e => this.registerEditor(e));
   },
-  
+
   registerDocumentEvents(document) {
     editorsForDocument(document).forEach(e => this.registerEvents(e));
   },
@@ -447,7 +447,7 @@ const Kite = {
       this.getSupportedLanguages().catch(() => []),
     ]).then(([state, languages]) => {
       this.supportedLanguages = languages;
-      
+
       if (state > StateController.STATES.INSTALLED) {
         localconfig.set('wasInstalled', true);
       }
@@ -492,8 +492,8 @@ const Kite = {
             this.setStatus(state);
             this.checkConnectivity().then(() => {
               this.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
-                if (item) { 
-                  // opn('http://localhost:46624/settings'); 
+                if (item) {
+                  // opn('http://localhost:46624/settings');
                   vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
                 }
               });
@@ -501,7 +501,7 @@ const Kite = {
           }
           if(src && (src === 'pollingInterval' || src === 'activationCheck')) this.lastPolledState = state
           return Plan.queryPlan().then(() => state);
-        default: 
+        default:
           if (this.isGrammarSupported(vscode.window.activeTextEditor)) {
             this.registerEditor(vscode.window.activeTextEditor);
           }
@@ -510,8 +510,8 @@ const Kite = {
       }
       //state caching for capturihg false positives in kited restart race condition
       //we do this only for checkState invocations coming from the polling or initial activation
-      //script to eliminate the possible case where multiple editor events were generated quickly 
-      //while kited was restarting 
+      //script to eliminate the possible case where multiple editor events were generated quickly
+      //while kited was restarting
       if(src && (src === 'pollingInterval' || src === 'activationCheck')) this.lastPolledState = state
       return state;
     })
@@ -542,7 +542,7 @@ const Kite = {
     const status = this.lastStatus;
 
     let statusLabel;
-    
+
     if (state === StateController.STATES.UNINSTALLED) {
       statusLabel = 'not installed';
     } else if (state === StateController.STATES.INSTALLED) {
@@ -560,7 +560,7 @@ const Kite = {
         case 'not whitelisted':
         case 'blacklisted':
         case 'ignored':
-        default: 
+        default:
           const editor = vscode.window.activeTextEditor;
           if (editor) {
             const ke = this.kiteEditorByEditor.get(editor);
@@ -570,7 +570,7 @@ const Kite = {
                 statusLabel = 'Docs available at cursor';
               }
             }
-          } 
+          }
           if (!statusLabel) {
             statusLabel ='ready';
           }
@@ -582,10 +582,10 @@ const Kite = {
     }
 
     this.statusBarItem.text = compact([
-      '$(primitive-dot) Kite', 
+      '$(primitive-dot) Kite',
       statusLabel,
     ]).join(': ')
-    
+
     switch (state) {
       case StateController.STATES.UNSUPPORTED:
         this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
@@ -606,7 +606,7 @@ const Kite = {
       case StateController.STATES.REACHABLE:
         this.statusBarItem.color = WARNING_COLOR;
         break;
-      default: 
+      default:
         switch(status.status) {
         case 'not whitelisted':
           this.statusBarItem.color = WARNING_COLOR;
@@ -620,12 +620,12 @@ const Kite = {
           this.statusBarItem.color = undefined;
           this.statusBarItem.tooltip = 'Kite engine is syncing your code';
           break;
-        case 'blacklisted': 
-        case 'ignored': 
+        case 'blacklisted':
+        case 'ignored':
           this.statusBarItem.color = undefined;
           this.statusBarItem.tooltip = 'Current path is ignored by Kite';
           break;
-        case 'ready': 
+        case 'ready':
           this.statusBarItem.color = undefined;
           this.statusBarItem.tooltip = 'Kite is ready';
           break;
@@ -645,10 +645,10 @@ const Kite = {
   isGrammarSupported(e) {
     return e && this.isDocumentGrammarSupported(e.document);
   },
-  
+
   isDocumentGrammarSupported(d) {
     return d &&
-           this.supportedLanguages.includes(d.languageId) && 
+           this.supportedLanguages.includes(d.languageId) &&
            SUPPORTED_EXTENSIONS[d.languageId](d.fileName);
   },
 
@@ -689,7 +689,7 @@ const Kite = {
       }
     })
     .catch(() => ({status: 'ready'}));
-  }, 
+  },
 
   getSupportedLanguages() {
     const path = languagesPath();
@@ -705,18 +705,18 @@ const Kite = {
       .then(res => res ? path : null)
       .catch(() => null));
   },
-  
+
   warnNotWhitelisted(document, res) {
     this.shownNotifications = this.shownNotifications || {};
 
     if (!this.shownNotifications['whitelist']) {
       this.shownNotifications['whitelist'] = true;
       vscode.window.showErrorMessage(
-        `The Kite engine is disabled for ${document.fileName}`,
+        `Kite is not whitelisted for ${document.fileName}`,
         `Whitelist ${res}`
       ).then(item => {
         delete this.shownNotifications['whitelist'];
-        return item 
+        return item
           ? StateController.whitelistPath(res)
             .then(() => Logger.debug('whitelisted'))
           : StateController.blacklistPath(document.fileName)
@@ -739,8 +739,8 @@ const Kite = {
         return null;
       } else if (resp.statusCode === 404) {
         return (
-          vscode.workspace.workspaceFolders 
-            ? vscode.workspace.workspaceFolders[0].uri.fsPath 
+          vscode.workspace.workspaceFolders
+            ? vscode.workspace.workspaceFolders[0].uri.fsPath
             : vscode.workspace.rootPath
         ) || os.homedir();
       } else {
@@ -764,9 +764,9 @@ const Kite = {
       if (this.isDocumentGrammarSupported(document)) {
         this.handle403Response(document, resp);
       }
-      
+
       // Logger.logResponse(resp);
-      
+
       if (resp.statusCode !== 200) {
         return promisifyReadResponse(resp).then(data => {
           const err = new Error(`bad status ${resp.statusCode}: ${data}`);

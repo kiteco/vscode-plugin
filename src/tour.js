@@ -36,7 +36,7 @@ module.exports = class KiteTour {
       <div class="kite-tour-gutter scrollbars-visible-always">
         <h5>${logoLarge} Kite for Python is installed and ready!</h5>
 
-        <p>Here's how to get completions, docs, and all the other features Kite has to offer.</p>
+        <p>Here’s how to get completions, docs, and all the other features Kite has to offer.</p>
 
         <div class="kite-tour-scroll-section">
 
@@ -48,7 +48,7 @@ module.exports = class KiteTour {
             <article>
               <h5>Hover for info</h5>
               <p>
-                Hover on any Python identifier to <b>jump to definition</b>,
+                Hover on any Python expression to <b>jump to definition</b>,
                 <b>find usages</b>, <b>open in web</b>, or <b>see more</b>
               </p>
             </article>
@@ -60,9 +60,9 @@ module.exports = class KiteTour {
             </figure>
 
             <article>
-              <h5>More info panel</h5>
+              <h5>Sidebar</h5>
               <p>
-                Click “more” on hover to navigate APIs, docs, examples, usages, and definitions.
+                Click “more” on hover to open a sidebar with APIs, docs, examples, usages, and definitions.
               </p>
             </article>
           </section>
@@ -75,7 +75,7 @@ module.exports = class KiteTour {
             <article>
               <h5>Web docs</h5>
               <p>
-                Browse your local code and all of Kite's knowledge base on your browser by clicking “web” on hover.
+                Browse your local code and all of Kite’s knowledge base on your browser by clicking “web” on hover.
               </p>
             </article>
           </section>
@@ -86,9 +86,9 @@ module.exports = class KiteTour {
             </figure>
 
             <article>
-              <h5>Completions and Call Signatures</h5>
+              <h5>Completions and Function Signatures</h5>
               <p>
-                See completions and call signatures as you write Python.
+                See completions and function signatures as you write Python.
                 Kite has more completions and docs than any other Python engine.
               </p>
             </article>
@@ -102,12 +102,10 @@ module.exports = class KiteTour {
             <article>
               <h5>Right click</h5>
               <p>
-                You can also right click on any Python identifier to access Kite's content.
+                You can also right click on any Python expression to access Kite’s content.
               </p>
             </article>
           </section>
-
-          <p>Kite is your Coding Copilot.</p>
         </div>
 
         <p><a
