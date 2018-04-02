@@ -8,7 +8,7 @@ describe('createJumpTo', () => {
 
   beforeEach(() => {
     require('../../assets/js/jump-to');
-    
+
     sinon.stub(window, 'jumpTo');
   });
 
@@ -31,7 +31,7 @@ describe('createJumpTo', () => {
       expect(document.querySelector('footer .actions').children.length).to.eql(0);
     });
   });
-  
+
   describe('when there is no examples but some docs', () => {
     beforeEach(() => {
       document.body.innerHTML = `
@@ -47,7 +47,7 @@ describe('createJumpTo', () => {
 
     it('creates a link in the footer to jump to the docs', () => {
       const actions = document.querySelector('footer .actions');
-      expect(actions.textContent).to.eql('Jump to  Docs');
+      expect(actions.textContent).to.eql('Jump to  Description');
 
       const link = actions.querySelector('a');
       expect(link.getAttribute('onclick')).to.eql("jumpTo('.summary'); return false;");
@@ -75,7 +75,7 @@ describe('createJumpTo', () => {
       expect(link.getAttribute('onclick')).to.eql("jumpTo('.examples'); return false;");
     });
   });
-  
+
   describe('when there is no docs but some examples from local code', () => {
     beforeEach(() => {
       document.body.innerHTML = `
@@ -91,7 +91,7 @@ describe('createJumpTo', () => {
 
     it('creates a link in the footer to jump to the examples', () => {
       const actions = document.querySelector('footer .actions');
-      expect(actions.textContent).to.eql('Jump to  Examples');
+      expect(actions.textContent).to.eql('Jump to  How to');
 
       const link = actions.querySelector('a');
       expect(link.getAttribute('onclick')).to.eql("jumpTo('.examples-from-your-code'); return false;");
@@ -114,7 +114,7 @@ describe('createJumpTo', () => {
 
     it('creates a link in the footer to jump to the examples from local code', () => {
       const actions = document.querySelector('footer .actions');
-      expect(actions.textContent).to.eql('Jump to  Examples');
+      expect(actions.textContent).to.eql('Jump to  How to');
 
       const link = actions.querySelector('a');
       expect(link.getAttribute('onclick')).to.eql("jumpTo('.examples-from-your-code'); return false;");
@@ -138,7 +138,7 @@ describe('createJumpTo', () => {
 
     it('creates a link in the footer to jump to the examples and docs', () => {
       const actions = document.querySelector('footer .actions');
-      expect(actions.textContent).to.eql('Jump to  Docs  Examples');
+      expect(actions.textContent).to.eql('Jump to  Description  How to');
 
       const link1 = actions.querySelector('a');
       expect(link1.getAttribute('onclick')).to.eql("jumpTo('.summary'); return false;");
