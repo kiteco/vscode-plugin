@@ -21,7 +21,7 @@ const localconfig = require('./localconfig');
 const metrics = require('./metrics');
 const Plan = require('./plan');
 const server = require('./server');
-const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath, languagesPath} = require('./urls');
+const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath, languagesPath, hoverPath} = require('./urls');
 const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params} = require('./utils');
 const {version} = require('../package.json');
@@ -160,9 +160,7 @@ const Kite = {
     ctx.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
       e.document && editorsForDocument(e.document).forEach(e => {
         const evt = this.eventsByEditor.get(e);
-        const ke = this.kiteEditorByEditor.get(e);
         evt.edit();
-        ke && ke.tokensList.updateTokens();
       })
     }));
 
@@ -284,7 +282,7 @@ const Kite = {
       metrics.track(`${source} Open in web clicked`);
       metrics.featureRequested('open_in_web');
       metrics.featureFulfilled('open_in_web');
-      opn(openDocumentationInWebURL(id, true));
+      opn(openDocumentationInWebURL(id));
     });
 
     vscode.commands.registerCommand('kite.web-url', (url) => {
@@ -316,21 +314,19 @@ const Kite = {
       const editor = vscode.window.activeTextEditor;
 
       if (editor && this.isGrammarSupported(editor)) {
-        const kiteEditor = this.kiteEditorByEditor.get(editor);
         const pos = editor.selection.active;
         const {document} = editor;
 
-        const token = kiteEditor.tokensList.tokenAtPosition(pos);
-
-        if (token) {
-          vscode.commands.executeCommand('kite.more-range', {
-            range: new vscode.Range(
-              document.positionAt(token.begin_bytes),
-              document.positionAt(token.end_bytes)
-            ),
-            source: 'Command',
-          });
-        }
+        const path = hoverPath(document, pos)
+        StateController.client.request({path})
+          .then(resp => {
+            if(resp.statusCode === 200) {
+              vscode.commands.executeCommand('kite.more-position', {
+                position: pos,
+                source: 'Command',
+              })
+            }
+          })
       }
     });
 
@@ -541,96 +537,104 @@ const Kite = {
     const state = this.lastState;
     const status = this.lastStatus;
 
-    let statusLabel;
+    const statusLabelPromise = this.getDocsAvailabilityLabel(state, status);
 
-    if (state === StateController.STATES.UNINSTALLED) {
-      statusLabel = 'not installed';
-    } else if (state === StateController.STATES.INSTALLED) {
-      statusLabel = 'not running';
-    } else if (state === StateController.STATES.REACHABLE) {
-      statusLabel = 'not logged in';
-    } else if(!Plan.isEnterprise() && !Plan.isTrialing()) {
-      switch(status.status) {
-        case 'indexing':
-          statusLabel = 'indexing';
+    statusLabelPromise.then(label => {
+      this.statusBarItem.text = compact(['$(primitive-dot) Kite', label]).join(': ')
+
+      switch (state) {
+        case StateController.STATES.UNSUPPORTED:
+          this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
+          this.statusBarItem.color = ERROR_COLOR;
           break;
-        case 'syncing':
-          statusLabel = 'syncing';
+        case StateController.STATES.UNINSTALLED:
+          this.statusBarItem.tooltip = 'Kite engine is not installed';
+          this.statusBarItem.color = ERROR_COLOR;
           break;
-        case 'not whitelisted':
-        case 'blacklisted':
-        case 'ignored':
+        case StateController.STATES.INSTALLED:
+          this.statusBarItem.tooltip = 'Kite engine is not running';
+          this.statusBarItem.color = ERROR_COLOR;
+          break;
+        case StateController.STATES.RUNNING:
+          this.statusBarItem.tooltip = 'Kite engine is not reachable';
+          this.statusBarItem.color = ERROR_COLOR;
+          break;
+        case StateController.STATES.REACHABLE:
+          this.statusBarItem.color = WARNING_COLOR;
+          break;
         default:
-          const editor = vscode.window.activeTextEditor;
-          if (editor) {
-            const ke = this.kiteEditorByEditor.get(editor);
-            if (ke) {
-              const token = ke.tokensList.tokenAtPosition(editor.selection.active);
-              if (token) {
-                statusLabel = 'Docs available at cursor';
-              }
-            }
+          switch(status.status) {
+            case 'not whitelisted':
+              this.statusBarItem.color = WARNING_COLOR;
+              this.statusBarItem.tooltip = 'Current path is not whitelisted';
+              break;
+            case 'indexing':
+              this.statusBarItem.color = undefined;
+              this.statusBarItem.tooltip = 'Kite engine is indexing your code';
+              break;
+            case 'syncing':
+              this.statusBarItem.color = undefined;
+              this.statusBarItem.tooltip = 'Kite engine is syncing your code';
+              break;
+            case 'blacklisted':
+            case 'ignored':
+              this.statusBarItem.color = undefined;
+              this.statusBarItem.tooltip = 'Current path is ignored by Kite';
+              break;
+            case 'ready':
+              this.statusBarItem.color = undefined;
+              this.statusBarItem.tooltip = 'Kite is ready';
+              break;
           }
-          if (!statusLabel) {
-            statusLabel ='ready';
-          }
-
-          break;
       }
-    } else {
-      statusLabel = null;
-    }
+    })
+  },
 
-    this.statusBarItem.text = compact([
-      '$(primitive-dot) Kite',
-      statusLabel,
-    ]).join(': ')
-
-    switch (state) {
-      case StateController.STATES.UNSUPPORTED:
-        this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
-        this.statusBarItem.color = ERROR_COLOR;
-        break;
+  getDocsAvailabilityLabel(state, status) {
+    let statusLabel = 'ready';
+    let hoverPromise;
+    switch(state) {
       case StateController.STATES.UNINSTALLED:
-        this.statusBarItem.tooltip = 'Kite engine is not installed';
-        this.statusBarItem.color = ERROR_COLOR;
+        statusLabel = 'not installed';
         break;
       case StateController.STATES.INSTALLED:
-        this.statusBarItem.tooltip = 'Kite engine is not running';
-        this.statusBarItem.color = ERROR_COLOR;
-        break;
-      case StateController.STATES.RUNNING:
-        this.statusBarItem.tooltip = 'Kite engine is not reachable';
-        this.statusBarItem.color = ERROR_COLOR;
+        statusLabel = 'not running';
         break;
       case StateController.STATES.REACHABLE:
-        this.statusBarItem.color = WARNING_COLOR;
+        statusLabel = 'not logged in';
         break;
       default:
-        switch(status.status) {
-        case 'not whitelisted':
-          this.statusBarItem.color = WARNING_COLOR;
-          this.statusBarItem.tooltip = 'Current path is not whitelisted';
-          break;
-        case 'indexing':
-          this.statusBarItem.color = undefined;
-          this.statusBarItem.tooltip = 'Kite engine is indexing your code';
-          break;
-        case 'syncing':
-          this.statusBarItem.color = undefined;
-          this.statusBarItem.tooltip = 'Kite engine is syncing your code';
-          break;
-        case 'blacklisted':
-        case 'ignored':
-          this.statusBarItem.color = undefined;
-          this.statusBarItem.tooltip = 'Current path is ignored by Kite';
-          break;
-        case 'ready':
-          this.statusBarItem.color = undefined;
-          this.statusBarItem.tooltip = 'Kite is ready';
-          break;
+        if(status) {
+          switch(status.status) {
+            case 'indexing':
+              statusLabel = 'indexing';
+              break;
+            case 'syncing':
+              statusLabel = 'syncing';
+              break;
+            case 'not whitelisted':
+            case 'blacklisted':
+            case 'ignored':
+              break;
+            default:
+              const editor = vscode.window.activeTextEditor;
+              if (editor) {
+                const path = hoverPath(editor.document, editor.selection.active);
+                hoverPromise = StateController.client.request({path})
+                  .then(resp => {
+                    if(resp.statusCode === 200) {
+                      return 'Docs available at cursor';
+                    } else {
+                      return 'ready';
+                    }
+                  }).catch(() => 'ready');
+              }
+              break;
+          }
         }
     }
+    if(hoverPromise) { return hoverPromise; }
+    return Promise.resolve(statusLabel);
   },
 
   setStatus(state = this.lastState, document) {

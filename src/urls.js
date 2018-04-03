@@ -11,14 +11,6 @@ function languagesPath() {
   return '/clientapi/languages';
 }
 
-function tokensPath(document) {
-  const state = md5(document.getText());
-  const filename = document.fileName;
-  const buffer = cleanPath(filename);
-
-  return `/api/buffer/vscode/${buffer}/${state}/tokens`;
-}
-
 function accountPath() {
   return '/api/account/user';
 }
@@ -105,17 +97,17 @@ function examplePath(id) {
   return `/api/python/curation/${id}`;
 }
 
-function openDocumentationInWebURL(id, token = false) {
+function openDocumentationInWebURL(id) {
   const url = `http://localhost:46624/clientapi/desktoplogin?d=/docs/${escapeId(id)}`;
   return url;
 }
 
-function openSignatureInWebURL(id, token = false) {
+function openSignatureInWebURL(id) {
   const url = `http://localhost:46624/clientapi/desktoplogin?d=/docs/${escapeId(id)}%23signature`;
   return url;
 }
 
-function openExampleInWebURL(id, token = false) {
+function openExampleInWebURL(id) {
   const url = `http://localhost:46624/clientapi/desktoplogin?d=/examples/python/${escapeId(id)}`;
   return url;
 }
@@ -167,7 +159,6 @@ module.exports = {
   serializeRangeForPath,
   shouldNotifyPath,
   signaturePath,
-  tokensPath,
   usagePath,
   usagesPath,
   statusPath,
