@@ -57,7 +57,7 @@ describe('createJumpTo', () => {
   describe('when there is no docs but some generic examples', () => {
     beforeEach(() => {
       document.body.innerHTML = `
-        <div class="examples">Some examples</div>
+        <div class="how-to">Some examples</div>
 
         <footer>
           <div class="actions"></div>
