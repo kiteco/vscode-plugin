@@ -14,17 +14,17 @@ window.jumpTo = function jumpTo (targetCls) {
 }
 
 window.createJumpTo = function createJumpTo () {
-  const examplesSection = document.querySelector('.examples-from-your-code') || document.querySelector('.examples');
+  const examplesSection = document.querySelector('.examples-from-your-code') || document.querySelector('.how-to');
   const docsSection = document.querySelector('.summary');
 
   const links = [];
 
   if (docsSection) {
-    links.push(`<a href="#" class="docs-button" onclick="jumpTo('.summary'); return false;">${iconDocs} <span>Docs</span></a>`)  
+    links.push(`<a href="#" class="docs-button" onclick="jumpTo('.summary'); return false;">${iconDocs} <span>Description</span></a>`)
   }
-  
+
   if (examplesSection) {
-    links.push(`<a href="#" class="examples-button" onclick="jumpTo('.${examplesSection.className}'); return false;">${iconExamples} <span>Examples</span></a>`)  
+    links.push(`<a href="#" class="examples-button" onclick="jumpTo('.${examplesSection.className}'); return false;">${iconExamples} <span>How to</span></a>`)
   }
 
   if (links.length > 0) {

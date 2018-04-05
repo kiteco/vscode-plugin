@@ -57,7 +57,7 @@ function debugHTML (html) {
       <!doctype html>
       <html class="vscode-dark">
         <meta charset="utf-8"/>
-        <style> 
+        <style>
           html {
             background: #333333;
             color: #999999;
@@ -78,9 +78,9 @@ function debugHTML (html) {
 
 function handleInternalLinks(html) {
   return html
-  .replace(/<a class="internal_link" href="#([^"]+)"/g, 
+  .replace(/<a class="internal_link" href="#([^"]+)"/g,
   `<a class="internal_link" href='command:kite.navigate?"link/python;$1"'`)
-  .replace(/<a href="#([^"]+)" class="internal_link"/g, 
+  .replace(/<a href="#([^"]+)" class="internal_link"/g,
     `<a href='command:kite.navigate?"link/python;$1"' class="internal_link"`);
 }
 
@@ -88,12 +88,12 @@ function wrapHTML (html) {
   html = handleInternalLinks(html);
   return `
   <style>
-    ${ 
+    ${
       process.env.NODE_ENV !== 'test'
         ? `html {
           font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
         }
-        
+
         pre, code, .code {
           font-family: ${vscode.workspace.getConfiguration('editor').get('fontFamily')};
           font-size: ${vscode.workspace.getConfiguration('editor').get('fontSize')}px;
@@ -187,7 +187,7 @@ function renderModule(data) {
       ${
         value.kind === 'type'
           ? `
-            ${renderPatterns(value, 'Popular Constructor Patterns')}
+            ${renderPatterns(value)}
             ${renderParameters(value)}
             ${renderLanguageSpecificArgumentsList(value)}`
           : ''
@@ -203,7 +203,7 @@ function renderModule(data) {
 
   <footer>
     <div class="actions"></div>
-    ${!idIsEmpty(symbol.id) 
+    ${!idIsEmpty(symbol.id)
       ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
             class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
       : ''}
@@ -235,7 +235,7 @@ function renderFunction(data) {
 
   <footer>
     <div class="actions"></div>
-    ${!idIsEmpty(symbol.id) 
+    ${!idIsEmpty(symbol.id)
       ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
             class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
       : ''}
@@ -263,7 +263,7 @@ function renderInstance(data) {
 
   <footer>
     <div class="actions"></div>
-    ${!idIsEmpty(symbol.id) 
+    ${!idIsEmpty(symbol.id)
       ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
             class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
       : ''}
@@ -274,9 +274,9 @@ function renderInstance(data) {
 function renderDocs(data) {
   const description = stripBody(symbolDescription(data));
 
-  return description && description.trim() !== '' 
+  return description && description.trim() !== ''
     ? `<section class="summary collapsible collapse">
-      <h4>Docs</h4>
+      <h4>Description</h4>
       <div class="section-content description">${description}</div>
     </section>`
     : '';
@@ -435,7 +435,7 @@ function renderLinks(data, limit = 2) {
 function renderLink(link) {
   return `<li data-name="${link.title}">
     <i class="icon icon-so"></i>
-    <a href="${link.url}" 
+    <a href="${link.url}"
        onclick="window.requestGet('/count?metric=requested&name=stackoverflow_example');window.requestGet('/count?metric=fulfilled&name=stackoverflow_example')"
        class="link">
       <span class="title">${link.title}</span>
@@ -453,7 +453,7 @@ function additionalLinksLink(linksCount, data) {
 
 function renderExamples(data, limit = 2) {
   return data.report && data.report.examples && data.report.examples.length
-    ? section('Examples', `
+    ? section('How To', `
       <ul>${data.report.examples.slice(0, limit).map(renderExample).join('')}</ul>
       ${additionalExamplesLink(data.report.examples.length - 2, data)}
     `)
@@ -479,7 +479,7 @@ function additionalExamplesLink(examplesCount, data) {
 
 function renderUsages(symbol) {
   return symbol.report && symbol.report.usages && symbol.report.usages.length
-    ? section('Examples from your code',
+    ? section('Examples From Your Code',
       Plan.can('usages_editor')
         ? `<ul class="usages-box">
           ${symbol.report.usages.map(renderUsage).join('')}
@@ -507,8 +507,8 @@ function renderMembers(value, kind, limit) {
   const detail = getDetails(value, 'type', 'module')
   const {members, total_members} = detail;
 
-  const title = kind === 'type' ? 'Top attributes' : 'Top members'
-  
+  const title = 'Popular Members'
+
   return members.length === 0
     ? ''
     : (limit != null
@@ -531,7 +531,7 @@ function stripLeadingSlash(str) {
   return str.replace(/^\//, '');
 }
 
-function renderPatterns(data, title='Popular Patterns') {
+function renderPatterns(data) {
   let patterns = '';
   const name = data.repr;
   const detail = getFunctionDetails(data);
@@ -539,7 +539,7 @@ function renderPatterns(data, title='Popular Patterns') {
     patterns = Plan.can('common_invocations_editor')
       ? `
         <section class="patterns">
-        <h4>${title}</h4>
+        <h4>How Others Used This</h4>
         <div class="section-content">${
           highlightCode(
             detail.signatures
@@ -549,7 +549,7 @@ function renderPatterns(data, title='Popular Patterns') {
           }</div>
         </section>`
       : `<section class="patterns">
-          <h4>${title}</h4>
+          <h4>How Others Used This</h4>
           <div class="section-content">
           ${proFeatures(
             `To see ${detail.signatures.length} ${

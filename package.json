@@ -46,11 +46,11 @@
             },
             {
                 "command": "kite.docs-for-cursor",
-                "title": "Kite: Docs for cursor"
+                "title": "Kite: Docs at cursor"
             },
             {
                 "command": "kite.install",
-                "title": "Kite Install"
+                "title": "Kite: Install"
             },
             {
                 "command": "kite.open-settings",

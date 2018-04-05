@@ -66,7 +66,7 @@ a[data-action="expand"] {
   line-height: 1.4em;
 }
 
-.kite section.summary dd, 
+.kite section.summary dd,
 .kite section.summary dt {
   font-size: 1em;
 }
@@ -218,7 +218,7 @@ a[data-action="expand"] {
   -webkit-user-select: text;
   user-select: text;
   cursor: text;
-  overflow-x: auto; 
+  overflow-x: auto;
 }
 .kite .debug {
   margin-top: 5px;
@@ -259,7 +259,7 @@ a[data-action="expand"] {
   padding: 0.4em;
   border: 1px solid var(--border-color);
 }
-.kite section.kwargs, 
+.kite section.kwargs,
 .kite section.parameters {
   flex: 0 0 auto;
   display: flex;
@@ -432,19 +432,19 @@ a[data-action="expand"] {
 .kite section.collapsed h4 {
   margin-bottom: 0;
 }
-.kite section.top-members .split-line .name {
+.kite section.popular-members .split-line .name {
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.kite section.top-members .split-line .type {
+.kite section.popular-members .split-line .type {
   flex: 0 0 auto;
 }
-.kite section.top-members a.more-members {
+.kite section.popular-members a.more-members {
   display: block;
   margin-top: 10px;
 }
-.kite section.examples a.more-examples {
+.kite section.how-to a.more-examples {
   display: block;
   margin-top: 10px;
 }
@@ -461,25 +461,25 @@ a[data-action="expand"] {
 .kite ul li + li {
   margin-top: 10px;
 }
-.kite section.examples ul li {
+.kite section.how-to ul li {
   position: relative;
 }
-.kite section.examples ul li > .icon {
+.kite section.how-to ul li > .icon {
   position: absolute;
   top: 0;
 }
-.kite section.examples ul li > a,
-.kite section.examples ul li > span {
+.kite section.how-to ul li > a,
+.kite section.how-to ul li > span {
   padding-left: 1.5em;
   padding-right: 1.5em;
   display: inline-block;
 }
-.kite section.examples ul li > a span,
-.kite section.examples ul li > span span {
+.kite section.how-to ul li > a span,
+.kite section.how-to ul li > span span {
   display: inline-block;
 }
-.kite section.examples ul li > a .icon,
-.kite section.examples ul li > span .icon {
+.kite section.how-to ul li > a .icon,
+.kite section.how-to ul li > span .icon {
   position: absolute;
   top: 0;
   right: 0;
@@ -741,39 +741,39 @@ a[data-action="expand"] {
 .kite section.collapsed h4 {
   margin-bottom: 0;
 }
-.kite section.top-members .split-line .name {
+.kite section.popular-members .split-line .name {
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.kite section.top-members .split-line .type {
+.kite section.popular-members .split-line .type {
   flex: 0 0 auto;
 }
-.kite section.top-members a.more-members {
+.kite section.popular-members a.more-members {
   display: block;
   margin-top: 10px;
 }
-.kite section.examples a.more-examples {
+.kite section.how-to a.more-examples {
   display: block;
   margin-top: 10px;
 }
-.kite section.examples ul li {
+.kite section.how-to ul li {
   position: relative;
 }
-.kite section.examples ul li > .icon {
+.kite section.how-to ul li > .icon {
   position: absolute;
 }
-.kite section.examples ul li > a,
-.kite section.examples ul li > span {
+.kite section.how-to ul li > a,
+.kite section.how-to ul li > span {
   padding-left: 1.5em;
   padding-right: 1.5em;
 }
-.kite section.examples ul li > a span,
-.kite section.examples ul li > span span {
+.kite section.how-to ul li > a span,
+.kite section.how-to ul li > span span {
   display: inline-block;
 }
-.kite section.examples ul li > a .icon,
-.kite section.examples ul li > span .icon {
+.kite section.how-to ul li > a .icon,
+.kite section.how-to ul li > span .icon {
   position: absolute;
   right: 0;
 }
@@ -1132,7 +1132,7 @@ a[data-action="expand"] {
 }
 .example-wrapper ul.list-tree {
   padding-left: 20px;
-  margin: 0; 
+  margin: 0;
 }
 figcaption + .example-wrapper table,
 figcaption + .example-wrapper ul.list-tree.root,
@@ -1745,7 +1745,7 @@ form.password-less .has-password {
 .install progress {
   width: 100%;
   height: 8px;
-  margin: 0;  
+  margin: 0;
   -webkit-appearance: none;
   appearance: none;
   border: none;
@@ -1773,7 +1773,7 @@ form.password-less .has-password {
   color: var(--text-color-highlight);
 }
 
-.install .disabled a:not(.no-disable), 
+.install .disabled a:not(.no-disable),
 .install .disabled button:not(.no-disable) {
   opacity: 0.6;
   pointer-events: none;
