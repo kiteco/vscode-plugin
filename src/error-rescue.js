@@ -4,7 +4,8 @@ const vscode = require('vscode');
 const server = require('./server');
 const {AUTOCORRECT_SHOW_SIDEBAR, AUTOCORRECT_DONT_SHOW_SIDEBAR} = require('./constants');
 const URI = vscode.Uri.parse('kite-vscode-error-rescue://error-rescue');
-const {wrapHTML, debugHTML} = require('./html-utils');
+const {wrapHTML, debugHTML, stripLeadingSlash} = require('./html-utils');
+const relativeDate = require('tiny-relative-date');
 let instance;
 
 server.addRoute('GET', `/error-rescue/toggle/${AUTOCORRECT_SHOW_SIDEBAR}`, (req, res, url) => {
@@ -160,43 +161,93 @@ module.exports = class KiteErrorRescue {
   }
 
   renderDiffs([history, filename, kiteEditor] = []) {
-    if (history) {
-      const diffsHTML = history.map(fix =>
-        `<div class="diff">
+    if (history && history.length) {
+      const diffsHTML = history.map((fix, index) => {
+        const {line, character} = kiteEditor.document.positionAt(fix.diffs[0].new_buffer_offset_bytes);
+
+        const defData = JSON.stringify({
+          file: filename,
+          line: line + 1,
+          character: character + 1,
+          source: 'ErrorRescue',
+        });
+
+        return `<div class="diff ${index === 0 ? 'recent' : ''}">
+          ${this.diffTitle(index)}
           <div class="timestamp">
-            Fixed ${fix.diffs.length} ${fix.diffs.length === 1 ? 'error' : 'errors'} on ${fix.timestamp}
+            Fixed ${relativeDate(fix.timestamp)}:
           </div>
-          ${fix.diffs.map(diff =>
-            [
-              '<code class="diff-content">',
-              diff.deleted.map(del => `<del>
-                <div class="line-number">${del.line + 1}</div>
-                <div class="line">${del.text}</div>
-              </del>`).join(''),
-              diff.inserted.map(ins => `<ins>
-                <div class="line-number">${ins.line + 1}</div>
-                <div class="line">${ins.text}</div>
-              </ins>`).join(''),
-              '</code>',
-            ].join('')
-          ).join('')}
+          ${fix.diffs.map(diff => this.renderDiff(diff)).join('')}
           <div class="feedback-actions ${kiteEditor.lastCorrectionsData.feedbackSent ? 'feedback-sent' : ''}">
-            <a class="thumb-down ${kiteEditor.lastCorrectionsData.feedbackSent == -1 ? 'clicked' : ''}"
-               href="#"
-               onclick="requestGet('/error-rescue/feedback/ko')">👎</a>
+            <a href='command:kite.def?${defData}' aria-label="">Go to code</a>
             <a class="thumb-up ${kiteEditor.lastCorrectionsData.feedbackSent == 1 ? 'clicked' : ''}" 
                href="#"
+               aria-label="Send feedback to Kite if you like this change"
                onclick="requestGet('/error-rescue/feedback/ok')">👍</a>
+            <a class="thumb-down ${kiteEditor.lastCorrectionsData.feedbackSent == -1 ? 'clicked' : ''}"
+               href="#"
+               aria-label="Send feedback to Kite if you don’t like this change"
+               onclick="requestGet('/error-rescue/feedback/ko')">👎</a>
           </div>
         </div>`
-      ).join('');
+      }).join('');
 
       return `
         <div class="file">Corrections in ${filename}</div>
         <div class="diffs">${diffsHTML}</div>
       `;
     } else {
-      return '';
+      return `<div class="diff">
+        <h4>Most recent code fixes</h4>
+        <div class="diffs">No fixes made to ${filename} yet.</div>
+      </div>`;
+    }
+  }
+
+  renderDiff(diff) {
+    return [
+      '<code class="diff-content">',
+      (diff.deleted || diff.old).map(del => `<del>
+          ${del.line != null ? `<div class="line-number">${del.line + 1}</div>` : ''}
+          <div class="line">${this.addEmphasis(del.text, del.emphasis)}</div>
+        </del>`).join(''),
+      (diff.inserted || diff.new).map(ins => `<ins>
+          ${ins.line != null ? `<div class="line-number">${ins.line + 1}</div>` : ''}
+          <div class="line">${this.addEmphasis(ins.text, ins.emphasis)}</div>
+        </ins>`).join(''),
+      '</code>',
+    ].join('');
+  }
+
+  addEmphasis(text, emphasis = []) {
+    let offset = 0;
+    const offsetIncrement = '<strong></strong>'.length;
+
+    return emphasis && emphasis.length
+      ? emphasis.reduce((t, {start_runes, end_runes}) => {
+        const newText = `${
+          text.slice(0, start_runes + offset)
+        }<strong>${
+          text.slice(start_runes + offset, end_runes + offset)
+        }</strong>${
+          text.slice(end_runes + offset)
+        }`;
+
+        offset += offsetIncrement;
+
+        return newText;
+      }, text)
+      : text;
+  }
+
+  diffTitle(index) {
+    switch (index) {
+      case 0:
+        return `<h4>Most recent code fixes</h4>`;
+      case 1:
+        return `<h4>Earlier fixes</h4>`;
+      default:
+        return '';
     }
   }
 }

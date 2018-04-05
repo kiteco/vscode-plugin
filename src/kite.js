@@ -308,7 +308,7 @@ const Kite = {
       opn(url.replace(/;/g, '%3B'));
     });
 
-    vscode.commands.registerCommand('kite.def', ({file, line, source}) => {
+    vscode.commands.registerCommand('kite.def', ({file, line, character, source}) => {
       metrics.track(`${source} Go to definition clicked`);
       metrics.featureRequested('definition');
       vscode.workspace.openTextDocument(vscode.Uri.file(file))
@@ -317,10 +317,14 @@ const Kite = {
       })
       .then(e => {
         metrics.featureFulfilled('definition');
+        const newPosition = new vscode.Position(line - 1, character ? character - 1 : 0);
         e.revealRange(new vscode.Range(
-          new vscode.Position(line - 1, 0),
+          newPosition,
           new vscode.Position(line - 1, 100)
         ));
+
+        const newSelection = new vscode.Selection(newPosition, newPosition);
+        e.selection = newSelection;
       })
     });
 
