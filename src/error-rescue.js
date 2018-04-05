@@ -192,10 +192,7 @@ module.exports = class KiteErrorRescue {
         </div>`
       }).join('');
 
-      return `
-        <div class="file">Corrections in ${filename}</div>
-        <div class="diffs">${diffsHTML}</div>
-      `;
+      return `<div class="diffs">${diffsHTML}</div>`;
     } else {
       return `<div class="diff">
         <h4>Most recent code fixes</h4>
