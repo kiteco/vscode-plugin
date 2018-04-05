@@ -114,10 +114,14 @@
                     "default": true,
                     "description": "Enables error rescue feature on save."
                 },
-                "kite.openErrorRescueSidebarOnSave": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Makes the error rescue sidebar appears on save when enabled."
+                "kite.actionWhenErrorRescueFixesCode": {
+                    "type": "string",
+                    "default": "Reopen sidebar",
+                    "enum": [
+                        "Reopen sidebar",
+                        "Fix code quietly"
+                    ],
+                    "description": "Choose whether Error Rescue should (re)open its sidebar upon making fixes, or do it quietly"
                 },
                 "kite.loggingLevel": {
                     "type": "string",

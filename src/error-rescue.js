@@ -2,15 +2,15 @@
 
 const vscode = require('vscode');
 const server = require('./server');
-
+const {AUTOCORRECT_SHOW_SIDEBAR, AUTOCORRECT_DONT_SHOW_SIDEBAR} = require('./constants');
 const URI = vscode.Uri.parse('kite-vscode-error-rescue://error-rescue');
 const {wrapHTML, debugHTML} = require('./html-utils');
 let instance;
 
-server.addRoute('GET', '/error-rescue/toggle/on', (req, res, url) => {
+server.addRoute('GET', `/error-rescue/toggle/${AUTOCORRECT_SHOW_SIDEBAR}`, (req, res, url) => {
   try {
     const config = vscode.workspace.getConfiguration('kite');
-    config.update('openErrorRescueSidebarOnSave', true, true);  
+    config.update('actionWhenErrorRescueFixesCode', AUTOCORRECT_SHOW_SIDEBAR, true);  
     res.writeHead(200);
     res.end();
   } catch(err) {
@@ -20,10 +20,10 @@ server.addRoute('GET', '/error-rescue/toggle/on', (req, res, url) => {
   }
 });
 
-server.addRoute('GET', '/error-rescue/toggle/off', (req, res, url) => {
+server.addRoute('GET', `/error-rescue/toggle/${AUTOCORRECT_DONT_SHOW_SIDEBAR}`, (req, res, url) => {
   try {
     const config = vscode.workspace.getConfiguration('kite');
-    config.update('openErrorRescueSidebarOnSave',false, true);  
+    config.update('actionWhenErrorRescueFixesCode', AUTOCORRECT_DONT_SHOW_SIDEBAR, true);  
     res.writeHead(200);
     res.end();
   } catch(err) {
@@ -123,21 +123,33 @@ module.exports = class KiteErrorRescue {
       
       return Promise.resolve(`
       <div class="kite-error-rescue-sidebar">
-        <div class="kite-sidebar-resizer"></div>
         <div class="kite-column">
+          <div class="messages"></div>
+          <div class="settings-view">
+            <a href="https://help.kite.com/article/78-what-is-error-rescue" title="Learn about Error Rescue" class="icon icon-question"></a>
+            <div class="settings-panel">
+              <div class="control-group checkbox">
+                <label>
+                  <input type="checkbox" class="input-toggle"></input>
+                  <div class="setting-title">Enable Error Rescue</div>
+                </label>
+              </div>
+              <div class="control-group select">
+                <label>
+                  <div class="setting-title">Any time code is fixed:</div>
+                  <select type="checkbox" class="form-control" onchange="requestGet('/error-rescue/toggle/' + this.value">
+                    <option value="${AUTOCORRECT_SHOW_SIDEBAR}">Reopen this sidebar</option>
+                    <option value="${AUTOCORRECT_DONT_SHOW_SIDEBAR}">Do nothing (fix code quietly)</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="content">${this.renderDiffs([
             kiteEditor.fixesHistory,
             kiteEditor.document.fileName,
             kiteEditor,
           ])}</div>
-          <footer>
-            <label>
-              <input type="checkbox"
-                     onchange="requestGet('/error-rescue/toggle/' + (this.checked ? 'on' : 'off'))"
-                     ${config.openErrorRescueSidebarOnSave ? 'checked' : ''}></input>
-              Show this panel on every save
-            </label>
-          </footer>
         </div>
       </div>`)
       .then(html => wrapHTML(html))
