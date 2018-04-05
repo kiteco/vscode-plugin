@@ -7,6 +7,7 @@ const {MAX_FILE_SIZE} = require('./constants');
 const {
   errorRescueFeedbackPath,
   errorRescueMetricsPath,
+  errorRescueModelInfoPath,
   onSaveValidationPath,
   errorRescuePath,
   normalizeDriveLetter,
@@ -71,7 +72,7 @@ module.exports = class KiteEditor {
 
             if(this.Kite.errorRescue.isSidebarOpen) {
               this.Kite.errorRescue.update()
-            } else if(config.openErrorRescueSidebarOnSave) {
+            } else if(config.actionWhenErrorRescueFixesCode == 'Reopen sidebar') {
               this.Kite.errorRescue.open()
               this.Kite.errorRescueStatusBarItem.hide();
             } else {
@@ -178,6 +179,31 @@ module.exports = class KiteEditor {
     .then(resp => {
       Logger.logResponse(resp);
       this.Kite.handle403Response(this.document, resp);
+      if (resp.statusCode !== 200) {
+        return promisifyReadResponse(resp).then(data => {
+          throw new Error(`Error ${resp.statusCode}: ${data}`);
+        });
+      } else {
+        return promisifyReadResponse(resp);
+      }
+    })
+    .then(data => parseJSON(data, {}))
+    .catch(err => console.error(err));
+  }
+
+  getErrorRescueModelInfo(version) {
+    const payload = {
+      metadata: this.getErrorRescueMetadata('autocorrect_request'),
+      language: 'python',
+      version,
+    };
+
+    return promisifyRequest(StateController.client.request({
+      path: errorRescueModelInfoPath(),
+      method: 'POST',
+    }, JSON.stringify(payload)))
+    .then(resp => {
+      Logger.logResponse(resp);
       if (resp.statusCode !== 200) {
         return promisifyReadResponse(resp).then(data => {
           throw new Error(`Error ${resp.statusCode}: ${data}`);

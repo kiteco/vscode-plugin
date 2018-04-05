@@ -30,6 +30,10 @@ function errorRescuePath() {
   return '/clientapi/editor/autocorrect';
 }
 
+function errorRescueModelInfoPath() {
+  return '/api/editor/autocorrect/model-info';
+}
+
 function errorRescueMetricsPath() {
   return '/clientapi/editor/autocorrect/metrics';
 }
@@ -162,6 +166,7 @@ module.exports = {
   accountPath,
   errorRescueFeedbackPath,
   errorRescueMetricsPath,
+  errorRescueModelInfoPath,
   errorRescuePath,
   completionsPath,
   examplePath,
