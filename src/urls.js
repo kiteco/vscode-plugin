@@ -26,15 +26,15 @@ function signaturePath() {
   return '/clientapi/editor/signatures';
 }
 
-function autocorrectPath() {
+function errorRescuePath() {
   return '/clientapi/editor/autocorrect';
 }
 
-function autocorrectMetricsPath() {
+function errorRescueMetricsPath() {
   return '/clientapi/editor/autocorrect/metrics';
 }
 
-function autocorrectFeedbackPath() {
+function errorRescueFeedbackPath() {
   return '/clientapi/editor/autocorrect/feedback';
 }
 
@@ -160,9 +160,9 @@ function normalizeDriveLetter(str) {
 
 module.exports = {
   accountPath,
-  autocorrectFeedbackPath,
-  autocorrectMetricsPath,
-  autocorrectPath,
+  errorRescueFeedbackPath,
+  errorRescueMetricsPath,
+  errorRescuePath,
   completionsPath,
   examplePath,
   hoverPath,

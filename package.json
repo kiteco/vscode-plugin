@@ -112,12 +112,12 @@
                 "kite.enableAutocorrect": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Enables autocorrect feature on save."
+                    "description": "Enables error rescue feature on save."
                 },
-                "kite.openAutocorrectSidebarOnSave": {
+                "kite.openErrorRescueSidebarOnSave": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Makes the autocorrect sidebar appears on save when enabled."
+                    "description": "Makes the error rescue sidebar appears on save when enabled."
                 },
                 "kite.loggingLevel": {
                     "type": "string",

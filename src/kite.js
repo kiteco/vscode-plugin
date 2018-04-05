@@ -4,7 +4,7 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const {StateController, AccountManager, Logger} = require('kite-installer');
-const {PYTHON_MODE, JAVASCRIPT_MODE, ATTEMPTS, INTERVAL, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
+const {PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
@@ -15,7 +15,7 @@ const KiteLogin = require('./login');
 const KiteInstall = require('./install');
 const KiteStatus = require('./status');
 const KiteTour = require('./tour');
-const KiteAutocorrect = require('./autocorrect');
+const KiteErrorRescue = require('./error-rescue');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
 const localconfig = require('./localconfig');
@@ -26,8 +26,6 @@ const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath, 
 const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params} = require('./utils');
 const {version} = require('../package.json');
-
-const pluralize = (n, singular, plural) => n === 1 ? singular : plural;
 
 const Kite = {
   activate(ctx)
@@ -61,7 +59,7 @@ const Kite = {
     const install = new KiteInstall(Kite);
     const status = new KiteStatus(Kite);
     const tour = new KiteTour(Kite);
-    const autocorrect = new KiteAutocorrect(Kite);
+    const errorRescue = new KiteErrorRescue(Kite);
 
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
@@ -79,11 +77,11 @@ const Kite = {
     ctx.subscriptions.push(search);
     ctx.subscriptions.push(status);
     ctx.subscriptions.push(install);
-    ctx.subscriptions.push(autocorrect);
+    ctx.subscriptions.push(errorRescue);
 
     this.status = status;
     this.install = install;
-    this.autocorrect = autocorrect;
+    this.errorRescue = errorRescue;
 
     server.addRoute('GET', '/check', (req, res) => {
       this.checkState('/check route');
@@ -117,7 +115,7 @@ const Kite = {
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-tour', tour));
     ctx.subscriptions.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-autocorrect', autocorrect));
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-error-rescue', errorRescue));
 
     ctx.subscriptions.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
@@ -190,8 +188,8 @@ const Kite = {
     this.statusBarItem.command = 'kite.status';
     this.statusBarItem.show();
 
-    this.autocorrectStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-    this.autocorrectStatusBarItem.command = 'kite.show-autocorrect';
+    this.errorRescueStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+    this.errorRescueStatusBarItem.command = 'kite.show-error-rescue';
 
     ctx.subscriptions.push(this.statusBarItem);
 
@@ -213,8 +211,8 @@ const Kite = {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
     }); 
     
-    vscode.commands.registerCommand('kite.show-autocorrect', () => {
-      autocorrect.open();
+    vscode.commands.registerCommand('kite.show-error-rescue', () => {
+      errorRescue.open();
     }); 
     
     vscode.commands.registerCommand('kite.install', () => {

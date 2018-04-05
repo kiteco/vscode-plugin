@@ -3,14 +3,14 @@
 const vscode = require('vscode');
 const server = require('./server');
 
-const URI = vscode.Uri.parse('kite-vscode-autocorrect://autocorrect');
+const URI = vscode.Uri.parse('kite-vscode-error-rescue://error-rescue');
 const {wrapHTML, debugHTML} = require('./html-utils');
 let instance;
 
-server.addRoute('GET', '/autocorrect/toggle/on', (req, res, url) => {
+server.addRoute('GET', '/error-rescue/toggle/on', (req, res, url) => {
   try {
     const config = vscode.workspace.getConfiguration('kite');
-    config.update('openAutocorrectSidebarOnSave', true, true);  
+    config.update('openErrorRescueSidebarOnSave', true, true);  
     res.writeHead(200);
     res.end();
   } catch(err) {
@@ -20,10 +20,10 @@ server.addRoute('GET', '/autocorrect/toggle/on', (req, res, url) => {
   }
 });
 
-server.addRoute('GET', '/autocorrect/toggle/off', (req, res, url) => {
+server.addRoute('GET', '/error-rescue/toggle/off', (req, res, url) => {
   try {
     const config = vscode.workspace.getConfiguration('kite');
-    config.update('openAutocorrectSidebarOnSave',false, true);  
+    config.update('openErrorRescueSidebarOnSave',false, true);  
     res.writeHead(200);
     res.end();
   } catch(err) {
@@ -33,12 +33,12 @@ server.addRoute('GET', '/autocorrect/toggle/off', (req, res, url) => {
   }
 });
 
-server.addRoute('GET', '/autocorrect/feedback/ok', (req, res, url) => {
+server.addRoute('GET', '/error-rescue/feedback/ok', (req, res, url) => {
   try {
     const kiteEditor = instance.lastKiteEditor
   
     if(kiteEditor && kiteEditor.fixesHistory) {
-      kiteEditor.postAutocorrectFeedbackData(kiteEditor.lastCorrectionsData, 1).then(() => {
+      kiteEditor.postErrorRescueFeedbackData(kiteEditor.lastCorrectionsData, 1).then(() => {
         kiteEditor.lastCorrectionsData.feedbackSent = 1
         instance.update();
       });
@@ -53,12 +53,12 @@ server.addRoute('GET', '/autocorrect/feedback/ok', (req, res, url) => {
   }
 });
 
-server.addRoute('GET', '/autocorrect/feedback/ko', (req, res, url) => {
+server.addRoute('GET', '/error-rescue/feedback/ko', (req, res, url) => {
   try {
     const kiteEditor = instance.lastKiteEditor
 
     if(kiteEditor && kiteEditor.fixesHistory) {
-      kiteEditor.postAutocorrectFeedbackData(kiteEditor.lastCorrectionsData, -1).then(() => {
+      kiteEditor.postErrorRescueFeedbackData(kiteEditor.lastCorrectionsData, -1).then(() => {
         kiteEditor.lastCorrectionsData.feedbackSent = -1
         instance.update();
       });
@@ -73,7 +73,7 @@ server.addRoute('GET', '/autocorrect/feedback/ko', (req, res, url) => {
   }
 });
 
-module.exports = class KiteAutocorrect {
+module.exports = class KiteErrorRescue {
   constructor(Kite) {
     server.start();
 
@@ -85,7 +85,7 @@ module.exports = class KiteAutocorrect {
       this.Kite.autocorrectStatusBarItem.hide();
     });
     vscode.workspace.onDidCloseTextDocument(doc => {
-      if (doc.uri.toString().indexOf('kite-vscode-autocorrect://') === 0) {
+      if (doc.uri.toString().indexOf('kite-vscode-error-rescue://') === 0) {
         delete this.isSidebarOpen;
       }
     });
@@ -122,7 +122,7 @@ module.exports = class KiteAutocorrect {
       const config = vscode.workspace.getConfiguration('kite');
       
       return Promise.resolve(`
-      <div class="kite-autocorrect-sidebar">
+      <div class="kite-error-rescue-sidebar">
         <div class="kite-sidebar-resizer"></div>
         <div class="kite-column">
           <div class="content">${this.renderDiffs([
@@ -133,8 +133,8 @@ module.exports = class KiteAutocorrect {
           <footer>
             <label>
               <input type="checkbox"
-                     onchange="requestGet('/autocorrect/toggle/' + (this.checked ? 'on' : 'off'))"
-                     ${config.openAutocorrectSidebarOnSave ? 'checked' : ''}></input>
+                     onchange="requestGet('/error-rescue/toggle/' + (this.checked ? 'on' : 'off'))"
+                     ${config.openErrorRescueSidebarOnSave ? 'checked' : ''}></input>
               Show this panel on every save
             </label>
           </footer>
@@ -171,10 +171,10 @@ module.exports = class KiteAutocorrect {
           <div class="feedback-actions ${kiteEditor.lastCorrectionsData.feedbackSent ? 'feedback-sent' : ''}">
             <a class="thumb-down ${kiteEditor.lastCorrectionsData.feedbackSent == -1 ? 'clicked' : ''}"
                href="#"
-               onclick="requestGet('/autocorrect/feedback/ko')">👎</a>
+               onclick="requestGet('/error-rescue/feedback/ko')">👎</a>
             <a class="thumb-up ${kiteEditor.lastCorrectionsData.feedbackSent == 1 ? 'clicked' : ''}" 
                href="#"
-               onclick="requestGet('/autocorrect/feedback/ok')">👍</a>
+               onclick="requestGet('/error-rescue/feedback/ok')">👍</a>
           </div>
         </div>`
       ).join('');

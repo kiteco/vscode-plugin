@@ -2,14 +2,13 @@
 
 const vscode = require('vscode');
 const {Logger, StateController} = require('kite-installer');
-const TokensList = require('./tokens-list');
 const metrics = require('./metrics');
 const {MAX_FILE_SIZE} = require('./constants');
 const {
-  autocorrectFeedbackPath,
-  autocorrectMetricsPath,
+  errorRescueFeedbackPath,
+  errorRescueMetricsPath,
   onSaveValidationPath,
-  autocorrectPath,
+  errorRescuePath,
   normalizeDriveLetter,
 } = require('./urls');
 const {
@@ -25,6 +24,7 @@ module.exports = class KiteEditor {
     this.editor = editor;
     this.document = editor.document;
     this.whitelisted = true;
+    this.fixesHistory = [];
   }
 
   isWhitelisted() {
@@ -43,7 +43,7 @@ module.exports = class KiteEditor {
     
     return Promise.all([
       this.postSaveValidationData(),
-      this.getAutocorrectData()
+      this.getErrorRescueData()
       .then(data => {
         const text = this.document.getText();
         const hash = md5(text);
@@ -51,7 +51,7 @@ module.exports = class KiteEditor {
         
         if (data.requested_buffer_hash !== hash) {
           // status.textContent = '';
-          this.postAutocorrectHashMismatchData(data, requestStartTime);
+          this.postErrorRescueHashMismatchData(data, requestStartTime);
           return;
         }
 
@@ -69,20 +69,20 @@ module.exports = class KiteEditor {
           .then(() => {
             this.fixesHistory.unshift(new Fix(data.diffs));
 
-            if(this.Kite.autocorrect.isSidebarOpen) {
-              this.Kite.autocorrect.update()
-            } else if(config.openAutocorrectSidebarOnSave) {
-              this.Kite.autocorrect.open()
-              this.Kite.autocorrectStatusBarItem.hide();
+            if(this.Kite.errorRescue.isSidebarOpen) {
+              this.Kite.errorRescue.update()
+            } else if(config.openErrorRescueSidebarOnSave) {
+              this.Kite.errorRescue.open()
+              this.Kite.errorRescueStatusBarItem.hide();
             } else {
-              this.Kite.autocorrectStatusBarItem.text = `${fixes} ${fixes === 1 ? 'error' : 'errors'} fixed`;
-              this.Kite.autocorrectStatusBarItem.show();
+              this.Kite.errorRescueStatusBarItem.text = `${fixes} ${fixes === 1 ? 'error' : 'errors'} fixed`;
+              this.Kite.errorRescueStatusBarItem.show();
             }
           }, (err) => {
             console.log(err)
           });
         } else {
-          this.Kite.autocorrectStatusBarItem.hide();
+          this.Kite.errorRescueStatusBarItem.hide();
         }
       }),
     ]).catch((err) => {
@@ -99,7 +99,7 @@ module.exports = class KiteEditor {
     }
 
     const payload = {
-      metadata: this.getAutocorrectMetadata('validation_onsave'),
+      metadata: this.getErrorRescueMetadata('validation_onsave'),
       buffer: text,
       filename: normalizeDriveLetter(this.document.fileName),
       language: 'python',
@@ -123,15 +123,15 @@ module.exports = class KiteEditor {
     .catch(err => console.error(err));
   }
 
-  postAutocorrectHashMismatchData(response, requestStartTime) {
+  postErrorRescueHashMismatchData(response, requestStartTime) {
     const payload = {
-      metadata: this.getAutocorrectMetadata('metrics_hash_mismatch'),
+      metadata: this.getErrorRescueMetadata('metrics_hash_mismatch'),
       response,
       response_time: new Date() - requestStartTime,
     };
 
     return promisifyRequest(StateController.client.request({
-      path: autocorrectMetricsPath(),
+      path: errorRescueMetricsPath(),
       method: 'POST',
     }, JSON.stringify(payload)))
     .then(resp => {
@@ -140,15 +140,15 @@ module.exports = class KiteEditor {
     .catch(err => console.error(err));
   }
 
-  postAutocorrectFeedbackData(response, feedback) {
+  postErrorRescueFeedbackData(response, feedback) {
     const payload = {
-      metadata: this.getAutocorrectMetadata('feedback_diffset'),
+      metadata: this.getErrorRescueMetadata('feedback_diffset'),
       response,
       feedback,
     };
 
     return promisifyRequest(StateController.client.request({
-      path: autocorrectFeedbackPath(),
+      path: errorRescueFeedbackPath(),
       method: 'POST',
     }, JSON.stringify(payload)))
     .then(resp => {
@@ -157,7 +157,7 @@ module.exports = class KiteEditor {
     .catch(err => console.error(err));
   }
 
-  getAutocorrectData() {
+  getErrorRescueData() {
     const text = this.document.getText();
 
     if (text.length > MAX_FILE_SIZE) {
@@ -165,14 +165,14 @@ module.exports = class KiteEditor {
       return Promise.resolve();
     }
     const payload = {
-      metadata: this.getAutocorrectMetadata('autocorrect_request'),
+      metadata: this.getErrorRescueMetadata('autocorrect_request'),
       buffer: text,
       filename: normalizeDriveLetter(this.document.fileName),
       language: 'python',
     };
 
     return promisifyRequest(StateController.client.request({
-      path: autocorrectPath(),
+      path: errorRescuePath(),
       method: 'POST',
     }, JSON.stringify(payload)))
     .then(resp => {
@@ -190,7 +190,7 @@ module.exports = class KiteEditor {
     .catch(err => console.error(err));
   }
 
-  getAutocorrectMetadata(event) {
+  getErrorRescueMetadata(event) {
     return {
       event,
       source: 'vscode',

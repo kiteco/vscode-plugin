@@ -1,93 +1,93 @@
-.kite-autocorrect-sidebar footer {
+.kite-error-rescue-sidebar footer {
   background: transparent !important;
   padding: 0 10px !important;
 }
-.kite-autocorrect-sidebar .content {
+.kite-error-rescue-sidebar .content {
   flex: 1 1 auto;
 }
-.kite-autocorrect-sidebar .file {
+.kite-error-rescue-sidebar .file {
   font-size: 1.4em;
   color: #d6dae1;
 }
-.kite-autocorrect-sidebar .diff {
+.kite-error-rescue-sidebar .diff {
   margin: 10px 0;
   margin-bottom: 20px;
 }
-.kite-autocorrect-sidebar .diff:not(:first-child) {
+.kite-error-rescue-sidebar .diff:not(:first-child) {
   opacity: 0.7;
 }
-.kite-autocorrect-sidebar .diff:not(:first-child) .feedback-actions {
+.kite-error-rescue-sidebar .diff:not(:first-child) .feedback-actions {
   display: none;
   pointer-events: none;
 }
-.kite-autocorrect-sidebar .feedback-sent {
+.kite-error-rescue-sidebar .feedback-sent {
   pointer-events: none;
 }
-.kite-autocorrect-sidebar .feedback-sent a {
+.kite-error-rescue-sidebar .feedback-sent a {
   opacity: 0.4;
 }
-.kite-autocorrect-sidebar .feedback-sent a.clicked {
+.kite-error-rescue-sidebar .feedback-sent a.clicked {
   opacity: 0.7;
 }
-.kite-autocorrect-sidebar .diff-content {
+.kite-error-rescue-sidebar .diff-content {
   margin-top: 10px;
   background: white;
   display: block;
   padding: 0;
   border-radius: 0;
 }
-.kite-autocorrect-sidebar .feedback-actions {
+.kite-error-rescue-sidebar .feedback-actions {
   text-align: right;
   margin-top: 10px;
 }
-.kite-autocorrect-sidebar .feedback-actions a {
+.kite-error-rescue-sidebar .feedback-actions a {
   margin-right: 10px;
   text-decoration: none;
 }
-.kite-autocorrect-sidebar .feedback-actions a:hover {
+.kite-error-rescue-sidebar .feedback-actions a:hover {
   text-decoration: none;
 }
-.kite-autocorrect-sidebar del,
-.kite-autocorrect-sidebar ins {
+.kite-error-rescue-sidebar del,
+.kite-error-rescue-sidebar ins {
   display: flex;
   flex-direction: row;
   text-decoration: none;
 }
-.kite-autocorrect-sidebar del .line-number,
-.kite-autocorrect-sidebar ins .line-number {
+.kite-error-rescue-sidebar del .line-number,
+.kite-error-rescue-sidebar ins .line-number {
   width: 80px;
   opacity: 0.5;
   padding: 10px;
   color: rgba(0, 0, 0, 0.7);
 }
-.kite-autocorrect-sidebar del .line,
-.kite-autocorrect-sidebar ins .line {
+.kite-error-rescue-sidebar del .line,
+.kite-error-rescue-sidebar ins .line {
   padding: 10px;
   padding-left: 30px;
   white-space: pre;
   position: relative;
   color: rgba(0, 0, 0, 0.8);
 }
-.kite-autocorrect-sidebar del {
+.kite-error-rescue-sidebar del {
   background: rgba(204, 102, 102, 0.2);
 }
-.kite-autocorrect-sidebar del .line-number {
+.kite-error-rescue-sidebar del .line-number {
   background: rgba(204, 102, 102, 0.4);
   text-align: left;
 }
-.kite-autocorrect-sidebar del .line::before {
+.kite-error-rescue-sidebar del .line::before {
   content: '-';
   position: absolute;
   left: 10px;
 }
-.kite-autocorrect-sidebar ins {
+.kite-error-rescue-sidebar ins {
   background: rgba(172, 198, 151, 0.2);
 }
-.kite-autocorrect-sidebar ins .line-number {
+.kite-error-rescue-sidebar ins .line-number {
   background: rgba(172, 198, 151, 0.4);
   text-align: right;
 }
-.kite-autocorrect-sidebar ins .line::before {
+.kite-error-rescue-sidebar ins .line::before {
   content: '+';
   position: absolute;
   left: 10px;
