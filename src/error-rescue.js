@@ -74,12 +74,27 @@ server.addRoute('GET', '/error-rescue/feedback/ko', (req, res, url) => {
   }
 });
 
+server.addRoute('GET', '/error-rescue/close-message', (req, res, url) => {
+  try {
+    delete instance.message;
+    instance.update();
+
+    res.writeHead(200);
+    res.end();
+  } catch(err) {
+    console.log(err)
+    res.writeHead(500);
+    res.end();
+  }
+});
+
 module.exports = class KiteErrorRescue {
   constructor(Kite) {
     server.start();
 
     this.Kite = Kite;
     instance = this;
+    this.messages = [];
     this.didChangeEmitter = new vscode.EventEmitter();
     vscode.window.onDidChangeActiveTextEditor(e => {
       this.update();
@@ -109,6 +124,40 @@ module.exports = class KiteErrorRescue {
     this.didChangeEmitter.fire(URI);
   }
 
+  showFirstRunExperience() {
+    this.message = `<h4>Kite error rescue just fixed your code for the first time</h4>
+    <p>
+      Error Rescue will automatically fix the most common mistakes when
+      you save your file. It uses machine learning
+      and your feedback to constantly get better.
+    </p>
+    <a href="https://help.kite.com/article/78-what-is-error-rescue">Learn about Error Rescue</a>`;
+    this.open();
+  }
+  
+  loadModelInfo(version) {
+    const kiteEditor = vscode.window.activeTextEditor 
+      ? this.Kite.kiteEditorByEditor.get(vscode.window.activeTextEditor.document.fileName)
+      : this.lastKiteEditor;
+
+    if(kiteEditor) {
+      kiteEditor.getErrorRescueModelInfo(version)
+      .then(data => {
+        // We don't want the model update info to be displayed if we already have the first run exp
+        if (!this.message) {
+          this.message = `<h4>Just added: New code fixes</h4>
+          ${data.examples.map((e) => {
+            return `
+              <p>${e.synopsis}</p>
+              ${this.renderDiff(e)}`;
+          }).join('')}
+          <a href="https://help.kite.com/article/78-what-is-error-rescue">Learn about Error Rescue</a>`;
+        }
+        this.open();
+      })
+    }
+  }
+
   dispose() {
     this.subscription.dispose();
   }
@@ -125,7 +174,14 @@ module.exports = class KiteErrorRescue {
       return Promise.resolve(`
       <div class="kite-error-rescue-sidebar">
         <div class="kite-column">
-          <div class="messages"></div>
+          <div class="messages">${
+            this.message 
+              ? `<div class="message-box">
+                <button class="btn btn-close" onclick="requestGet('/error-rescue/close-message')">x</button>
+                ${this.message}
+              </div>`
+              : ''
+          }</div>
           <div class="settings-view">
             <a href="https://help.kite.com/article/78-what-is-error-rescue" title="Learn about Error Rescue" class="icon icon-question"></a>
             <div class="settings-panel">

@@ -188,9 +188,6 @@ const Kite = {
     this.statusBarItem.command = 'kite.status';
     this.statusBarItem.show();
 
-    this.errorRescueStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-    this.errorRescueStatusBarItem.command = 'kite.show-error-rescue';
-
     ctx.subscriptions.push(this.statusBarItem);
 
     vscode.commands.registerCommand('kite.status', () => {
@@ -817,7 +814,11 @@ const Kite = {
         }
       });
     });
-  }
+  },
+
+  errorRescueVersion() {
+    return localconfig.get('autocorrect_model_version');
+  },
 }
 
 module.exports = {

@@ -4,6 +4,7 @@ const vscode = require('vscode');
 const {Logger, StateController} = require('kite-installer');
 const metrics = require('./metrics');
 const {MAX_FILE_SIZE} = require('./constants');
+const localconfig = require('./localconfig');
 const {
   errorRescueFeedbackPath,
   errorRescueMetricsPath,
@@ -61,6 +62,14 @@ module.exports = class KiteEditor {
         this.lastCorrectionsData = data;
 
         if (fixes > 0) {
+          const previousVersion = this.Kite.errorRescueVersion();
+          const versionChanged = data.version !== previousVersion;
+          const firstRunExperience = versionChanged && previousVersion == null;
+          const mustOpenErrorRescueSidebar = config.actionWhenErrorRescueFixesCode == 'Reopen sidebar';
+          if (versionChanged && data.version != null) {
+            localconfig.set('autocorrect_model_version', data.version);
+          }
+
           this.editor.edit(builder => {
             builder.replace(new vscode.Range(
               this.document.positionAt(0),
@@ -70,20 +79,29 @@ module.exports = class KiteEditor {
           .then(() => {
             this.fixesHistory.unshift(new Fix(data.diffs));
 
-            if(this.Kite.errorRescue.isSidebarOpen) {
-              this.Kite.errorRescue.update()
-            } else if(config.actionWhenErrorRescueFixesCode == 'Reopen sidebar') {
-              this.Kite.errorRescue.open()
-              this.Kite.errorRescueStatusBarItem.hide();
+            if ((firstRunExperience || mustOpenErrorRescueSidebar) && !this.Kite.errorRescue.isSidebarOpen) {
+              if (firstRunExperience) {
+                this.Kite.errorRescue.showFirstRunExperience();
+              } else if (versionChanged) {
+                this.Kite.errorRescue.loadModelInfo(data.version);
+              } else {
+                this.Kite.errorRescue.open()
+              }
+            } else if (this.Kite.errorRescue.isSidebarOpen) {
+              if (versionChanged) {
+                this.Kite.errorRescue.loadModelInfo(data.version);
+              } else {
+                this.Kite.errorRescue.update()
+              }
             } else {
-              this.Kite.errorRescueStatusBarItem.text = `${fixes} ${fixes === 1 ? 'error' : 'errors'} fixed`;
-              this.Kite.errorRescueStatusBarItem.show();
+              // notify
+              // if (versionChanged) {
+              //   this.Kite.notifications.notifyErrorRescueVersionChange(data.version);
+              // }
             }
           }, (err) => {
             console.log(err)
           });
-        } else {
-          this.Kite.errorRescueStatusBarItem.hide();
         }
       }),
     ]).catch((err) => {
