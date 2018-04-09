@@ -267,11 +267,16 @@ module.exports = class KiteErrorRescue {
             <a class="thumb-up ${kiteEditor.lastCorrectionsData.feedbackSent == 1 ? 'clicked' : ''}" 
                href="#"
                aria-label="Send feedback to Kite if you like this change"
-               onclick="requestGet('/error-rescue/feedback/ok')">👍</a>
+               onclick="requestGet('/error-rescue/feedback/ok')"
+               onmouseover="showFeedbackFeedback(this, this.getAttribute('aria-label'), {confirmation: false})"
+               onmouseout="hideFeedbackFeedback(this)">👍</a>
             <a class="thumb-down ${kiteEditor.lastCorrectionsData.feedbackSent == -1 ? 'clicked' : ''}"
                href="#"
                aria-label="Send feedback to Kite if you don’t like this change"
-               onclick="requestGet('/error-rescue/feedback/ko')">👎</a>
+               onclick="requestGet('/error-rescue/feedback/ko')"
+               onmouseover="showFeedbackFeedback(this, this.getAttribute('aria-label'), {confirmation: false})"
+               onmouseout="hideFeedbackFeedback(this)">👎</a>
+            <span class="feedback-feedback ${kiteEditor.lastCorrectionsData.feedbackSent ? 'confirmation' : ''}">${kiteEditor.lastCorrectionsData.feedbackSent ? 'Thank you for your feedback!' : ''}</span>
           </div>
         </div>`
       }).join('');
