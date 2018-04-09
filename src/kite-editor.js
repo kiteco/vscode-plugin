@@ -39,7 +39,7 @@ module.exports = class KiteEditor {
     const requestStartTime = new Date();
     const config = vscode.workspace.getConfiguration('kite');
     
-    if (!config.enableAutocorrect) {
+    if (!config.enableErrorRescue) {
       return Promise.resolve(); 
     }
     

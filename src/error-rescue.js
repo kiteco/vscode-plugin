@@ -8,7 +8,35 @@ const {wrapHTML, debugHTML, stripLeadingSlash} = require('./html-utils');
 const relativeDate = require('tiny-relative-date');
 let instance;
 
-server.addRoute('GET', `/error-rescue/toggle/${AUTOCORRECT_SHOW_SIDEBAR}`, (req, res, url) => {
+server.addRoute('GET', `/error-rescue/toggle/on`, (req, res, url) => {
+  try {
+    const config = vscode.workspace.getConfiguration('kite');
+    config.update('enableErrorRescue', true, true);
+    setTimeout(() => instance.update(), 100);
+    res.writeHead(200);
+    res.end();
+  } catch(err) {
+    console.log(err)
+    res.writeHead(500);
+    res.end();
+  }
+});
+
+server.addRoute('GET', `/error-rescue/toggle/off`, (req, res, url) => {
+  try {
+    const config = vscode.workspace.getConfiguration('kite');
+    config.update('enableErrorRescue', false, true);
+    setTimeout(() => instance.update(), 100);
+    res.writeHead(200);
+    res.end();
+  } catch(err) {
+    console.log(err)
+    res.writeHead(500);
+    res.end();
+  }
+});
+
+server.addRoute('GET', `/error-rescue/switch/${AUTOCORRECT_SHOW_SIDEBAR}`, (req, res, url) => {
   try {
     const config = vscode.workspace.getConfiguration('kite');
     config.update('actionWhenErrorRescueFixesCode', AUTOCORRECT_SHOW_SIDEBAR, true);  
@@ -21,7 +49,7 @@ server.addRoute('GET', `/error-rescue/toggle/${AUTOCORRECT_SHOW_SIDEBAR}`, (req,
   }
 });
 
-server.addRoute('GET', `/error-rescue/toggle/${AUTOCORRECT_DONT_SHOW_SIDEBAR}`, (req, res, url) => {
+server.addRoute('GET', `/error-rescue/switch/${AUTOCORRECT_DONT_SHOW_SIDEBAR}`, (req, res, url) => {
   try {
     const config = vscode.workspace.getConfiguration('kite');
     config.update('actionWhenErrorRescueFixesCode', AUTOCORRECT_DONT_SHOW_SIDEBAR, true);  
@@ -182,21 +210,21 @@ module.exports = class KiteErrorRescue {
               </div>`
               : ''
           }</div>
-          <div class="settings-view">
+          <div class="settings-view ${config.enableErrorRescue ? 'error-rescue-enabled' : ''}">
             <a href="https://help.kite.com/article/78-what-is-error-rescue" title="Learn about Error Rescue" class="icon icon-question"></a>
             <div class="settings-panel">
-              <div class="control-group checkbox">
+              <div class="control-group checkbox ${config.enableErrorRescue ? 'checked' : ''}">
                 <label>
-                  <input type="checkbox" class="input-toggle"></input>
+                  <input type="checkbox" class="input-toggle" ${config.enableErrorRescue ? 'checked' : ''} onchange="requestGet('/error-rescue/toggle/' + (this.checked ? 'on' : 'off'))"></input>
                   <div class="setting-title">Enable Error Rescue</div>
                 </label>
               </div>
               <div class="control-group select">
                 <label>
                   <div class="setting-title">Any time code is fixed:</div>
-                  <select type="checkbox" class="form-control" onchange="requestGet('/error-rescue/toggle/' + this.value">
-                    <option value="${AUTOCORRECT_SHOW_SIDEBAR}">Reopen this sidebar</option>
-                    <option value="${AUTOCORRECT_DONT_SHOW_SIDEBAR}">Do nothing (fix code quietly)</option>
+                  <select type="checkbox" class="form-control" onchange="requestGet('/error-rescue/switch/' + this.value)">
+                    <option value="${AUTOCORRECT_SHOW_SIDEBAR}" ${config.actionWhenErrorRescueFixesCode === AUTOCORRECT_SHOW_SIDEBAR ? 'selected' : ''}>Reopen this sidebar</option>
+                    <option value="${AUTOCORRECT_DONT_SHOW_SIDEBAR}" ${config.actionWhenErrorRescueFixesCode === AUTOCORRECT_DONT_SHOW_SIDEBAR ? 'selected' : ''}>Do nothing (fix code quietly)</option>
                   </select>
                 </label>
               </div>

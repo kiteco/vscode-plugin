@@ -109,7 +109,7 @@
                     "default": false,
                     "description": "Displays JSON data used by a view"
                 },
-                "kite.enableAutocorrect": {
+                "kite.enableErrorRescue": {
                     "type": "boolean",
                     "default": true,
                     "description": "Enables error rescue feature on save."
