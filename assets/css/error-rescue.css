@@ -1,0 +1,265 @@
+.auto-cursor {
+  cursor: default;
+}
+.tab[data-type=".kite-error-rescue-sidebar"] .icon-info::before {
+  color: #6494ed;
+}
+.kite-error-rescue-sidebar .settings-view {
+  background: transparent !important;
+  flex-direction: column;
+  margin: 0;
+  padding: 0 0 20px;
+  position: relative;
+}
+.kite-error-rescue-sidebar .settings-view .settings-panel {
+  width: 100%;
+}
+.kite-error-rescue-sidebar .settings-view .setting-title,
+.kite-error-rescue-sidebar .settings-view .form-control {
+  font-size: 1em;
+}
+.kite-error-rescue-sidebar .settings-view .control-group {
+  margin-bottom: 0.5em;
+}
+.kite-error-rescue-sidebar .settings-view .control-group.checkbox {
+  padding-left: 3.25em;
+}
+.kite-error-rescue-sidebar .settings-view .control-group.checkbox:not(.checked) + .control-group.select {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.kite-error-rescue-sidebar .settings-view:not(.error-rescue-enabled) + .content {
+  display: none;
+}
+.kite-error-rescue-sidebar .settings-view input.input-toggle {
+  margin-left: -3.25em;
+  position: absolute;
+}
+.kite-error-rescue-sidebar .settings-view:not(.error-rescue-enabled) + .content {
+  display: none;
+}
+.kite-error-rescue-sidebar .settings-view .control-group.select {
+  padding-left: 3.25em;
+}
+.kite-error-rescue-sidebar .settings-view .control-group.select label {
+  flex-direction: row;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.kite-error-rescue-sidebar .settings-view .control-group.select label .setting-title {
+  white-space: nowrap;
+  margin-right: 5px;
+}
+.kite-error-rescue-sidebar .settings-view .control-group.select label .form-control {
+  width: auto;
+  flex: 1 1 0;
+}
+.kite-error-rescue-sidebar .content:not(:empty) {
+  border-top: 1px solid #1a1d23;
+  padding-top: 20px;
+}
+.kite-error-rescue-sidebar h4 {
+  font-size: 1em;
+  margin-bottom: 1.5em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #d6dae1;
+}
+.kite-error-rescue-sidebar .diff {
+  margin: 10px 0;
+  margin-bottom: 20px;
+}
+.kite-error-rescue-sidebar .diff a,
+.kite-error-rescue-sidebar .diff a:hover,
+.kite-error-rescue-sidebar .diff a:focus,
+.kite-error-rescue-sidebar .diff a:active {
+  font-size: 1em;
+}
+.kite-error-rescue-sidebar .diff .feedback-actions a {
+  white-space: nowrap;
+}
+.kite-error-rescue-sidebar .diff:not(:first-child) .feedback-actions {
+  display: none;
+  pointer-events: none;
+}
+.kite-error-rescue-sidebar .diff-content {
+  margin-top: 10px;
+  display: block;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.kite-error-rescue-sidebar .feedback-actions {
+  display: flex;
+  text-align: left;
+  margin-top: 10px;
+}
+.kite-error-rescue-sidebar .feedback-actions a {
+  padding-left: 5px;
+  padding-right: 5px;
+  color: rgba(155, 165, 182, 0.6);
+}
+.kite-error-rescue-sidebar .feedback-actions a:hover {
+  color: #d6dae1;
+}
+.kite-error-rescue-sidebar .feedback-actions a.clicked {
+  color: white;
+  opacity: 1;
+}
+.kite-error-rescue-sidebar .feedback-feedback {
+  min-height: 3em;
+  padding-left: .4em;
+  color: transparent;
+  transition: color 300ms;
+}
+.kite-error-rescue-sidebar .feedback-feedback.hint {
+  color: rgba(155, 165, 182, 0.6);
+}
+.kite-error-rescue-sidebar .feedback-feedback.confirmation {
+  color: #d6dae1;
+}
+.kite-error-rescue-sidebar del,
+.kite-error-rescue-sidebar ins {
+  display: flex;
+  flex-direction: row;
+  text-decoration: none;
+  border: 1px solid rgba(155, 165, 182, 0.1);
+}
+.kite-error-rescue-sidebar del .line-number,
+.kite-error-rescue-sidebar ins .line-number {
+  width: 80px;
+  opacity: 0.5;
+  padding: 4px 10px;
+  color: #9ba5b6;
+  border-right: 1px solid rgba(155, 165, 182, 0.1);
+}
+.kite-error-rescue-sidebar del strong,
+.kite-error-rescue-sidebar ins strong {
+  padding: 0.2em 0.1em;
+  margin: -0.2em -0.1em;
+  font-weight: inherit;
+}
+.kite-error-rescue-sidebar del .line,
+.kite-error-rescue-sidebar ins .line {
+  padding: 4px;
+  padding-left: 30px;
+  position: relative;
+  color: #9ba5b6;
+  white-space: pre-wrap;
+  margin-left: 4ch;
+  text-indent: -4ch;
+  flex: 1 1 0;
+}
+.kite-error-rescue-sidebar del .line::before,
+.kite-error-rescue-sidebar ins .line::before {
+  opacity: 0.5;
+  position: absolute;
+  left: 0;
+  padding-left: 10px;
+}
+.kite-error-rescue-sidebar ins {
+  border-top: 0;
+}
+.kite-error-rescue-sidebar del .line::before {
+  content: '+';
+}
+.kite-error-rescue-sidebar ins .line::before {
+  content: '-';
+}
+.kite-error-rescue-sidebar ins .line-number {
+  text-align: right;
+}
+.kite-error-rescue-sidebar del strong {
+  border: 1px solid rgba(204, 102, 102, 0.3);
+}
+.kite-error-rescue-sidebar ins strong {
+  border: 1px solid rgba(172, 198, 151, 0.3);
+}
+.kite-error-rescue-sidebar .recent del {
+  border: 0;
+  margin: 0;
+  background-color: #502d4a;
+}
+.kite-error-rescue-sidebar .recent del .line-number {
+  background-color: #623042;
+  border: none;
+}
+.kite-error-rescue-sidebar .recent del strong {
+  background-color: #743340;
+  border: none;
+}
+.kite-error-rescue-sidebar .recent ins {
+  border: 0;
+  margin: 0;
+  background-color: #315156;
+}
+.kite-error-rescue-sidebar .recent ins .line-number {
+  background-color: #3b6656;
+  border: none;
+}
+.kite-error-rescue-sidebar .recent ins strong {
+  background-color: #457851;
+  border: none;
+}
+.kite-error-rescue-sidebar a.icon-question {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  font-size: 1.5em;
+  color: rgba(155, 165, 182, 0.6);
+}
+.kite-error-rescue-sidebar a.icon-question:hover::before {
+  color: #d6dae1;
+}
+.kite-error-rescue-sidebar a.icon-question::before {
+  font-size: 1em;
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+.kite-error-rescue-sidebar .messages.has-messages + div .icon-question {
+  display: none;
+}
+.kite-error-rescue-sidebar .message-box {
+  margin: 0 0 10px;
+  padding: 20px 60px 20px 20px;
+  border-radius: 3px;
+  background: #343b47;
+  position: relative;
+}
+.kite-error-rescue-sidebar .message-box h4 {
+  margin-top: 0;
+}
+.kite-error-rescue-sidebar .message-box .btn-close {
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0.5em;
+  margin: calc(3.5px);
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  color: rgba(155, 165, 182, 0.6);
+}
+.kite-error-rescue-sidebar .message-box .btn-close .icon::before {
+  margin-right: 0;
+}
+.kite-error-rescue-sidebar .message-box .btn-close:hover {
+  color: #d6dae1;
+}
+.kite-error-rescue-sidebar .message-box p + .diff-content {
+  margin-top: -10px;
+}
+.kite-error-rescue-sidebar .message-box .diff-content {
+  margin-bottom: 20px;
+}
+.kite-error-rescue-sidebar .message-box a {
+  color: #6494ed;
+}
+.kite-error-rescue-sidebar .kite-column {
+  display: block !important;
+  overflow-y: auto !important;
+}
