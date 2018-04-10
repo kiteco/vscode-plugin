@@ -94,10 +94,14 @@ module.exports = class KiteEditor {
                 this.Kite.errorRescue.update()
               }
             } else {
-              // notify
-              // if (versionChanged) {
-              //   this.Kite.notifications.notifyErrorRescueVersionChange(data.version);
-              // }
+              if (versionChanged) {
+                vscode.window.showInformationMessage('Kite Error Rescue has just been updated', 'Learn more')
+                .then(item => {
+                  if (item === 'Learn more') {
+                    this.Kite.errorRescue.loadModelInfo(data.version);
+                  }
+                });
+              }
             }
           }, (err) => {
             console.log(err)
