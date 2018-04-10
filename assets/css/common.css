@@ -19,6 +19,55 @@ ul, i {
   list-style: none;
 }
 
+/* UI elements */
+
+.input-toggle {
+  -webkit-appearance: none;
+  margin: 0;
+  margin-top: 0.1em;
+  width: 3em;
+  height: 1.5em;
+  border-radius: 999px;
+  background: var(--button-background);
+  position: relative;
+  outline: none !important;
+}
+.input-toggle:after {
+  content: '';
+  z-index: 100;
+  position: absolute;
+  left: 0.6em;
+  top: 0.35em;
+  width: 0.8em;
+  height: 0.8em;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border-radius: 999px;
+  transition: left 120ms ease-out;
+  background: var(--button-color);
+}
+.input-toggle:checked:after {
+  left: 1.6em;
+}
+.input-toggle:hover:after {
+  background: var(--link-color);
+}
+
+select {
+  position: relative;
+  border: none;
+  background: var(--button-background);
+  color: var(--button-text);
+  height: 2em;
+  outline: none !important;
+}
+.vscode-high-contrast select {
+  color: black;
+}
+
+/* Icons */
+
 .icon-kite::before {
   content: '';
   display: inline-block;

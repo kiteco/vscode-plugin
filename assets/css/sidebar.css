@@ -7,6 +7,12 @@
     --font-size
 */
 
+.kite {
+  --sidebar-padding: 20px;
+  --sidebar-left-indent: 20px;
+  --near-white: rgb(180, 180, 180);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -20,7 +26,7 @@
   font-family: sans-serif;
   flex-direction: column;
   position: absolute;
-  padding: 10px 10px 0;
+  padding: 0;
   top: 0;
   left: 0;
   right: 0;
@@ -241,6 +247,7 @@ a[data-action="expand"] {
 .kite .expand-header {
   flex: 0 0 auto;
   margin-bottom: 10px;
+  padding: var(--sidebar-padding) !important; /* TK */
 }
 .kite section.summary pre code {
   white-space: pre;
@@ -328,6 +335,7 @@ a[data-action="expand"] {
   left: 0;
   right: 0;
   bottom: 0;
+  padding: var(--sidebar-padding) !important; /* TK */
 }
 
 .kite h3 {
