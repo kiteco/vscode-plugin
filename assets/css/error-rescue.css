@@ -298,7 +298,7 @@
   padding: 0.5em;
   margin: -0.5em;
   position: absolute;
-  right: var(--sidebar-padding);
+  right: calc(var(--sidebar-padding) - 4px); // For optical correction
   top: var(--sidebar-padding);
   color: inherit;
   opacity: 0.5;
