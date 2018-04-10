@@ -247,7 +247,7 @@ a[data-action="expand"] {
 .kite .expand-header {
   flex: 0 0 auto;
   margin-bottom: 10px;
-  padding: var(--sidebar-padding) !important; /* TK */
+  padding: var(--sidebar-padding);
 }
 .kite section.summary pre code {
   white-space: pre;
@@ -335,7 +335,7 @@ a[data-action="expand"] {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: var(--sidebar-padding) !important; /* TK */
+  padding: var(--sidebar-padding);
 }
 
 .kite h3 {

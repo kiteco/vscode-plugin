@@ -302,6 +302,7 @@
   top: var(--sidebar-padding);
   color: inherit;
   opacity: 0.5;
+  z-index: 100;
 }
 .kite-error-rescue-sidebar .message-box .btn-close:hover {
   opacity: 1;
