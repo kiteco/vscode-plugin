@@ -143,7 +143,7 @@ module.exports = class KiteErrorRescue {
     if (this.isSidebarOpen) {
       this.update();
     } else {
-      vscode.commands.executeCommand('vscode.previewHtml', URI, vscode.ViewColumn.Two, 'Kite');
+      vscode.commands.executeCommand('vscode.previewHtml', URI, vscode.ViewColumn.Two, 'Kite Error Rescue');
       this.isSidebarOpen = true;
     }
   } 
