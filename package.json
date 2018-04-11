@@ -59,6 +59,10 @@
             {
                 "command": "kite.open-permissions",
                 "title": "Kite: Permissions"
+            },
+            {
+                "command": "kite.show-error-rescue",
+                "title": "Kite: Open Error Rescue Sidebar"
             }
         ],
         "menus": {
