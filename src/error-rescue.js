@@ -205,13 +205,13 @@ module.exports = class KiteErrorRescue {
           <div class="messages">${
             this.message 
               ? `<div class="message-box">
-                <button class="btn btn-close" onclick="requestGet('/error-rescue/close-message')">x</button>
+                <button class="btn btn-close icon icon-x" onclick="requestGet('/error-rescue/close-message')"></button>
                 ${this.message}
               </div>`
               : ''
           }</div>
           <div class="settings-view ${config.enableErrorRescue ? 'error-rescue-enabled' : ''}">
-            <a href="https://help.kite.com/article/78-what-is-error-rescue" title="Learn about Error Rescue" class="icon icon-question"></a>
+            <a href="https://help.kite.com/article/78-what-is-error-rescue" title="Learn about Error Rescue" class="icon icon-info"></a>
             <div class="settings-panel">
               <div class="control-group checkbox ${config.enableErrorRescue ? 'checked' : ''}">
                 <label>
@@ -264,18 +264,18 @@ module.exports = class KiteErrorRescue {
           ${fix.diffs.map(diff => this.renderDiff(diff)).join('')}
           <div class="feedback-actions ${kiteEditor.lastCorrectionsData.feedbackSent ? 'feedback-sent' : ''}">
             <a href='command:kite.def?${defData}' aria-label="">Go to code</a>
-            <a class="thumb-up ${kiteEditor.lastCorrectionsData.feedbackSent == 1 ? 'clicked' : ''}" 
+            <a class="thumb-up icon icon-thumbsup ${kiteEditor.lastCorrectionsData.feedbackSent == 1 ? 'clicked' : ''}" 
                href="#"
                aria-label="Send feedback to Kite if you like this change"
                onclick="requestGet('/error-rescue/feedback/ok')"
                onmouseover="showFeedbackFeedback(this, this.getAttribute('aria-label'), {confirmation: false})"
-               onmouseout="hideFeedbackFeedback(this)">👍</a>
-            <a class="thumb-down ${kiteEditor.lastCorrectionsData.feedbackSent == -1 ? 'clicked' : ''}"
+               onmouseout="hideFeedbackFeedback(this)"></a>
+            <a class="thumb-down icon icon-thumbsdown ${kiteEditor.lastCorrectionsData.feedbackSent == -1 ? 'clicked' : ''}"
                href="#"
                aria-label="Send feedback to Kite if you don’t like this change"
                onclick="requestGet('/error-rescue/feedback/ko')"
                onmouseover="showFeedbackFeedback(this, this.getAttribute('aria-label'), {confirmation: false})"
-               onmouseout="hideFeedbackFeedback(this)">👎</a>
+               onmouseout="hideFeedbackFeedback(this)"></a>
             <span class="feedback-feedback ${kiteEditor.lastCorrectionsData.feedbackSent ? 'confirmation' : ''}">${kiteEditor.lastCorrectionsData.feedbackSent ? 'Thank you for your feedback!' : ''}</span>
           </div>
         </div>`
