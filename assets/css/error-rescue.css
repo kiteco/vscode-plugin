@@ -1,20 +1,25 @@
 .kite-error-rescue-sidebar {
-  --line-del-background: rgb(120, 40, 40);
-  --line-ins-background: rgb(40, 110, 40);
+  --line-del-background: rgba(120, 40, 40, .75);
+  --line-ins-background: rgba(40, 110, 40, .75);
+  --subtle-light-border: rgba(255, 255, 255, 0.15);
+  --subtle-dark-border: rgba(0, 0, 0, 0.1);
+  --subtle-border: var(--subtle-light-border);
 }
 .vscode-light .kite-error-rescue-sidebar {
-  --line-del-background: rgb(250, 180, 180);
-  --line-ins-background: rgb(190, 240, 190);
+  --line-del-background: rgba(250, 180, 180, .8);
+  --line-ins-background: rgba(190, 240, 190, .8);
+  --subtle-border: var(--subtle-dark-border);
 }
 .vscode-high-contrast .kite-error-rescue-sidebar {
-  --line-del-background: rgb(40, 10, 10);
-  --line-ins-background: rgb(10, 30, 10);
+  --line-del-background: black;
+  --line-ins-background: black;
+  --subtle-border: white;
 }
 
 .auto-cursor {
   cursor: default;
 }
-.tab[data-type=".kite-error-rescue-sidebar"] .icon-info::before {
+.tab[data-type=".kite-error-rescue-sidebar"] .icon-question::before {
   color: #6494ed;
 }
 .kite-error-rescue-sidebar .settings-view {
@@ -160,7 +165,7 @@
   display: flex;
   flex-direction: row;
   text-decoration: none;
-  border: 1px solid rgba(155, 165, 182, 0.1);
+  border: 1px solid var(--subtle-border);
 }
 .kite-error-rescue-sidebar del .line-number,
 .kite-error-rescue-sidebar ins .line-number {
@@ -168,7 +173,7 @@
   opacity: 0.75;
   padding: 6px 10px;
   color: var(--text-color);
-  border-right: 1px solid rgba(155, 165, 182, 0.1);
+  border-right: 1px solid var(--subtle-border);
 }
 .kite-error-rescue-sidebar del strong,
 .kite-error-rescue-sidebar ins strong {
@@ -195,7 +200,7 @@
   padding-left: 10px;
 }
 .kite-error-rescue-sidebar ins {
-  border-top: 0;
+  border-top: 0 !important;
 }
 .kite-error-rescue-sidebar del .line::before {
   content: '+';
@@ -240,7 +245,26 @@
   margin: 0;
   background-color: var(--line-ins-background);
 }
-.kite-error-rescue-sidebar a.icon-info {
+
+.vscode-high-contrast .kite-error-rescue-sidebar .recent del,
+.vscode-high-contrast .kite-error-rescue-sidebar .recent ins {
+  border: 1px solid white;
+}
+.vscode-high-contrast .kite-error-rescue-sidebar del strong,
+.vscode-high-contrast .kite-error-rescue-sidebar ins strong {
+  border-color: white;
+}
+.vscode-high-contrast .kite-error-rescue-sidebar .recent del strong,
+.vscode-high-contrast .kite-error-rescue-sidebar .recent ins strong {
+  background: white;
+  color: black;
+  border: none;
+}
+.vscode-high-contrast .kite-error-rescue-sidebar .line::before {
+  color: white;
+}
+
+.kite-error-rescue-sidebar a.icon-question {
   position: absolute;
   top: var(--sidebar-padding);
   right: var(--sidebar-padding);
@@ -248,10 +272,10 @@
   font-size: 1.2em;
   color: var(--button-color) !important;
 }
-.kite-error-rescue-sidebar a.icon-info:hover::before {
+.kite-error-rescue-sidebar a.icon-question:hover::before {
   color: var(--text-color-highlight) !important;
 }
-.kite-error-rescue-sidebar a.icon-info::before {
+.kite-error-rescue-sidebar a.icon-question::before {
   font-size: 1em;
   width: auto;
   height: auto;
@@ -307,12 +331,33 @@
 .kite-error-rescue-sidebar .message-box .btn-close:hover {
   opacity: 1;
 }
-.kite-error-rescue-sidebar .message-box p + .diff-content {
-  margin-top: -10px;
-}
 .kite-error-rescue-sidebar .message-box .diff-content {
+  margin-left: 0;
   margin-bottom: 20px;
 }
+.kite-error-rescue-sidebar .message-box del,
+.kite-error-rescue-sidebar .message-box ins,
+.kite-error-rescue-sidebar .message-box del strong,
+.kite-error-rescue-sidebar .message-box ins strong{
+    border-color: var(--subtle-dark-border);
+}
+.kite-error-rescue-sidebar .message-box del .line,
+.kite-error-rescue-sidebar .message-box ins .line {
+  color: inherit;
+}
+.vscode-light .kite-error-rescue-sidebar .message-box del,
+.vscode-light .kite-error-rescue-sidebar .message-box ins,
+.vscode-light .kite-error-rescue-sidebar .message-box del strong,
+.vscode-light .kite-error-rescue-sidebar .message-box ins strong {
+  border-color: var(--subtle-light-border);
+}
+.vscode-high-contrast .kite-error-rescue-sidebar .message-box del,
+.vscode-high-contrast .kite-error-rescue-sidebar .message-box ins,
+.vscode-high-contrast .kite-error-rescue-sidebar .message-box del strong,
+.vscode-high-contrast .kite-error-rescue-sidebar .message-box ins strong {
+  border-color: black;
+}
+
 .kite-error-rescue-sidebar .kite-column {
   display: block !important;
   overflow-y: auto !important;

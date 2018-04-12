@@ -211,7 +211,7 @@ module.exports = class KiteErrorRescue {
               : ''
           }</div>
           <div class="settings-view ${config.enableErrorRescue ? 'error-rescue-enabled' : ''}">
-            <a href="https://help.kite.com/article/78-what-is-error-rescue" title="Learn about Error Rescue" class="icon icon-info"></a>
+            <a href="https://help.kite.com/article/78-what-is-error-rescue" title="Learn about Error Rescue" class="icon icon-question"></a>
             <div class="settings-panel">
               <div class="control-group checkbox ${config.enableErrorRescue ? 'checked' : ''}">
                 <label>
