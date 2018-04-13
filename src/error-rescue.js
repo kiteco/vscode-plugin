@@ -8,6 +8,8 @@ const {wrapHTML, debugHTML, stripLeadingSlash} = require('./html-utils');
 const relativeDate = require('tiny-relative-date');
 let instance;
 
+const asUrlPart = str => str.toLowerCase().replace(/\s/g, '-')
+
 server.addRoute('GET', `/error-rescue/toggle/on`, (req, res, url) => {
   try {
     const config = vscode.workspace.getConfiguration('kite');
@@ -36,7 +38,7 @@ server.addRoute('GET', `/error-rescue/toggle/off`, (req, res, url) => {
   }
 });
 
-server.addRoute('GET', `/error-rescue/switch/${AUTOCORRECT_SHOW_SIDEBAR}`, (req, res, url) => {
+server.addRoute('GET', `/error-rescue/switch/${asUrlPart(AUTOCORRECT_SHOW_SIDEBAR)}`, (req, res, url) => {
   try {
     const config = vscode.workspace.getConfiguration('kite');
     config.update('actionWhenErrorRescueFixesCode', AUTOCORRECT_SHOW_SIDEBAR, true);  
@@ -49,7 +51,7 @@ server.addRoute('GET', `/error-rescue/switch/${AUTOCORRECT_SHOW_SIDEBAR}`, (req,
   }
 });
 
-server.addRoute('GET', `/error-rescue/switch/${AUTOCORRECT_DONT_SHOW_SIDEBAR}`, (req, res, url) => {
+server.addRoute('GET', `/error-rescue/switch/${asUrlPart(AUTOCORRECT_DONT_SHOW_SIDEBAR)}`, (req, res, url) => {
   try {
     const config = vscode.workspace.getConfiguration('kite');
     config.update('actionWhenErrorRescueFixesCode', AUTOCORRECT_DONT_SHOW_SIDEBAR, true);  
@@ -223,8 +225,8 @@ module.exports = class KiteErrorRescue {
                 <label>
                   <div class="setting-title">Any time code is fixed:</div>
                   <select type="checkbox" class="form-control" onchange="requestGet('/error-rescue/switch/' + this.value)">
-                    <option value="${AUTOCORRECT_SHOW_SIDEBAR}" ${config.actionWhenErrorRescueFixesCode === AUTOCORRECT_SHOW_SIDEBAR ? 'selected' : ''}>Reopen this sidebar</option>
-                    <option value="${AUTOCORRECT_DONT_SHOW_SIDEBAR}" ${config.actionWhenErrorRescueFixesCode === AUTOCORRECT_DONT_SHOW_SIDEBAR ? 'selected' : ''}>Do nothing (fix code quietly)</option>
+                    <option value="${asUrlPart(AUTOCORRECT_SHOW_SIDEBAR)}" ${config.actionWhenErrorRescueFixesCode === AUTOCORRECT_SHOW_SIDEBAR ? 'selected' : ''}>Reopen this sidebar</option>
+                    <option value="${asUrlPart(AUTOCORRECT_DONT_SHOW_SIDEBAR)}" ${config.actionWhenErrorRescueFixesCode === AUTOCORRECT_DONT_SHOW_SIDEBAR ? 'selected' : ''}>Do nothing (fix code quietly)</option>
                   </select>
                 </label>
               </div>
