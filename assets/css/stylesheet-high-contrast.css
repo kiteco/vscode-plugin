@@ -16,4 +16,13 @@
   --examples-output-background: black;
   --open-web-link-background: white;
   --open-web-link-color: black;
+
+  /* Error Rescue */
+  --line-del-background: black;
+  --line-ins-background: black;
+  --line-number-background: black;
+  --subtle-border-color: white;
+  --subtle-inverse-border-color: black;
+  --header-background: black;
+  --messages-text: black;
 }

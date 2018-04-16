@@ -16,4 +16,13 @@
   --open-web-link-background: rgba(255, 255, 255, 0.2);
   --open-web-link-color: #9ba5b6;
   --sticky-header-hover-background: #2b3445;
+
+  /* Error Rescue */
+  --line-del-background: rgba(120, 40, 40, .75);
+  --line-ins-background: rgba(40, 110, 40, .75);
+  --line-number-background: rgba(0, 0, 0, .25);
+  --subtle-border-color: rgba(255, 255, 255, 0.15);
+  --subtle-inverse-border-color: rgba(0, 0, 0, 0.1);
+  --header-background: rgba(255, 255, 255, 0.05);
+  --messages-text: black;
 }

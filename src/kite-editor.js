@@ -79,6 +79,10 @@ module.exports = class KiteEditor {
           .then(() => {
             this.fixesHistory.unshift(new Fix(data.diffs));
 
+            // DEBUG
+            this.Kite.errorRescue.loadModelInfo(data.version);
+            return;
+
             if ((firstRunExperience || mustOpenErrorRescueSidebar) && !this.Kite.errorRescue.isSidebarOpen) {
               if (firstRunExperience) {
                 this.Kite.errorRescue.showFirstRunExperience();
