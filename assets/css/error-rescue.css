@@ -1,31 +1,15 @@
-.kite-error-rescue-sidebar {
-  --line-del-background: rgb(120, 40, 40);
-  --line-ins-background: rgb(40, 110, 40);
-}
-.vscode-light .kite-error-rescue-sidebar {
-  --line-del-background: rgb(250, 180, 180);
-  --line-ins-background: rgb(190, 240, 190);
-}
-.vscode-high-contrast .kite-error-rescue-sidebar {
-  --line-del-background: rgb(40, 10, 10);
-  --line-ins-background: rgb(10, 30, 10);
-}
-
 .auto-cursor {
   cursor: default;
 }
-.tab[data-type=".kite-error-rescue-sidebar"] .icon-info::before {
+.tab[data-type=".kite-error-rescue-sidebar"] .icon-question::before {
   color: #6494ed;
 }
 .kite-error-rescue-sidebar .settings-view {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: var(--header-background) !important;
   flex-direction: column;
   padding: var(--sidebar-left-indent) var(--sidebar-padding);
   position: relative;
   line-height: 1.6;
-}
-.vscode-light .kite-error-rescue-sidebar .settings-view {
-  background: rgba(0, 0, 0, 0.05) !important;
 }
 .kite-error-rescue-sidebar .settings-view .settings-panel {
   margin-left: var(--sidebar-left-indent);
@@ -80,9 +64,6 @@
   font-weight: 400;
   color: var(--text-color-highlight);
   opacity: 0.5;
-}
-.vscode-high-contrast .kite .kite-error-rescue-sidebar h4 {
-  opacity: 1;
 }
 .kite-error-rescue-sidebar .diff {
   margin: 10px 0;
@@ -160,7 +141,7 @@
   display: flex;
   flex-direction: row;
   text-decoration: none;
-  border: 1px solid rgba(155, 165, 182, 0.1);
+  border: 1px solid var(--subtle-border-color);
 }
 .kite-error-rescue-sidebar del .line-number,
 .kite-error-rescue-sidebar ins .line-number {
@@ -168,7 +149,7 @@
   opacity: 0.75;
   padding: 6px 10px;
   color: var(--text-color);
-  border-right: 1px solid rgba(155, 165, 182, 0.1);
+  border-right: 1px solid var(--subtle-border-color);
 }
 .kite-error-rescue-sidebar del strong,
 .kite-error-rescue-sidebar ins strong {
@@ -195,7 +176,7 @@
   padding-left: 10px;
 }
 .kite-error-rescue-sidebar ins {
-  border-top: 0;
+  border-top: 0 !important;
 }
 .kite-error-rescue-sidebar del .line::before {
   content: '+';
@@ -212,35 +193,29 @@
 .kite-error-rescue-sidebar ins strong {
   border: 1px solid rgba(151, 220, 151, 0.3);
 }
-.kite-error-rescue-sidebar .recent del {
-  border: 0;
-  margin: 0;
-  background-color: var(--line-del-background);
-}
-.kite-error-rescue-sidebar .recent del .line-number,
-.kite-error-rescue-sidebar .recent ins .line-number {
-  background-color: rgba(0, 0, 0, .25);
-  border: none;
-}
-.vscode-light .kite-error-rescue-sidebar .recent del .line-number,
-.vscode-light .kite-error-rescue-sidebar .recent ins .line-number {
-  background-color: rgba(255, 255, 255, .5);
-}
-.kite-error-rescue-sidebar .recent del strong,
-.kite-error-rescue-sidebar .recent ins strong {
-  background-color: rgba(255, 255, 255, .15);
-  border: none;
-}
-.vscode-light .kite-error-rescue-sidebar .recent del strong,
-.vscode-light .kite-error-rescue-sidebar .recent ins strong {
-  background-color: rgba(0, 0, 0, .1);
-}
+.kite-error-rescue-sidebar .recent del,
 .kite-error-rescue-sidebar .recent ins {
   border: 0;
   margin: 0;
+}
+.kite-error-rescue-sidebar .recent del {
+  background-color: var(--line-del-background);
+}
+.kite-error-rescue-sidebar .recent ins {
   background-color: var(--line-ins-background);
 }
-.kite-error-rescue-sidebar a.icon-info {
+.kite-error-rescue-sidebar .recent del .line-number,
+.kite-error-rescue-sidebar .recent ins .line-number {
+  background-color: var(--line-number-background);
+  border: none;
+}
+.kite-error-rescue-sidebar .recent del strong,
+.kite-error-rescue-sidebar .recent ins strong {
+  background-color: var(--subtle-border-color);
+  border: none;
+}
+
+.kite-error-rescue-sidebar a.icon-question {
   position: absolute;
   top: var(--sidebar-padding);
   right: var(--sidebar-padding);
@@ -248,23 +223,20 @@
   font-size: 1.2em;
   color: var(--button-color) !important;
 }
-.kite-error-rescue-sidebar a.icon-info:hover::before {
+.kite-error-rescue-sidebar a.icon-question:hover::before {
   color: var(--text-color-highlight) !important;
 }
-.kite-error-rescue-sidebar a.icon-info::before {
+.kite-error-rescue-sidebar a.icon-question::before {
   font-size: 1em;
   width: auto;
   height: auto;
   margin: 0;
 }
 .kite-error-rescue-sidebar .messages {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: var(--header-background) !important;
 }
 .kite-error-rescue-sidebar .messages:not(:empty) {
   padding-top: var(--sidebar-padding);
-}
-.vscode-light .kite-error-rescue-sidebar .messages {
-  background: rgba(0, 0, 0, 0.05) !important;
 }
 .kite-error-rescue-sidebar .message-box {
   line-height: 1.8;
@@ -274,21 +246,12 @@
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
   background: var(--text-color-highlight) !important;
-  color: black !important;
-}
-.vscode-light .kite-error-rescue-sidebar .message-box {
-  color: var(--near-white) !important;
+  color: var(--messages-text) !important;
 }
 .kite-error-rescue-sidebar .message-box h4 {
   margin-top: 0;
-  color: black !important;
   opacity: 0.75;
-}
-.vscode-light .kite-error-rescue-sidebar .message-box h4 {
-  color: var(--near-white) !important;
-}
-.vscode-high-contrast .kite-error-rescue-sidebar .message-box a {
-  color: black;
+  color: var(--messages-text) !important;
 }
 
 .kite-error-rescue-sidebar .message-box .btn-close {
@@ -298,7 +261,7 @@
   padding: 0.5em;
   margin: -0.5em;
   position: absolute;
-  right: calc(var(--sidebar-padding) - 4px); // For optical correction
+  right: calc(var(--sidebar-padding) - 4px); /* For optical correction */
   top: var(--sidebar-padding);
   color: inherit;
   opacity: 0.5;
@@ -307,14 +270,49 @@
 .kite-error-rescue-sidebar .message-box .btn-close:hover {
   opacity: 1;
 }
-.kite-error-rescue-sidebar .message-box p + .diff-content {
-  margin-top: -10px;
-}
 .kite-error-rescue-sidebar .message-box .diff-content {
+  margin-left: 0;
   margin-bottom: 20px;
 }
+.kite-error-rescue-sidebar .message-box del,
+.kite-error-rescue-sidebar .message-box ins,
+.kite-error-rescue-sidebar .message-box del strong,
+.kite-error-rescue-sidebar .message-box ins strong {
+  border-color: var(--subtle-inverse-border-color);
+}
+.kite-error-rescue-sidebar .message-box del .line,
+.kite-error-rescue-sidebar .message-box ins .line {
+  color: inherit;
+}
+
 .kite-error-rescue-sidebar .kite-column {
   display: block !important;
   overflow-y: auto !important;
   padding: 0;
 }
+
+
+
+.vscode-high-contrast .kite .kite-error-rescue-sidebar h4 {
+  opacity: 1;
+}
+.vscode-high-contrast .kite-error-rescue-sidebar .message-box a {
+  color: black;
+}
+.vscode-high-contrast .kite-error-rescue-sidebar .recent del,
+.vscode-high-contrast .kite-error-rescue-sidebar .recent ins {
+  border: 1px solid white;
+}
+.vscode-high-contrast .kite-error-rescue-sidebar del strong,
+.vscode-high-contrast .kite-error-rescue-sidebar ins strong {
+  border-color: white;
+}
+.vscode-high-contrast .kite-error-rescue-sidebar .recent del strong,
+.vscode-high-contrast .kite-error-rescue-sidebar .recent ins strong {
+  color: black;
+  border: none;
+}
+.vscode-high-contrast .kite-error-rescue-sidebar .line::before {
+  color: white;
+}
+

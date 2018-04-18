@@ -15,4 +15,13 @@
   --examples-output-background: rgba(0, 0, 0, 0.1);
   --open-web-link-background: rgba(0, 0, 0, 0.2);
   --open-web-link-color: #333333;
+
+  /* Error Rescue */
+  --line-del-background: rgba(250, 180, 180, .8);
+  --line-ins-background: rgba(190, 240, 190, .8);
+  --line-number-background: rgba(255, 255, 255, .5);
+  --subtle-border-color: rgba(0, 0, 0, 0.1);
+  --subtle-inverse-border-color: rgba(255, 255, 255, 0.15);
+  --header-background: rgba(0, 0, 0, 0.05);
+  --messages-text: rgb(180, 180, 180);
 }
