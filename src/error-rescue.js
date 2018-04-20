@@ -8,7 +8,7 @@ const {wrapHTML, debugHTML, stripLeadingSlash} = require('./html-utils');
 const relativeDate = require('tiny-relative-date');
 let instance;
 
-const asUrlPart = str => str.toLowerCase().replace(/\s/g, '-')
+ const asUrlPart = str => str.toLowerCase().replace(/\s/g, '-')
 
 server.addRoute('GET', `/error-rescue/toggle/on`, (req, res, url) => {
   try {
@@ -166,25 +166,32 @@ module.exports = class KiteErrorRescue {
   }
   
   loadModelInfo(version) {
+    this.getErrorRescueModelInfo(version)
+    .then(data => {
+      // We don't want the model update info to be displayed if we already have the first run exp
+      if (!this.message) {
+        this.message = `<h4>Just added: New code fixes</h4>
+        ${data.examples.map((e) => {
+          return `
+            <p>${e.synopsis}</p>
+            ${this.renderDiff(e)}`;
+        }).join('')}
+        <a href="https://help.kite.com/article/78-what-is-error-rescue">Learn about Error Rescue</a>`;
+      }
+      this.open();
+    })
+    .catch(() => {});
+  }
+
+  getErrorRescueModelInfo(version) {
     const kiteEditor = vscode.window.activeTextEditor 
       ? this.Kite.kiteEditorByEditor.get(vscode.window.activeTextEditor.document.fileName)
       : this.lastKiteEditor;
 
     if(kiteEditor) {
-      kiteEditor.getErrorRescueModelInfo(version)
-      .then(data => {
-        // We don't want the model update info to be displayed if we already have the first run exp
-        if (!this.message) {
-          this.message = `<h4>Just added: New code fixes</h4>
-          ${data.examples.map((e) => {
-            return `
-              <p>${e.synopsis}</p>
-              ${this.renderDiff(e)}`;
-          }).join('')}
-          <a href="https://help.kite.com/article/78-what-is-error-rescue">Learn about Error Rescue</a>`;
-        }
-        this.open();
-      })
+      return kiteEditor.getErrorRescueModelInfo(version)
+    } else {
+      return Promise.reject();
     }
   }
 

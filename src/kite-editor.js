@@ -95,12 +95,16 @@ module.exports = class KiteEditor {
               }
             } else {
               if (versionChanged) {
-                vscode.window.showInformationMessage('Kite Error Rescue has just been updated', 'Learn more')
-                .then(item => {
-                  if (item === 'Learn more') {
-                    this.Kite.errorRescue.loadModelInfo(data.version);
-                  }
-                });
+                this.Kite.errorRescue.getErrorRescueModelInfo(data.version)
+                .then(model => {
+                  vscode.window.showInformationMessage(`Kite Error Rescue has just been updated: ${model.examples[0].synopsis}`, 'Learn more')
+                  .then(item => {
+                    if (item === 'Learn more') {
+                      this.Kite.errorRescue.loadModelInfo(data.version);
+                    }
+                  });
+                })
+                .catch(() => {});
               }
             }
           }, (err) => {
