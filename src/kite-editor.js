@@ -214,7 +214,6 @@ module.exports = class KiteEditor {
       }
     })
     .then(data => parseJSON(data, {}))
-    .catch(err => console.error(err));
   }
 
   getErrorRescueModelInfo(version) {
