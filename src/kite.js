@@ -346,7 +346,7 @@ const Kite = {
 
     const config = vscode.workspace.getConfiguration('kite');
     if (config.showDocsNotificationOnStartup) {
-      vscode.window.showInformationMessage('Kite is now integrated with VS Code', 'Learn how to use Kite', "Don't show this again").then(item => {
+      vscode.window.showInformationMessage('Welcome to Kite for VS Code', 'Learn how to use Kite', "Don't show this again").then(item => {
         if (item) {
           switch(item) {
             case 'Learn how to use Kite':
