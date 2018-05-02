@@ -218,6 +218,15 @@ const Kite = {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
     });
 
+    vscode.commands.registerCommand('kite.open-sidebar', () => {
+      if (!router.isSidebarOpen()) {
+        vscode.commands.executeCommand('vscode.previewHtml', router.URI, vscode.ViewColumn.Two, 'Kite');
+      }
+    });
+
+    vscode.commands.registerCommand('kite.open-error-rescue-sidebar', () => {
+    });
+
     vscode.commands.registerCommand('kite.open-settings', () => {
       opn('http://localhost:46624/settings');
     });
@@ -326,7 +335,7 @@ const Kite = {
     });
 
     vscode.commands.registerCommand('kite.help', () => {
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.One, 'Kite Tour');
+      opn('https://help.kite.com/category/46-vs-code-integration');
     });
 
     vscode.commands.registerCommand('kite.docs-for-cursor', () => {
