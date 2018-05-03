@@ -482,7 +482,9 @@ const Kite = {
           this.showErrorMessage('Sorry, the Kite engine is currently not supported on your platform');
           break;
         case StateController.STATES.UNINSTALLED:
-          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
+          if (this.shown[state] || (vscode.window.activeTextEditor && !this.isGrammarSupported(vscode.window.activeTextEditor))) { 
+            return state; 
+          }
           this.shown[state] = true;
           if (!localconfig.get('wasInstalled', false)) {
             this.install.reset();
