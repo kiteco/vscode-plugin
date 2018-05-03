@@ -224,11 +224,12 @@ const Kite = {
       }
     });
 
-    vscode.commands.registerCommand('kite.open-error-rescue-sidebar', () => {
-    });
-
     vscode.commands.registerCommand('kite.open-settings', () => {
       opn('http://localhost:46624/settings');
+    });
+    
+    vscode.commands.registerCommand('kite.open-copilot', () => {
+      opn('http://localhost:46624/clientapi/sidebar/open');
     });
 
     vscode.commands.registerCommand('kite.open-permissions', () => {

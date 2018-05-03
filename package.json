@@ -53,6 +53,10 @@
                 "title": "Kite: Permissions"
             },
             {
+                "command": "kite.open-copilot",
+                "title": "Kite: Open copilot"
+            },
+            {
                 "command": "kite.open-sidebar",
                 "title": "Kite: Open sidebar"
             },
