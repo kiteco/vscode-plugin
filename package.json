@@ -59,6 +59,10 @@
             {
                 "command": "kite.open-permissions",
                 "title": "Kite: Permissions"
+            },
+            {
+                "command": "kite.show-error-rescue",
+                "title": "Kite: Open Error Rescue Sidebar"
             }
         ],
         "menus": {
@@ -109,6 +113,20 @@
                     "default": false,
                     "description": "Displays JSON data used by a view"
                 },
+                "kite.enableErrorRescue": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables error rescue feature on save."
+                },
+                "kite.actionWhenErrorRescueFixesCode": {
+                    "type": "string",
+                    "default": "Reopen sidebar",
+                    "enum": [
+                        "Reopen sidebar",
+                        "Fix code quietly"
+                    ],
+                    "description": "Choose whether Error Rescue should (re)open its sidebar upon making fixes, or do it quietly"
+                },
                 "kite.loggingLevel": {
                     "type": "string",
                     "default": "info",
@@ -137,7 +155,8 @@
         "kite-installer": "^1.0.0",
         "md5": "^2.2.0",
         "opn": "^1.0.0",
-        "rollbar": "^2.3.8"
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0"
     },
     "devDependencies": {
         "@types/mocha": "^2.2.32",

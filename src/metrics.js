@@ -105,5 +105,7 @@ module.exports = {
   featureRequested,
   featureFulfilled,
   trackHealth,
+  getOsName,
+  version: kitePkg.version,
   track: () => {}
 };

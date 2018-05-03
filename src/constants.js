@@ -25,6 +25,9 @@ const WARNING_COLOR = '#929497';
 
 const NOT_WHITELISTED = 7;
 
+const AUTOCORRECT_SHOW_SIDEBAR = 'Reopen sidebar';
+const AUTOCORRECT_DONT_SHOW_SIDEBAR = 'Fix code quietly';
+
 module.exports = {
   ATTEMPTS, 
   INTERVAL,
@@ -36,4 +39,6 @@ module.exports = {
   WARNING_COLOR,
   NOT_WHITELISTED,
   SUPPORTED_EXTENSIONS,
+  AUTOCORRECT_SHOW_SIDEBAR,
+  AUTOCORRECT_DONT_SHOW_SIDEBAR,
 };

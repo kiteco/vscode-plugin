@@ -4,7 +4,7 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const {StateController, AccountManager, Logger} = require('kite-installer');
-const {PYTHON_MODE, JAVASCRIPT_MODE, ATTEMPTS, INTERVAL, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
+const {PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
@@ -15,6 +15,7 @@ const KiteLogin = require('./login');
 const KiteInstall = require('./install');
 const KiteStatus = require('./status');
 const KiteTour = require('./tour');
+const KiteErrorRescue = require('./error-rescue');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
 const localconfig = require('./localconfig');
@@ -25,8 +26,6 @@ const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath, 
 const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params} = require('./utils');
 const {version} = require('../package.json');
-
-const pluralize = (n, singular, plural) => n === 1 ? singular : plural;
 
 const Kite = {
   activate(ctx)
@@ -60,6 +59,7 @@ const Kite = {
     const install = new KiteInstall(Kite);
     const status = new KiteStatus(Kite);
     const tour = new KiteTour(Kite);
+    const errorRescue = new KiteErrorRescue(Kite);
 
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
@@ -77,9 +77,11 @@ const Kite = {
     ctx.subscriptions.push(search);
     ctx.subscriptions.push(status);
     ctx.subscriptions.push(install);
+    ctx.subscriptions.push(errorRescue);
 
     this.status = status;
     this.install = install;
+    this.errorRescue = errorRescue;
 
     server.addRoute('GET', '/check', (req, res) => {
       this.checkState('/check route');
@@ -112,6 +114,8 @@ const Kite = {
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-tour', tour));
+    ctx.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-error-rescue', errorRescue));
 
     ctx.subscriptions.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
@@ -130,6 +134,13 @@ const Kite = {
       vscode.languages.registerCompletionItemProvider(JAVASCRIPT_MODE, new KiteCompletionProvider(Kite), '.'));
     ctx.subscriptions.push(
       vscode.languages.registerSignatureHelpProvider(JAVASCRIPT_MODE, new KiteSignatureProvider(Kite), '(', ','));
+
+    ctx.subscriptions.push(vscode.workspace.onWillSaveTextDocument((e) => {
+      const kiteEditor = this.kiteEditorByEditor.get(e.document.fileName);
+      if(this.isDocumentGrammarSupported(e.document) && kiteEditor && kiteEditor.isWhitelisted) {
+        e.waitUntil(kiteEditor.onWillSave())
+      }
+    }));
 
     ctx.subscriptions.push(vscode.workspace.onDidChangeConfiguration(() => {
       Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
@@ -152,7 +163,7 @@ const Kite = {
     }));
 
     ctx.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(e => {
-      const evt = this.eventsByEditor.get(e.textEditor);
+      const evt = this.eventsByEditor.get(e.textEditor.document.fileName);
       evt.selectionChanged();
       this.setStatusBarLabel();
     }));
@@ -195,8 +206,12 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.login', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
-    });
-
+    }); 
+    
+    vscode.commands.registerCommand('kite.show-error-rescue', () => {
+      errorRescue.open();
+    }); 
+    
     vscode.commands.registerCommand('kite.install', () => {
       install.reset();
       AccountManager.initClient('alpha.kite.com', -1, true);
@@ -290,7 +305,7 @@ const Kite = {
       opn(url.replace(/;/g, '%3B'));
     });
 
-    vscode.commands.registerCommand('kite.def', ({file, line, source}) => {
+    vscode.commands.registerCommand('kite.def', ({file, line, character, source}) => {
       metrics.track(`${source} Go to definition clicked`);
       metrics.featureRequested('definition');
       vscode.workspace.openTextDocument(vscode.Uri.file(file))
@@ -299,10 +314,14 @@ const Kite = {
       })
       .then(e => {
         metrics.featureFulfilled('definition');
+        const newPosition = new vscode.Position(line - 1, character ? character - 1 : 0);
         e.revealRange(new vscode.Range(
-          new vscode.Position(line - 1, 0),
+          newPosition,
           new vscode.Position(line - 1, 100)
         ));
+
+        const newSelection = new vscode.Selection(newPosition, newPosition);
+        e.selection = newSelection;
       })
     });
 
@@ -419,9 +438,9 @@ const Kite = {
   },
 
   registerEvents(e) {
-    if (e && !this.eventsByEditor.has(e) && e.document) {
+    if (e && e.document && !this.eventsByEditor.has(e.document.fileName)) {
       const evt = new EditorEvents(this, e);
-      this.eventsByEditor.set(e, evt);
+      this.eventsByEditor.set(e.document.fileName, evt);
 
       if (e === vscode.window.activeTextEditor) {
         evt.focus();
@@ -430,10 +449,13 @@ const Kite = {
   },
 
   registerEditor(e) {
-    if (!this.kiteEditorByEditor.has(e)) {
+    if (this.kiteEditorByEditor.has(e.document.fileName)) {
+      const ke = this.kiteEditorByEditor.get(e.document.fileName);
+      ke.editor = e
+    } else { 
       Logger.debug('register kite editor for', e.document.fileName, e.document.languageId);
-      const evt = new KiteEditor(Kite, e);
-      this.kiteEditorByEditor.set(e, evt);
+      const ke = new KiteEditor(Kite, e);
+      this.kiteEditorByEditor.set(e.document.fileName, ke);
     }
   },
 
@@ -657,7 +679,7 @@ const Kite = {
   },
 
   isEditorWhitelisted(e) {
-    const ke = this.kiteEditorByEditor.get(e);
+    const ke = this.kiteEditorByEditor.get(e.document.fileName);
     return ke && ke.isWhitelisted();
   },
 
@@ -665,7 +687,7 @@ const Kite = {
     // for the moment a 404 response is sent for non-whitelisted file by
     // the tokens endpoint
     editorsForDocument(document).forEach(e => {
-      const ke = this.kiteEditorByEditor.get(e);
+      const ke = this.kiteEditorByEditor.get(e.document.fileName);
       if (ke) { ke.whitelisted = resp.statusCode !== 403 }
     });
 
@@ -792,7 +814,11 @@ const Kite = {
         }
       });
     });
-  }
+  },
+
+  errorRescueVersion() {
+    return localconfig.get('autocorrect_model_version');
+  },
 }
 
 module.exports = {
