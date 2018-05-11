@@ -72,9 +72,8 @@ module.exports = class KiteCompletionProvider {
   ${c.documentation_text}
 
             `);
+            item.detail = `Kite docs`;
           }
-          // item.detail = c.hint;
-          item.detail = `Kite docs`;
           item.kind = kindForHint(c.hint);
           return item;
         });
