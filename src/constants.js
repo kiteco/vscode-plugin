@@ -8,10 +8,10 @@ const SUPPORTED_EXTENSIONS = {
 }
 
 // MAX_FILE_SIZE is the maximum file size to send to Kite
-const MAX_FILE_SIZE = 2 ** 20; // 1048576
+const MAX_FILE_SIZE = Math.pow(2, 20); // 1048576
 
 // MAX_PAYLOAD_SIZE is the maximum length for a POST reqest body
-const MAX_PAYLOAD_SIZE = 2 ** 21; // 2097152
+const MAX_PAYLOAD_SIZE = Math.pow(2, 21); // 2097152
 
 const CONNECT_ERROR_LOCKOUT = 15 * 60;
 
@@ -32,6 +32,7 @@ module.exports = {
   ATTEMPTS, 
   INTERVAL,
   PYTHON_MODE,
+  JAVASCRIPT_MODE,
   MAX_PAYLOAD_SIZE,
   MAX_FILE_SIZE,
   CONNECT_ERROR_LOCKOUT,
