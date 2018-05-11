@@ -47,11 +47,14 @@ ul, i {
   transition: left 120ms ease-out;
   background: var(--button-color);
 }
+.input-toggle:checked {
+  background: var(--link-color);
+}
 .input-toggle:checked:after {
   left: 1.6em;
 }
-.input-toggle:hover:after {
-  background: var(--link-color);
+.input-toggle:checked:after {
+  background: var(--sticky-header-hover-background);
 }
 
 select {
