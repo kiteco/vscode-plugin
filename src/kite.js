@@ -4,6 +4,7 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const http = require('http');
+const cp = require('child_process');
 const {StateController, AccountManager, Logger} = require('kite-installer');
 const {PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
@@ -226,6 +227,7 @@ const Kite = {
     });
 
     vscode.commands.registerCommand('kite.open-settings', () => {
+      http.get('http://localhost:46624/clientapi/sidebar/open');
       opn('kite://settings');
     });
     
@@ -234,6 +236,7 @@ const Kite = {
     });
     
     vscode.commands.registerCommand('kite.open-permissions', () => {
+      http.get('http://localhost:46624/clientapi/sidebar/open');
       opn('kite://settings/permissions');
     });
 
