@@ -245,7 +245,7 @@ module.exports = class KiteStatus {
       case STATES.UNINSTALLED:
         content = `
           <div class="text-danger">Kite engine is not installed ${dot}</div>
-          <a href="command:kite.install" class="btn error">Install now</a>
+          <a href="https://kite.com/download" class="btn error">Install now</a>
         `;
         break;
       case STATES.INSTALLED:
