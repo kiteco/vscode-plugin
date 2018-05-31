@@ -8,7 +8,7 @@ const {wrapHTML, debugHTML, stripLeadingSlash} = require('./html-utils');
 const relativeDate = require('tiny-relative-date');
 let instance;
 
- const asUrlPart = str => str.toLowerCase().replace(/\s/g, '-')
+const asUrlPart = str => str.toLowerCase().replace(/\s/g, '-')
 
 server.addRoute('GET', `/error-rescue/toggle/on`, (req, res, url) => {
   try {
@@ -135,6 +135,7 @@ module.exports = class KiteErrorRescue {
         delete this.isSidebarOpen;
       }
     });
+    this.URI = URI;
   }
   
   get onDidChange() {

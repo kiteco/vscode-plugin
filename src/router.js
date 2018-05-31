@@ -19,6 +19,8 @@ module.exports = class KiteRouter {
       }
     });
     this.clearNavigation();
+
+    this.URI = URI;
   }
 
   get onDidChange() { 
@@ -28,6 +30,10 @@ module.exports = class KiteRouter {
   dispose() {}
 
   provideTextDocumentContent() {
+    if (!this.navigation[this.step]) {
+      return Promise.resolve('');
+    }
+
     let {authority, path, document} = this.navigation[this.step];
     let promise
     path = path.replace(/^\//, '');

@@ -3,6 +3,8 @@
 const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
+const http = require('http');
+const cp = require('child_process');
 const {StateController, AccountManager, Logger} = require('kite-installer');
 const {PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
@@ -218,12 +220,24 @@ const Kite = {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
     });
 
-    vscode.commands.registerCommand('kite.open-settings', () => {
-      opn('http://localhost:46624/settings');
+    vscode.commands.registerCommand('kite.open-sidebar', () => {
+      if (!router.isSidebarOpen()) {
+        vscode.commands.executeCommand('vscode.previewHtml', router.URI, vscode.ViewColumn.Two, 'Kite');
+      }
     });
 
+    vscode.commands.registerCommand('kite.open-settings', () => {
+      http.get('http://localhost:46624/clientapi/sidebar/open');
+      opn('kite://settings');
+    });
+    
+    vscode.commands.registerCommand('kite.open-copilot', () => {
+      http.get('http://localhost:46624/clientapi/sidebar/open');
+    });
+    
     vscode.commands.registerCommand('kite.open-permissions', () => {
-      opn('http://localhost:46624/settings/permissions');
+      http.get('http://localhost:46624/clientapi/sidebar/open');
+      opn('kite://settings/permissions');
     });
 
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
@@ -326,7 +340,7 @@ const Kite = {
     });
 
     vscode.commands.registerCommand('kite.help', () => {
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-tour://tour', vscode.ViewColumn.One, 'Kite Tour');
+      opn('https://help.kite.com/category/46-vs-code-integration');
     });
 
     vscode.commands.registerCommand('kite.docs-for-cursor', () => {
