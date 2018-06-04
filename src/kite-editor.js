@@ -39,8 +39,8 @@ module.exports = class KiteEditor {
     const requestStartTime = new Date();
     const config = vscode.workspace.getConfiguration('kite');
     
-    if (!config.enableErrorRescue) {
-      return Promise.resolve(); 
+    if (true /*!config.enableErrorRescue*/) {
+      return this.postSaveValidationData(); 
     }
     
     return Promise.all([
