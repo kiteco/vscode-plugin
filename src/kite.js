@@ -34,6 +34,8 @@ const Kite = {
   {
     if(process.env.NODE_ENV === 'test') { return; }
 
+    metrics.featureRequested('starting');
+
     const rollbar = new Rollbar({
       accessToken: '4ca1bfd4721544e487c76583478a436a',
       payload: {
@@ -424,6 +426,8 @@ const Kite = {
     setInterval(checkHealth, 60 * 1000 * 10);
     checkHealth();
 
+    metrics.featureFulfilled('starting');
+
     function checkHealth() {
       StateController.handleState().then(state => {
         switch (state) {
@@ -439,8 +443,10 @@ const Kite = {
   },
 
   deactivate() {
+    metrics.featureRequested('stopping');
     // send the activated event
     metrics.track('deactivated');
+    metrics.featureFulfilled('stopping');
   },
 
   registerDocument(document) {
