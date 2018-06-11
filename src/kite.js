@@ -17,7 +17,7 @@ const KiteLogin = require('./login');
 const KiteInstall = require('./install');
 const KiteStatus = require('./status');
 const KiteTour = require('./tour');
-const KiteErrorRescue = require('./error-rescue');
+// const KiteErrorRescue = require('./error-rescue');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
 const localconfig = require('./localconfig');
@@ -63,7 +63,7 @@ const Kite = {
     const install = new KiteInstall(Kite);
     const status = new KiteStatus(Kite);
     const tour = new KiteTour(Kite);
-    const errorRescue = new KiteErrorRescue(Kite);
+    // const errorRescue = new KiteErrorRescue(Kite);
 
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
@@ -81,11 +81,11 @@ const Kite = {
     ctx.subscriptions.push(search);
     ctx.subscriptions.push(status);
     ctx.subscriptions.push(install);
-    ctx.subscriptions.push(errorRescue);
+    // ctx.subscriptions.push(errorRescue);
 
     this.status = status;
     this.install = install;
-    this.errorRescue = errorRescue;
+    // this.errorRescue = errorRescue;
 
     server.addRoute('GET', '/check', (req, res) => {
       this.checkState('/check route');
@@ -118,8 +118,8 @@ const Kite = {
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-tour', tour));
-    ctx.subscriptions.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-error-rescue', errorRescue));
+    // ctx.subscriptions.push(
+    //   vscode.workspace.registerTextDocumentContentProvider('kite-vscode-error-rescue', errorRescue));
 
     ctx.subscriptions.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
@@ -212,9 +212,9 @@ const Kite = {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
     }); 
     
-    vscode.commands.registerCommand('kite.show-error-rescue', () => {
-      errorRescue.open();
-    }); 
+    // vscode.commands.registerCommand('kite.show-error-rescue', () => {
+    //   errorRescue.open();
+    // }); 
     
     vscode.commands.registerCommand('kite.install', () => {
       install.reset();
