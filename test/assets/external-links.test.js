@@ -1,9 +1,14 @@
 const expect = require('expect.js');
-const jsdom = require('mocha-jsdom');
 const sinon = require('sinon');
 
 describe('handleExternalLinks', () => {
-  jsdom();
+  before(function () {
+    this.jsdom = require('jsdom-global')()
+  })
+  
+  after(function () {
+    this.jsdom()
+  })
 
   beforeEach(() => {
     require('../../assets/js/external-links');
