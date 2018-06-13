@@ -53,7 +53,7 @@ module.exports = class KiteHoverProvider {
               line: data.report.definition.line,
               source: 'Hover',
             });
-            links.push(`[def](com mand:kite.def?${defData})`);
+            links.push(`[def](command:kite.def?${defData})`);
           }
           
           if (links.length) { 
