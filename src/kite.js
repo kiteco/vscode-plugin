@@ -175,7 +175,7 @@ const Kite = {
     ctx.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
       e.document && editorsForDocument(e.document).forEach(e => {
         const evt = this.eventsByEditor.get(e);
-        evt.edit();
+        evt && evt.edit();
       })
     }));
 
