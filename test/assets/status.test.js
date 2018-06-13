@@ -1,12 +1,17 @@
 const expect = require('expect.js');
-const jsdom = require('mocha-jsdom');
 const sinon = require('sinon');
 const {click} = require('widjet-test-utils/events');
 
 describe('initStatus', () => {
   let infoBox, link;
 
-  jsdom();
+  before(function () {
+    this.jsdom = require('jsdom-global')()
+  })
+  
+  after(function () {
+    this.jsdom()
+  })
 
   beforeEach(() => {
     require('../../assets/js/status');

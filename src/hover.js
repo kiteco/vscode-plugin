@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 const {Hover} = vscode;
 const {hoverPath} = require('./urls');
-const {compact, editorsForDocument} = require('./utils');
+const {compact, editorsForDocument, escapeCommandArguments} = require('./utils');
 const {symbolName, symbolKind, symbolId, idIsEmpty} = require('./data-utils');
 
 module.exports = class KiteHoverProvider {
@@ -32,30 +32,30 @@ module.exports = class KiteHoverProvider {
           const links = [];
 
           if (!idIsEmpty(id)) {
-            links.push(`[web](command:kite.web?${JSON.stringify({
+            links.push(`[web](command:kite.web?${escapeCommandArguments({
               id,
               source: 'Hover',
             })})`);
-            links.push(`[more](command:kite.more-position?${JSON.stringify({
+            links.push(`[more](command:kite.more-position?${escapeCommandArguments({
               position,
               source: 'Hover',
             })})`);
           } else {
-            links.push(`[more](command:kite.more-position?${JSON.stringify({
+            links.push(`[more](command:kite.more-position?${escapeCommandArguments({
               position,
               source: 'Hover',
             })})`);
           }
           
           if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
-            const defData = JSON.stringify({
+            const defData = escapeCommandArguments({
               file: data.report.definition.filename,
               line: data.report.definition.line,
               source: 'Hover',
             });
             links.push(`[def](command:kite.def?${defData})`);
           }
-
+          
           if (links.length) { 
             const md = new vscode.MarkdownString('**Kite:** ' + links.join(' '))
             md.isTrusted = true;

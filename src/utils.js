@@ -120,6 +120,8 @@ function params (url) {
   }, {})
 };
 
+const escapeCommandArguments = (o) => JSON.stringify(o).replace(/"/g, '&quot;');
+
 module.exports = {
   compact,
   delayPromise,
@@ -127,6 +129,7 @@ module.exports = {
   head,
   last,
   log,
+  escapeCommandArguments,
   detailExist,
   detailGet,
   detailLang,
