@@ -1,6 +1,5 @@
 const expect = require('expect.js');
 const vscode = require('vscode');
-const jsdom = require('mocha-jsdom');
 const KiteRouter = require('../src/router');
 const {fixtureURI, withRoutes, withKiteWhitelistedPaths, fakeResponse, log} = require('./helpers');
 const {asArray} = require('../src/html-utils');
@@ -11,7 +10,13 @@ const {
 } = require('./section-helpers');
 
 describe('router', () => {
-  jsdom();
+  before(function () {
+    this.jsdom = require('jsdom-global')()
+  })
+  
+  after(function () {
+    this.jsdom()
+  })
 
   let router;
 
