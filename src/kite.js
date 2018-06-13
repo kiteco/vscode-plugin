@@ -728,7 +728,7 @@ const Kite = {
 
     const path = statusPath(document.fileName);
 
-    return StateController.client.request({path}, null, document)
+    return StateController.client.request({path})
     .then(resp => {
       if (resp.statusCode === 200) {
         return promisifyReadResponse(resp).then(json => JSON.parse(json));
