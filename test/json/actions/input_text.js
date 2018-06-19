@@ -14,6 +14,11 @@ module.exports = (action) => {
           builder.replace(range, action.properties.text);
         }
       })
+      .then(() => {
+        if(/[\w]$/.test(action.properties.text)) {
+          vscode.commands.executeCommand('editor.action.triggerSuggest')
+        }
+      })
     }
   });
 };

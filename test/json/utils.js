@@ -38,6 +38,7 @@ function loadResponseForEditor(p, e) {
     const v = body[k];
     if (v === 'filled-out-by-testrunner') {
       switch (k) {
+        case 'editor':
         case 'source':
           body[k] = 'vscode';
           break;

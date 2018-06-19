@@ -71,6 +71,29 @@
           ]
         }
       }
+    },
+    {
+      "description": "typing again in the buffer",
+      "step": "action",
+      "type": "input_text",
+      "properties": {
+        "text": "im"
+      }
+    },
+    {
+      "description": "calls the completions endpoint", 
+      "step": "expect",
+      "type": "request",
+      "properties": {
+        "path": "/clientapi/editor/completions",
+        "method": "POST",
+        "body": {
+          "editor": "filled-out-by-testrunner",
+          "filename": "filled-out-by-testrunner",
+          "text": "import json\nim",
+          "cursor_runes": 14
+        }
+      }
     }
   ]
 }
