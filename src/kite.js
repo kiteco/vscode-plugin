@@ -30,11 +30,18 @@ const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, par
 const {version} = require('../package.json');
 
 const Kite = {
-  activate(ctx)
-  {
-    if(process.env.NODE_ENV === 'test') { return; }
+  activate(ctx) {
+    if(process.env.NODE_ENV !== 'test') { 
+      this._activate()
+      ctx.subscriptions.push(this);
+    }
+  },
 
+  _activate()
+  {
     metrics.featureRequested('starting');
+    
+    this.reset();
 
     const rollbar = new Rollbar({
       accessToken: '4ca1bfd4721544e487c76583478a436a',
@@ -46,17 +53,18 @@ const Kite = {
       },
     });
 
-    process.on('uncaughtException', function (err) {
+    const tracker = (err) => {
       if (err.stack.indexOf('kite') > -1) {
         rollbar.error(err);
       }
-    });
-
-    this.kiteEditorByEditor = new Map();
-    this.eventsByEditor = new Map();
-    this.supportedLanguages = [];
-    this.shown = {};
-
+    }
+    process.on('uncaughtException', tracker);
+    this.disposables.push({
+      dispose() {
+        process.removeListener('uncaughtException', tracker);
+      }
+    })
+    
     const router = new KiteRouter(Kite);
     const search = new KiteSearch(Kite);
     const login = new KiteLogin(Kite);
@@ -76,12 +84,12 @@ const Kite = {
       ''
     );
 
-    ctx.subscriptions.push(server);
-    ctx.subscriptions.push(router);
-    ctx.subscriptions.push(search);
-    ctx.subscriptions.push(status);
-    ctx.subscriptions.push(install);
-    // ctx.subscriptions.push(errorRescue);
+    this.disposables.push(server);
+    this.disposables.push(router);
+    this.disposables.push(search);
+    this.disposables.push(status);
+    this.disposables.push(install);
+    // this.disposables.push(errorRescue);
 
     this.status = status;
     this.install = install;
@@ -106,51 +114,51 @@ const Kite = {
 
     server.start();
 
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-sidebar', router));
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-search', search));
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-login', login));
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-install', install));
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-tour', tour));
-    // ctx.subscriptions.push(
+    // this.disposables.push(
     //   vscode.workspace.registerTextDocumentContentProvider('kite-vscode-error-rescue', errorRescue));
 
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.languages.registerDefinitionProvider(PYTHON_MODE, new KiteDefinitionProvider(Kite)));
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.languages.registerCompletionItemProvider(PYTHON_MODE, new KiteCompletionProvider(Kite), '.'));
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
 
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.languages.registerHoverProvider(JAVASCRIPT_MODE, new KiteHoverProvider(Kite)));
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.languages.registerDefinitionProvider(JAVASCRIPT_MODE, new KiteDefinitionProvider(Kite)));
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.languages.registerCompletionItemProvider(JAVASCRIPT_MODE, new KiteCompletionProvider(Kite), '.'));
-    ctx.subscriptions.push(
+    this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(JAVASCRIPT_MODE, new KiteSignatureProvider(Kite), '(', ','));
 
-    ctx.subscriptions.push(vscode.workspace.onWillSaveTextDocument((e) => {
+    this.disposables.push(vscode.workspace.onWillSaveTextDocument((e) => {
       const kiteEditor = this.kiteEditorByEditor.get(e.document.fileName);
       if(this.isDocumentGrammarSupported(e.document) && kiteEditor && kiteEditor.isWhitelisted) {
         e.waitUntil(kiteEditor.onWillSave())
       }
     }));
 
-    ctx.subscriptions.push(vscode.workspace.onDidChangeConfiguration(() => {
+    this.disposables.push(vscode.workspace.onDidChangeConfiguration(() => {
       Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
     }));
 
-    ctx.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
+    this.disposables.push(vscode.window.onDidChangeActiveTextEditor(e => {
       if (e) {
         if (/Code[\/\\]User[\/\\]settings.json$/.test(e.document.fileName)){
           metrics.featureRequested('settings');
@@ -161,25 +169,25 @@ const Kite = {
           this.registerEditor(e);
         }
 
-        const evt = this.eventsByEditor.get(e);
+        const evt = this.eventsByEditor.get(e.document.fileName);
         evt.focus();
       }
     }));
 
-    ctx.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(e => {
+    this.disposables.push(vscode.window.onDidChangeTextEditorSelection(e => {
       const evt = this.eventsByEditor.get(e.textEditor.document.fileName);
       evt.selectionChanged();
       this.setStatusBarLabel();
     }));
 
-    ctx.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
+    this.disposables.push(vscode.workspace.onDidChangeTextDocument(e => {
       e.document && editorsForDocument(e.document).forEach(e => {
-        const evt = this.eventsByEditor.get(e);
+        const evt = this.eventsByEditor.get(e.document.fileName);
         evt && evt.edit();
       })
     }));
 
-    ctx.subscriptions.push(vscode.workspace.onDidOpenTextDocument(doc => {
+    this.disposables.push(vscode.workspace.onDidOpenTextDocument(doc => {
       if (doc.languageId === 'python') {
         this.registerDocumentEvents(doc);
         this.registerDocument(doc);
@@ -192,57 +200,57 @@ const Kite = {
     this.statusBarItem.command = 'kite.status';
     this.statusBarItem.show();
 
-    ctx.subscriptions.push(this.statusBarItem);
+    this.disposables.push(this.statusBarItem);
 
-    vscode.commands.registerCommand('kite.status', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.status', () => {
       metrics.featureRequested('status_panel');
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.search', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.search', () => {
       search.clearCache();
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-search://search', vscode.ViewColumn.Two, 'Kite Search');
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.reset-search-history', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.reset-search-history', () => {
       localconfig.set('searchHistory', []);
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.login', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.login', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
-    }); 
+    })); 
     
-    // vscode.commands.registerCommand('kite.show-error-rescue', () => {
+    // this.disposables.push(vscode.commands.registerCommand('kite.show-error-rescue', () => {
     //   errorRescue.open();
-    // }); 
+    // })); 
     
-    vscode.commands.registerCommand('kite.install', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.install', () => {
       install.reset();
       AccountManager.initClient('alpha.kite.com', -1, true);
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.open-sidebar', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.open-sidebar', () => {
       if (!router.isSidebarOpen()) {
         vscode.commands.executeCommand('vscode.previewHtml', router.URI, vscode.ViewColumn.Two, 'Kite');
       }
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.open-settings', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.open-settings', () => {
       http.get('http://localhost:46624/clientapi/sidebar/open');
       opn('kite://settings');
-    });
+    }));
     
-    vscode.commands.registerCommand('kite.open-copilot', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.open-copilot', () => {
       http.get('http://localhost:46624/clientapi/sidebar/open');
-    });
+    }));
     
-    vscode.commands.registerCommand('kite.open-permissions', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.open-permissions', () => {
       http.get('http://localhost:46624/clientapi/sidebar/open');
       opn('kite://settings/permissions');
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.more', ({id, source}) => {
+    this.disposables.push(vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
       metrics.featureRequested('expand_panel');
       metrics.featureRequested('documentation');
@@ -257,19 +265,19 @@ const Kite = {
           }
         }
       `);
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.previous', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.previous', () => {
       metrics.track(`Back navigation clicked`);
       router.back();
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.next', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.next', () => {
       metrics.track(`Forward navigation clicked`);
       router.forward();
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.more-range', ({range, source}) => {
+    this.disposables.push(vscode.commands.registerCommand('kite.more-range', ({range, source}) => {
       metrics.track(`${source} See info clicked`);
       metrics.featureRequested('expand_panel');
       metrics.featureRequested('documentation');
@@ -284,9 +292,9 @@ const Kite = {
           }
         }
       `);
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.more-position', ({position, source}) => {
+    this.disposables.push(vscode.commands.registerCommand('kite.more-position', ({position, source}) => {
       metrics.track(`${source} See info clicked`);
       metrics.featureRequested('expand_panel');
       metrics.featureRequested('documentation');
@@ -301,27 +309,27 @@ const Kite = {
           }
         }
       `);
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.navigate', (path) => {
+    this.disposables.push(vscode.commands.registerCommand('kite.navigate', (path) => {
       const uri = `kite-vscode-sidebar://${path}`;
       router.chopNavigation();
       router.navigate(uri);
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.web', ({id, source}) => {
+    this.disposables.push(vscode.commands.registerCommand('kite.web', ({id, source}) => {
       metrics.track(`${source} Open in web clicked`);
       metrics.featureRequested('open_in_web');
       metrics.featureFulfilled('open_in_web');
       opn(openDocumentationInWebURL(id));
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.web-url', (url) => {
+    this.disposables.push(vscode.commands.registerCommand('kite.web-url', (url) => {
       metrics.track(`Open in web clicked`);
       opn(url.replace(/;/g, '%3B'));
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.def', ({file, line, character, source}) => {
+    this.disposables.push(vscode.commands.registerCommand('kite.def', ({file, line, character, source}) => {
       metrics.track(`${source} Go to definition clicked`);
       metrics.featureRequested('definition');
       vscode.workspace.openTextDocument(vscode.Uri.file(file))
@@ -339,13 +347,13 @@ const Kite = {
         const newSelection = new vscode.Selection(newPosition, newPosition);
         e.selection = newSelection;
       })
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.help', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.help', () => {
       opn('https://help.kite.com/category/46-vs-code-integration');
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.docs-for-cursor', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.docs-for-cursor', () => {
       const editor = vscode.window.activeTextEditor;
 
       if (editor && this.isGrammarSupported(editor)) {
@@ -363,9 +371,9 @@ const Kite = {
             }
           })
       }
-    });
+    }));
 
-    vscode.commands.registerCommand('kite.usage', ({file, line, source}) => {
+    this.disposables.push(vscode.commands.registerCommand('kite.usage', ({file, line, source}) => {
       metrics.track(`${source} Go to usage clicked`);
       metrics.featureRequested('usage');
       vscode.workspace.openTextDocument(file).then(doc => {
@@ -377,7 +385,7 @@ const Kite = {
           ));
         });
       })
-    });
+    }));
 
     const config = vscode.workspace.getConfiguration('kite');
     if (config.showDocsNotificationOnStartup) {
@@ -412,6 +420,11 @@ const Kite = {
         if (e.document.languageId === 'python') {
           this.registerEvents(e);
           this.registerEditor(e);
+
+          if (e === vscode.window.activeTextEditor) {
+            const evt = this.eventsByEditor.get(e.document.fileName)
+            evt.focus();
+          }
         }
       })
 
@@ -428,6 +441,8 @@ const Kite = {
 
     metrics.featureFulfilled('starting');
 
+    return this;
+
     function checkHealth() {
       StateController.handleState().then(state => {
         switch (state) {
@@ -442,11 +457,26 @@ const Kite = {
     }
   },
 
+  reset() {
+    this.kiteEditorByEditor = new Map();
+    this.eventsByEditor = new Map();
+    this.supportedLanguages = [];
+    this.shown = {};
+    this.disposables = [];
+  },
+
   deactivate() {
     metrics.featureRequested('stopping');
     // send the activated event
     metrics.track('deactivated');
     metrics.featureFulfilled('stopping');
+    this.dispose();
+    this.reset();
+  },
+  
+  dispose() {
+    this.disposables && this.disposables.forEach(d => d.dispose())
+    delete this.disposables;
   },
 
   registerDocument(document) {
@@ -461,10 +491,6 @@ const Kite = {
     if (e && e.document && !this.eventsByEditor.has(e.document.fileName)) {
       const evt = new EditorEvents(this, e);
       this.eventsByEditor.set(e.document.fileName, evt);
-
-      if (e === vscode.window.activeTextEditor) {
-        evt.focus();
-      }
     }
   },
 
@@ -844,7 +870,8 @@ const Kite = {
 }
 
 module.exports = {
-  activate(ctx) { Kite.activate(ctx); },
+  activate(ctx) { return Kite.activate(ctx); },
   deactivate() { Kite.deactivate(); },
-  request(...args) { return Kite.request(...args); }
+  request(...args) { return Kite.request(...args); },
+  kite: Kite,
 }

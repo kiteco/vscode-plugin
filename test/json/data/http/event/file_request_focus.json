@@ -1,0 +1,12 @@
+{
+  "source": "filled-out-by-testrunner",
+  "filename": "filled-out-by-testrunner",
+  "text": "import json",
+  "action": "focus",
+  "selections": [
+    {
+      "start": 0,
+      "end": 0
+    }
+  ]
+}

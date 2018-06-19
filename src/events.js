@@ -13,7 +13,8 @@ module.exports = class EditorEvents {
   }
 
   focus() {
-    return this.Kite.checkState('focus').then(() => this.send('focus'));
+    return this.Kite.checkState('focus')
+    .then(() => this.send('focus'))
   }
 
   edit() {
@@ -44,6 +45,7 @@ module.exports = class EditorEvents {
   }
 
   mergeEvents() {
+    let focus = this.pendingEvents.filter(e => e === 'focus')[0];
     let action = this.pendingEvents.some(e => e === 'edit') ? 'edit' : this.pendingEvents.pop();
 
     this.reset();
@@ -54,21 +56,31 @@ module.exports = class EditorEvents {
       return this.reset();
     }
 
-    return this.Kite.request({
+    let promise = Promise.resolve();
+
+    if (focus && action !== focus) {
+      promise = promise.then(() =>this.Kite.request({
+        path: '/clientapi/editor/event',
+        method: 'POST',
+      }, JSON.stringify(this.buildEvent(focus)), this.document))
+    }
+
+    return promise
+    .then(() => this.Kite.request({
       path: '/clientapi/editor/event',
       method: 'POST',
-    }, payload, this.document)
+    }, payload, this.document))
     .then((res) => {
       this.pendingPromiseResolve(res);
     })
     .catch((err) => {
       this.pendingPromiseReject(err);
       // on connection error send a metric, but not too often or we will generate too many events
-      if (!this.lastErrorAt ||
-          secondsSince(this.lastErrorAt) >= CONNECT_ERROR_LOCKOUT) {
-        this.lastErrorAt = new Date();
-        // metrics.track('could not connect to event endpoint', err);
-      }
+      // if (!this.lastErrorAt ||
+      //     secondsSince(this.lastErrorAt) >= CONNECT_ERROR_LOCKOUT) {
+      //   this.lastErrorAt = new Date();
+      //   // metrics.track('could not connect to event endpoint', err);
+      // }
     })
     .then(() => {
       delete this.pendingPromise;

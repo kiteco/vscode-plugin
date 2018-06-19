@@ -41,14 +41,18 @@ function waitsFor(m, f, t, i) {
   }
 
   const intervalTime = i || 10;
-  const timeoutDuration = t || 2000;
+  const timeoutDuration = t || 1500;
 
   return new Promise((resolve, reject) => {
     const interval = setInterval(() => {
-      if (f()) {
-        clearTimeout(timeout);
-        clearInterval(interval);
-        resolve();
+      try {
+        if (f()) {
+          clearTimeout(timeout);
+          clearInterval(interval);
+          resolve();
+        }
+      } catch(err) {
+        reject(err);
       }
     }, intervalTime);
 
