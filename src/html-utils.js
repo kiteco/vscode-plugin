@@ -175,6 +175,7 @@ function renderExamplesList(data) {
 
 function renderModule(data) {
   const {symbol} = data;
+  const {name} = symbol;
   const value = head(symbol.value);
   const kind = value.kind;
 
@@ -187,7 +188,7 @@ function renderModule(data) {
       ${
         value.kind === 'type'
           ? `
-            ${renderPatterns(value)}
+            ${renderPatterns(name, value)}
             ${renderParameters(value)}
             ${renderLanguageSpecificArgumentsList(value)}`
           : ''
@@ -212,6 +213,7 @@ function renderModule(data) {
 
 function renderFunction(data) {
   const {symbol} = data;
+  const {name} = symbol;
   const value = head(symbol.value);
 
   return `
@@ -220,7 +222,7 @@ function renderFunction(data) {
 
   <div class="scroll-wrapper">
     <div class="sections-wrapper">
-      ${renderPatterns(value)}
+      ${renderPatterns(name, value)}
       ${renderParameters(value)}
       ${renderLanguageSpecificArgumentsList(value)}
       ${renderReturnType(symbol)}
@@ -531,9 +533,8 @@ function stripLeadingSlash(str) {
   return str.replace(/^\//, '');
 }
 
-function renderPatterns(data) {
+function renderPatterns(name, data) {
   let patterns = '';
-  const name = data.repr;
   const detail = getFunctionDetails(data);
   if (detail && detail.signatures && detail.signatures.length) {
     patterns = Plan.can('common_invocations_editor')
