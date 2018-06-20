@@ -76,7 +76,9 @@ function buildAction(action, block) {
   return () => describe(action.description, () => {
     ACTIONS[action.type] && ACTIONS[action.type](action);
 
-    block && block();
+    describe('', () => {
+      block && block();
+    });
   });
 }
 
@@ -85,6 +87,8 @@ function buildExpectation(expectation, block) {
   
     EXPECTATIONS[expectation.type] && EXPECTATIONS[expectation.type](expectation);
   
-    block && block();
+    describe('', () => {
+      block && block();
+    })
   };
 }

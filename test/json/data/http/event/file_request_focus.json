@@ -1,6 +1,6 @@
 {
-  "source": "filled-out-by-testrunner",
-  "filename": "filled-out-by-testrunner",
+  "source": "<<plugin>>",
+  "filename": "<<editor.filename>>",
   "text": "import json",
   "action": "focus",
   "selections": [

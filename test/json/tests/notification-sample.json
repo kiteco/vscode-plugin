@@ -1,0 +1,43 @@
+{
+  "description": "test description",
+  "setup": {
+    "whitelist": [],
+    "kited": "authenticated"
+  },
+  "test": [
+    {
+      "description": "opening a file",
+      "step": "action",
+      "type": "open",
+      "properties": {
+        "file": "data/whitelisted/file.py"
+      }
+    },
+    {
+      "description": "calls projectdir endpoint",
+      "step": "expect",
+      "type": "request",
+      "properties": {
+        "path": "/clientapi/projectdir?filename=<<editor.filename>>",
+        "method": "GET"
+      }
+    },
+    {
+      "description": "calls notify endpoint",
+      "step": "expect",
+      "type": "request",
+      "properties": {
+        "path": "/clientapi/permissions/notify?filename=<<editor.filename>>",
+        "method": "GET"
+      }
+    }, 
+    {
+      "description": "shows a notification",
+      "step": "expect",
+      "type": "notification",
+      "properties": {
+        "level": "error"
+      }
+    }
+  ]
+}

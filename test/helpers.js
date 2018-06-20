@@ -165,11 +165,16 @@ function fakeResponse(statusCode, data, props) {
   return resp;
 }
 
+function decorateResponse(resp, req) {
+  resp.request = req;
+  return resp;
+}
+
 function fakeRequestMethod(resp) {
   if (resp) {
     switch (typeof resp) {
       case 'boolean':
-        resp = fakeResponse(200);
+        resp = resp ? fakeResponse(200) : fakeResponse(500);
         break;
       case 'object':
         resp = fakeResponse(200, '', resp);
@@ -180,29 +185,35 @@ function fakeRequestMethod(resp) {
     }
   }
 
-  return (opts, callback) => ({
-    on(type, cb) {
-      switch (type) {
-        case 'error':
-          if (resp === false) { cb({}); }
-          break;
-        case 'response':
-          if (resp) { cb(typeof resp == 'function' ? resp(opts) : resp); }
-          break;
-      }
-    },
-    end() {
-      if (resp) {
-        typeof resp == 'function'
-          ? callback(resp(opts))
-          : callback(resp);
-      }
-    },
-    write(data) {},
-    setTimeout(timeout, callback) {
-      if (resp == null) { callback({}); }
-    },
-  });
+  return (opts, callback) => {
+    const req = {
+      opts,
+      on(type, cb) {
+        switch (type) {
+          case 'error':
+            if (resp === false) { cb({}); }
+            break;
+          case 'response':
+            if (resp) { cb(decorateResponse(typeof resp == 'function' ? resp(opts) : resp), req); }
+            break;
+        }
+      },
+      end() {
+        if (resp && callback) {
+          typeof resp == 'function'
+            ? callback(decorateResponse(resp(opts, this), req))
+            : callback(decorateResponse(resp, req));
+        }
+      },
+      write(data) {
+        this.data = data;
+      },
+      setTimeout(timeout, callback) {
+        if (resp == null) { callback({}); }
+      },
+    };
+    return req;
+  };
 }
 
 function fakeKiteInstallPaths() {
@@ -217,10 +228,10 @@ function fakeKiteInstallPaths() {
 }
 
 function fakeRouter(routes) {
-  return (opts) => {
+  return (opts, req) => {
     for (let i = 0; i < routes.length; i++) {
       const [predicate, handler] = routes[i];
-      if (predicate(opts)) { return handler(opts); }
+      if (predicate(opts, req)) { return handler(opts, req); }
     }
     return fakeResponse(200);
   };
@@ -530,6 +541,7 @@ function withKiteReachable(routes, block) {
 
   routes.push([o => o.path === '/system', o => fakeResponse(200)]);
   routes.push([o => o.path === '/clientapi/user', o => fakeResponse(200, '{}')]);
+  routes.push([o => o.path.indexOf('/clientapi/status') === 0, o => fakeResponse(200, '{"status": "ready"}')]);
   routes.push([o => o.path.indexOf('/clientapi/plan') !== -1, o => fakeResponse(200, '{}')]);
 
   withKiteRunning(() => {
@@ -587,6 +599,7 @@ function withKiteWhitelistedPaths(paths, block) {
     paths = [];
   }
 
+  const eventRe = /^\/clientapi\/editor\/event$/;
   const authRe = /^\/clientapi\/permissions\/authorized\?filename=(.+)$/;
   const projectDirRe = /^\/clientapi\/projectdir\?filename=(.+)$/;
   const notifyRe = /^\/clientapi\/permissions\/notify\?filename=(.+)$/;
@@ -598,6 +611,9 @@ function withKiteWhitelistedPaths(paths, block) {
 
   const routes = [
     [
+      o => eventRe.test(o.path),
+      (o, r) => whitelisted(JSON.parse(r.data).filename) ? fakeResponse(200) : fakeResponse(403),
+    ], [
       o => {
         const match = authRe.exec(o.path);
         return match && whitelisted(match[1]);

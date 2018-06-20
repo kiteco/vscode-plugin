@@ -24,7 +24,33 @@ function walk(p, callback) {
   }
 }
 
-function loadResponseForEditor(p, e) {
+function readValueAtPath(path, object) {
+  if (!path) { return object; }
+
+  return path.split(/\./g).reduce((memo, key) => {
+    if (memo == undefined) { return memo; }
+    return memo[key];
+  }, object);
+}
+
+function substituteFromContext(data, context) {
+  let string = JSON.stringify(data);
+
+  string = string.replace(/<<([^>]+)>>/g, (m, k) => readValueAtPath(k, context))
+
+  return JSON.parse(string)
+}
+
+function buildContextForEditor(e) {
+  return {
+    plugin: 'vscode',
+    editor: {
+      filename: e.document.fileName,
+    }
+  }
+}
+
+function loadPayload(p) {
   let body;
   switch (typeof p) {
     case 'object':
@@ -33,27 +59,13 @@ function loadResponseForEditor(p, e) {
     case 'string':
       body = require(jsonPath(p));
   }
-
-  for (const k in body) {
-    const v = body[k];
-    if (v === 'filled-out-by-testrunner') {
-      switch (k) {
-        case 'editor':
-        case 'source':
-          body[k] = 'vscode';
-          break;
-        case 'filename':
-          body[k] = e.document.fileName;
-          break;
-      }
-    }
-  }
-
   return body;
 }
 
 module.exports = {
   jsonPath,
   walk,
-  loadResponseForEditor,
+  loadPayload,
+  substituteFromContext,
+  buildContextForEditor,
 };

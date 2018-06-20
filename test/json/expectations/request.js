@@ -3,29 +3,37 @@
 const expect = require('expect.js')
 const vscode = require('vscode');
 const http = require('http');
-const {loadResponseForEditor} = require('../utils');
+const {loadPayload, substituteFromContext, buildContextForEditor} = require('../utils');
 const {waitsFor} = require('../../helpers')
 const {StateController} = require('kite-installer')
 
-const mostRecentCallMatching = (exPath, exMethod, exPayload) => {
+const mostRecentCallMatching = (exPath, exMethod, exPayload, context={}) => {
   const calls = StateController.client.request.getCalls();
   let matched = false;
+
+  exPath = substituteFromContext(exPath, context) 
+  exPayload = exPayload && substituteFromContext(loadPayload(exPayload), context);
+
+  // console.log('--------------------')
+  // console.log(exPath, exPayload)
 
   if(calls.length === 0) { return false; }
 
   return calls.reverse().reduce((b, c, i, a) => {
-    const [{path, method}, payload] = c.args;
-
+    let [{path, method}, payload] = c.args;
+    method = method || 'GET'
     
     // b is false here only if we found a call that partially matches
     // the expected parameters, eg. same endpoint but different method/payload
     // so that mean the most recent call to the expected endpoint is not the one
     // we were looking for, and the assertion must fail immediately
     if(!b || matched) { return b; }
+
+    // console.log(path, method, payload)
     
     if(path === exPath) {
       if(method === exMethod) {
-        if(expect.eql(JSON.parse(payload), exPayload)) {
+        if(!exPayload || expect.eql(JSON.parse(payload), exPayload)) {
           matched = true;
           return true;
         } else {
@@ -51,9 +59,8 @@ module.exports = (expectation) => {
     return waitsFor(`request to '${expectation.properties.path}' for test '${expectation.description}'`, () => mostRecentCallMatching(
         expectation.properties.path,
         expectation.properties.method,
-        loadResponseForEditor(
-          expectation.properties.body,
-          vscode.window.activeTextEditor)
+        expectation.properties.body,
+        buildContextForEditor(vscode.window.activeTextEditor)
       ))
       .catch(err => {
         console.log(err);

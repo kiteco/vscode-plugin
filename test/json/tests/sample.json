@@ -59,8 +59,8 @@
         "path": "/clientapi/editor/event",
         "method": "POST",
         "body": {
-          "source": "filled-out-by-testrunner",
-          "filename": "filled-out-by-testrunner",
+          "source": "<<plugin>>",
+          "filename": "<<editor.filename>>",
           "text": "import json\n",
           "action": "edit",
           "selections": [
@@ -88,8 +88,8 @@
         "path": "/clientapi/editor/completions",
         "method": "POST",
         "body": {
-          "editor": "filled-out-by-testrunner",
-          "filename": "filled-out-by-testrunner",
+          "editor": "<<plugin>>",
+          "filename": "<<editor.filename>>",
           "text": "import json\nim",
           "cursor_runes": 14
         }
