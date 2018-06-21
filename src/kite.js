@@ -229,16 +229,14 @@ const Kite = {
     });
 
     vscode.commands.registerCommand('kite.open-settings', () => {
-      http.get('http://localhost:46624/clientapi/sidebar/open');
       opn('kite://settings');
     });
     
     vscode.commands.registerCommand('kite.open-copilot', () => {
-      http.get('http://localhost:46624/clientapi/sidebar/open');
+      opn('kite://home');
     });
     
     vscode.commands.registerCommand('kite.open-permissions', () => {
-      http.get('http://localhost:46624/clientapi/sidebar/open');
       opn('kite://settings/permissions');
     });
 
