@@ -151,6 +151,7 @@
         "sinon": "^2.3.5",
         "typescript": "^2.0.3",
         "vscode": "^1.0.0",
-        "widjet-test-utils": "^1.8.0"
+        "widjet-test-utils": "^1.8.0",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master"
     }
 }

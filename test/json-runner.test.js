@@ -14,18 +14,18 @@ const STATES = {
   authenticated: withKiteAuthenticated,
 };
 
-walk(jsonPath('actions'), file => {
+walk(path.resolve(__dirname, 'json', 'actions'), '.js', file => {
   const key = path.basename(file).replace(path.extname(file), '');
   ACTIONS[key] = require(file);
 });
 
-walk(jsonPath('expectations'), file => {
+walk(path.resolve(__dirname, 'json', 'expectations'), '.js', file => {
   const key = path.basename(file).replace(path.extname(file), '');
   EXPECTATIONS[key] = require(file);
 });
 
 describe.only('JSON tests', () => {
-  walk(jsonPath('tests'), (testFile) => {
+  walk(jsonPath('tests'),  '.json', (testFile) => {
     buildTest(require(testFile));
   });
 });

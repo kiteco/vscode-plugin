@@ -7,10 +7,14 @@ const vscode = require('vscode');
 const base = path.resolve(__dirname, '..');
 
 function jsonPath(p) {
-  return path.join(base, 'json', p);
+  return path.join(base, '..', 'node_modules', 'editors-json-tests', p);
 }
 
-function walk(p, callback) {
+function walk(p, ext, callback) {
+  if(typeof ext == 'function') {
+    callback = ext;
+    ext = undefined;
+  }
   if (fs.existsSync(p)) {
     const stats = fs.lstatSync(p);
 
@@ -19,7 +23,9 @@ function walk(p, callback) {
 
       content.forEach(s => walk(path.join(p, s), callback));
     } else {
-      callback(p);
+      if (!ext || path.extname(p) === ext) {
+        callback(p);
+      }
     }
   }
 }
