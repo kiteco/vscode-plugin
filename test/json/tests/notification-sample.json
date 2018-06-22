@@ -32,11 +32,12 @@
       }
     }, 
     {
-      "description": "shows a notification",
+      "description": "shows a warning notification",
       "step": "expect",
       "type": "notification",
       "properties": {
-        "level": "error"
+        "level": "warning",
+        "message": "Kite is not whitelisted for <<editor.filename>>"
       }
     }
   ]

@@ -785,7 +785,7 @@ const Kite = {
 
     if (!this.shownNotifications['whitelist']) {
       this.shownNotifications['whitelist'] = true;
-      vscode.window.showErrorMessage(
+      vscode.window.showWarningMessage(
         `Kite is not whitelisted for ${document.fileName}`,
         `Whitelist ${res}`
       ).then(item => {
