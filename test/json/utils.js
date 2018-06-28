@@ -47,11 +47,22 @@ function substituteFromContext(data, context) {
   return JSON.parse(string)
 }
 
+function cleanPath(p) {
+  return encodeURI(normalizeDriveLetter(p))
+  .replace(/^([a-zA-Z]):/, (m, d) => `/windows/${d}`)
+  .replace(/\/|\\|%5C/g, ':');
+}
+
+function normalizeDriveLetter(str) {
+  return str.replace(/^[a-z]:/, m => m.toUpperCase());
+}
+
 function buildContextForEditor(e) {
   return {
     plugin: 'vscode',
     editor: {
       filename: e.document.fileName,
+      filename_escaped: cleanPath(e.document.fileName),
     }
   }
 }

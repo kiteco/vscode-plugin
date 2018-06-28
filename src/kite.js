@@ -463,6 +463,7 @@ const Kite = {
     this.supportedLanguages = [];
     this.shown = {};
     this.disposables = [];
+    delete this.shownNotifications;
   },
 
   deactivate() {

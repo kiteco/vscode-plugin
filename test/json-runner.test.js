@@ -26,12 +26,12 @@ walk(path.resolve(__dirname, 'json', 'expectations'), '.js', file => {
 
 describe.only('JSON tests', () => {
   walk(jsonPath('tests'),  '.json', (testFile) => {
-    buildTest(require(testFile));
+    buildTest(require(testFile), testFile);
   });
 });
 
-function buildTest(data) {
-  describe(data.description, () => {
+function buildTest(data, file) {
+  describe(`${data.description} ('${file}')`, () => {
     let spy;
 
     beforeEach(() => {

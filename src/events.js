@@ -95,7 +95,9 @@ module.exports = class EditorEvents {
       ? {
         source: 'vscode',
         action: 'skip',
+        text: '',
         filename: normalizeDriveLetter(this.document.fileName),
+        selections: [{start: 0, end: 0}]
       }
       : this.makeEvent(action, this.document, content, this.editor.selection);
   }

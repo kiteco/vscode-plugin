@@ -61,7 +61,7 @@ module.exports = (expectation) => {
         expectation.properties.method,
         expectation.properties.body,
         buildContextForEditor(vscode.window.activeTextEditor)
-      ))
+      ), 100)
       .catch(err => {
         console.log(err);
         throw err;

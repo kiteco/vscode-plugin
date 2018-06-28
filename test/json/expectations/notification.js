@@ -15,15 +15,11 @@ const LEVELS = {
 }
 
 module.exports = (expectation) => {
-  if (!NotificationsMock.initialized) {
-    NotificationsMock.initialize()
-  } 
-
   beforeEach(() => {
     const spy = vscode.window[LEVELS[expectation.properties.level]]
-    return waitsFor(`${expectation.properties.level} notitication`, () => {
+    return waitsFor(`${expectation.properties.level} notification`, () => {
       return NotificationsMock.newNotification();
-    })
+    }, 100)
   });
 
   const block = () => {
@@ -53,6 +49,10 @@ const NotificationsMock = {
     ];
     this.initialized = true;
   },
+  cleanup() {
+    this.notifications = [];
+    delete this.lastNotification;
+  },
   newNotification() {
     const lastNotification = this.notifications[this.notifications.length - 1];
     const created = lastNotification != this.lastNotification;
@@ -76,4 +76,12 @@ const NotificationsMock = {
     return notification;
   },
 
+}
+
+if (!NotificationsMock.initialized) {
+  NotificationsMock.initialize()
+
+  beforeEach(() => {
+    NotificationsMock.cleanup()
+  })
 }
