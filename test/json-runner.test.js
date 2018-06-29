@@ -31,6 +31,10 @@ describe.only('JSON tests', () => {
 });
 
 function buildTest(data, file) {
+  if (data.ignore) {
+    return;
+  }
+
   describe(`${data.description} ('${file}')`, () => {
     let spy;
 
