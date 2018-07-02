@@ -3,7 +3,7 @@
 const expect = require('expect.js')
 const sinon = require('sinon');
 const vscode = require('vscode');
-const {substituteFromContext, buildContextForEditor} = require('../utils');
+const {substituteFromContext, buildContextForEditor, itForExpectation} = require('../utils');
 const {waitsFor} = require('../../helpers')
 let stubs;
 
@@ -32,11 +32,7 @@ module.exports = (expectation) => {
     }
   }
 
-  if(expectation.focus) {
-    it.only(expectation.description, block);
-  } else {
-    it(expectation.description, block);
-  }
+  itForExpectation(expectation);
 }
 
 const NotificationsMock = {

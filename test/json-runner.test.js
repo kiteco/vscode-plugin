@@ -4,9 +4,9 @@ const path = require('path');
 const {kite} = require('../src/kite');
 const sinon = require('sinon');
 const vscode = require('vscode');
-const {jsonPath, walk} = require('./json/utils');
+const {jsonPath, walk, describeForTest} = require('./json/utils');
 const {StateController} = require('kite-installer');
-const {withKiteAuthenticated, withKiteWhitelistedPaths} = require('./helpers');
+const {withKiteAuthenticated, withKiteWhitelistedPaths, withKiteBlacklistedPaths, sleep} = require('./helpers');
 
 const ACTIONS = {};
 const EXPECTATIONS = {};
@@ -25,6 +25,7 @@ walk(path.resolve(__dirname, 'json', 'expectations'), '.js', file => {
 });
 
 describe.only('JSON tests', () => {
+  afterEach(() => sleep(100))
   walk(jsonPath('tests'),  '.json', (testFile) => {
     buildTest(require(testFile), testFile);
   });
@@ -35,17 +36,19 @@ function buildTest(data, file) {
     return;
   }
 
-  describe(`${data.description} ('${file}')`, () => {
+  describeForTest(data, `${data.description} ('${file}')`, () => {
     let spy;
 
     beforeEach(() => {
       spy = sinon.spy(StateController.client, 'request');
       kite._activate();
+      // console.log('start ------------------------------------')
     })
     afterEach(() => {
       spy.restore();
       kite.deactivate();
-
+      
+      // console.log('end ------------------------------------')
       return clearWorkspace();
       function clearWorkspace() {
         if(vscode.window.activeTextEditor) {
@@ -57,6 +60,10 @@ function buildTest(data, file) {
     })
 
     const block = () => {
+      if(data.setup.kited === 'authenticated' && data.setup.blacklist) {
+        withKiteBlacklistedPaths(data.setup.blacklist.map(p => jsonPath(p)));
+      }
+
       data.test.reverse().reduce((f, s) => {
         switch (s.step) {
           case 'action':
@@ -69,7 +76,7 @@ function buildTest(data, file) {
       }, () => {})();
     }
     if(data.setup.kited === 'authenticated' && data.setup.whitelist) {
-      withKiteWhitelistedPaths(data.setup.whitelist, block)
+      withKiteWhitelistedPaths(data.setup.whitelist.map(p => jsonPath(p)), block)
     } else {
       STATES[data.setup.kited](block);
     }

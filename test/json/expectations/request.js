@@ -3,7 +3,7 @@
 const expect = require('expect.js')
 const vscode = require('vscode');
 const http = require('http');
-const {loadPayload, substituteFromContext, buildContextForEditor} = require('../utils');
+const {loadPayload, substituteFromContext, buildContextForEditor, itForExpectation} = require('../utils');
 const {waitsFor} = require('../../helpers')
 const {StateController} = require('kite-installer')
 
@@ -56,21 +56,17 @@ const mostRecentCallMatching = (exPath, exMethod, exPayload, context={}) => {
 
 module.exports = (expectation) => {
   beforeEach(() => {
-    return waitsFor(`request to '${expectation.properties.path}' for test '${expectation.description}'`, () => mostRecentCallMatching(
+    return waitsFor(`request to '${expectation.properties.method} ${expectation.properties.path}' with '${JSON.stringify(expectation.properties.body)}' for test '${expectation.description}'`, () => mostRecentCallMatching(
         expectation.properties.path,
         expectation.properties.method,
         expectation.properties.body,
         buildContextForEditor(vscode.window.activeTextEditor)
-      ), 100)
+      ), 300)
       .catch(err => {
         console.log(err);
         throw err;
       });
   });
 
-  if(expectation.focus) {
-    it.only(expectation.description, () => {});
-  } else {
-    it(expectation.description, () => {});
-  }
+  itForExpectation(expectation)
 };

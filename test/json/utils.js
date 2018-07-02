@@ -79,10 +79,32 @@ function loadPayload(p) {
   return body;
 }
 
+function itForExpectation (expectation) {
+  if(expectation.ignore) {
+    it.skip(expectation.description, () => {});
+  } else if(expectation.focus) {
+    it.only(expectation.description, () => {});
+  } else {
+    it(expectation.description, () => {});
+  }
+}
+
+function describeForTest(test, description, block) {
+  if(test.ignore) {
+    describe.skip(description, block);
+  } else if(test.focus) {
+    describe.only(description, block);
+  } else {
+    describe(description, block);
+  }
+}
+
 module.exports = {
   jsonPath,
   walk,
   loadPayload,
   substituteFromContext,
   buildContextForEditor,
+  itForExpectation,
+  describeForTest,
 };

@@ -653,7 +653,7 @@ function withKiteIgnoredPaths(paths) {
     [
       o => {
         const match = authRe.exec(o.path);
-        return o.method === 'GET' && match && ignored(match[1]);
+        return match && ignored(match[1]);
       },
       o => fakeResponse(403),
     ],
@@ -661,6 +661,7 @@ function withKiteIgnoredPaths(paths) {
 }
 
 function withKiteBlacklistedPaths(paths) {
+  // console.log(paths)
   const notifyRe = /^\/clientapi\/permissions\/notify\?filename=(.+)$/;
   const blacklisted = path => paths.some(p => path.indexOf(p) !== -1);
 
@@ -668,7 +669,8 @@ function withKiteBlacklistedPaths(paths) {
     [
       o => {
         const match = notifyRe.exec(o.path);
-        return o.method === 'GET' && match && blacklisted(match[1]);
+        // console.log('blacklist match', match, o.path, match && blacklisted(match[1]))
+        return match && blacklisted(match[1]);
       },
       o => fakeResponse(403),
     ],

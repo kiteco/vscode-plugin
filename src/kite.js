@@ -436,7 +436,7 @@ const Kite = {
     }, config.get('pollingInterval') || 5000);
 
     // We monitor kited health
-    setInterval(checkHealth, 60 * 1000 * 10);
+    this.healthInterval = setInterval(checkHealth, 60 * 1000 * 10);
     checkHealth();
 
     metrics.featureFulfilled('starting');
@@ -464,6 +464,11 @@ const Kite = {
     this.shown = {};
     this.disposables = [];
     delete this.shownNotifications;
+    delete this.lastState;
+    delete this.lastStatus;
+    delete this.lastPolledState;
+    delete this.pollingInterval;
+    delete this.healthInterval;
   },
 
   deactivate() {
@@ -729,15 +734,20 @@ const Kite = {
 
   isEditorWhitelisted(e) {
     const ke = this.kiteEditorByEditor.get(e.document.fileName);
+    // console.log(ke, 'exists')
     return ke && ke.isWhitelisted();
   },
 
   handle403Response(document, resp) {
+    // console.log('handle status for ', resp.statusCode, resp.request)
     // for the moment a 404 response is sent for non-whitelisted file by
     // the tokens endpoint
     editorsForDocument(document).forEach(e => {
       const ke = this.kiteEditorByEditor.get(e.document.fileName);
-      if (ke) { ke.whitelisted = resp.statusCode !== 403 }
+      if (ke) { 
+        ke.whitelisted = resp.statusCode !== 403 
+        // console.log('editor for', e.document.fileName, 'whitelisted?', ke.whitelisted)
+      }
     });
 
     if (resp.statusCode === 403) {
@@ -774,11 +784,9 @@ const Kite = {
   },
 
   shouldOfferWhitelist(document) {
-    return this.projectDirForEditor(document)
-    .then(path =>
-      this.shouldNotify(document)
-      .then(res => res ? path : null)
-      .catch(() => null));
+    return this.shouldNotify(document)
+      .then((shouldNotify) => shouldNotify && this.projectDirForEditor(document))
+      .catch(() => null);
   },
 
   warnNotWhitelisted(document, res) {
@@ -829,6 +837,10 @@ const Kite = {
     const path = shouldNotifyPath(filepath);
 
     return StateController.client.request({path})
+    .then(resp => {
+      // console.log('notify responded with', resp.statusCode)
+      return resp;
+    })
     .then(resp => resp.statusCode === 200)
     .catch(() => false);
   },

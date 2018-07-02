@@ -21,7 +21,10 @@ module.exports = (action) => {
       })
       .then(() => {
         if(/[\w]$/.test(action.properties.text)) {
-          vscode.commands.executeCommand('editor.action.triggerSuggest')
+          vscode.commands.executeCommand('editor.action.triggerSuggest');
+        }
+        if(/[\(,]$/.test(action.properties.text)) {
+          vscode.commands.executeCommand('editor.action.triggerParameterHints');
         }
       })
     }

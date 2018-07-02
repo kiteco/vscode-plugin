@@ -14,11 +14,14 @@ module.exports = class KiteSignatureProvider {
   }
 
   provideSignatureHelp(document, position, token) {
+    // console.log('signature called', this.isTest, editorsForDocument(document).length, editorsForDocument(document).some(e => this.Kite.isEditorWhitelisted(e)))
+    // console.log('document', document.fileName)
     // hueristic - based on how editors are registered for whitelisting based on
     // documents, it should be sufficient to see if just one passes the check below
     if(this.isTest || editorsForDocument(document).some(e => this.Kite.isEditorWhitelisted(e))) {
       const text = document.getText();
 
+      // console.log('whitelist condition passed')
       if (text.length > MAX_FILE_SIZE) {
         Logger.warn('buffer contents too large, not attempting signature');
         return Promise.resolve([]);
@@ -33,6 +36,7 @@ module.exports = class KiteSignatureProvider {
       };
       Logger.debug(payload);
 
+      // console.log('request start')
       return this.Kite.request({
         path: signaturePath(),
         method: 'POST',
