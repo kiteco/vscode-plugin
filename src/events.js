@@ -13,8 +13,7 @@ module.exports = class EditorEvents {
   }
 
   focus() {
-    return this.Kite.checkState('focus')
-    .then(() => this.send('focus'))
+    return this.send('focus')
   }
 
   edit() {
@@ -22,7 +21,7 @@ module.exports = class EditorEvents {
   }
 
   selectionChanged() {
-    return this.Kite.checkState('selectionChanged').then(() => this.send('selection'));
+    return this.send('selection');
   }
 
   send(action) {

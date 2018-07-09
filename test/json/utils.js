@@ -5,9 +5,9 @@ const path = require('path');
 const vscode = require('vscode');
 
 const base = path.resolve(__dirname, '..');
-
+const testBase = path.join(base, '..', 'node_modules', 'editors-json-tests');
 function jsonPath(p) {
-  return path.join(base, '..', 'node_modules', 'editors-json-tests', p);
+  return path.join(testBase, p);
 }
 
 function walk(p, ext, callback) {
@@ -39,10 +39,25 @@ function readValueAtPath(path, object) {
   }, object);
 }
 
+function writeValueAtPath(path, value, object) {
+  if (!object) { object = {}; }
+
+  return path.split(/\./g).reduce((memo, key, i, a) => {
+    if (i === a.length - 1) {
+      memo[key] = value;
+      return object;
+    } else if (memo[key] == undefined) {
+      memo[key] = {};
+      return memo[key];
+    }
+    return memo[key];
+  }, object);
+}
+
 function substituteFromContext(data, context) {
   let string = JSON.stringify(data);
 
-  string = string.replace(/<<([^>]+)>>/g, (m, k) => readValueAtPath(k, context))
+  string = string.replace(/\$\{([^}]+)\}/g, (m, k) => readValueAtPath(k, context))
 
   return JSON.parse(string)
 }
@@ -57,14 +72,21 @@ function normalizeDriveLetter(str) {
   return str.replace(/^[a-z]:/, m => m.toUpperCase());
 }
 
-function buildContextForEditor(e) {
-  return {
+function buildContext() {
+  const context = {
     plugin: 'vscode',
-    editor: {
+    editors: {},
+  };
+
+  vscode.window.visibleTextEditors.forEach(e => {
+    const relativePath = path.relative(testBase, e.document.fileName);
+    writeValueAtPath(relativePath, {
       filename: e.document.fileName,
       filename_escaped: cleanPath(e.document.fileName),
-    }
-  }
+    }, context.editors);
+  });
+
+  return context;
 }
 
 function loadPayload(p) {
@@ -104,7 +126,7 @@ module.exports = {
   walk,
   loadPayload,
   substituteFromContext,
-  buildContextForEditor,
+  buildContext,
   itForExpectation,
   describeForTest,
 };

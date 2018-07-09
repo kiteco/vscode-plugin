@@ -3,7 +3,7 @@
 const expect = require('expect.js')
 const vscode = require('vscode');
 const http = require('http');
-const {loadPayload, substituteFromContext, buildContextForEditor, itForExpectation} = require('../utils');
+const {loadPayload, substituteFromContext, buildContext, itForExpectation} = require('../utils');
 const {waitsFor} = require('../../helpers')
 const {StateController} = require('kite-installer')
 
@@ -35,7 +35,7 @@ module.exports = (expectation) => {
           expectation.properties.path,
           expectation.properties.method,
           expectation.properties.body,
-          buildContextForEditor(vscode.window.activeTextEditor));
+          buildContext(vscode.window.activeTextEditor));
           // console.log(calls.length);
           
         return calls.length === expectation.properties.count;

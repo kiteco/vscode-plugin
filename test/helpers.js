@@ -33,7 +33,7 @@ const Kite = {
 }
 
 function waitsFor(m, f, t, i) {
-  if (typeof m === 'function') {
+  if (typeof m == 'function' && typeof f != 'function') {
     i = t;
     t = f;
     f = m;
@@ -41,24 +41,26 @@ function waitsFor(m, f, t, i) {
   }
 
   const intervalTime = i || 10;
-  const timeoutDuration = t || 1500;
+  const timeoutDuration = t || 2000;
 
   return new Promise((resolve, reject) => {
     const interval = setInterval(() => {
-      try {
-        if (f()) {
-          clearTimeout(timeout);
-          clearInterval(interval);
-          resolve();
-        }
-      } catch(err) {
-        reject(err);
+      if (f()) {
+        clearTimeout(timeout);
+        clearInterval(interval);
+        resolve();
       }
     }, intervalTime);
 
     const timeout = setTimeout(() => {
       clearInterval(interval);
-      reject(new Error(`Waited ${timeoutDuration}ms for ${m} but nothing happened`));
+      let msg;
+      if (typeof m == 'function') {
+        msg = `Waited ${timeoutDuration}ms for ${m()}`;
+      } else {
+        msg = `Waited ${timeoutDuration}ms for ${m} but nothing happened`;
+      }
+      reject(new Error(msg));
     }, timeoutDuration);
   });
 }

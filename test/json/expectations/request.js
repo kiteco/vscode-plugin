@@ -3,37 +3,63 @@
 const expect = require('expect.js')
 const vscode = require('vscode');
 const http = require('http');
-const {loadPayload, substituteFromContext, buildContextForEditor, itForExpectation} = require('../utils');
+const {StateController} = require('kite-installer');
+const {loadPayload, substituteFromContext, buildContext, itForExpectation} = require('../utils');
 const {waitsFor} = require('../../helpers')
-const {StateController} = require('kite-installer')
 
-const mostRecentCallMatching = (exPath, exMethod, exPayload, context={}) => {
+let closeMatches;
+const getDesc = (expectation) => () => {
+  const base = [
+    'request to',
+    expectation.properties.method,
+    expectation.properties.path,
+    'in test',
+    expectation.description,
+    'with',
+    JSON.stringify(substituteFromContext(expectation.properties.body, buildContext())),
+  ];
+
+  if (closeMatches.length > 0) {
+    base.push('\nbut some calls were close');
+    closeMatches.forEach(({path, method, payload}) => {
+      base.push(`\n - ${method} ${path} = ${payload}`);
+    });
+  } else {
+    base.push('\nbut no calls were anywhere close');
+  }
+
+  return base.join(' ');
+};
+
+const mostRecentCallMatching = (exPath, exMethod, exPayload, context = {}, env) => {
   const calls = StateController.client.request.getCalls();
+  closeMatches = [];
   let matched = false;
 
-  exPath = substituteFromContext(exPath, context) 
+  exPath = substituteFromContext(exPath, context);
   exPayload = exPayload && substituteFromContext(loadPayload(exPayload), context);
 
   // console.log('--------------------')
   // console.log(exPath, exPayload)
 
-  if(calls.length === 0) { return false; }
+  if (calls.length === 0) { return false; }
 
   return calls.reverse().reduce((b, c, i, a) => {
     let [{path, method}, payload] = c.args;
-    method = method || 'GET'
-    
+    method = method || 'GET';
+
     // b is false here only if we found a call that partially matches
     // the expected parameters, eg. same endpoint but different method/payload
     // so that mean the most recent call to the expected endpoint is not the one
     // we were looking for, and the assertion must fail immediately
-    if(!b || matched) { return b; }
+    if (!b || matched) { return b; }
 
-    // console.log(path, method, payload)
-    
-    if(path === exPath) {
-      if(method === exMethod) {
-        if(!exPayload || expect.eql(JSON.parse(payload), exPayload)) {
+    // console.log(path, method, payload);
+
+    if (path === exPath) {
+      if (method === exMethod) {
+        closeMatches.push({path, method, payload});
+        if (!exPayload || expect.eql(JSON.parse(payload), exPayload)) {
           matched = true;
           return true;
         } else {
@@ -51,22 +77,20 @@ const mostRecentCallMatching = (exPath, exMethod, exPayload, context={}) => {
         return b;
       }
     }
-  }, true)
-}
+  }, true);
+};
 
 module.exports = (expectation) => {
-  beforeEach(() => {
-    return waitsFor(`request to '${expectation.properties.method} ${expectation.properties.path}' with '${JSON.stringify(expectation.properties.body)}' for test '${expectation.description}'`, () => mostRecentCallMatching(
+  beforeEach(function() {
+    return waitsFor(getDesc(expectation), () => {
+      return mostRecentCallMatching(
         expectation.properties.path,
         expectation.properties.method,
         expectation.properties.body,
-        buildContextForEditor(vscode.window.activeTextEditor)
-      ), 300)
-      .catch(err => {
-        console.log(err);
-        throw err;
-      });
+        buildContext(),
+        this.env);
+    }, 300);
   });
 
-  itForExpectation(expectation)
+  itForExpectation(expectation);
 };

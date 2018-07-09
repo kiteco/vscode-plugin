@@ -3,7 +3,7 @@
 const expect = require('expect.js')
 const sinon = require('sinon');
 const vscode = require('vscode');
-const {substituteFromContext, buildContextForEditor, itForExpectation} = require('../utils');
+const {substituteFromContext, buildContext, itForExpectation} = require('../utils');
 const {waitsFor} = require('../../helpers')
 let stubs;
 
@@ -26,7 +26,7 @@ module.exports = (expectation) => {
     expect(NotificationsMock.lastNotification.level).to.eql(expectation.properties.level)
 
     if(expectation.properties.message) {
-      const message = substituteFromContext(expectation.properties.message, buildContextForEditor(vscode.window.activeTextEditor))
+      const message = substituteFromContext(expectation.properties.message, buildContext(vscode.window.activeTextEditor))
 
       expect(NotificationsMock.lastNotification.message).to.eql(message);
     }
