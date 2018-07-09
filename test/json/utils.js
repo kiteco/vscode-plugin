@@ -3,6 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 const vscode = require('vscode');
+const md5 = require('md5');
+const sinon = require('sinon');
 
 const base = path.resolve(__dirname, '..');
 const testBase = path.join(base, '..', 'node_modules', 'editors-json-tests');
@@ -83,6 +85,8 @@ function buildContext() {
     writeValueAtPath(relativePath, {
       filename: e.document.fileName,
       filename_escaped: cleanPath(e.document.fileName),
+      hash: md5(e.document.getText()),
+      offset: e.document.offsetAt(e.selection.active),
     }, context.editors);
   });
 
@@ -101,13 +105,13 @@ function loadPayload(p) {
   return body;
 }
 
-function itForExpectation (expectation) {
+function itForExpectation (expectation, block=() => {}) {
   if(expectation.ignore) {
-    it.skip(expectation.description, () => {});
+    it.skip(expectation.description, block);
   } else if(expectation.focus) {
-    it.only(expectation.description, () => {});
+    it.only(expectation.description, block);
   } else {
-    it(expectation.description, () => {});
+    it(expectation.description, block);
   }
 }
 
@@ -121,6 +125,64 @@ function describeForTest(test, description, block) {
   }
 }
 
+let stubs;
+const NotificationsMock = {
+  LEVELS: {
+    info: 'showInformationMessage',
+    warning: 'showWarningMessage',
+    warn: 'showWarningMessage',
+    error: 'showErrorMessage',
+  },
+
+  initialize() {
+    this.notifications = []
+    this.stubs = [
+      sinon.stub(vscode.window, 'showInformationMessage').callsFake((...args) => this.registerNotification('info', ...args)),
+      sinon.stub(vscode.window, 'showWarningMessage').callsFake((...args) => this.registerNotification('warning', ...args)),
+      sinon.stub(vscode.window, 'showErrorMessage').callsFake((...args) => this.registerNotification('error', ...args)),
+    ];
+    this.initialized = true;
+  },
+  cleanup() {
+    this.notifications = [];
+    delete this.lastNotification;
+  },
+  notificationsForLevel(level) {
+    return this.notifications.filter(n => n.level === level)
+  },
+  newNotification() {
+    const lastNotification = this.notifications[this.notifications.length - 1];
+    const created = lastNotification != this.lastNotification;
+
+    if(created) {
+      this.lastNotification = lastNotification;
+    }
+    return created;
+  },
+  registerNotification(level, message, ...actions) {
+    const notification = {
+      level, 
+      message, 
+      actions, 
+      then(resolve) {
+        this.resolve = resolve;
+        
+      }
+    }
+    this.notifications.push(notification)
+    return notification;
+  },
+
+}
+
+if (!NotificationsMock.initialized) {
+  NotificationsMock.initialize()
+
+  beforeEach(() => {
+    NotificationsMock.cleanup()
+  })
+}
+
 module.exports = {
   jsonPath,
   walk,
@@ -129,4 +191,6 @@ module.exports = {
   buildContext,
   itForExpectation,
   describeForTest,
+  NotificationsMock,
 };
+

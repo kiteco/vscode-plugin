@@ -28,9 +28,9 @@ const callsMatching = (exPath, exMethod, exPayload, context={}) => {
   });
 }
 
-module.exports = (expectation) => {
+module.exports = (expectation, not) => {
   beforeEach(() => {
-    return waitsFor(`${expectation.properties.count} requests to '${expectation.properties.path}' for test '${expectation.description}'`, () => {
+    const promise = waitsFor(`${expectation.properties.count} requests to '${expectation.properties.path}' for test '${expectation.description}'`, () => {
         const calls = callsMatching(
           expectation.properties.path,
           expectation.properties.method,
@@ -44,6 +44,19 @@ module.exports = (expectation) => {
         console.log(err);
         throw err;
       });
+
+    if(not) {
+      return promise.then(() => {
+        const callsCount = callsMatching(
+          expectation.properties.path,
+          expectation.properties.method,
+          expectation.properties.body,
+          buildContext(vscode.window.activeTextEditor)).length;
+        throw new Error(`no ${expectation.properties.count} requests to '${expectation.properties.path}' for test '${expectation.description}' but ${callsCount} were found`);
+      }, () => {})
+    } else {
+      return promise;
+    }
   });
 
   itForExpectation(expectation);

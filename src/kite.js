@@ -694,7 +694,7 @@ const Kite = {
               break;
             default:
               const editor = vscode.window.activeTextEditor;
-              if (editor) {
+              if (editor && this.isEditorWhitelisted(editor)) {
                 const path = hoverPath(editor.document, editor.selection.active);
                 hoverPromise = StateController.client.request({path})
                   .then(resp => {

@@ -70,13 +70,15 @@ function buildTest(data, file) {
             return buildAction(s, f);
           case 'expect':
             return buildExpectation(s, f);
+          case 'expect_not':
+            return buildExpectation(s, f, true);
           default:
             return f;
         }
       }, () => {})();
     }
-    if(data.setup.kited === 'authenticated' && data.setup.whitelist) {
-      withKiteWhitelistedPaths(data.setup.whitelist.map(p => jsonPath(p)), block)
+    if(data.setup.kited === 'authenticated') {
+      withKiteWhitelistedPaths((data.setup.whitelist || []).map(p => jsonPath(p)), block)
     } else {
       STATES[data.setup.kited](block);
     }
@@ -93,10 +95,10 @@ function buildAction(action, block) {
   });
 }
 
-function buildExpectation(expectation, block) {
+function buildExpectation(expectation, block, not) {
   return () => {
   
-    EXPECTATIONS[expectation.type] && EXPECTATIONS[expectation.type](expectation);
+    EXPECTATIONS[expectation.type] && EXPECTATIONS[expectation.type](expectation, not);
   
     describe('', () => {
       block && block();

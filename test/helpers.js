@@ -595,6 +595,20 @@ function withKiteNotAuthenticated(block) {
   });
 }
 
+let whitelistedPaths;
+let blacklistedPaths;
+let ignoredPaths;
+
+function updateWhitelist(paths) {
+  whitelistedPaths = paths;
+}
+function updateBlacklist(paths) {
+  blacklistedPaths = paths;
+}
+function updateIgnored(paths) {
+  ignoredPaths = paths;
+}
+
 function withKiteWhitelistedPaths(paths, block) {
   if (typeof paths == 'function') {
     block = paths;
@@ -608,7 +622,7 @@ function withKiteWhitelistedPaths(paths, block) {
 
   const whitelisted = match => {
     const path = match.replace(/:/g, '/');
-    return paths.some(p => path.indexOf(p) !== -1);
+    return whitelistedPaths.some(p => path.indexOf(p) !== -1);
   };
 
   const routes = [
@@ -638,18 +652,26 @@ function withKiteWhitelistedPaths(paths, block) {
 
   withKiteAuthenticated(routes, () => {
     describe('with whitelisted paths', () => {
+      beforeEach(() => {
+        updateWhitelist(paths);
+      })
       block();
     });
   });
 }
 
 function withKiteIgnoredPaths(paths) {
+  
+
   const authRe = /^\/clientapi\/permissions\/authorized\?filename=(.+)$/;
   const ignored = match => {
     const path = match.replace(/:/g, '/');
-    return paths.some(p => path.indexOf(p) !== -1);
+    return ignoredPaths.some(p => path.indexOf(p) !== -1);
   };
 
+  beforeEach(() => {
+    updateIgnored(paths);
+  })
   withKiteBlacklistedPaths(paths);
   withRoutes([
     [
@@ -665,8 +687,11 @@ function withKiteIgnoredPaths(paths) {
 function withKiteBlacklistedPaths(paths) {
   // console.log(paths)
   const notifyRe = /^\/clientapi\/permissions\/notify\?filename=(.+)$/;
-  const blacklisted = path => paths.some(p => path.indexOf(p) !== -1);
+  const blacklisted = path => blacklistedPaths.some(p => path.indexOf(p) !== -1);
 
+  beforeEach(() => {
+    updateBlacklist(paths);
+  })
   withRoutes([
     [
       o => {
@@ -739,6 +764,7 @@ module.exports = {
   withKiteWhitelistedPaths, withKiteBlacklistedPaths, withKiteIgnoredPaths,
   withFakeServer, withRoutes, withPlan, withFakePlan,
   sleep, delay, fixtureURI, waitsFor,
+  updateWhitelist, updateBlacklist, updateIgnored,
 
   Kite, log,
 };
