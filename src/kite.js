@@ -222,12 +222,6 @@ const Kite = {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
     });
 
-    vscode.commands.registerCommand('kite.open-sidebar', () => {
-      if (!router.isSidebarOpen()) {
-        vscode.commands.executeCommand('vscode.previewHtml', router.URI, vscode.ViewColumn.Two, 'Kite');
-      }
-    });
-
     vscode.commands.registerCommand('kite.open-settings', () => {
       kiteOpen('kite://settings');
     });
@@ -267,44 +261,14 @@ const Kite = {
       router.forward();
     });
 
-    vscode.commands.registerCommand('kite.more-range', ({range, source}) => {
-      metrics.track(`${source} See info clicked`);
-      metrics.featureRequested('expand_panel');
-      metrics.featureRequested('documentation');
-      server.start();
-      const uri = `kite-vscode-sidebar://value-range/${JSON.stringify(range)}`;
-      router.clearNavigation();
-      router.navigate(uri, `
-        window.onload = () => {
-          window.requestGet('/count?metric=fulfilled&name=expand_panel');
-          if(document.querySelector('.summary .description:not(:empty)')) {
-            window.requestGet('/count?metric=fulfilled&name=documentation');
-          }
-        }
-      `);
-    });
-
     vscode.commands.registerCommand('kite.more-position', ({position, source}) => {
-      metrics.track(`${source} See info clicked`);
-      metrics.featureRequested('expand_panel');
-      metrics.featureRequested('documentation');
-      server.start();
-      const uri = `kite-vscode-sidebar://value-position/${JSON.stringify(position)}`;
-      router.clearNavigation();
-      router.navigate(uri, `
-        window.onload = () => {
-          window.requestGet('/count?metric=fulfilled&name=expand_panel');
-          if(document.querySelector('.summary .description:not(:empty)')) {
-            window.requestGet('/count?metric=fulfilled&name=documentation');
-          }
-        }
-      `);
-    });
-
-    vscode.commands.registerCommand('kite.navigate', (path) => {
-      const uri = `kite-vscode-sidebar://${path}`;
-      router.chopNavigation();
-      router.navigate(uri);
+      const doc = vscode.window.activeTextEditor.document;
+      const path = hoverPath(doc, position);
+      return this.request({path})
+      .then(data => JSON.parse(data))
+      .then(data => {
+        opn(`kite://docs/${symbol.id}`)
+      })
     });
 
     vscode.commands.registerCommand('kite.web', ({id, source}) => {
