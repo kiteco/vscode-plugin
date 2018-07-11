@@ -55,10 +55,6 @@
             {
                 "command": "kite.open-copilot",
                 "title": "Kite: Open Copilot"
-            },
-            {
-                "command": "kite.open-sidebar",
-                "title": "Kite: Open sidebar"
             }
         ],
         "menus": {
