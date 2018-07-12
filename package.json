@@ -29,10 +29,6 @@
     "contributes": {
         "commands": [
             {
-                "command": "kite.search",
-                "title": "Kite: Search"
-            },
-            {
                 "command": "kite.status",
                 "title": "Kite: Status"
             },
@@ -59,9 +55,6 @@
         ],
         "menus": {
             "editor/context": [
-                {
-                    "command": "kite.search"
-                },
                 {
                     "command": "kite.open-settings"
                 },
