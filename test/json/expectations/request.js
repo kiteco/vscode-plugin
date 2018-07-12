@@ -19,7 +19,7 @@ const getDesc = (expectation) => () => {
 
   if(expectation.properties.body) {
     base.push('with');
-    base.push(JSON.stringify(substituteFromContext(expectation.properties.body, buildContext())))
+    base.push(JSON.stringify(substituteFromContext(loadPayload(expectation.properties.body), buildContext())))
   }
 
   if (closeMatches.length > 0) {
@@ -49,7 +49,7 @@ const getNotDesc = (expectation) => {
 
   if(expectation.properties.body) {
     base.push('with');
-    base.push(JSON.stringify(substituteFromContext(expectation.properties.body, buildContext())))
+    base.push(JSON.stringify(substituteFromContext(loadPayload(expectation.properties.body), buildContext())))
   }
 
   base.push('\nbut calls were found');
