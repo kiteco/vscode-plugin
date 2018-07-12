@@ -24,7 +24,7 @@ walk(path.resolve(__dirname, 'json', 'expectations'), '.js', file => {
   EXPECTATIONS[key] = require(file);
 });
 
-describe.only('JSON tests', () => {
+describe('JSON tests', () => {
   afterEach(() => sleep(100))
   walk(jsonPath('tests'),  '.json', (testFile) => {
     buildTest(require(testFile), testFile);
