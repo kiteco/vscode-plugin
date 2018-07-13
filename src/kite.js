@@ -202,8 +202,7 @@ const Kite = {
     });
 
     vscode.commands.registerCommand('kite.open-settings', () => {
-      http.get('http://localhost:46624/clientapi/sidebar/open');
-      opn('kite://settings');
+      http.get('http://localhost:46624/clientapi/sidebar/settings');
     });
     
     vscode.commands.registerCommand('kite.open-copilot', () => {
@@ -211,13 +210,12 @@ const Kite = {
     });
     
     vscode.commands.registerCommand('kite.open-permissions', () => {
-      http.get('http://localhost:46624/clientapi/sidebar/open');
-      opn('kite://settings/permissions');
+      http.get('http://localhost:46624/clientapi/sidebar/settings/permissions');
     });
-
+    
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
-      opn(`kite://docs/${id}`);
+      http.get(`http://localhost:46624/clientapi/sidebar/docs/${id}`);
     });
     
     vscode.commands.registerCommand('kite.more-position', ({position, source}) => {
@@ -227,7 +225,7 @@ const Kite = {
       return this.request({path})
       .then(data => JSON.parse(data))
       .then(data => {
-        opn(`kite://docs/${data.symbol[0].id}`)
+        http.get(`http://localhost:46624/clientapi/sidebar/docs/${data.symbol[0].id}`)
       })
     });
 
