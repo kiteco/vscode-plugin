@@ -215,7 +215,7 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
-      opn(`kite://docs/${id}`);
+      kiteOpen(`kite://docs/${id}`);
     });
     
     vscode.commands.registerCommand('kite.more-position', ({position, source}) => {
@@ -225,7 +225,7 @@ const Kite = {
       return this.request({path})
       .then(data => JSON.parse(data))
       .then(data => {
-        opn(`kite://docs/${data.symbol[0].id}`)
+        kiteOpen(`kite://docs/${data.symbol[0].id}`)
       })
     });
 
