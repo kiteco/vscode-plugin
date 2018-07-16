@@ -26,7 +26,7 @@ const Plan = require('./plan');
 const server = require('./server');
 const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath, languagesPath, hoverPath} = require('./urls');
 const Rollbar = require('rollbar');
-const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params} = require('./utils');
+const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params, kiteOpen} = require('./utils');
 const {version} = require('../package.json');
 
 const Kite = {
@@ -229,17 +229,15 @@ const Kite = {
     });
 
     vscode.commands.registerCommand('kite.open-settings', () => {
-      http.get('http://localhost:46624/clientapi/sidebar/open');
-      opn('kite://settings');
+      kiteOpen('kite://settings');
     });
     
     vscode.commands.registerCommand('kite.open-copilot', () => {
-      http.get('http://localhost:46624/clientapi/sidebar/open');
+      kiteOpen('kite://open')
     });
     
     vscode.commands.registerCommand('kite.open-permissions', () => {
-      http.get('http://localhost:46624/clientapi/sidebar/open');
-      opn('kite://settings/permissions');
+      kiteOpen('kite://settings/permissions');
     });
 
     vscode.commands.registerCommand('kite.more', ({id, source}) => {

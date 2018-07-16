@@ -1,6 +1,8 @@
 'use strict';
 
 const vscode = require('vscode');
+const cp = require('child_process');
+const os = require('os');
 
 const compact = a => a.filter(v => v && v !== '');
 
@@ -122,6 +124,19 @@ function params (url) {
 
 const escapeCommandArguments = (o) => JSON.stringify(o).replace(/"/g, '&quot;');
 
+const kiteOpen = (url) => {
+  const env = Object.assign({}, process.env)
+  delete env["ELECTRON_RUN_AS_NODE"]
+  switch(os.platform()) {
+    case 'darwin':
+      cp.spawnSync("open", [url], {env: env})
+      break;
+    case 'win32':
+      cp.spawnSync("cmd", ["/b", "/c", "start","", url], {env: env});
+      break;
+  }
+}
+
 module.exports = {
   compact,
   delayPromise,
@@ -147,4 +162,5 @@ module.exports = {
   merge,
   getDetails,
   getFunctionDetails,
+  kiteOpen,
 };
