@@ -121,6 +121,7 @@ module.exports = class KiteStatus {
     const filepath = normalizeDriveLetter(editor.document.fileName);
     const path = statusPath(filepath);
 
+
     return this.Kite.request({path})
     .then(json => JSON.parse(json))
     .catch(() => def);
@@ -336,7 +337,7 @@ module.exports = class KiteStatus {
   }
 
   renderSubscription(plan, status) {
-    if (!plan || (status && status < STATES.AUTHENTICATED)) { return ''; }
+    if (!plan || (status && status.state < STATES.AUTHENTICATED)) { return ''; }
 
     let leftSide = '';
     let rightSide = '';
@@ -371,7 +372,7 @@ module.exports = class KiteStatus {
         if (days < 7) {
           leftSide += `<span class="kite-trial-days">${remains.join(' ')}</span>`;
           rightSide = `<a is="kite-localtoken-anchor"
-                          href="http://localhost:46624/redirect/pro">Upgrade</a>`;
+                          href="command:kite.web-url?%22http://localhost:46624/redirect/pro%22">Upgrade</a>`;
         } else {
           rightSide = `<a href='command:kite.web-url?"https://help.kite.com/article/65-kite-pro"'>What's this?</a>`;
         }
