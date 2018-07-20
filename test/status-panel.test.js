@@ -227,6 +227,31 @@ describe('status panel', () => {
       });
     });
 
+    withPlan('trialing pro with 0 days remaining', {
+      status: 'trialing',
+      active_subscription: 'pro',
+      features: {},
+      trial_days_remaining: 0,
+      started_kite_pro_trial: true,
+    }, () => {
+      loadStatus();
+
+      it('displays a pro badge with the remaining days in normal text', () => {
+        expect(document.querySelector('.split-line .left .pro')).not.to.be(null);
+        const days = document.querySelector('.split-line .left .kite-trial-days');
+        expect(days).not.to.be(null);
+        expect(days.textContent).to.eql('Trial: 0 days left');
+        expect(days.classList.contains('text-danger')).to.be(false);
+      });
+
+      it('displays a link to upgrade to a pro account', () => {
+        const link = document.querySelector('.split-line .right a');
+        expect(link).not.to.be(null);
+        expect(link.textContent).to.eql('Upgrade');
+        expect(link.href).to.eql('command:kite.web-url?%22http://localhost:46624/redirect/pro%22');
+      });
+    });
+
     withPlan('community that did not trialed Kite yet', {
       status: 'active',
       active_subscription: 'community',
