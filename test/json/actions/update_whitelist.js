@@ -1,10 +1,12 @@
 'use strict';
 
 const {jsonPath} = require('../utils');
-const {updateWhitelist} = require('../../helpers');
+const {updateKitePaths} = require('kite-api/test/helpers/kite');
 
 module.exports = (action) => {
   beforeEach(() => { 
-    updateWhitelist(action.properties.whitelist.map(jsonPath));
+    updateKitePaths({
+      whitelist: action.properties.whitelist.map(jsonPath),
+    });
   });
 };
