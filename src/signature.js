@@ -18,7 +18,7 @@ module.exports = class KiteSignatureProvider {
     // console.log('document', document.fileName)
     // hueristic - based on how editors are registered for whitelisting based on
     // documents, it should be sufficient to see if just one passes the check below
-    if(this.isTest || editorsForDocument(document).some(e => this.Kite.isEditorWhitelisted(e))) {
+    if(this.isTest || this.Kite.isDocumentWhitelisted(document)) {
       const text = document.getText();
 
       // console.log('whitelist condition passed')

@@ -30,7 +30,7 @@ module.exports = class KiteEditor {
   }
 
   isWhitelisted() {
-    return this.whitelisted;
+    return this.Kite.isDocumentWhitelisted(this.document);
   }
   
   onWillSave() {

@@ -1,7 +1,7 @@
 'use strict';
 
-const {MAX_PAYLOAD_SIZE, MAX_FILE_SIZE, CONNECT_ERROR_LOCKOUT} = require('./constants');
-const {secondsSince} = require('./utils');
+const KiteAPI = require('kite-api');
+const {MAX_PAYLOAD_SIZE, MAX_FILE_SIZE} = require('./constants');
 const {normalizeDriveLetter} = require('./urls');
  
 module.exports = class EditorEvents {
@@ -72,6 +72,8 @@ module.exports = class EditorEvents {
     .then((res) => {
       this.pendingPromiseResolve(res);
     })
+    .then(KiteAPI.emitWhitelistedPathDetected(this.document.fileName))
+    .catch(KiteAPI.emitNonWhitelistedPathDetected(this.document.fileName))
     .catch((err) => {
       this.pendingPromiseReject(err);
       // on connection error send a metric, but not too often or we will generate too many events

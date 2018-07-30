@@ -1,6 +1,7 @@
 'use strict';
 
 let Kite;
+const {promisifyReadResponse} = require('./utils');
 
 const Plan = {
   can(feature) {
@@ -64,6 +65,7 @@ const Plan = {
     if (!Kite) { Kite = require('./kite'); }
     const path = this.planPath();
     return Kite.request({path})
+    .then(res => promisifyReadResponse(res))
     .then(data => {
       this.plan = JSON.parse(data);
 

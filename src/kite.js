@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
-const http = require('http');
+const KiteAPI = require('kite-api');
 const {StateController, AccountManager, Logger} = require('kite-installer');
 const {PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
@@ -185,6 +185,25 @@ const Kite = {
       }
     }));
 
+    this.whitelistedEditorIDs = {};
+    this.disposables.push(KiteAPI.onDidDetectWhitelistedPath(path => {
+      // console.log('whitelisted', path);
+      this.whitelistedEditorIDs[path] = true;
+    }));
+
+    this.disposables.push(KiteAPI.onDidDetectNonWhitelistedPath(path => {
+      // console.log('not whitelisted', path);
+      this.whitelistedEditorIDs[path] = false;
+      const document = this.documentForPath(path);
+      this.shouldOfferWhitelist(document)
+      .then(res => { if (res) { this.warnNotWhitelisted(document, res); }})
+      .catch(err => console.error(err));
+    }));
+
+    this.disposables.push(KiteAPI.onDidFailRequest(err => {
+      // TODO
+    }));
+
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
     this.statusBarItem.text = '$(primitive-dot) Kite';
     this.statusBarItem.color = '#abcdef';
@@ -284,7 +303,7 @@ const Kite = {
         const {document} = editor;
 
         const path = hoverPath(document, pos)
-        StateController.client.request({path})
+        KiteAPI.request({path})
           .then(resp => {
             if(resp.statusCode === 200) {
               vscode.commands.executeCommand('kite.more-position', {
@@ -386,6 +405,7 @@ const Kite = {
     this.supportedLanguages = [];
     this.shown = {};
     this.disposables = [];
+    this.whitelistedEditorIDs = {};
     delete this.shownNotifications;
     delete this.lastState;
     delete this.lastStatus;
@@ -619,7 +639,7 @@ const Kite = {
               const editor = vscode.window.activeTextEditor;
               if (editor && this.isEditorWhitelisted(editor)) {
                 const path = hoverPath(editor.document, editor.selection.active);
-                hoverPromise = StateController.client.request({path})
+                hoverPromise = KiteAPI.request({path})
                   .then(resp => {
                     if(resp.statusCode === 200) {
                       return 'Docs available at cursor';
@@ -656,9 +676,15 @@ const Kite = {
   },
 
   isEditorWhitelisted(e) {
-    const ke = this.kiteEditorByEditor.get(e.document.fileName);
-    // console.log(ke, 'exists')
-    return ke && ke.isWhitelisted();
+    return this.isDocumentWhitelisted(e.document);
+  },
+  
+  isDocumentWhitelisted(d) {
+    return this.whitelistedEditorIDs[d.fileName];
+  },
+
+  documentForPath(path) {
+    return vscode.workspace.textDocuments.filter(d => d.fileName === path).shift();
   },
 
   handle403Response(document, resp) {
@@ -688,7 +714,7 @@ const Kite = {
 
     const path = statusPath(document.fileName);
 
-    return StateController.client.request({path})
+    return KiteAPI.request({path})
     .then(resp => {
       if (resp.statusCode === 200) {
         return promisifyReadResponse(resp).then(json => JSON.parse(json));
@@ -737,7 +763,7 @@ const Kite = {
     const filepath = document.fileName;
     const path = projectDirPath(filepath);
 
-    return StateController.client.request({path})
+    return KiteAPI.request({path})
     .then(resp => {
       if (resp.statusCode === 200) {
         return promisifyReadResponse(resp)
@@ -759,7 +785,7 @@ const Kite = {
     const filepath = document.fileName;
     const path = shouldNotifyPath(filepath);
 
-    return StateController.client.request({path})
+    return KiteAPI.request({path})
     .then(resp => {
       // console.log('notify responded with', resp.statusCode)
       return resp;
@@ -769,23 +795,7 @@ const Kite = {
   },
 
   request(req, data, document) {
-    return promisifyRequest(StateController.client.request(req, data))
-    .then(resp => {
-      if (this.isDocumentGrammarSupported(document)) {
-        this.handle403Response(document, resp);
-      }
-
-      // Logger.logResponse(resp);
-
-      if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          const err = new Error(`bad status ${resp.statusCode}: ${data}`);
-          err.status = resp.statusCode;
-          throw err;
-        })
-      }
-      return promisifyReadResponse(resp);
-    })
+    return KiteAPI.request(req, data);
   },
 
   checkConnectivity() {

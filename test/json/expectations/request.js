@@ -3,7 +3,7 @@
 const expect = require('expect.js')
 const vscode = require('vscode');
 const http = require('http');
-const {StateController} = require('kite-installer');
+const KiteAPI = require('kite-api');
 const {loadPayload, substituteFromContext, buildContext, itForExpectation} = require('../utils');
 const {waitsFor} = require('../../helpers')
 
@@ -58,7 +58,7 @@ const getNotDesc = (expectation) => {
 };
 
 const mostRecentCallMatching = (exPath, exMethod, exPayload, context = {}, env) => {
-  const calls = StateController.client.request.getCalls();
+  const calls = KiteAPI.request.getCalls();
   closeMatches = [];
   let matched = false;
 

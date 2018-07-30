@@ -5,10 +5,10 @@ const vscode = require('vscode');
 const http = require('http');
 const {loadPayload, substituteFromContext, buildContext, itForExpectation} = require('../utils');
 const {waitsFor} = require('../../helpers')
-const {StateController} = require('kite-installer')
+const KiteAPI = require('kite-api');
 
 const callsMatching = (exPath, exMethod, exPayload, context={}) => {
-  const calls = StateController.client.request.getCalls();
+  const calls = KiteAPI.request.getCalls();
 
   exPath = substituteFromContext(exPath, context) 
   exPayload = exPayload && substituteFromContext(loadPayload(exPayload), context);

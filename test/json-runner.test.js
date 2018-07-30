@@ -4,9 +4,11 @@ const path = require('path');
 const {kite} = require('../src/kite');
 const sinon = require('sinon');
 const vscode = require('vscode');
+const KiteAPI = require('kite-api');
 const {jsonPath, walk, describeForTest} = require('./json/utils');
 const {StateController} = require('kite-installer');
-const {withKite, withKitePaths} = require('kite-api/test/helpers/kite');
+const {withKite, withKitePaths, withKiteRoutes} = require('kite-api/test/helpers/kite');
+const {fakeResponse} = require('kite-api/test/helpers/http');
 const {sleep} = require('./helpers');
 
 const ACTIONS = {};
@@ -40,7 +42,14 @@ function pathsSetup(setup) {
 }
 
 describe('JSON tests', () => {
-  afterEach(() => sleep(100))
+  let stub;
+  beforeEach(() => {
+    stub = sinon.spy(KiteAPI, 'request');
+  })
+  afterEach(() => {
+    stub.restore();
+    sleep(100);
+  })
   walk(jsonPath('tests'),  '.json', (testFile) => {
     buildTest(require(testFile), testFile);
   });
@@ -76,6 +85,9 @@ function buildTest(data, file) {
 
     withKite(kiteSetup(data.setup.kited), () => {
       withKitePaths(pathsSetup(data.setup), undefined, () => {
+        withKiteRoutes([
+          [o => o.path === '/clientapi/plan', o => fakeResponse(200, '{}')]
+        ])
         data.test.reverse().reduce((f, s) => {
           switch (s.step) {
             case 'action':
