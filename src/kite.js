@@ -134,7 +134,7 @@ const Kite = {
       vscode.languages.registerDefinitionProvider(JAVASCRIPT_MODE, new KiteDefinitionProvider(Kite)));
 
     this.disposables.push(
-      vscode.languages.registerCompletionItemProvider(JAVASCRIPT_MODE, new KiteCompletionProvider(Kite), '.'));
+      vscode.languages.registerCompletionItemProvider(JAVASCRIPT_MODE, new KiteCompletionProvider(Kite), '.', ' '));
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(JAVASCRIPT_MODE, new KiteSignatureProvider(Kite), '(', ','));
 
@@ -198,16 +198,6 @@ const Kite = {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
     }));
 
-
-    this.disposables.push(vscode.commands.registerCommand('kite.search', () => {
-      search.clearCache();
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-search://search', vscode.ViewColumn.Two, 'Kite Search');
-    }));
-
-    this.disposables.push(vscode.commands.registerCommand('kite.reset-search-history', () => {
-      localconfig.set('searchHistory', []);
-    }));
-
     this.disposables.push(vscode.commands.registerCommand('kite.login', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
     })); 
@@ -220,12 +210,6 @@ const Kite = {
       install.reset();
       AccountManager.initClient('alpha.kite.com', -1, true);
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
-    }));
-
-    this.disposables.push(vscode.commands.registerCommand('kite.open-sidebar', () => {
-      if (!router.isSidebarOpen()) {
-        vscode.commands.executeCommand('vscode.previewHtml', router.URI, vscode.ViewColumn.Two, 'Kite');
-      }
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.open-settings', () => {
