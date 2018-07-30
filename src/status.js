@@ -121,6 +121,7 @@ module.exports = class KiteStatus {
     const filepath = normalizeDriveLetter(editor.document.fileName);
     const path = statusPath(filepath);
 
+
     return this.Kite.request({path})
     .then(json => JSON.parse(json))
     .catch(() => def);
@@ -336,18 +337,18 @@ module.exports = class KiteStatus {
   }
 
   renderSubscription(plan, status) {
-    if (!plan || (status && status < STATES.AUTHENTICATED)) { return ''; }
+    if (!plan || (status && status.state < STATES.AUTHENTICATED)) { return ''; }
 
     let leftSide = '';
     let rightSide = '';
-
+    
     if (Plan.isEnterprise()) {
       leftSide = `<div class="enterprise">${enterpriseLogoSvg}</div>`;
       rightSide = `<a is="kite-localtoken-anchor"
-                      href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a>`;
+      href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a>`;
     } else if (!Plan.isPro() && Plan.isActive()) {
       leftSide = `<div class="logo">${logo}</div> Kite Basic`;
-
+      
       if (Plan.hasStartedTrial()) {
         rightSide = `<a href='command:kite.web-url?"http://localhost:46624/redirect/pro"'>Upgrade</a>`;
       } else {
@@ -355,7 +356,7 @@ module.exports = class KiteStatus {
       }
     } else if (Plan.isPro()) {
       leftSide = `<div class="pro">${proLogoSvg}</div>`;
-
+      
       if (Plan.isTrialing() || Plan.hasReferralCredits()) {
         const days = Plan.remainingTrialDays();
         const remains = [
@@ -368,14 +369,14 @@ module.exports = class KiteStatus {
           remains.unshift('Trial:');
         }
 
-        if (days < 5) {
-          leftSide += `<span class="kite-trial-days text-danger">${remains.join(' ')}</span>`;
+        if (days < 7) {
+          leftSide += `<span class="kite-trial-days">${remains.join(' ')}</span>`;
+          rightSide = `<a is="kite-localtoken-anchor"
+                          href="command:kite.web-url?%22http://localhost:46624/redirect/pro%22">Upgrade</a>`;
         } else {
-          leftSide += `<span class="kite-trial-days ">${remains.join(' ')}</span>`;
+          rightSide = `<a href='command:kite.web-url?"https://help.kite.com/article/65-kite-pro"'>What's this?</a>`;
         }
 
-        rightSide = `<a is="kite-localtoken-anchor"
-                        href="http://localhost:46624/redirect/pro">Upgrade</a>`;
       } else {
         rightSide = `<a is="kite-localtoken-anchor"
                         href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a>`;

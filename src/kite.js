@@ -766,5 +766,6 @@ const Kite = {
 module.exports = {
   activate(ctx) { Kite.activate(ctx); },
   deactivate() { Kite.deactivate(); },
-  request(...args) { return Kite.request(...args); }
+  request(...args) { return Kite.request(...args); },
+  kite: Kite,
 }
