@@ -9,7 +9,9 @@ const {StateController, Logger} = require('kite-installer');
 const Plan = require('../src/plan');
 const {merge, promisifyRequest, promisifyReadResponse} = require('../src/utils');
 
-Logger.LEVEL = Logger.LEVELS.ERROR;
+before(() => {
+  sinon.stub(Logger, 'log')
+})
 
 const Kite = {
   request(req, data) {
