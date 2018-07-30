@@ -2,7 +2,7 @@
     "name": "kite",
     "displayName": "kite",
     "description": "Python programming copilot — Kite shows cloud-powered completions, documentation, and examples.",
-    "version": "0.32.0",
+    "version": "0.35.0",
     "publisher": "kiteco",
     "engines": {
         "vscode": "^1.10.0"
@@ -29,10 +29,6 @@
     "contributes": {
         "commands": [
             {
-                "command": "kite.search",
-                "title": "Kite: Search"
-            },
-            {
                 "command": "kite.status",
                 "title": "Kite: Status"
             },
@@ -55,17 +51,10 @@
             {
                 "command": "kite.open-copilot",
                 "title": "Kite: Open Copilot"
-            },
-            {
-                "command": "kite.open-sidebar",
-                "title": "Kite: Open sidebar"
             }
         ],
         "menus": {
             "editor/context": [
-                {
-                    "command": "kite.search"
-                },
                 {
                     "command": "kite.open-settings"
                 },

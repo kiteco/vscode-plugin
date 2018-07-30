@@ -4,20 +4,16 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const http = require('http');
-const cp = require('child_process');
 const {StateController, AccountManager, Logger} = require('kite-installer');
 const {PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
 const KiteDefinitionProvider = require('./definition');
-const KiteRouter = require('./router');
-const KiteSearch = require('./search');
 const KiteLogin = require('./login');
 const KiteInstall = require('./install');
 const KiteStatus = require('./status');
 const KiteTour = require('./tour');
-// const KiteErrorRescue = require('./error-rescue');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
 const localconfig = require('./localconfig');
@@ -26,7 +22,7 @@ const Plan = require('./plan');
 const server = require('./server');
 const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath, languagesPath, hoverPath} = require('./urls');
 const Rollbar = require('rollbar');
-const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params} = require('./utils');
+const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params, kiteOpen} = require('./utils');
 const {version} = require('../package.json');
 
 const Kite = {
@@ -64,9 +60,7 @@ const Kite = {
         process.removeListener('uncaughtException', tracker);
       }
     })
-    
-    const router = new KiteRouter(Kite);
-    const search = new KiteSearch(Kite);
+
     const login = new KiteLogin(Kite);
     const install = new KiteInstall(Kite);
     const status = new KiteStatus(Kite);
@@ -85,11 +79,10 @@ const Kite = {
     );
 
     this.disposables.push(server);
-    this.disposables.push(router);
-    this.disposables.push(search);
     this.disposables.push(status);
     this.disposables.push(install);
     // this.disposables.push(errorRescue);
+
 
     this.status = status;
     this.install = install;
@@ -115,10 +108,6 @@ const Kite = {
     server.start();
 
     this.disposables.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-sidebar', router));
-    this.disposables.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-search', search));
-    this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-login', login));
     this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-install', install));
@@ -133,6 +122,7 @@ const Kite = {
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
     this.disposables.push(
       vscode.languages.registerDefinitionProvider(PYTHON_MODE, new KiteDefinitionProvider(Kite)));
+
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(PYTHON_MODE, new KiteCompletionProvider(Kite), '.', ' '));
     this.disposables.push(
@@ -142,6 +132,7 @@ const Kite = {
       vscode.languages.registerHoverProvider(JAVASCRIPT_MODE, new KiteHoverProvider(Kite)));
     this.disposables.push(
       vscode.languages.registerDefinitionProvider(JAVASCRIPT_MODE, new KiteDefinitionProvider(Kite)));
+
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(JAVASCRIPT_MODE, new KiteCompletionProvider(Kite), '.'));
     this.disposables.push(
@@ -207,6 +198,7 @@ const Kite = {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
     }));
 
+
     this.disposables.push(vscode.commands.registerCommand('kite.search', () => {
       search.clearCache();
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-search://search', vscode.ViewColumn.Two, 'Kite Search');
@@ -237,84 +229,31 @@ const Kite = {
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.open-settings', () => {
-      http.get('http://localhost:46624/clientapi/sidebar/open');
-      opn('kite://settings');
+      kiteOpen('kite://settings');
     }));
     
     this.disposables.push(vscode.commands.registerCommand('kite.open-copilot', () => {
-      http.get('http://localhost:46624/clientapi/sidebar/open');
+      kiteOpen('kite://open')
     }));
     
     this.disposables.push(vscode.commands.registerCommand('kite.open-permissions', () => {
-      http.get('http://localhost:46624/clientapi/sidebar/open');
-      opn('kite://settings/permissions');
+      kiteOpen('kite://settings/permissions');
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
-      metrics.featureRequested('expand_panel');
-      metrics.featureRequested('documentation');
-      server.start();
-      const uri = `kite-vscode-sidebar://value/${id}`;
-      router.clearNavigation();
-      router.navigate(uri, `
-        window.onload = () => {
-          window.requestGet('/count?metric=fulfilled&name=expand_panel');
-          if(document.querySelector('.summary .description:not(:empty)')) {
-            window.requestGet('/count?metric=fulfilled&name=documentation');
-          }
-        }
-      `);
-    }));
-
-    this.disposables.push(vscode.commands.registerCommand('kite.previous', () => {
-      metrics.track(`Back navigation clicked`);
-      router.back();
-    }));
-
-    this.disposables.push(vscode.commands.registerCommand('kite.next', () => {
-      metrics.track(`Forward navigation clicked`);
-      router.forward();
-    }));
-
-    this.disposables.push(vscode.commands.registerCommand('kite.more-range', ({range, source}) => {
-      metrics.track(`${source} See info clicked`);
-      metrics.featureRequested('expand_panel');
-      metrics.featureRequested('documentation');
-      server.start();
-      const uri = `kite-vscode-sidebar://value-range/${JSON.stringify(range)}`;
-      router.clearNavigation();
-      router.navigate(uri, `
-        window.onload = () => {
-          window.requestGet('/count?metric=fulfilled&name=expand_panel');
-          if(document.querySelector('.summary .description:not(:empty)')) {
-            window.requestGet('/count?metric=fulfilled&name=documentation');
-          }
-        }
-      `);
+      kiteOpen(`kite://docs/${id}`);
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.more-position', ({position, source}) => {
       metrics.track(`${source} See info clicked`);
-      metrics.featureRequested('expand_panel');
-      metrics.featureRequested('documentation');
-      server.start();
-      const uri = `kite-vscode-sidebar://value-position/${JSON.stringify(position)}`;
-      router.clearNavigation();
-      router.navigate(uri, `
-        window.onload = () => {
-          window.requestGet('/count?metric=fulfilled&name=expand_panel');
-          if(document.querySelector('.summary .description:not(:empty)')) {
-            window.requestGet('/count?metric=fulfilled&name=documentation');
-          }
-        }
-      `);
-    }));
-
-    this.disposables.push(vscode.commands.registerCommand('kite.navigate', (path) => {
-      const uri = `kite-vscode-sidebar://${path}`;
-      router.chopNavigation();
-      router.navigate(uri);
+      const doc = vscode.window.activeTextEditor.document;
+      const path = hoverPath(doc, position);
+      return this.request({path})
+      .then(data => JSON.parse(data))
+      .then(data => {
+        kiteOpen(`kite://docs/${data.symbol[0].id}`)
+      })
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.web', ({id, source}) => {

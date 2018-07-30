@@ -524,7 +524,11 @@ function withFakeServer(routes, block) {
     beforeEach(function() {
       this.routes = routes.concat();
       const router = fakeRouter(this.routes);
-      sinon.stub(http, 'request').callsFake(fakeRequestMethod(router));
+      if(http.request.isSinonProxy) {
+        http.request.callsFake(fakeRequestMethod(router));
+      } else {
+        sinon.stub(http, 'request').callsFake(fakeRequestMethod(router));
+      }
     });
 
     afterEach(() => {
@@ -559,7 +563,11 @@ function withKiteNotReachable(block) {
   withKiteRunning(() => {
     describe(', not reachable', () => {
       beforeEach(() => {
-        sinon.stub(http, 'request').callsFake(fakeRequestMethod(false));
+        if(http.request.isSinonProxy) {
+          http.request.callsFake(fakeRequestMethod(false));
+        } else {
+          sinon.stub(http, 'request').callsFake(fakeRequestMethod(false));
+        }
       });
 
       block();
@@ -588,6 +596,8 @@ function withKiteAuthenticated(routes, block) {
 function withKiteNotAuthenticated(block) {
   withKiteReachable([
     [o => o.path === '/api/account/authenticated', o => fakeResponse(401)],
+    [o => o.path === '/clientapi/user', o => fakeResponse(401)],
+    [o => o.path === '/clientapi/plan', o => fakeResponse(200)],
   ], () => {
     describe(', not authenticated', () => {
       block();
