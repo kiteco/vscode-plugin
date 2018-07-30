@@ -9,7 +9,9 @@ const {StateController, Logger} = require('kite-installer');
 const Plan = require('../src/plan');
 const {merge, promisifyRequest, promisifyReadResponse} = require('../src/utils');
 
-Logger.LEVEL = Logger.LEVELS.ERROR;
+before(() => {
+  sinon.stub(Logger, 'log')
+})
 
 const Kite = {
   request(req, data) {
@@ -33,7 +35,7 @@ const Kite = {
 }
 
 function waitsFor(m, f, t, i) {
-  if (typeof m === 'function') {
+  if (typeof m == 'function' && typeof f != 'function') {
     i = t;
     t = f;
     f = m;
@@ -54,7 +56,13 @@ function waitsFor(m, f, t, i) {
 
     const timeout = setTimeout(() => {
       clearInterval(interval);
-      reject(new Error(`Waited ${timeoutDuration}ms for ${m} but nothing happened`));
+      let msg;
+      if (typeof m == 'function') {
+        msg = `Waited ${timeoutDuration}ms for ${m()}`;
+      } else {
+        msg = `Waited ${timeoutDuration}ms for ${m} but nothing happened`;
+      }
+      reject(new Error(msg));
     }, timeoutDuration);
   });
 }
@@ -161,11 +169,16 @@ function fakeResponse(statusCode, data, props) {
   return resp;
 }
 
+function decorateResponse(resp, req) {
+  resp.request = req;
+  return resp;
+}
+
 function fakeRequestMethod(resp) {
   if (resp) {
     switch (typeof resp) {
       case 'boolean':
-        resp = fakeResponse(200);
+        resp = resp ? fakeResponse(200) : fakeResponse(500);
         break;
       case 'object':
         resp = fakeResponse(200, '', resp);
@@ -176,29 +189,35 @@ function fakeRequestMethod(resp) {
     }
   }
 
-  return (opts, callback) => ({
-    on(type, cb) {
-      switch (type) {
-        case 'error':
-          if (resp === false) { cb({}); }
-          break;
-        case 'response':
-          if (resp) { cb(typeof resp == 'function' ? resp(opts) : resp); }
-          break;
-      }
-    },
-    end() {
-      if (resp) {
-        typeof resp == 'function'
-          ? callback(resp(opts))
-          : callback(resp);
-      }
-    },
-    write(data) {},
-    setTimeout(timeout, callback) {
-      if (resp == null) { callback({}); }
-    },
-  });
+  return (opts, callback) => {
+    const req = {
+      opts,
+      on(type, cb) {
+        switch (type) {
+          case 'error':
+            if (resp === false) { cb({}); }
+            break;
+          case 'response':
+            if (resp) { cb(decorateResponse(typeof resp == 'function' ? resp(opts) : resp), req); }
+            break;
+        }
+      },
+      end() {
+        if (resp && callback) {
+          typeof resp == 'function'
+            ? callback(decorateResponse(resp(opts, this), req))
+            : callback(decorateResponse(resp, req));
+        }
+      },
+      write(data) {
+        this.data = data;
+      },
+      setTimeout(timeout, callback) {
+        if (resp == null) { callback({}); }
+      },
+    };
+    return req;
+  };
 }
 
 function fakeKiteInstallPaths() {
@@ -213,10 +232,10 @@ function fakeKiteInstallPaths() {
 }
 
 function fakeRouter(routes) {
-  return (opts) => {
+  return (opts, req) => {
     for (let i = 0; i < routes.length; i++) {
       const [predicate, handler] = routes[i];
-      if (predicate(opts)) { return handler(opts); }
+      if (predicate(opts, req)) { return handler(opts, req); }
     }
     return fakeResponse(200);
   };
@@ -530,6 +549,7 @@ function withKiteReachable(routes, block) {
 
   routes.push([o => o.path === '/system', o => fakeResponse(200)]);
   routes.push([o => o.path === '/clientapi/user', o => fakeResponse(200, '{}')]);
+  routes.push([o => o.path.indexOf('/clientapi/status') === 0, o => fakeResponse(200, '{"status": "ready"}')]);
   routes.push([o => o.path.indexOf('/clientapi/plan') !== -1, o => fakeResponse(200, '{}')]);
 
   withKiteRunning(() => {
@@ -587,23 +607,41 @@ function withKiteNotAuthenticated(block) {
   });
 }
 
+let whitelistedPaths;
+let blacklistedPaths;
+let ignoredPaths;
+
+function updateWhitelist(paths) {
+  whitelistedPaths = paths;
+}
+function updateBlacklist(paths) {
+  blacklistedPaths = paths;
+}
+function updateIgnored(paths) {
+  ignoredPaths = paths;
+}
+
 function withKiteWhitelistedPaths(paths, block) {
   if (typeof paths == 'function') {
     block = paths;
     paths = [];
   }
 
+  const eventRe = /^\/clientapi\/editor\/event$/;
   const authRe = /^\/clientapi\/permissions\/authorized\?filename=(.+)$/;
   const projectDirRe = /^\/clientapi\/projectdir\?filename=(.+)$/;
   const notifyRe = /^\/clientapi\/permissions\/notify\?filename=(.+)$/;
 
   const whitelisted = match => {
     const path = match.replace(/:/g, '/');
-    return paths.some(p => path.indexOf(p) !== -1);
+    return whitelistedPaths.some(p => path.indexOf(p) !== -1);
   };
 
   const routes = [
     [
+      o => eventRe.test(o.path),
+      (o, r) => whitelisted(JSON.parse(r.data).filename) ? fakeResponse(200) : fakeResponse(403),
+    ], [
       o => {
         const match = authRe.exec(o.path);
         return match && whitelisted(match[1]);
@@ -626,24 +664,32 @@ function withKiteWhitelistedPaths(paths, block) {
 
   withKiteAuthenticated(routes, () => {
     describe('with whitelisted paths', () => {
+      beforeEach(() => {
+        updateWhitelist(paths);
+      })
       block();
     });
   });
 }
 
 function withKiteIgnoredPaths(paths) {
+  
+
   const authRe = /^\/clientapi\/permissions\/authorized\?filename=(.+)$/;
   const ignored = match => {
     const path = match.replace(/:/g, '/');
-    return paths.some(p => path.indexOf(p) !== -1);
+    return ignoredPaths.some(p => path.indexOf(p) !== -1);
   };
 
+  beforeEach(() => {
+    updateIgnored(paths);
+  })
   withKiteBlacklistedPaths(paths);
   withRoutes([
     [
       o => {
         const match = authRe.exec(o.path);
-        return o.method === 'GET' && match && ignored(match[1]);
+        return match && ignored(match[1]);
       },
       o => fakeResponse(403),
     ],
@@ -651,14 +697,19 @@ function withKiteIgnoredPaths(paths) {
 }
 
 function withKiteBlacklistedPaths(paths) {
+  // console.log(paths)
   const notifyRe = /^\/clientapi\/permissions\/notify\?filename=(.+)$/;
-  const blacklisted = path => paths.some(p => path.indexOf(p) !== -1);
+  const blacklisted = path => blacklistedPaths.some(p => path.indexOf(p) !== -1);
 
+  beforeEach(() => {
+    updateBlacklist(paths);
+  })
   withRoutes([
     [
       o => {
         const match = notifyRe.exec(o.path);
-        return o.method === 'GET' && match && blacklisted(match[1]);
+        // console.log('blacklist match', match, o.path, match && blacklisted(match[1]))
+        return match && blacklisted(match[1]);
       },
       o => fakeResponse(403),
     ],
@@ -725,6 +776,7 @@ module.exports = {
   withKiteWhitelistedPaths, withKiteBlacklistedPaths, withKiteIgnoredPaths,
   withFakeServer, withRoutes, withPlan, withFakePlan,
   sleep, delay, fixtureURI, waitsFor,
+  updateWhitelist, updateBlacklist, updateIgnored,
 
   Kite, log,
 };

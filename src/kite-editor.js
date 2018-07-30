@@ -25,7 +25,7 @@ module.exports = class KiteEditor {
     this.Kite = Kite;
     this.editor = editor;
     this.document = editor.document;
-    this.whitelisted = true;
+    this.whitelisted = false;
     this.fixesHistory = [];
   }
 

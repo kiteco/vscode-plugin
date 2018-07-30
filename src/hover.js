@@ -11,7 +11,7 @@ module.exports = class KiteHoverProvider {
     this.Kite = Kite;
     this.isTest = isTest;
   }
-
+ 
   provideHover(doc, position) {
     // hueristic - based on how editors are registered for whitelisting based on
     // documents, it should be sufficient to see if just one passes the check below
