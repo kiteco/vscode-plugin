@@ -178,11 +178,20 @@ const Kite = {
       })
     }));
 
-    this.disposables.push(vscode.workspace.onDidOpenTextDocument(doc => {
-      if (doc.languageId === 'python') {
-        this.registerDocumentEvents(doc);
-        this.registerDocument(doc);
-      }
+    // this.disposables.push(vscode.workspace.onDidOpenTextDocument(doc => {
+    //   console.log('vscode open hook', doc.fileName, 'language is', doc.languageId)
+    //   if (doc.languageId === 'python') {
+    //     this.registerDocumentEvents(doc);
+    //     this.registerDocument(doc);
+    //   }
+    // }));
+    this.disposables.push(vscode.window.onDidChangeVisibleTextEditors(editors => {
+      editors.forEach((e) => {
+        if (e.document.languageId === 'python') {
+          this.registerDocumentEvents(e.document);
+          this.registerDocument(e.document);
+        }
+      })
     }));
 
     this.whitelistedEditorIDs = {};
@@ -415,6 +424,12 @@ const Kite = {
   },
 
   deactivate() {
+    for(const [, ke] of this.kiteEditorByEditor) {
+      ke.dispose();
+    }
+    for(const [, evt] of this.eventsByEditor) {
+      evt.dispose();
+    }
     metrics.featureRequested('stopping');
     // send the activated event
     metrics.track('deactivated');

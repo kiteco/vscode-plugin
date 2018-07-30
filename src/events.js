@@ -12,6 +12,12 @@ module.exports = class EditorEvents {
     this.reset();
   }
 
+  dispose() {
+    delete this.Kite;
+    delete this.editor;
+    delete this.document;
+  }
+
   focus() {
     return this.send('focus')
   }
@@ -58,7 +64,7 @@ module.exports = class EditorEvents {
     let promise = Promise.resolve();
 
     if (focus && action !== focus) {
-      promise = promise.then(() =>this.Kite.request({
+      promise = promise.then(() => this.Kite.request({
         path: '/clientapi/editor/event',
         method: 'POST',
       }, JSON.stringify(this.buildEvent(focus)), this.document))

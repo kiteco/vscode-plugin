@@ -42,14 +42,6 @@ function pathsSetup(setup) {
 }
 
 describe('JSON tests', () => {
-  let stub;
-  beforeEach(() => {
-    stub = sinon.spy(KiteAPI, 'request');
-  })
-  afterEach(() => {
-    stub.restore();
-    sleep(100);
-  })
   walk(jsonPath('tests'),  '.json', (testFile) => {
     buildTest(require(testFile), testFile);
   });
@@ -63,16 +55,16 @@ function buildTest(data, file) {
   describeForTest(data, `${data.description} ('${file}')`, () => {
     let spy;
 
-    beforeEach(() => {
-      spy = sinon.spy(StateController.client, 'request');
+    beforeEach('package activation', () => {
+      // console.log(`------------------------------------\n start ${data.description}\n------------------------------------`);
+      spy = sinon.spy(KiteAPI, 'request');
       kite._activate();
-      // console.log('start ------------------------------------')
     })
-    afterEach(() => {
+    afterEach('package deactivation', () => {
       spy.restore();
       kite.deactivate();
       
-      // console.log('end ------------------------------------')
+      // console.log(`------------------------------------\n end ${data.description}\n------------------------------------`);
       return clearWorkspace();
       function clearWorkspace() {
         if(vscode.window.activeTextEditor) {

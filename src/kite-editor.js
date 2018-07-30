@@ -29,6 +29,12 @@ module.exports = class KiteEditor {
     this.fixesHistory = [];
   }
 
+  dispose() {
+    delete this.Kite;
+    delete this.editor;
+    delete this.document;
+  }
+
   isWhitelisted() {
     return this.Kite.isDocumentWhitelisted(this.document);
   }

@@ -122,8 +122,12 @@ function log(v) {
   return v;
 }
 
+function formatCall({method, path, payload}) {
+  return `${method} ${path} ${payload || ''}`;
+}
+
 module.exports = {
   withPlan, withFakePlan,
   sleep, delay, fixtureURI, waitsFor,
-  Kite, log,
+  Kite, log, formatCall,
 };
