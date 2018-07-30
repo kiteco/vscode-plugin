@@ -4,20 +4,16 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const http = require('http');
-const cp = require('child_process');
 const {StateController, AccountManager, Logger} = require('kite-installer');
 const {PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
 const KiteDefinitionProvider = require('./definition');
-const KiteRouter = require('./router');
-const KiteSearch = require('./search');
 const KiteLogin = require('./login');
 const KiteInstall = require('./install');
 const KiteStatus = require('./status');
 const KiteTour = require('./tour');
-// const KiteErrorRescue = require('./error-rescue');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
 const localconfig = require('./localconfig');
@@ -57,8 +53,6 @@ const Kite = {
     this.supportedLanguages = [];
     this.shown = {};
 
-    const router = new KiteRouter(Kite);
-    const search = new KiteSearch(Kite);
     const login = new KiteLogin(Kite);
     const install = new KiteInstall(Kite);
     const status = new KiteStatus(Kite);
@@ -77,8 +71,6 @@ const Kite = {
     );
 
     ctx.subscriptions.push(server);
-    ctx.subscriptions.push(router);
-    ctx.subscriptions.push(search);
     ctx.subscriptions.push(status);
     ctx.subscriptions.push(install);
     // ctx.subscriptions.push(errorRescue);
@@ -106,10 +98,6 @@ const Kite = {
 
     server.start();
 
-    ctx.subscriptions.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-sidebar', router));
-    ctx.subscriptions.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-search', search));
     ctx.subscriptions.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-login', login));
     ctx.subscriptions.push(
@@ -199,15 +187,6 @@ const Kite = {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
     });
 
-    vscode.commands.registerCommand('kite.search', () => {
-      search.clearCache();
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-search://search', vscode.ViewColumn.Two, 'Kite Search');
-    });
-
-    vscode.commands.registerCommand('kite.reset-search-history', () => {
-      localconfig.set('searchHistory', []);
-    });
-
     vscode.commands.registerCommand('kite.login', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
     }); 
@@ -220,12 +199,6 @@ const Kite = {
       install.reset();
       AccountManager.initClient('alpha.kite.com', -1, true);
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
-    });
-
-    vscode.commands.registerCommand('kite.open-sidebar', () => {
-      if (!router.isSidebarOpen()) {
-        vscode.commands.executeCommand('vscode.previewHtml', router.URI, vscode.ViewColumn.Two, 'Kite');
-      }
     });
 
     vscode.commands.registerCommand('kite.open-settings', () => {
@@ -242,69 +215,18 @@ const Kite = {
 
     vscode.commands.registerCommand('kite.more', ({id, source}) => {
       metrics.track(`${source} See info clicked`);
-      metrics.featureRequested('expand_panel');
-      metrics.featureRequested('documentation');
-      server.start();
-      const uri = `kite-vscode-sidebar://value/${id}`;
-      router.clearNavigation();
-      router.navigate(uri, `
-        window.onload = () => {
-          window.requestGet('/count?metric=fulfilled&name=expand_panel');
-          if(document.querySelector('.summary .description:not(:empty)')) {
-            window.requestGet('/count?metric=fulfilled&name=documentation');
-          }
-        }
-      `);
+      kiteOpen(`kite://docs/${id}`);
     });
-
-    vscode.commands.registerCommand('kite.previous', () => {
-      metrics.track(`Back navigation clicked`);
-      router.back();
-    });
-
-    vscode.commands.registerCommand('kite.next', () => {
-      metrics.track(`Forward navigation clicked`);
-      router.forward();
-    });
-
-    vscode.commands.registerCommand('kite.more-range', ({range, source}) => {
-      metrics.track(`${source} See info clicked`);
-      metrics.featureRequested('expand_panel');
-      metrics.featureRequested('documentation');
-      server.start();
-      const uri = `kite-vscode-sidebar://value-range/${JSON.stringify(range)}`;
-      router.clearNavigation();
-      router.navigate(uri, `
-        window.onload = () => {
-          window.requestGet('/count?metric=fulfilled&name=expand_panel');
-          if(document.querySelector('.summary .description:not(:empty)')) {
-            window.requestGet('/count?metric=fulfilled&name=documentation');
-          }
-        }
-      `);
-    });
-
+    
     vscode.commands.registerCommand('kite.more-position', ({position, source}) => {
       metrics.track(`${source} See info clicked`);
-      metrics.featureRequested('expand_panel');
-      metrics.featureRequested('documentation');
-      server.start();
-      const uri = `kite-vscode-sidebar://value-position/${JSON.stringify(position)}`;
-      router.clearNavigation();
-      router.navigate(uri, `
-        window.onload = () => {
-          window.requestGet('/count?metric=fulfilled&name=expand_panel');
-          if(document.querySelector('.summary .description:not(:empty)')) {
-            window.requestGet('/count?metric=fulfilled&name=documentation');
-          }
-        }
-      `);
-    });
-
-    vscode.commands.registerCommand('kite.navigate', (path) => {
-      const uri = `kite-vscode-sidebar://${path}`;
-      router.chopNavigation();
-      router.navigate(uri);
+      const doc = vscode.window.activeTextEditor.document;
+      const path = hoverPath(doc, position);
+      return this.request({path})
+      .then(data => JSON.parse(data))
+      .then(data => {
+        kiteOpen(`kite://docs/${data.symbol[0].id}`)
+      })
     });
 
     vscode.commands.registerCommand('kite.web', ({id, source}) => {

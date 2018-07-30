@@ -29,10 +29,6 @@
     "contributes": {
         "commands": [
             {
-                "command": "kite.search",
-                "title": "Kite: Search"
-            },
-            {
                 "command": "kite.status",
                 "title": "Kite: Status"
             },
@@ -55,17 +51,10 @@
             {
                 "command": "kite.open-copilot",
                 "title": "Kite: Open Copilot"
-            },
-            {
-                "command": "kite.open-sidebar",
-                "title": "Kite: Open sidebar"
             }
         ],
         "menus": {
             "editor/context": [
-                {
-                    "command": "kite.search"
-                },
                 {
                     "command": "kite.open-settings"
                 },
