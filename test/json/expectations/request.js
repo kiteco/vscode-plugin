@@ -123,8 +123,7 @@ module.exports = (expectation, not) => {
         expectation.properties.body,
         buildContext(),
         this.env);
-    }, 300)
-    .then(() => console.log('call matching done'));
+    }, 300);
 
     if(not) {
       return promise.then(() => {
