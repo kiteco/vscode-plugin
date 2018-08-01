@@ -2,7 +2,7 @@
 const {CompletionItem, CompletionItemKind, MarkdownString} = require('vscode');
 const {Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
-const {promisifyReadResponse, parseJSON, editorsForDocument} = require('./utils');
+const {promisifyReadResponse, parseJSON} = require('./utils');
 const {completionsPath, normalizeDriveLetter} = require('./urls');
 
 const fill = (s, l, f = ' ') => {
@@ -52,6 +52,7 @@ module.exports = class KiteCompletionProvider {
         path: completionsPath(),
         method: 'POST',
       }, JSON.stringify(payload), document)
+      .then(resp => promisifyReadResponse(resp))
       .then(data => {
         data = parseJSON(data, {});
         const completions = data.completions || [];

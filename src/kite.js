@@ -72,12 +72,6 @@ const Kite = {
     // send the activated event
     metrics.track('activated');
 
-    AccountManager.initClient(
-      StateController.client.hostname,
-      StateController.client.port,
-      ''
-    );
-
     this.disposables.push(server);
     this.disposables.push(status);
     this.disposables.push(install);
@@ -809,7 +803,7 @@ const Kite = {
     .catch(() => false);
   },
 
-  request(req, data, document) {
+  request(req, data) {
     return KiteAPI.request(req, data);
   },
 

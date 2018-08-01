@@ -2,9 +2,9 @@
 
 const path = require('path');
 const sinon = require('sinon');
-const {StateController, Logger} = require('kite-installer');
+const {Logger} = require('kite-installer');
 const Plan = require('../src/plan');
-const {promisifyRequest, promisifyReadResponse} = require('../src/utils');
+const KiteAPI = require('kite-api');
 const {withKiteRoutes} = require('kite-api/test/helpers/kite');
 const {fakeResponse} = require('kite-api/test/helpers/http');
 
@@ -14,22 +14,7 @@ before(() => {
 
 const Kite = {
   request(req, data) {
-    return promisifyRequest(StateController.client.request(req, data))
-    .then(resp => {
-      
-      if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          const err = new Error(`bad status ${resp.statusCode}: ${data}`);
-          err.status = resp.statusCode;
-          throw err;
-        })
-      }
-      return promisifyReadResponse(resp);
-    })
-    .catch(err => {
-      this.checkState();
-      throw err;
-    });
+    return KiteAPI.request(req, data);
   },
 }
 

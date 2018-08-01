@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 const {Hover} = vscode;
 const {hoverPath} = require('./urls');
-const {compact, editorsForDocument, escapeCommandArguments} = require('./utils');
+const {compact, promisifyReadResponse, escapeCommandArguments} = require('./utils');
 const {symbolName, symbolKind, symbolId, idIsEmpty} = require('./data-utils');
 
 module.exports = class KiteHoverProvider {
@@ -18,6 +18,7 @@ module.exports = class KiteHoverProvider {
     if (this.isTest || this.Kite.isDocumentWhitelisted(doc)) {
       const path = hoverPath(doc, position);
       return this.Kite.request({path})
+      .then(resp => promisifyReadResponse(resp))
       .then(data => JSON.parse(data))
       .then(data => {
         if (data && data.symbol && data.symbol.length) {
