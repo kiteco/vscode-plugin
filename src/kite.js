@@ -256,6 +256,7 @@ const Kite = {
       const doc = vscode.window.activeTextEditor.document;
       const path = hoverPath(doc, position);
       return this.request({path})
+      .then(resp => promisifyReadResponse(resp))
       .then(data => JSON.parse(data))
       .then(data => {
         kiteOpen(`kite://docs/${data.symbol[0].id}`)
@@ -737,6 +738,7 @@ const Kite = {
   getSupportedLanguages() {
     const path = languagesPath();
     return this.request({path})
+    .then(resp => promisifyReadResponse(resp))
     .then(json => JSON.parse(json))
     .catch(() => ['python']);
   },
@@ -795,10 +797,6 @@ const Kite = {
     const path = shouldNotifyPath(filepath);
 
     return KiteAPI.request({path})
-    .then(resp => {
-      // console.log('notify responded with', resp.statusCode)
-      return resp;
-    })
     .then(resp => resp.statusCode === 200)
     .catch(() => false);
   },
