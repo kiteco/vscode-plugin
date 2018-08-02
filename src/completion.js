@@ -2,7 +2,7 @@
 const {CompletionItem, CompletionItemKind, MarkdownString} = require('vscode');
 const {Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
-const {promisifyReadResponse, parseJSON} = require('./utils');
+const {parseJSON} = require('./utils');
 const {completionsPath, normalizeDriveLetter} = require('./urls');
 
 const fill = (s, l, f = ' ') => {
