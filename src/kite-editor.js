@@ -202,19 +202,8 @@ module.exports = class KiteEditor {
       path: errorRescuePath(),
       method: 'POST',
     }, JSON.stringify(payload))
-    .then(resp => promisifyReadResponse(resp))
-    .then(resp => {
-      Logger.logResponse(resp);
-      this.Kite.handle403Response(this.document, resp);
-      if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          throw new Error(`Error ${resp.statusCode}: ${data}`);
-        });
-      } else {
-        return promisifyReadResponse(resp);
-      }
-    })
-    .then(data => parseJSON(data, {}))
+    .then(KiteAPI.emitWhitelistedPathDetected(this.document.fileName))
+    .catch(KiteAPI.emitNonWhitelistedPathDetected(this.document.fileName))
   }
 
   getErrorRescueModelInfo(version) {
@@ -228,17 +217,6 @@ module.exports = class KiteEditor {
       path: errorRescueModelInfoPath(),
       method: 'POST',
     }, JSON.stringify(payload))
-    .then(resp => promisifyReadResponse(resp))
-    .then(resp => {
-      Logger.logResponse(resp);
-      if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          throw new Error(`Error ${resp.statusCode}: ${data}`);
-        });
-      } else {
-        return promisifyReadResponse(resp);
-      }
-    })
     .then(data => parseJSON(data, {}))
     .catch(err => console.error(err));
   }

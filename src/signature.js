@@ -41,7 +41,6 @@ module.exports = class KiteSignatureProvider {
         path: signaturePath(),
         method: 'POST',
       }, JSON.stringify(payload), document)
-      .then(resp => promisifyReadResponse(resp))
       .then(data => {
         data = parseJSON(data, {});
 

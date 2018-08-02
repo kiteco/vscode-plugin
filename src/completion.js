@@ -52,7 +52,6 @@ module.exports = class KiteCompletionProvider {
         path: completionsPath(),
         method: 'POST',
       }, JSON.stringify(payload), document)
-      .then(resp => promisifyReadResponse(resp))
       .then(data => {
         data = parseJSON(data, {});
         const completions = data.completions || [];

@@ -5,6 +5,7 @@ const sinon = require('sinon');
 const {Logger} = require('kite-installer');
 const Plan = require('../src/plan');
 const KiteAPI = require('kite-api');
+const {promisifyReadResponse} = require('../src/utils');
 const {withKiteRoutes} = require('kite-api/test/helpers/kite');
 const {fakeResponse} = require('kite-api/test/helpers/http');
 
@@ -14,7 +15,7 @@ before(() => {
 
 const Kite = {
   request(req, data) {
-    return KiteAPI.request(req, data);
+    return KiteAPI.request(req, data).then(resp => promisifyReadResponse(resp));
   },
 }
 

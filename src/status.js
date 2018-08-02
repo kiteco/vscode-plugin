@@ -109,7 +109,6 @@ module.exports = class KiteStatus {
     const path = accountPath();
 
     return this.Kite.request({path})
-    .then(res => promisifyReadResponse(res))
     .then(account => JSON.parse(account));
   }
 

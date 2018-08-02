@@ -18,7 +18,6 @@ module.exports = class KiteHoverProvider {
     if (this.isTest || this.Kite.isDocumentWhitelisted(doc)) {
       const path = hoverPath(doc, position);
       return this.Kite.request({path})
-      .then(resp => promisifyReadResponse(resp))
       .then(data => JSON.parse(data))
       .then(data => {
         if (data && data.symbol && data.symbol.length) {

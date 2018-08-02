@@ -34,7 +34,6 @@ const getDesc = (expectation) => () => {
       return `- ${formatCall({path, method, payload})}`
     }).join('\n')}`)
   } else {
-    // console.log(StateController.client.request.getCalls()
     //   .map(({args: [{path, method}, payload]}) => `${method || 'GET'} ${path} '${payload || ''}'`));
     base.push(`\nbut no calls were anywhere close\n${KiteAPI.request.getCalls().map(c => { 
       let [{path, method}, payload] = c.args;

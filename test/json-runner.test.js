@@ -6,10 +6,8 @@ const sinon = require('sinon');
 const vscode = require('vscode');
 const KiteAPI = require('kite-api');
 const {jsonPath, walk, describeForTest} = require('./json/utils');
-const {StateController} = require('kite-installer');
 const {withKite, withKitePaths, withKiteRoutes} = require('kite-api/test/helpers/kite');
 const {fakeResponse} = require('kite-api/test/helpers/http');
-const {sleep} = require('./helpers');
 
 const ACTIONS = {};
 const EXPECTATIONS = {};

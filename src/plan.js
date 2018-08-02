@@ -65,7 +65,6 @@ const Plan = {
     if (!Kite) { Kite = require('./kite'); }
     const path = this.planPath();
     return Kite.request({path})
-    .then(res => promisifyReadResponse(res))
     .then(data => {
       this.plan = JSON.parse(data);
 
