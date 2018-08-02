@@ -143,18 +143,8 @@ module.exports = class KiteEditor {
       path: onSaveValidationPath(),
       method: 'POST',
     }, JSON.stringify(payload))
-    .then(resp => promisifyReadResponse(resp))
-    .then(resp => {
-      Logger.logResponse(resp);
-      this.Kite.handle403Response(this.document, resp);
-      if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          throw new Error(`Error ${resp.statusCode}: ${data}`);
-        });
-      } else {
-        return promisifyReadResponse(resp);
-      }
-    })
+    .then(KiteAPI.emitWhitelistedPathDetected(this.document.fileName))
+    .catch(KiteAPI.emitNonWhitelistedPathDetected(this.document.fileName))
     .catch(err => console.error(err));
   }
 
