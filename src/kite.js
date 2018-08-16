@@ -392,6 +392,9 @@ const Kite = {
   },
 
   reset() {
+    this.disposables && this.disposables.forEach((disposable) => {
+      disposable.dispose();
+    })
     this.kiteEditorByEditor = new Map();
     this.eventsByEditor = new Map();
     this.supportedLanguages = [];
