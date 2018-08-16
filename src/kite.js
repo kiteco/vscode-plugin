@@ -172,13 +172,6 @@ const Kite = {
       })
     }));
 
-    // this.disposables.push(vscode.workspace.onDidOpenTextDocument(doc => {
-    //   console.log('vscode open hook', doc.fileName, 'language is', doc.languageId)
-    //   if (doc.languageId === 'python') {
-    //     this.registerDocumentEvents(doc);
-    //     this.registerDocument(doc);
-    //   }
-    // }));
     this.disposables.push(vscode.window.onDidChangeVisibleTextEditors(editors => {
       editors.forEach((e) => {
         if (e.document.languageId === 'python') {
@@ -223,11 +216,7 @@ const Kite = {
     this.disposables.push(vscode.commands.registerCommand('kite.login', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
     })); 
-    
-    // this.disposables.push(vscode.commands.registerCommand('kite.show-error-rescue', () => {
-    //   errorRescue.open();
-    // })); 
-    
+       
     this.disposables.push(vscode.commands.registerCommand('kite.install', () => {
       install.reset();
       AccountManager.initClient('alpha.kite.com', -1, true);
