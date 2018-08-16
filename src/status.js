@@ -1,20 +1,20 @@
 'use strict';
 
 const vscode = require('vscode');
-const {StateController, Logger} = require('kite-installer');
+const KiteAPI = require('kite-api')
 const server = require('./server');
 const {wrapHTML, debugHTML, proLogoSvg, enterpriseLogoSvg, logo, pluralize} = require('./html-utils');
 const Plan = require('./plan');
 const {accountPath, statusPath, normalizeDriveLetter} = require('./urls');
-const {promisifyRequest, promisifyReadResponse, params} = require('./utils');
+const {promisifyReadResponse, params} = require('./utils');
 const {MAX_FILE_SIZE} = require('./constants');
-const {STATES} = StateController;
+const {STATES} = KiteAPI;
 const dot = '<span class="dot">•</span>';
 
 let Kite;
 
 server.addRoute('GET', '/status/start', (req, res, url) => {
-  StateController.runKiteAndWait()
+  KiteAPI.runKiteAndWait()
   .then(() => {
     res.writeHead(200),
     res.end();
@@ -26,7 +26,7 @@ server.addRoute('GET', '/status/start', (req, res, url) => {
 });
 
 server.addRoute('GET', '/status/start-enterprise', (req, res, url) => {
-  StateController.runKiteEnterpriseAndWait()
+  KiteAPI.runKiteEnterpriseAndWait()
   .then(() => {
     res.writeHead(200),
     res.end();
@@ -39,7 +39,7 @@ server.addRoute('GET', '/status/start-enterprise', (req, res, url) => {
 
 server.addRoute('GET', '/status/whitelist', (req, res, url) => {
   const dirpath = params(url).dirpath;
-  StateController.whitelistPath(dirpath)
+  KiteAPI.whitelistPath(dirpath)
   .then(() => {
     res.writeHead(200),
     res.end();
@@ -131,10 +131,10 @@ module.exports = class KiteStatus {
     const editor = vscode.window.activeTextEditor;
     const promises = [
       Plan.queryPlan().catch(() => null),
-      StateController.handleState().then(state => {
+      KiteAPI.checkHealth().then(state => {
         return Promise.all([
-          StateController.isKiteInstalled().then(() => true, () => false),
-          StateController.isKiteEnterpriseInstalled().then(() => true, () => false),
+          KiteAPI.isKiteInstalled().then(() => true, () => false),
+          KiteAPI.isKiteEnterpriseInstalled().then(() => true, () => false),
         ]).then(([kiteInstalled, kiteEnterpriseInstalled]) => {
           return {
             state,
@@ -250,8 +250,8 @@ module.exports = class KiteStatus {
         `;
         break;
       case STATES.INSTALLED:
-        if (StateController.hasManyKiteInstallation() ||
-            StateController.hasManyKiteEnterpriseInstallation()) {
+        if (KiteAPI.hasManyKiteInstallation() ||
+            KiteAPI.hasManyKiteEnterpriseInstallation()) {
           content = `<div class="text-danger">Kite engine is not running ${dot}<br/>You have multiple versions of Kite installed.<br/>Please launch your desired one.</div>`;
         } else if (status.kiteInstalled && status.kiteEnterpriseInstalled) {
           content = `

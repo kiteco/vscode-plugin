@@ -1,6 +1,7 @@
 'use strict';
 
 let Kite;
+const {promisifyReadResponse} = require('./utils');
 
 const Plan = {
   can(feature) {

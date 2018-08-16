@@ -1,7 +1,7 @@
 'use strict';
 
-const {MAX_PAYLOAD_SIZE, MAX_FILE_SIZE, CONNECT_ERROR_LOCKOUT} = require('./constants');
-const {secondsSince} = require('./utils');
+const KiteAPI = require('kite-api');
+const {MAX_PAYLOAD_SIZE, MAX_FILE_SIZE} = require('./constants');
 const {normalizeDriveLetter} = require('./urls');
  
 module.exports = class EditorEvents {
@@ -10,6 +10,12 @@ module.exports = class EditorEvents {
     this.editor = editor;
     this.document = editor.document;
     this.reset();
+  }
+
+  dispose() {
+    delete this.Kite;
+    delete this.editor;
+    delete this.document;
   }
 
   focus() {
@@ -58,7 +64,7 @@ module.exports = class EditorEvents {
     let promise = Promise.resolve();
 
     if (focus && action !== focus) {
-      promise = promise.then(() =>this.Kite.request({
+      promise = promise.then(() => this.Kite.request({
         path: '/clientapi/editor/event',
         method: 'POST',
       }, JSON.stringify(this.buildEvent(focus)), this.document))
@@ -72,6 +78,8 @@ module.exports = class EditorEvents {
     .then((res) => {
       this.pendingPromiseResolve(res);
     })
+    .then(KiteAPI.emitWhitelistedPathDetected(this.document.fileName))
+    .catch(KiteAPI.emitNonWhitelistedPathDetected(this.document.fileName))
     .catch((err) => {
       this.pendingPromiseReject(err);
       // on connection error send a metric, but not too often or we will generate too many events

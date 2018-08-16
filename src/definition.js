@@ -2,8 +2,7 @@
 
 const vscode = require('vscode');
 const {Location, Position} = vscode;
-const {StateController, Logger} = require('kite-installer');
-const {promisifyRequest, promisifyReadResponse, parseJSON, editorsForDocument} = require('./utils');
+const {editorsForDocument, parseJSON, promisifyReadResponse} = require('./utils');
 const {hoverPath} = require('./urls');
 
 module.exports = class KiteDefinitionProvider {

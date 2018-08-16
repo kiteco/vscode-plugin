@@ -4,11 +4,10 @@ const expect = require('expect.js');
 const vscode = require('vscode');
 const KiteStatus = require('../src/status');
 const {kite: Kite} = require('../src/kite');
-const {
-  fixtureURI, fakeResponse, fakeKiteInstallPaths,
-  withRoutes, withFakeServer, withPlan, withKiteNotRunning,
-  withKiteNotReachable, withKiteNotAuthenticated, withKiteAuthenticated,
-} = require('./helpers');
+const {fixtureURI, withPlan} = require('./helpers');
+
+const {withKite, withKiteRoutes} = require('kite-api/test/helpers/kite');
+const {fakeResponse} = require('kite-api/test/helpers/http');
 
 const dot = '•';
 
@@ -35,51 +34,46 @@ describe('status panel', () => {
     status = new KiteStatus(Kite);
   });
 
-  describe('with kite not installed', () => {
-    fakeKiteInstallPaths();
-    withFakeServer([], () => {
-      loadStatus();
-  
-      it('shows a warning message stating kite is not installed', () => {
-        const msg = document.querySelector('.status .text-danger');
-        expect(msg.textContent).to.eql(`Kite engine is not installed ${dot}`);
-      });
+  withKite({installed: false}, () => {
+    loadStatus();
 
-      it('shows a link to download kite', () => {
-        const link = document.querySelector('.status a');
+    it('shows a warning message stating kite is not installed', () => {
+      const msg = document.querySelector('.status .text-danger');
+      expect(msg.textContent).to.eql(`Kite engine is not installed ${dot}`);
+    });
 
-        expect(link.href).to.eql('https://kite.com/download')
-        expect(link.textContent).to.eql('Install now')
-      });
+    it('shows a link to download kite', () => {
+      const link = document.querySelector('.status a');
 
-      it('does not render the account information', () => {
-        expect(document.querySelector('.split-line')).to.be(null);
-      });
+      expect(link.href).to.eql('https://kite.com/download')
+      expect(link.textContent).to.eql('Install now')
+    });
+
+    it('does not render the account information', () => {
+      expect(document.querySelector('.split-line')).to.be(null);
     });
   });
 
-  withKiteNotRunning(() => {
-    withFakeServer([], () => {
-      loadStatus();
-      
-      it('shows a warning message stating kite is not running', () => {
-        const msg = document.querySelector('.status .text-danger');
-        expect(msg.textContent).to.eql(`Kite engine is not running ${dot}`);
-      });
-  
-      it('shows a link to start kite', () => {
-        const link = document.querySelector('.status a');
-  
-        expect(link.textContent).to.eql('Launch now')
-      });
-  
-      it('does not render the account information', () => {
-        expect(document.querySelector('.split-line')).to.be(null);
-      });
+  withKite({running: false}, () => {
+    loadStatus();
+    
+    it('shows a warning message stating kite is not running', () => {
+      const msg = document.querySelector('.status .text-danger');
+      expect(msg.textContent).to.eql(`Kite engine is not running ${dot}`);
+    });
+
+    it('shows a link to start kite', () => {
+      const link = document.querySelector('.status a');
+
+      expect(link.textContent).to.eql('Launch now')
+    });
+
+    it('does not render the account information', () => {
+      expect(document.querySelector('.split-line')).to.be(null);
     });
   })
 
-  withKiteNotReachable(() => {
+  withKite({reachable: false}, () => {
     loadStatus();
     
     it('shows a warning message stating kite is not reachable', () => {
@@ -92,7 +86,7 @@ describe('status panel', () => {
     });
   });
   
-  withKiteNotAuthenticated(() => {
+  withKite({logged: false}, () => {
     loadStatus();
     
     it('shows a warning message stating the use is not logged in', () => {
@@ -111,7 +105,7 @@ describe('status panel', () => {
     });
   });  
   
-  withKiteAuthenticated(() => {
+  withKite({logged: true}, () => {
     describe('with no editor open', () => {
       loadStatus();
       
@@ -314,7 +308,7 @@ describe('status panel', () => {
       });
   
       describe('when the user has an unverified email', () => {
-        withRoutes([[
+        withKiteRoutes([[
           o => /^\/api\/account\/user/.test(o.path),
           o => fakeResponse(200, JSON.stringify({email_verified: false})),
         ]]);

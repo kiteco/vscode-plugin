@@ -4,15 +4,13 @@ const path = require('path');
 const {kite} = require('../src/kite');
 const sinon = require('sinon');
 const vscode = require('vscode');
+const KiteAPI = require('kite-api');
 const {jsonPath, walk, describeForTest} = require('./json/utils');
-const {StateController} = require('kite-installer');
-const {withKiteAuthenticated, withKiteWhitelistedPaths, withKiteBlacklistedPaths, sleep} = require('./helpers');
+const {withKite, withKitePaths, withKiteRoutes} = require('kite-api/test/helpers/kite');
+const {fakeResponse} = require('kite-api/test/helpers/http');
 
 const ACTIONS = {};
 const EXPECTATIONS = {};
-const STATES = {
-  authenticated: withKiteAuthenticated,
-};
 
 walk(path.resolve(__dirname, 'json', 'actions'), '.js', file => {
   const key = path.basename(file).replace(path.extname(file), '');
@@ -24,8 +22,24 @@ walk(path.resolve(__dirname, 'json', 'expectations'), '.js', file => {
   EXPECTATIONS[key] = require(file);
 });
 
+function kiteSetup(setup) {
+  switch (setup) {
+    case 'authenticated':
+      return {logged: true};
+    default:
+      return {};
+  }
+}
+
+function pathsSetup(setup) {
+  return {
+    whitelist: setup.whitelist && setup.whitelist.map(jsonPath),
+    blacklist: setup.blacklist && setup.blacklist.map(jsonPath),
+    ignored: setup.ignored && setup.ignored.map(jsonPath),
+  };
+}
+
 describe('JSON tests', () => {
-  afterEach(() => sleep(100))
   walk(jsonPath('tests'),  '.json', (testFile) => {
     buildTest(require(testFile), testFile);
   });
@@ -39,16 +53,16 @@ function buildTest(data, file) {
   describeForTest(data, `${data.description} ('${file}')`, () => {
     let spy;
 
-    beforeEach(() => {
-      spy = sinon.spy(StateController.client, 'request');
+    beforeEach('package activation', () => {
+      // console.log(`------------------------------------\n start ${data.description}\n------------------------------------`);
+      spy = sinon.spy(KiteAPI, 'request');
       kite._activate();
-      // console.log('start ------------------------------------')
     })
-    afterEach(() => {
+    afterEach('package deactivation', () => {
       spy.restore();
       kite.deactivate();
       
-      // console.log('end ------------------------------------')
+      // console.log(`------------------------------------\n end ${data.description}\n------------------------------------`);
       return clearWorkspace();
       function clearWorkspace() {
         if(vscode.window.activeTextEditor) {
@@ -59,29 +73,25 @@ function buildTest(data, file) {
       }
     })
 
-    const block = () => {
-      if(data.setup.kited === 'authenticated' && data.setup.blacklist) {
-        withKiteBlacklistedPaths(data.setup.blacklist.map(p => jsonPath(p)));
-      }
-
-      data.test.reverse().reduce((f, s) => {
-        switch (s.step) {
-          case 'action':
-            return buildAction(s, f);
-          case 'expect':
-            return buildExpectation(s, f);
-          case 'expect_not':
-            return buildExpectation(s, f, true);
-          default:
-            return f;
-        }
-      }, () => {})();
-    }
-    if(data.setup.kited === 'authenticated') {
-      withKiteWhitelistedPaths((data.setup.whitelist || []).map(p => jsonPath(p)), block)
-    } else {
-      STATES[data.setup.kited](block);
-    }
+    withKite(kiteSetup(data.setup.kited), () => {
+      withKitePaths(pathsSetup(data.setup), undefined, () => {
+        withKiteRoutes([
+          [o => o.path === '/clientapi/plan', o => fakeResponse(200, '{}')]
+        ])
+        data.test.reverse().reduce((f, s) => {
+          switch (s.step) {
+            case 'action':
+              return buildAction(s, f);
+            case 'expect':
+              return buildExpectation(s, f);
+            case 'expect_not':
+              return buildExpectation(s, f, true);
+            default:
+              return f;
+          }
+        }, () => {})();
+      });
+    });
   });
 }
 

@@ -3,8 +3,8 @@
 const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
-const http = require('http');
-const {StateController, AccountManager, Logger} = require('kite-installer');
+const KiteAPI = require('kite-api');
+const {AccountManager, Logger} = require('kite-installer');
 const {PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
@@ -22,7 +22,7 @@ const Plan = require('./plan');
 const server = require('./server');
 const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath, languagesPath, hoverPath} = require('./urls');
 const Rollbar = require('rollbar');
-const {editorsForDocument, promisifyRequest, promisifyReadResponse, compact, params, kiteOpen} = require('./utils');
+const {editorsForDocument, promisifyReadResponse, compact, params, kiteOpen} = require('./utils');
 const {version} = require('../package.json');
 
 const Kite = {
@@ -71,12 +71,6 @@ const Kite = {
 
     // send the activated event
     metrics.track('activated');
-
-    AccountManager.initClient(
-      StateController.client.hostname,
-      StateController.client.port,
-      ''
-    );
 
     this.disposables.push(server);
     this.disposables.push(status);
@@ -178,12 +172,33 @@ const Kite = {
       })
     }));
 
-    this.disposables.push(vscode.workspace.onDidOpenTextDocument(doc => {
-      if (doc.languageId === 'python') {
-        this.registerDocumentEvents(doc);
-        this.registerDocument(doc);
-      }
+    this.disposables.push(vscode.window.onDidChangeVisibleTextEditors(editors => {
+      editors.forEach((e) => {
+        if (e.document.languageId === 'python') {
+          this.registerDocumentEvents(e.document);
+          this.registerDocument(e.document);
+        }
+      })
     }));
+
+    this.whitelistedEditorIDs = {};
+    this.disposables.push(KiteAPI.onDidDetectWhitelistedPath(path => {
+      // console.log('whitelisted', path);
+      this.whitelistedEditorIDs[path] = true;
+    }));
+
+    this.disposables.push(KiteAPI.onDidDetectNonWhitelistedPath(path => {
+      // console.log('not whitelisted', path);
+      this.whitelistedEditorIDs[path] = false;
+      const document = this.documentForPath(path);
+      this.shouldOfferWhitelist(document)
+      .then(res => { if (res) { this.warnNotWhitelisted(document, res); }})
+      .catch(err => console.error(err));
+    }));
+
+    // this.disposables.push(KiteAPI.onDidFailRequest(err => {
+    //   // TODO
+    // }));
 
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
     this.statusBarItem.text = '$(primitive-dot) Kite';
@@ -201,11 +216,7 @@ const Kite = {
     this.disposables.push(vscode.commands.registerCommand('kite.login', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
     })); 
-    
-    // this.disposables.push(vscode.commands.registerCommand('kite.show-error-rescue', () => {
-    //   errorRescue.open();
-    // })); 
-    
+       
     this.disposables.push(vscode.commands.registerCommand('kite.install', () => {
       install.reset();
       AccountManager.initClient('alpha.kite.com', -1, true);
@@ -284,7 +295,7 @@ const Kite = {
         const {document} = editor;
 
         const path = hoverPath(document, pos)
-        StateController.client.request({path})
+        KiteAPI.request({path})
           .then(resp => {
             if(resp.statusCode === 200) {
               vscode.commands.executeCommand('kite.more-position', {
@@ -367,7 +378,7 @@ const Kite = {
     return this;
 
     function checkHealth() {
-      StateController.handleState().then(state => {
+      KiteAPI.checkHealth().then(state => {
         switch (state) {
           case 0: return metrics.trackHealth('unsupported');
           case 1: return metrics.trackHealth('uninstalled');
@@ -381,11 +392,15 @@ const Kite = {
   },
 
   reset() {
+    this.disposables && this.disposables.forEach((disposable) => {
+      disposable.dispose();
+    })
     this.kiteEditorByEditor = new Map();
     this.eventsByEditor = new Map();
     this.supportedLanguages = [];
     this.shown = {};
     this.disposables = [];
+    this.whitelistedEditorIDs = {};
     delete this.shownNotifications;
     delete this.lastState;
     delete this.lastStatus;
@@ -395,6 +410,12 @@ const Kite = {
   },
 
   deactivate() {
+    for(const [, ke] of this.kiteEditorByEditor) {
+      ke.dispose();
+    }
+    for(const [, evt] of this.eventsByEditor) {
+      evt.dispose();
+    }
     metrics.featureRequested('stopping');
     // send the activated event
     metrics.track('deactivated');
@@ -436,27 +457,27 @@ const Kite = {
 
   checkState(src) {
     return Promise.all([
-      StateController.handleState(),
+      KiteAPI.checkHealth(),
       this.getSupportedLanguages().catch(() => []),
     ]).then(([state, languages]) => {
       this.supportedLanguages = languages;
 
-      if (state > StateController.STATES.INSTALLED) {
+      if (state > KiteAPI.STATES.INSTALLED) {
         localconfig.set('wasInstalled', true);
       }
 
       switch (state) {
-        case StateController.STATES.UNSUPPORTED:
+        case KiteAPI.STATES.UNSUPPORTED:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           this.shown[state] = true;
-          if (!StateController.isOSSupported()) {
+          if (!Kite.isOSSupported()) {
             metrics.track('OS unsupported');
-          } else if (!StateController.isOSVersionSupported()) {
+          } else if (!Kite.isOSVersionSupported()) {
             metrics.track('OS version unsupported');
           }
           this.showErrorMessage('Sorry, the Kite engine is currently not supported on your platform');
           break;
-        case StateController.STATES.UNINSTALLED:
+        case KiteAPI.STATES.UNINSTALLED:
           if (this.shown[state] || (vscode.window.activeTextEditor && !this.isGrammarSupported(vscode.window.activeTextEditor))) { 
             return state; 
           }
@@ -467,22 +488,22 @@ const Kite = {
             vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
           }
           break;
-        case StateController.STATES.INSTALLED:
+        case KiteAPI.STATES.INSTALLED:
           break;
-        case StateController.STATES.RUNNING:
+        case KiteAPI.STATES.RUNNING:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           //An imperfect safeguard against showing a false positive error notification generated by
           //kited restart race condition
-          if(this.lastPolledState && this.lastPolledState === StateController.STATES.RUNNING){
+          if(this.lastPolledState && this.lastPolledState === KiteAPI.STATES.RUNNING){
             this.shown[state] = true;
             this.showErrorMessage('The Kite background service is running but not reachable.');
           }
           break;
-        case StateController.STATES.REACHABLE:
+        case KiteAPI.STATES.REACHABLE:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           //An imperfect safeguard against showing a false positive error notification generated by
           //kited restart race condition
-          if(this.lastPolledState && this.lastPolledState === StateController.STATES.REACHABLE) {
+          if(this.lastPolledState && this.lastPolledState === KiteAPI.STATES.REACHABLE) {
             this.shown[state] = true;
             this.setStatus(state);
             this.checkConnectivity().then(() => {
@@ -542,23 +563,23 @@ const Kite = {
       this.statusBarItem.text = compact(['$(primitive-dot) Kite', label]).join(': ')
 
       switch (state) {
-        case StateController.STATES.UNSUPPORTED:
+        case KiteAPI.STATES.UNSUPPORTED:
           this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
           this.statusBarItem.color = ERROR_COLOR;
           break;
-        case StateController.STATES.UNINSTALLED:
+        case KiteAPI.STATES.UNINSTALLED:
           this.statusBarItem.tooltip = 'Kite engine is not installed';
           this.statusBarItem.color = ERROR_COLOR;
           break;
-        case StateController.STATES.INSTALLED:
+        case KiteAPI.STATES.INSTALLED:
           this.statusBarItem.tooltip = 'Kite engine is not running';
           this.statusBarItem.color = ERROR_COLOR;
           break;
-        case StateController.STATES.RUNNING:
+        case KiteAPI.STATES.RUNNING:
           this.statusBarItem.tooltip = 'Kite engine is not reachable';
           this.statusBarItem.color = ERROR_COLOR;
           break;
-        case StateController.STATES.REACHABLE:
+        case KiteAPI.STATES.REACHABLE:
           this.statusBarItem.color = WARNING_COLOR;
           break;
         default:
@@ -593,13 +614,13 @@ const Kite = {
     let statusLabel = 'ready';
     let hoverPromise;
     switch(state) {
-      case StateController.STATES.UNINSTALLED:
+      case KiteAPI.STATES.UNINSTALLED:
         statusLabel = 'not installed';
         break;
-      case StateController.STATES.INSTALLED:
+      case KiteAPI.STATES.INSTALLED:
         statusLabel = 'not running';
         break;
-      case StateController.STATES.REACHABLE:
+      case KiteAPI.STATES.REACHABLE:
         statusLabel = 'not logged in';
         break;
       default:
@@ -619,7 +640,7 @@ const Kite = {
               const editor = vscode.window.activeTextEditor;
               if (editor && this.isEditorWhitelisted(editor)) {
                 const path = hoverPath(editor.document, editor.selection.active);
-                hoverPromise = StateController.client.request({path})
+                hoverPromise = KiteAPI.request({path})
                   .then(resp => {
                     if(resp.statusCode === 200) {
                       return 'Docs available at cursor';
@@ -656,31 +677,15 @@ const Kite = {
   },
 
   isEditorWhitelisted(e) {
-    const ke = this.kiteEditorByEditor.get(e.document.fileName);
-    // console.log(ke, 'exists')
-    return ke && ke.isWhitelisted();
+    return this.isDocumentWhitelisted(e.document);
+  },
+  
+  isDocumentWhitelisted(d) {
+    return this.whitelistedEditorIDs[d.fileName];
   },
 
-  handle403Response(document, resp) {
-    // console.log('handle status for ', resp.statusCode, resp.request)
-    // for the moment a 404 response is sent for non-whitelisted file by
-    // the tokens endpoint
-    editorsForDocument(document).forEach(e => {
-      const ke = this.kiteEditorByEditor.get(e.document.fileName);
-      if (ke) { 
-        ke.whitelisted = resp.statusCode !== 403 
-        // console.log('editor for', e.document.fileName, 'whitelisted?', ke.whitelisted)
-      }
-    });
-
-    if (resp.statusCode === 403) {
-      // this.setStatus(NOT_WHITELISTED, document);
-      this.shouldOfferWhitelist(document)
-      .then(res => { if (res) { this.warnNotWhitelisted(document, res); }})
-      .catch(err => console.error(err));
-    } else {
-      this.setStatus(StateController.STATES.WHITELISTED, document);
-    }
+  documentForPath(path) {
+    return vscode.workspace.textDocuments.filter(d => d.fileName === path).shift();
   },
 
   getStatus(document) {
@@ -688,7 +693,7 @@ const Kite = {
 
     const path = statusPath(document.fileName);
 
-    return StateController.client.request({path})
+    return KiteAPI.request({path})
     .then(resp => {
       if (resp.statusCode === 200) {
         return promisifyReadResponse(resp).then(json => JSON.parse(json));
@@ -723,9 +728,9 @@ const Kite = {
       ).then(item => {
         delete this.shownNotifications['whitelist'];
         return item
-          ? StateController.whitelistPath(res)
+          ? KiteAPI.whitelistPath(res)
             .then(() => Logger.debug('whitelisted'))
-          : StateController.blacklistPath(document.fileName)
+          : KiteAPI.blacklistPath(document.fileName)
             .then(() => Logger.debug('blacklisted'));
       });
     } else {
@@ -737,7 +742,7 @@ const Kite = {
     const filepath = document.fileName;
     const path = projectDirPath(filepath);
 
-    return StateController.client.request({path})
+    return KiteAPI.request({path})
     .then(resp => {
       if (resp.statusCode === 200) {
         return promisifyReadResponse(resp)
@@ -759,33 +764,13 @@ const Kite = {
     const filepath = document.fileName;
     const path = shouldNotifyPath(filepath);
 
-    return StateController.client.request({path})
-    .then(resp => {
-      // console.log('notify responded with', resp.statusCode)
-      return resp;
-    })
+    return KiteAPI.request({path})
     .then(resp => resp.statusCode === 200)
     .catch(() => false);
   },
 
-  request(req, data, document) {
-    return promisifyRequest(StateController.client.request(req, data))
-    .then(resp => {
-      if (this.isDocumentGrammarSupported(document)) {
-        this.handle403Response(document, resp);
-      }
-
-      // Logger.logResponse(resp);
-
-      if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          const err = new Error(`bad status ${resp.statusCode}: ${data}`);
-          err.status = resp.statusCode;
-          throw err;
-        })
-      }
-      return promisifyReadResponse(resp);
-    })
+  request(req, data) {
+    return KiteAPI.request(req, data).then(resp => promisifyReadResponse(resp));
   },
 
   checkConnectivity() {

@@ -3,9 +3,9 @@
 const expect = require('expect.js')
 const vscode = require('vscode');
 const http = require('http');
-const {StateController} = require('kite-installer');
+const KiteAPI = require('kite-api');
 const {loadPayload, substituteFromContext, buildContext, itForExpectation} = require('../utils');
-const {waitsFor} = require('../../helpers')
+const {waitsFor, formatCall} = require('../../helpers')
 
 let closeMatches;
 const getDesc = (expectation) => () => {
@@ -24,16 +24,23 @@ const getDesc = (expectation) => () => {
 
   if (closeMatches.length > 0) {
     base.push('\nbut some calls were close');
-    closeMatches.forEach(({path, method, payload}) => {
-      base.push(`\n - ${method} ${path}`);
-      if(expectation.properties.body) {
-        base.push(`= ${payload}`);
-      }
+    closeMatches.forEach((call) => {
+      base.push(`\n - ${formatCall(call)}`) 
     });
+    base.push(`\nAll calls:\n${KiteAPI.request.getCalls().map(c => { 
+      let [{path, method}, payload] = c.args;
+      method = method || 'GET';
+
+      return `- ${formatCall({path, method, payload})}`
+    }).join('\n')}`)
   } else {
-    // console.log(StateController.client.request.getCalls()
     //   .map(({args: [{path, method}, payload]}) => `${method || 'GET'} ${path} '${payload || ''}'`));
-    base.push('\nbut no calls were anywhere close');
+    base.push(`\nbut no calls were anywhere close\n${KiteAPI.request.getCalls().map(c => { 
+      let [{path, method}, payload] = c.args;
+      method = method || 'GET';
+
+      return `- ${formatCall({path, method, payload})}`
+    }).join('\n')}`);
   }
 
   return base.join(' ');
@@ -58,7 +65,7 @@ const getNotDesc = (expectation) => {
 };
 
 const mostRecentCallMatching = (exPath, exMethod, exPayload, context = {}, env) => {
-  const calls = StateController.client.request.getCalls();
+  const calls = KiteAPI.request.getCalls();
   closeMatches = [];
   let matched = false;
 
@@ -89,7 +96,7 @@ const mostRecentCallMatching = (exPath, exMethod, exPayload, context = {}, env) 
           matched = true;
           return true;
         } else {
-          return false;
+          return b;
         }
       } else {
         // not the right method = failure
@@ -107,7 +114,7 @@ const mostRecentCallMatching = (exPath, exMethod, exPayload, context = {}, env) 
 };
 
 module.exports = (expectation, not) => {
-  beforeEach(function() {
+  beforeEach('request matching', function() {
     const promise = waitsFor(getDesc(expectation), () => {
       return mostRecentCallMatching(
         expectation.properties.path,

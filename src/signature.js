@@ -2,7 +2,7 @@
 const {SignatureHelp, SignatureInformation, ParameterInformation} = require('vscode');
 const {Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
-const {parseJSON, stripTags, getFunctionDetails, editorsForDocument} = require('./utils');
+const {parseJSON, stripTags, getFunctionDetails, promisifyReadResponse} = require('./utils');
 const {signaturePath, normalizeDriveLetter} = require('./urls');
 const {valueLabel, parameterType} = require('./data-utils');
 
@@ -18,7 +18,7 @@ module.exports = class KiteSignatureProvider {
     // console.log('document', document.fileName)
     // hueristic - based on how editors are registered for whitelisting based on
     // documents, it should be sufficient to see if just one passes the check below
-    if(this.isTest || editorsForDocument(document).some(e => this.Kite.isEditorWhitelisted(e))) {
+    if(this.isTest || this.Kite.isDocumentWhitelisted(document)) {
       const text = document.getText();
 
       // console.log('whitelist condition passed')

@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 const {Hover} = vscode;
 const {hoverPath} = require('./urls');
-const {compact, editorsForDocument, escapeCommandArguments} = require('./utils');
+const {compact, promisifyReadResponse, escapeCommandArguments} = require('./utils');
 const {symbolName, symbolKind, symbolId, idIsEmpty} = require('./data-utils');
 
 module.exports = class KiteHoverProvider {
@@ -15,7 +15,7 @@ module.exports = class KiteHoverProvider {
   provideHover(doc, position) {
     // hueristic - based on how editors are registered for whitelisting based on
     // documents, it should be sufficient to see if just one passes the check below
-    if (this.isTest || editorsForDocument(doc).some(e => this.Kite.isEditorWhitelisted(e))) {
+    if (this.isTest || this.Kite.isDocumentWhitelisted(doc)) {
       const path = hoverPath(doc, position);
       return this.Kite.request({path})
       .then(data => JSON.parse(data))

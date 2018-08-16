@@ -1,7 +1,8 @@
 'use strict';
 
 const vscode = require('vscode');
-const {Logger, StateController} = require('kite-installer');
+const {Logger} = require('kite-installer');
+const KiteAPI = require('kite-api');
 const metrics = require('./metrics');
 const {MAX_FILE_SIZE} = require('./constants');
 const localconfig = require('./localconfig');
@@ -29,8 +30,14 @@ module.exports = class KiteEditor {
     this.fixesHistory = [];
   }
 
+  dispose() {
+    delete this.Kite;
+    delete this.editor;
+    delete this.document;
+  }
+
   isWhitelisted() {
-    return this.whitelisted;
+    return this.Kite.isDocumentWhitelisted(this.document);
   }
   
   onWillSave() {
@@ -132,21 +139,12 @@ module.exports = class KiteEditor {
       language: 'python',
     };
 
-    return promisifyRequest(StateController.client.request({
+    return KiteAPI.request({
       path: onSaveValidationPath(),
       method: 'POST',
-    }, JSON.stringify(payload)))
-    .then(resp => {
-      Logger.logResponse(resp);
-      this.Kite.handle403Response(this.document, resp);
-      if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          throw new Error(`Error ${resp.statusCode}: ${data}`);
-        });
-      } else {
-        return promisifyReadResponse(resp);
-      }
-    })
+    }, JSON.stringify(payload))
+    .then(KiteAPI.emitWhitelistedPathDetected(this.document.fileName))
+    .catch(KiteAPI.emitNonWhitelistedPathDetected(this.document.fileName))
     .catch(err => console.error(err));
   }
 
@@ -157,10 +155,11 @@ module.exports = class KiteEditor {
       response_time: new Date() - requestStartTime,
     };
 
-    return promisifyRequest(StateController.client.request({
+    return KiteAPI.request({
       path: errorRescueMetricsPath(),
       method: 'POST',
-    }, JSON.stringify(payload)))
+    }, JSON.stringify(payload))
+    .then(resp => promisifyReadResponse(resp))
     .then(resp => {
       Logger.logResponse(resp);
     })
@@ -174,10 +173,11 @@ module.exports = class KiteEditor {
       feedback,
     };
 
-    return promisifyRequest(StateController.client.request({
+    return KiteAPI.request({
       path: errorRescueFeedbackPath(),
       method: 'POST',
-    }, JSON.stringify(payload)))
+    }, JSON.stringify(payload))
+    .then(resp => promisifyReadResponse(resp))
     .then(resp => {
       Logger.logResponse(resp);
     })
@@ -198,22 +198,12 @@ module.exports = class KiteEditor {
       language: 'python',
     };
 
-    return promisifyRequest(StateController.client.request({
+    return KiteAPI.request({
       path: errorRescuePath(),
       method: 'POST',
-    }, JSON.stringify(payload)))
-    .then(resp => {
-      Logger.logResponse(resp);
-      this.Kite.handle403Response(this.document, resp);
-      if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          throw new Error(`Error ${resp.statusCode}: ${data}`);
-        });
-      } else {
-        return promisifyReadResponse(resp);
-      }
-    })
-    .then(data => parseJSON(data, {}))
+    }, JSON.stringify(payload))
+    .then(KiteAPI.emitWhitelistedPathDetected(this.document.fileName))
+    .catch(KiteAPI.emitNonWhitelistedPathDetected(this.document.fileName))
   }
 
   getErrorRescueModelInfo(version) {
@@ -223,20 +213,10 @@ module.exports = class KiteEditor {
       version,
     };
 
-    return promisifyRequest(StateController.client.request({
+    return KiteAPI.request({
       path: errorRescueModelInfoPath(),
       method: 'POST',
-    }, JSON.stringify(payload)))
-    .then(resp => {
-      Logger.logResponse(resp);
-      if (resp.statusCode !== 200) {
-        return promisifyReadResponse(resp).then(data => {
-          throw new Error(`Error ${resp.statusCode}: ${data}`);
-        });
-      } else {
-        return promisifyReadResponse(resp);
-      }
-    })
+    }, JSON.stringify(payload))
     .then(data => parseJSON(data, {}))
     .catch(err => console.error(err));
   }
