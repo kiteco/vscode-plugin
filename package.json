@@ -120,12 +120,12 @@
     },
     "dependencies": {
         "analytics-node": "^3.1.1",
-        "atob": "^2.0.3",
+        "atob": "^2.1.2",
         "formidable": "^1.1.1",
         "getmac": "^1.2.1",
-        "kite-installer": "^2.0.5",
         "kite-api": "^1.0.3",
         "kite-connector": "^1.0.2",
+        "kite-installer": "^2.0.5",
         "md5": "^2.2.0",
         "opn": "^5.0.0",
         "rollbar": "^2.3.8",
@@ -134,15 +134,15 @@
     "devDependencies": {
         "@types/mocha": "^2.2.32",
         "@types/node": "^6.0.40",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
         "eslint": "^3.6.0",
         "expect.js": "^0.3.1",
         "jsdom": "^10",
-        "mocha": "^2.3.3",
         "jsdom-global": "^3",
+        "mocha": "^5.2.0",
         "sinon": "^2.3.5",
         "typescript": "^2.0.3",
-        "vscode": "^1.0.0",
-        "widjet-test-utils": "^1.8.0",
-        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master"
+        "vscode": "^1.1.21",
+        "widjet-test-utils": "^1.8.0"
     }
 }
