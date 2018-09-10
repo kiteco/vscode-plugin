@@ -583,28 +583,33 @@ const Kite = {
           this.statusBarItem.color = WARNING_COLOR;
           break;
         default:
-          switch(status.status) {
-            case 'not whitelisted':
-              this.statusBarItem.color = WARNING_COLOR;
-              this.statusBarItem.tooltip = 'Current path is not whitelisted';
-              break;
-            case 'indexing':
-              this.statusBarItem.color = undefined;
-              this.statusBarItem.tooltip = 'Kite engine is indexing your code';
-              break;
-            case 'syncing':
-              this.statusBarItem.color = undefined;
-              this.statusBarItem.tooltip = 'Kite engine is syncing your code';
-              break;
-            case 'blacklisted':
-            case 'ignored':
-              this.statusBarItem.color = undefined;
-              this.statusBarItem.tooltip = 'Current path is ignored by Kite';
-              break;
-            case 'ready':
-              this.statusBarItem.color = undefined;
-              this.statusBarItem.tooltip = 'Kite is ready';
-              break;
+          if(status) {
+            switch(status.status) {
+              case 'not whitelisted':
+                this.statusBarItem.color = WARNING_COLOR;
+                this.statusBarItem.tooltip = 'Current path is not whitelisted';
+                break;
+              case 'indexing':
+                this.statusBarItem.color = undefined;
+                this.statusBarItem.tooltip = 'Kite engine is indexing your code';
+                break;
+              case 'syncing':
+                this.statusBarItem.color = undefined;
+                this.statusBarItem.tooltip = 'Kite engine is syncing your code';
+                break;
+              case 'blacklisted':
+              case 'ignored':
+                this.statusBarItem.color = undefined;
+                this.statusBarItem.tooltip = 'Current path is ignored by Kite';
+                break;
+              case 'ready':
+                this.statusBarItem.color = undefined;
+                this.statusBarItem.tooltip = 'Kite is ready';
+                break;
+            }
+          } else {
+            this.statusBarItem.color = undefined;
+            this.statusBarItem.tooltip = '';
           }
       }
     })
