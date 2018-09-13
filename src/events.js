@@ -117,7 +117,7 @@ module.exports = class EditorEvents {
       filename: normalizeDriveLetter(document.fileName),
     };
 
-    if (selection) {
+    if (selection && selection.start != null && selection.end != null) {
       event.selections = [{
         start: document.offsetAt(selection.start),
         end: document.offsetAt(selection.end),
