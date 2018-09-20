@@ -4,6 +4,7 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const KiteAPI = require('kite-api');
+const https = require('https');
 const {AccountManager, Logger} = require('kite-installer');
 const {PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
@@ -219,7 +220,8 @@ const Kite = {
        
     this.disposables.push(vscode.commands.registerCommand('kite.install', () => {
       install.reset();
-      AccountManager.initClient('alpha.kite.com', -1, true);
+      AccountManager.initClient('alpha.kite.com', -1);
+      AccountManager.client.protocol = https;
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
     }));
 
@@ -484,7 +486,8 @@ const Kite = {
           this.shown[state] = true;
           if (!localconfig.get('wasInstalled', false)) {
             this.install.reset();
-            AccountManager.initClient('alpha.kite.com', -1, true);
+            AccountManager.initClient('alpha.kite.com', -1);
+            AccountManager.client.protocol = https;
             vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
           }
           break;
