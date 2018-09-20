@@ -220,8 +220,7 @@ const Kite = {
        
     this.disposables.push(vscode.commands.registerCommand('kite.install', () => {
       install.reset();
-      AccountManager.initClient('alpha.kite.com', -1);
-      AccountManager.client.protocol = https;
+      AccountManager.initClient('alpha.kite.com', -1, '', true);
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
     }));
 
@@ -484,10 +483,9 @@ const Kite = {
             return state; 
           }
           this.shown[state] = true;
-          if (!localconfig.get('wasInstalled', false)) {
+          if (!localconfig.get('wasInstalled', false) || true) {
             this.install.reset();
-            AccountManager.initClient('alpha.kite.com', -1);
-            AccountManager.client.protocol = https;
+            AccountManager.initClient('alpha.kite.com', -1, '', true);
             vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
           }
           break;

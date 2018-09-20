@@ -177,7 +177,7 @@ function getErrorMessage(error) {
   switch (error.message) {
     case 'bad_state 2': 
       return 'Kite is already installed';
-      case 'bad_state 3': 
+    case 'bad_state 3': 
       return 'Kite is already running';
     default: 
       return error.message;
