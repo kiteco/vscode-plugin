@@ -7,7 +7,7 @@ window.initLogin = function initLogin() {
   const resetBtn = form.querySelector('.send-link');
 
   emailInput.addEventListener('input', () => {
-    const url = `https://kite.com/account/resetPassword/request?email=${emailInput.value}`;
+    const url = `https://kite.com/reset-password?email=${emailInput.value}`;
 
     resetLink.href = url;
     resetBtn.href = url;
