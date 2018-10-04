@@ -5,7 +5,7 @@ const {kite} = require('../src/kite');
 const sinon = require('sinon');
 const vscode = require('vscode');
 const KiteAPI = require('kite-api');
-const {jsonPath, walk, describeForTest} = require('./json/utils');
+const {jsonPath, walk, describeForTest, featureSetPath} = require('./json/utils');
 const {withKite, withKitePaths, withKiteRoutes} = require('kite-api/test/helpers/kite');
 const {fakeResponse} = require('kite-api/test/helpers/http');
 
@@ -26,22 +26,42 @@ function kiteSetup(setup) {
   switch (setup) {
     case 'authenticated':
       return {logged: true};
+    case 'unsupported':
+    case 'not_supported':
+      return {supported: false};
+    case 'uninstalled':
+    case 'not_installed':
+      return {installed: false};
+    case 'not_running':
+      return {running: false};
+    case 'unreachable':
+    case 'not_reachable':
+      return {reachable: false};
+    case 'unlogged':
+    case 'not_logged':
+      return {logged: false};
     default:
-      return {};
+      return {supported: false};
   }
 }
 
 function pathsSetup(setup) {
   return {
-    whitelist: setup.whitelist && setup.whitelist.map(jsonPath),
-    blacklist: setup.blacklist && setup.blacklist.map(jsonPath),
-    ignored: setup.ignored && setup.ignored.map(jsonPath),
+    whitelist: setup.whitelist && setup.whitelist.map(p => jsonPath(p)),
+    blacklist: setup.blacklist && setup.blacklist.map(p => jsonPath(p)),
+    ignored: setup.ignored && setup.ignored.map(p => jsonPath(p)),
   };
 }
 
+const featureSet = require(featureSetPath());
+
+console.log(featureSet);
+
 describe('JSON tests', () => {
-  walk(jsonPath('tests'),  '.json', (testFile) => {
-    buildTest(require(testFile), testFile);
+  featureSet.forEach(feature => {
+    walk(jsonPath('tests', feature), (testFile) => {
+      buildTest(require(testFile), testFile);
+    });
   });
 });
 
@@ -72,6 +92,8 @@ function buildTest(data, file) {
         }
       }
     })
+
+    console.log(data.setup, file)
 
     withKite(kiteSetup(data.setup.kited), () => {
       withKitePaths(pathsSetup(data.setup), undefined, () => {

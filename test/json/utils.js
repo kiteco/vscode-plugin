@@ -8,8 +8,15 @@ const sinon = require('sinon');
 
 const base = path.resolve(__dirname, '..');
 const testBase = path.join(base, '..', 'node_modules', 'editors-json-tests');
-function jsonPath(p) {
-  return path.join(testBase, p);
+
+function jsonPath(...p) {
+  return path.join(testBase, ...p);
+}
+
+function featureSetPath() {
+  return fs.existsSync(jsonPath('tests/vscode.json'))
+    ? jsonPath('tests/vscode.json')
+    : jsonPath('tests/default.json');
 }
 
 function walk(p, ext, callback) {
@@ -192,5 +199,6 @@ module.exports = {
   itForExpectation,
   describeForTest,
   NotificationsMock,
+  featureSetPath,
 };
 

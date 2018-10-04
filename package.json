@@ -134,7 +134,7 @@
     "devDependencies": {
         "@types/mocha": "^2.2.32",
         "@types/node": "^6.0.40",
-        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#new-completion-spec",
         "eslint": "^3.6.0",
         "expect.js": "^0.3.1",
         "jsdom": "^10",
