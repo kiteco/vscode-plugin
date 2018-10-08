@@ -55,8 +55,6 @@ function pathsSetup(setup) {
 
 const featureSet = require(featureSetPath());
 
-console.log(featureSet);
-
 describe('JSON tests', () => {
   featureSet.forEach(feature => {
     walk(jsonPath('tests', feature), (testFile) => {
@@ -92,8 +90,6 @@ function buildTest(data, file) {
         }
       }
     })
-
-    console.log(data.setup, file)
 
     withKite(kiteSetup(data.setup.kited), () => {
       withKitePaths(pathsSetup(data.setup), undefined, () => {
