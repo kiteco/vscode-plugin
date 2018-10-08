@@ -36,7 +36,6 @@ module.exports = (expectation, not) => {
           expectation.properties.method,
           expectation.properties.body,
           buildContext(vscode.window.activeTextEditor));
-          // console.log(calls.length);
           
         return calls.length === expectation.properties.count;
       }, 300)

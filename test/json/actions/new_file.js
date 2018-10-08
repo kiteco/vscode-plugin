@@ -15,7 +15,7 @@ module.exports = (action) => {
     })
     .then(editor => {
       let editBuilder = textEdit => {
-        textEdit.insert(new vscode.Position(0, 0), '');
+        textEdit.insert(new vscode.Position(0, 0), action.properties.content);
       };
 
       return editor.edit(editBuilder, {

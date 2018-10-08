@@ -2,7 +2,13 @@
 
 const vscode = require('vscode');
 
+let sigCalled = false;
+let alphaCompletionCalled = false;
 module.exports = (action) => {
+  afterEach(() => {
+    sigCalled = false;
+    alphaCompletionCalled = false;
+  });
   beforeEach(() => {
     const editor = vscode.window.activeTextEditor;
     if (action.properties.text) {
@@ -20,10 +26,15 @@ module.exports = (action) => {
         }
       })
       .then(() => {
-        if(/[\w ,.]$/.test(action.properties.text)) {
+        if(/[ ,.]$/.test(action.properties.text)) {
+          alphaCompletionCalled = false;
+          vscode.commands.executeCommand('editor.action.triggerSuggest');
+        } else if (/\w$/.test(action.properties.text) && !alphaCompletionCalled) {
+          alphaCompletionCalled = true;
           vscode.commands.executeCommand('editor.action.triggerSuggest');
         }
-        if(/[\(,]$/.test(action.properties.text)) {
+        if(/[\(,]$/.test(action.properties.text) || (sigCalled && !/[\)]$/.test(action.properties.text))) {
+          sigCalled = true;
           vscode.commands.executeCommand('editor.action.triggerParameterHints');
         }
       })
