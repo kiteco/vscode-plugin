@@ -9,7 +9,6 @@ const {kite} = require('../../../src/kite');
 
 module.exports = (action) => {
   beforeEach('new file action', () => { 
-    console.log(vscode.Uri.file('untitled:' + jsonPath(action.properties.file)))
     return vscode.window.showTextDocument(vscode.Uri.parse('untitled:' + jsonPath(action.properties.file)))
     .then((editor) => {
       return editor;
