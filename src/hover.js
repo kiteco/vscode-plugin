@@ -32,12 +32,12 @@ module.exports = class KiteHoverProvider {
           const links = [];
 
           if (!idIsEmpty(id)) {
-            links.push(`[more](command:kite.more-position?${escapeCommandArguments({
+            links.push(`[docs](command:kite.more-position?${escapeCommandArguments({
               position,
               source: 'Hover',
             })})`);
           } else {
-            links.push(`[more](command:kite.more-position?${escapeCommandArguments({
+            links.push(`[docs](command:kite.more-position?${escapeCommandArguments({
               position,
               source: 'Hover',
             })})`);

@@ -49,7 +49,7 @@ module.exports = class KiteTour {
               <h5>Hover for info</h5>
               <p>
                 Hover on any Python expression to <b>jump to definition</b>,
-                <b>find usages</b>, <b>open in web</b>, or <b>see more</b>
+                <b>find usages</b>, or <b>see docs</b>
               </p>
             </article>
           </section>
@@ -62,7 +62,7 @@ module.exports = class KiteTour {
             <article>
               <h5>Sidebar</h5>
               <p>
-                Click “more” on hover to open a sidebar with APIs, docs, examples, usages, and definitions.
+                Click docs on hover to open a sidebar with APIs, docs, examples, usages, and definitions.
               </p>
             </article>
           </section>

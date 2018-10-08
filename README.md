@@ -39,8 +39,7 @@ The icon in the status bar can take three different colors:
 Hovering your mouse over an expression will show you a popup with up to three links:
 
 - `def` will open the file where this symbol is defined (this may not be available if Kite cannot find the definition)
-- `web` will open the docs for the expression in your browser
-- `more` will open the sidebar with docs for this expression
+- `docs` will open the sidebar with docs for this expression
 
 ### Sidebar
 
