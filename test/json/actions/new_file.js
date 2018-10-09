@@ -3,13 +3,11 @@
 const vscode = require('vscode');
 const path = require('path');
 const KiteAPI = require('kite-api');
-const {jsonPath} = require('../utils');
 const {waitsFor} = require('../../helpers');
-const {kite} = require('../../../src/kite');
 
-module.exports = (action) => {
+module.exports = ({action, root}) => {
   beforeEach('new file action', () => { 
-    return vscode.window.showTextDocument(vscode.Uri.parse('untitled:' + jsonPath(action.properties.file)))
+    return vscode.window.showTextDocument(vscode.Uri.parse('untitled:' + path.join(root(), action.properties.file)))
     .then((editor) => {
       return editor;
     })

@@ -4,7 +4,7 @@ const vscode = require('vscode');
 
 let sigCalled = false;
 let alphaCompletionCalled = false;
-module.exports = (action) => {
+module.exports = ({action}) => {
   afterEach(() => {
     sigCalled = false;
     alphaCompletionCalled = false;
@@ -14,6 +14,7 @@ module.exports = (action) => {
     if (action.properties.text) {
       const range = new vscode.Range(editor.selection.start, editor.selection.end);
       return editor.edit(builder => {
+        console.log('modifying document');
         if (action.properties.offset) {
           const {line, character} = editor.document.positionAt(action.properties.offset);
     
@@ -26,6 +27,7 @@ module.exports = (action) => {
         }
       })
       .then(() => {
+        console.log('post edit actions (completions & signature)');
         if(/[ ,.]$/.test(action.properties.text)) {
           alphaCompletionCalled = false;
           vscode.commands.executeCommand('editor.action.triggerSuggest');

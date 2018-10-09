@@ -1,12 +1,12 @@
 'use strict';
 
-const {jsonPath} = require('../utils');
+const path = require('path');
 const {updateKitePaths} = require('kite-api/test/helpers/kite');
 
-module.exports = (action) => {
+module.exports = ({action, path}) => {
   beforeEach(() => { 
     updateKitePaths({
-      ignored: action.properties.ignored.map(p => jsonPath(p)),
+      ignored: action.properties.ignored.map(p => path.join(root(), p)),
     });
   });
 };

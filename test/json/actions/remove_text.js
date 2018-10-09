@@ -2,7 +2,7 @@
 
 const vscode = require('vscode');
 
-module.exports = (action) => {
+module.exports = ({action}) => {
   beforeEach(() => {
     const editor = vscode.window.activeTextEditor;
 

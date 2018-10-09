@@ -28,14 +28,14 @@ const callsMatching = (exPath, exMethod, exPayload, context={}) => {
   });
 }
 
-module.exports = (expectation, not) => {
+module.exports = ({expectation, not, root}) => {
   beforeEach(() => {
     const promise = waitsFor(`${expectation.properties.count} requests to '${expectation.properties.path}' for test '${expectation.description}'`, () => {
         const calls = callsMatching(
           expectation.properties.path,
           expectation.properties.method,
           expectation.properties.body,
-          buildContext(vscode.window.activeTextEditor));
+          buildContext(root));
           
         return calls.length === expectation.properties.count;
       }, 300)
@@ -50,7 +50,7 @@ module.exports = (expectation, not) => {
           expectation.properties.path,
           expectation.properties.method,
           expectation.properties.body,
-          buildContext(vscode.window.activeTextEditor)).length;
+          buildContext(root)).length;
         throw new Error(`no ${expectation.properties.count} requests to '${expectation.properties.path}' for test '${expectation.description}' but ${callsCount} were found`);
       }, () => {})
     } else {

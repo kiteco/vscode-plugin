@@ -132,6 +132,8 @@
         "tiny-relative-date": "^1.3.0"
     },
     "devDependencies": {
+        "@atom/temp": "^0.8.4",
+        "fs-plus": "^3.0.2",
         "@types/mocha": "^2.2.32",
         "@types/node": "^6.0.40",
         "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",

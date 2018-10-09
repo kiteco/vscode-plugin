@@ -81,14 +81,14 @@ function normalizeDriveLetter(str) {
   return str.replace(/^[a-z]:/, m => m.toUpperCase());
 }
 
-function buildContext() {
+function buildContext(root) {
   const context = {
     plugin: 'vscode',
     editors: {},
   };
 
   vscode.window.visibleTextEditors.forEach(e => {
-    const relativePath = path.relative(testBase, e.document.fileName);
+    const relativePath = path.relative(root(), e.document.fileName);
     writeValueAtPath(relativePath, {
       filename: e.document.fileName,
       filename_escaped: cleanPath(e.document.fileName),
