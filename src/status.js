@@ -1,12 +1,13 @@
 'use strict';
 
+
 const vscode = require('vscode');
 const KiteAPI = require('kite-api')
 const server = require('./server');
 const {wrapHTML, debugHTML, proLogoSvg, enterpriseLogoSvg, logo, pluralize} = require('./html-utils');
 const Plan = require('./plan');
 const {accountPath, statusPath, normalizeDriveLetter} = require('./urls');
-const {promisifyReadResponse, params} = require('./utils');
+const {kiteOpen, params} = require('./utils');
 const {MAX_FILE_SIZE} = require('./constants');
 const {STATES} = KiteAPI;
 const dot = '<span class="dot">•</span>';
@@ -52,7 +53,7 @@ server.addRoute('GET', '/status/whitelist', (req, res, url) => {
 
 
 server.addRoute('GET', '/status/login', (req, res, url) => {
-  vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+  kiteOpen('kite://home')
   res.writeHead(200);
   res.end();
 });
