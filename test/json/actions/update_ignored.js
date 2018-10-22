@@ -6,7 +6,7 @@ const {updateKitePaths} = require('kite-api/test/helpers/kite');
 module.exports = (action) => {
   beforeEach(() => { 
     updateKitePaths({
-      ignored: action.properties.ignored.map(jsonPath),
+      ignored: action.properties.ignored.map(p => jsonPath(p)),
     });
   });
 };

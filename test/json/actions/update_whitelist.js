@@ -6,7 +6,7 @@ const {updateKitePaths} = require('kite-api/test/helpers/kite');
 module.exports = (action) => {
   beforeEach(() => { 
     updateKitePaths({
-      whitelist: action.properties.whitelist.map(jsonPath),
+      whitelist: action.properties.whitelist.map(p => jsonPath(p)),
     });
   });
 };

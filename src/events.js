@@ -19,7 +19,7 @@ module.exports = class EditorEvents {
   }
 
   focus() {
-    return this.send('focus')
+    return this.send('focus');
   }
 
   edit() {
