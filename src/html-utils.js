@@ -204,10 +204,6 @@ function renderModule(data) {
 
   <footer>
     <div class="actions"></div>
-    ${!idIsEmpty(symbol.id)
-      ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
-            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
-      : ''}
   </footer>`;
 }
 
@@ -237,10 +233,6 @@ function renderFunction(data) {
 
   <footer>
     <div class="actions"></div>
-    ${!idIsEmpty(symbol.id)
-      ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
-            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
-      : ''}
   </footer>
   `;
 }
@@ -265,10 +257,6 @@ function renderInstance(data) {
 
   <footer>
     <div class="actions"></div>
-    ${!idIsEmpty(symbol.id)
-      ? `<a onclick="window.requestGet('/count?metric=requested&name=open_in_web');window.requestGet('/count?metric=fulfilled&name=open_in_web')"
-            class="kite-open-link" href='command:kite.web-url?"${openDocumentationInWebURL(symbol.id)}"'><span>Open in web</span>${logo}</a>`
-      : ''}
   </footer>
   `;
 }

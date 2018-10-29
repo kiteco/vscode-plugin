@@ -4,7 +4,6 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const KiteAPI = require('kite-api');
-const https = require('https');
 const {AccountManager, Logger} = require('kite-installer');
 const {PYTHON_MODE, NEW_PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
@@ -21,14 +20,14 @@ const localconfig = require('./localconfig');
 const metrics = require('./metrics');
 const Plan = require('./plan');
 const server = require('./server');
-const {openDocumentationInWebURL, projectDirPath, shouldNotifyPath, statusPath, languagesPath, hoverPath} = require('./urls');
+const {projectDirPath, shouldNotifyPath, statusPath, languagesPath, hoverPath} = require('./urls');
 const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyReadResponse, compact, params, kiteOpen} = require('./utils');
 const {version} = require('../package.json');
 
 const Kite = {
   activate(ctx) {
-    if(process.env.NODE_ENV !== 'test') { 
+    if(process.env.NODE_ENV !== 'test') {
       this._activate()
       ctx.subscriptions.push(this);
     }
@@ -37,7 +36,7 @@ const Kite = {
   _activate()
   {
     metrics.featureRequested('starting');
-    
+
     this.reset();
 
     const rollbar = new Rollbar({
@@ -224,8 +223,8 @@ const Kite = {
 
     this.disposables.push(vscode.commands.registerCommand('kite.login', () => {
       vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
-    })); 
-       
+    }));
+
     this.disposables.push(vscode.commands.registerCommand('kite.install', () => {
       install.reset();
       AccountManager.initClient('alpha.kite.com', -1, '', true);
@@ -235,11 +234,11 @@ const Kite = {
     this.disposables.push(vscode.commands.registerCommand('kite.open-settings', () => {
       kiteOpen('kite://settings');
     }));
-    
+
     this.disposables.push(vscode.commands.registerCommand('kite.open-copilot', () => {
       kiteOpen('kite://open')
     }));
-    
+
     this.disposables.push(vscode.commands.registerCommand('kite.open-permissions', () => {
       kiteOpen('kite://settings/permissions');
     }));
@@ -260,15 +259,7 @@ const Kite = {
       })
     }));
 
-    this.disposables.push(vscode.commands.registerCommand('kite.web', ({id, source}) => {
-      metrics.track(`${source} Open in web clicked`);
-      metrics.featureRequested('open_in_web');
-      metrics.featureFulfilled('open_in_web');
-      opn(openDocumentationInWebURL(id));
-    }));
-
     this.disposables.push(vscode.commands.registerCommand('kite.web-url', (url) => {
-      metrics.track(`Open in web clicked`);
       opn(url.replace(/;/g, '%3B'));
     }));
 
@@ -281,7 +272,7 @@ const Kite = {
       })
       .then(e => {
         metrics.featureFulfilled('definition');
-        const newPosition = new vscode.Position(line - 1, character ? character - 1 : 0);
+        const newPosition = new vscode.Position(line - 1, character ? character - 1 : 0);
         e.revealRange(new vscode.Range(
           newPosition,
           new vscode.Position(line - 1, 100)
@@ -432,7 +423,7 @@ const Kite = {
     this.dispose();
     this.reset();
   },
-  
+
   dispose() {
     this.disposables && this.disposables.forEach(d => d.dispose())
     delete this.disposables;
@@ -457,7 +448,7 @@ const Kite = {
     if (this.kiteEditorByEditor.has(e.document.fileName)) {
       const ke = this.kiteEditorByEditor.get(e.document.fileName);
       ke.editor = e
-    } else { 
+    } else {
       Logger.debug('register kite editor for', e.document.fileName, e.document.languageId);
       const ke = new KiteEditor(Kite, e);
       this.kiteEditorByEditor.set(e.document.fileName, ke);
@@ -487,8 +478,8 @@ const Kite = {
           this.showErrorMessage('Sorry, the Kite engine is currently not supported on your platform');
           break;
         case KiteAPI.STATES.UNINSTALLED:
-          if (this.shown[state] || (vscode.window.activeTextEditor && !this.isGrammarSupported(vscode.window.activeTextEditor))) { 
-            return state; 
+          if (this.shown[state] || (vscode.window.activeTextEditor && !this.isGrammarSupported(vscode.window.activeTextEditor))) {
+            return state;
           }
           this.shown[state] = true;
           if (!localconfig.get('wasInstalled', false) || true) {
@@ -693,7 +684,7 @@ const Kite = {
   isEditorWhitelisted(e) {
     return this.isDocumentWhitelisted(e.document);
   },
-  
+
   isDocumentWhitelisted(d) {
     return this.whitelistedEditorIDs[d.fileName];
   },
