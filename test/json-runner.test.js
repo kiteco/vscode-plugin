@@ -85,19 +85,19 @@ function buildTest(data, file) {
       kite.deactivate();
       
       console.log(`------------------------------------\n end ${data.description}\n------------------------------------`);
-      return clearWorkspace();
+      // return clearWorkspace();
 
-      function clearWorkspace() {
-        const editor = vscode.window.activeTextEditor;
-        console.log(vscode.workspace.textDocuments.length);
-        if(editor) {
-          return vscode.commands.executeCommand('workbench.action.closeActiveEditor')
-          .then(clearWorkspace);
-        } else {
-          console.log('workspace cleaned');
-          return;
-        }
-      }
+      // function clearWorkspace() {
+      //   const editor = vscode.window.activeTextEditor;
+      //   console.log(vscode.workspace.textDocuments.length);
+      //   if(editor) {
+      //     return vscode.commands.executeCommand('workbench.action.closeActiveEditor')
+      //     .then(clearWorkspace);
+      //   } else {
+      //     console.log('workspace cleaned');
+      //     return;
+      //   }
+      // }
     })
 
     withKite(kiteSetup(data.setup.kited), () => {

@@ -37,4 +37,7 @@ module.exports = ({action, root}) => {
       })
     // .then(() => console.log('kite editor found for file'))
   });
+  afterEach(() => { 
+    return vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+  })
 };
