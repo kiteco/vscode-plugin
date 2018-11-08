@@ -1,24 +1,31 @@
 window.initDownloadProgress = function initDownloadProgress() {
+  const vscode = window.vscode = acquireVsCodeApi();
   const downloadKiteContainer = document.querySelector('.download-kite');
   const progress = document.querySelector('progress');
 
-  const interval = setInterval(() => {
-    requestGet('/install/progress')
-    .then(ratio => {
-      ratio = parseFloat(ratio);
-      downloadKiteContainer.classList.toggle('hidden', ratio === -1 || ratio === 1);
-      if (ratio !== -1) {
-        progress.value = Math.round(ratio * 100);
-        if (ratio === 1) { clearInterval(interval); }
-      } 
-    });
-  }, 50);
+  window.addEventListener('message', event => { 
+    const message = event.data; // The JSON data our extension sent
+    switch (message.command) {
+      case 'progress':
+        const ratio = parseFloat(message.ratio);
+        downloadKiteContainer.classList.toggle('hidden', ratio === -1 || ratio === 1);
+        if (ratio !== -1) {
+          progress.value = Math.round(ratio * 100);
+        }
+        break;
+    }
+  });
 }
 
 window.submitEvent = function(event) {
+  const vscode = window.vscode = acquireVsCodeApi();
   const form = document.querySelector('form');
-  const eventInput = form.querySelector('input[name="event"]');
-  eventInput.value = event;
-  request(form.method, form.action, new FormData(form));
-  return false;
+  const fd = new FormData(form);
+  const message = {command: 'event', event};
+
+  for (let a of fd.entries()) { 
+    message[a[0]] = a[1];
+  }
+  
+  vscode.postMessage(message);
 }

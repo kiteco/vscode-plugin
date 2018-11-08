@@ -4,13 +4,14 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const KiteAPI = require('kite-api');
-const {AccountManager, Logger} = require('kite-installer');
+const NodeClient = require('kite-connector/lib/clients/node');
+const {Logger} = require('kite-installer');
 const {PYTHON_MODE, NEW_PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
 const KiteDefinitionProvider = require('./definition');
-const KiteInstall = require('./install');
+const KiteInstall = require('./install-webview');
 const KiteStatus = require('./status-webview');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
@@ -66,14 +67,9 @@ const Kite = {
 
     this.disposables.push(status);
     this.disposables.push(install);
-    // this.disposables.push(errorRescue);
 
     this.status = status;
     this.install = install;
-    // this.errorRescue = errorRescue;
-
-    this.disposables.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-install', install));
 
     this.disposables.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
@@ -190,8 +186,8 @@ const Kite = {
 
     this.disposables.push(vscode.commands.registerCommand('kite.install', () => {
       install.reset();
-      AccountManager.initClient('alpha.kite.com', -1, '', true);
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
+      KiteAPI.Account.client = new NodeClient('alpha.kite.com', -1, '', true);
+      install.show()
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.open-settings', () => {
@@ -428,9 +424,7 @@ const Kite = {
           }
           this.shown[state] = true;
           if (!localconfig.get('wasInstalled', false) || true) {
-            this.install.reset();
-            AccountManager.initClient('alpha.kite.com', -1, '', true);
-            vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
+            vscode.commands.executeCommand('kite.install');
           }
           break;
         case KiteAPI.STATES.INSTALLED:

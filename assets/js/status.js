@@ -1,6 +1,6 @@
 
 window.initStatus = function() {
-  const vscode = window.vscode = window.acquireVsCodeApi();
+  const vscode = window.vscode = acquireVsCodeApi();
 
   const link = document.querySelector('.kite-warning-box .resend-email');
   const box = document.querySelector('.kite-warning-box');

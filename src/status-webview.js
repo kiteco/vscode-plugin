@@ -19,7 +19,7 @@ module.exports = class KiteStatus {
   }
 
   dispose() {
-    
+
   }
 
   show() {
@@ -33,7 +33,6 @@ module.exports = class KiteStatus {
       });
   
       this.currentPanel.webview.onDidReceiveMessage(message => {
-        console.log(message);
         switch (message.command) {
           case 'count':
             const {metric, name} = message;
