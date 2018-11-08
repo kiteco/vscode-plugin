@@ -2,7 +2,7 @@
 
 const expect = require('expect.js');
 const vscode = require('vscode');
-const KiteStatus = require('../src/status');
+const KiteStatus = require('../src/status-webview');
 const {kite: Kite} = require('../src/kite');
 const {fixtureURI} = require('./helpers');
 
@@ -14,7 +14,7 @@ const dot = '•';
 let status;
 const loadStatus = () => {
   beforeEach(() => {
-    return status.provideTextDocumentContent()
+    return status.getHTML()
           .then(html => document.body.innerHTML = html)
           .catch(err => console.log(err));
   });

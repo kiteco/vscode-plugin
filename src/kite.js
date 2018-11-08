@@ -11,7 +11,7 @@ const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
 const KiteDefinitionProvider = require('./definition');
 const KiteInstall = require('./install');
-const KiteStatus = require('./status');
+const KiteStatus = require('./status-webview');
 const KiteTour = require('./tour');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
@@ -73,7 +73,6 @@ const Kite = {
     this.disposables.push(install);
     // this.disposables.push(errorRescue);
 
-
     this.status = status;
     this.install = install;
     // this.errorRescue = errorRescue;
@@ -100,11 +99,7 @@ const Kite = {
     this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-install', install));
     this.disposables.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
-    this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-tour', tour));
-    // this.disposables.push(
-    //   vscode.workspace.registerTextDocumentContentProvider('kite-vscode-error-rescue', errorRescue));
 
     this.disposables.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
@@ -212,7 +207,7 @@ const Kite = {
 
     this.disposables.push(vscode.commands.registerCommand('kite.status', () => {
       metrics.featureRequested('status_panel');
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
+      this.status.show();
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.login', () => {

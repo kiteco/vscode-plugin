@@ -21,13 +21,15 @@ const giftLogoPath = path.resolve(__dirname, '..', 'assets', 'images', 'icon-gif
 const server = require('./server');
 
 const ASSETS_PATH = path.resolve(__dirname, '..', 'assets');
+
+const vscodeResourcePath = (p) => vscode.Uri.file(p).with({ scheme: 'vscode-resource' });
 const STYLESHEETS = fs.readdirSync(path.resolve(ASSETS_PATH, 'css'))
 .map(p => path.resolve(ASSETS_PATH, 'css', p))
-.map(p => `<link href="file://${p}" rel="stylesheet"/>`)
+.map(p => `<link href="${vscodeResourcePath(p)}" rel="stylesheet"/>`)
 .join('');
 const SCRIPTS = fs.readdirSync(path.resolve(ASSETS_PATH, 'js'))
 .map(p => path.resolve(ASSETS_PATH, 'js', p))
-.map(p => `<script src="file://${p}" type="text/javascript"></script>`)
+.map(p => `<script src="${vscodeResourcePath(p)}" type="text/javascript"></script>`)
 .join('');
 
 // const {
