@@ -369,26 +369,9 @@ const Kite = {
       this.checkState('pollingInterval');
     }, config.get('pollingInterval') || 5000);
 
-    // We monitor kited health
-    this.healthInterval = setInterval(checkHealth, 60 * 1000 * 10);
-    checkHealth();
-
     metrics.featureFulfilled('starting');
 
     return this;
-
-    function checkHealth() {
-      KiteAPI.checkHealth().then(state => {
-        switch (state) {
-          case 0: return metrics.trackHealth('unsupported');
-          case 1: return metrics.trackHealth('uninstalled');
-          case 2: return metrics.trackHealth('installed');
-          case 3: return metrics.trackHealth('running');
-          case 4: return metrics.trackHealth('reachable');
-          case 5: return metrics.trackHealth('authenticated');
-        }
-      });
-    }
   },
 
   reset() {
@@ -406,7 +389,6 @@ const Kite = {
     delete this.lastStatus;
     delete this.lastPolledState;
     delete this.pollingInterval;
-    delete this.healthInterval;
   },
 
   deactivate() {
