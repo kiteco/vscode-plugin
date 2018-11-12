@@ -7,25 +7,12 @@ const {Logger} = require('kite-installer');
 const kitePkg = require('../package.json');
 const localconfig = require('./localconfig.js');
 const {metricsCounterPath} = require('./urls');
-const Segment = require('analytics-node');
 
 const OS_VERSION = os.type() + ' ' + os.release();
 
 const EDITOR_UUID = vscode.env.machineId;
 
-const ANALYTICS = new Segment(
-  process.env.NODE_ENV === 'development'
-  ? 'tlsFlkyXKAyTtbIYMsx8slXJxDQv8Izn'
-  : 'hZHSUR8FABnNidGOa3WnYAtHyBBsaoGA');
-
 let Kite;
-
-let macaddress;
-
-require('getmac').getMac((err, mac) => {
-  if (err) { throw err; }
-  macaddress = mac;
-});
 
 // Generate a unique ID for this user and save it for future use.
 function distinctID() {
@@ -61,20 +48,6 @@ function featureRequested(name) {
 
 function featureFulfilled(name) {
   sendFeatureMetric(`vscode_${name}_fulfilled`);
-}
-
-function track(event, properties = {}) {
-  const e = {
-    event,
-    userId: '0',
-    properties
-  };
-  
-  if(process.env.NODE_ENV !== 'test') {
-    Logger.debug('segment:', e);
-    
-    if (macaddress) { ANALYTICS.track(e); }
-  }
 }
 
 function getOsName() {
