@@ -1724,7 +1724,7 @@ form.password-less .has-password {
 .install {
   position: relative;
   max-width: 400px;
-  margin: 0 auto;
+  margin: 20px auto 0;
 }
 
 .install .logo {
