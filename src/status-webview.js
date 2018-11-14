@@ -75,6 +75,8 @@ module.exports = class KiteStatus {
   }
 
   update() {
+    if(!this.currentPanel) { return; }
+
     this.getHTML()
     .then(html => {
       if(this.currentPanel) {
