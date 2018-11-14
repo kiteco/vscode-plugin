@@ -6,10 +6,9 @@ const server = require('./server');
 const {wrapHTML, debugHTML, proLogoSvg, enterpriseLogoSvg, logo, pluralize} = require('./html-utils');
 const Plan = require('./plan');
 const {accountPath, statusPath, normalizeDriveLetter} = require('./urls');
-const {promisifyReadResponse, params} = require('./utils');
+const {params} = require('./utils');
 const {MAX_FILE_SIZE} = require('./constants');
 const {STATES} = KiteAPI;
-const dot = '<span class="dot">•</span>';
 
 let Kite;
 
@@ -240,22 +239,22 @@ module.exports = class KiteStatus {
     let content = '';
     switch (status.state) {
       case STATES.UNSUPPORTED:
-        content = `<div class="text-danger">Kite engine is not available on your system ${dot}</div>`;
+        content = `<div class="text-danger">Kite engine is not available on your system</div>`;
         break;
 
       case STATES.UNINSTALLED:
         content = `
-          <div class="text-danger">Kite engine is not installed ${dot}</div>
+          <div class="text-danger">Kite engine is not installed</div>
           <a href="https://kite.com/download" class="btn error">Install now</a>
         `;
         break;
       case STATES.INSTALLED:
         if (KiteAPI.hasManyKiteInstallation() ||
             KiteAPI.hasManyKiteEnterpriseInstallation()) {
-          content = `<div class="text-danger">Kite engine is not running ${dot}<br/>You have multiple versions of Kite installed.<br/>Please launch your desired one.</div>`;
+          content = `<div class="text-danger">Kite engine is not running<br/>You have multiple versions of Kite installed.<br/>Please launch your desired one.</div>`;
         } else if (status.kiteInstalled && status.kiteEnterpriseInstalled) {
           content = `
-            <div class="text-danger">Kite engine is not running ${dot}<br/>Which version of kite do you want to launch?</div>
+            <div class="text-danger">Kite engine is not running<br/>Which version of kite do you want to launch?</div>
             <a href="#"
                onclick="requestGet('/status/start-enterprise').then(() => requestGet('/status/reload'))"
                class="btn purple">Launch Kite Enterprise</a><br/>
@@ -265,14 +264,14 @@ module.exports = class KiteStatus {
           `;
         } else if (status.kiteInstalled) {
           content = `
-            <div class="text-danger">Kite engine is not running ${dot}</div>
+            <div class="text-danger">Kite engine is not running</div>
             <a href="#"
               onclick="requestGet('/status/start').then(() => requestGet('/status/reload'))"
               class="btn error">Launch now</a>
           `;
         } else if (status.kiteEnterpriseInstalled) {
           content = `
-            <div class="text-danger">Kite engine is not running ${dot}</div>
+            <div class="text-danger">Kite engine is not running</div>
             <a href="#"
               onclick="requestGet('/status/start-enterprise').then(() => requestGet('/status/reload'))"
               class="btn error">Launch now</a>
@@ -286,7 +285,7 @@ module.exports = class KiteStatus {
         break;
       case STATES.REACHABLE:
         content = `
-          <div class="text-danger">Kite engine is not logged in ${dot}</div>
+          <div class="text-danger">Kite engine is not logged in</div>
           <a href="#"
              onclick="requestGet('/status/login')"
              class="btn error">Login now</a>
@@ -295,26 +294,26 @@ module.exports = class KiteStatus {
       case STATES.AUTHENTICATED:
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
-          content = `<div>Open a supported file to see Kite's status ${dot}</div>`;
+          content = `<div>Open a supported file to see Kite's status</div>`;
         } else if (!this.Kite.isGrammarSupported(editor)) {
-          content = `<div>Open a supported file to see Kite's status ${dot}</div>`;
+          content = `<div>Open a supported file to see Kite's status</div>`;
         } else if (this.Kite.isEditorWhitelisted(editor)) {
           if (editor.document.getText().length >= MAX_FILE_SIZE) {
             content = `
-            <div class="text-warning">The current file is too large for Kite to handle ${dot}</div>`;
+            <div class="text-warning">The current file is too large for Kite to handle</div>`;
           } else {
             switch (syncStatus.status) {
               case '':
               case 'ready':
-                content = `<div class="ready">Kite engine is ready and working ${dot}</div>`;
+                content = `<div class="ready">Kite engine is ready and working</div>`;
                 break;
 
               case 'indexing':
-                content = `<div class="ready">Kite engine is indexing your code ${dot}</div>`;
+                content = `<div class="ready">Kite engine is indexing your code</div>`;
                 break;
 
               case 'syncing':
-                content = `<div class="ready">Kite engine is syncing your code ${dot}</div>`;
+                content = `<div class="ready">Kite engine is syncing your code</div>`;
                 break;
             }
           }
@@ -322,12 +321,12 @@ module.exports = class KiteStatus {
           const path = encodeURI(normalizeDriveLetter(editor.document.fileName));
           const settingsURL = `http://localhost:46624/settings/permissions?filename=${path}`;
           content = shouldOfferWhitelist
-            ? `<div class="text-warning">Kite engine is not enabled for this file ${dot}</div>
+            ? `<div class="text-warning">Kite engine is not enabled for this file</div>
               <a href="#"
                  onclick="requestGet('/status/whitelist?dirpath=${projectDir}').then(() => requestGet('/status/reload'))"
                  class="btn warning">Enable for ${projectDir}</a><br/>
               <a href="${settingsURL}" class="btn warning">Whitelist settings…</a>`
-            : `<div>The current file is ignored by Kite ${dot}</div>
+            : `<div>The current file is ignored by Kite</div>
               <a href="${settingsURL}" class="btn">Whitelist settings…</a>`;
         }
         break;

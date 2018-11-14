@@ -9,8 +9,6 @@ const {fixtureURI, withPlan} = require('./helpers');
 const {withKite, withKiteRoutes} = require('kite-api/test/helpers/kite');
 const {fakeResponse} = require('kite-api/test/helpers/http');
 
-const dot = '•';
-
 let status;
 const loadStatus = () => {
   beforeEach(() => {
@@ -24,11 +22,11 @@ describe('status panel', () => {
   before(function () {
     this.jsdom = require('jsdom-global')();
   });
-  
+
   after(function () {
     this.jsdom();
   });
-  
+
   beforeEach(() => {
     Kite.supportedLanguages = []
     status = new KiteStatus(Kite);
@@ -39,7 +37,7 @@ describe('status panel', () => {
 
     it('shows a warning message stating kite is not installed', () => {
       const msg = document.querySelector('.status .text-danger');
-      expect(msg.textContent).to.eql(`Kite engine is not installed ${dot}`);
+      expect(msg.textContent).to.eql(`Kite engine is not installed`);
     });
 
     it('shows a link to download kite', () => {
@@ -56,10 +54,10 @@ describe('status panel', () => {
 
   withKite({running: false}, () => {
     loadStatus();
-    
+
     it('shows a warning message stating kite is not running', () => {
       const msg = document.querySelector('.status .text-danger');
-      expect(msg.textContent).to.eql(`Kite engine is not running ${dot}`);
+      expect(msg.textContent).to.eql(`Kite engine is not running`);
     });
 
     it('shows a link to start kite', () => {
@@ -75,43 +73,43 @@ describe('status panel', () => {
 
   withKite({reachable: false}, () => {
     loadStatus();
-    
+
     it('shows a warning message stating kite is not reachable', () => {
       const msg = document.querySelector('.status .text-danger');
       expect(msg.textContent).to.eql(`Kite engine is not reachable`);
     });
-  
+
     it('does not render the account information', () => {
       expect(document.querySelector('.split-line')).to.be(null);
     });
   });
-  
+
   withKite({logged: false}, () => {
     loadStatus();
-    
+
     it('shows a warning message stating the use is not logged in', () => {
       const msg = document.querySelector('.status .text-danger');
-      expect(msg.textContent).to.eql(`Kite engine is not logged in ${dot}`);
+      expect(msg.textContent).to.eql(`Kite engine is not logged in`);
     });
-    
+
     it('shows a login action', () => {
       const link = document.querySelector('.status a');
-      
+
       expect(link.textContent).to.eql('Login now')
     });
-    
+
     it('does not render the account information', () => {
       expect(document.querySelector('.split-line')).to.be(null);
     });
-  });  
-  
+  });
+
   withKite({logged: true}, () => {
     describe('with no editor open', () => {
       loadStatus();
-      
+
       it('says that kite status will be available by opening a file', () => {
         const msg = document.querySelector('.status div');
-        expect(msg.textContent).to.eql(`Open a supported file to see Kite's status ${dot}`);
+        expect(msg.textContent).to.eql(`Open a supported file to see Kite's status`);
       });
     })
 
@@ -124,10 +122,10 @@ describe('status panel', () => {
       });
 
       loadStatus();
-      
+
       it('says that kite status will be available by opening a file', () => {
         const msg = document.querySelector('.status div');
-        expect(msg.textContent).to.eql(`Open a supported file to see Kite's status ${dot}`);
+        expect(msg.textContent).to.eql(`Open a supported file to see Kite's status`);
       });
     });
 
@@ -172,7 +170,7 @@ describe('status panel', () => {
         expect(link.href).to.eql('http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount');
       });
     });
-    
+
     withPlan('trialing pro with more than 6 days remaining', {
       status: 'trialing',
       active_subscription: 'pro',
@@ -181,7 +179,7 @@ describe('status panel', () => {
       started_kite_pro_trial: true,
     }, () => {
       loadStatus();
-  
+
       it('displays a pro badge without the remaining days', () => {
         expect(document.querySelector('.split-line .left .pro svg')).not.to.be(null);
         const days = document.querySelector('.split-line .left .kite-trial-days');
@@ -301,20 +299,20 @@ describe('status panel', () => {
 
       describe('when the user has a verified email', () => {
         loadStatus();
-  
+
         it('does not display a verification warning', () => {
           expect(document.querySelector('.kite-warning-box')).to.be(null);
         });
       });
-  
+
       describe('when the user has an unverified email', () => {
         withKiteRoutes([[
           o => /^\/api\/account\/user/.test(o.path),
           o => fakeResponse(200, JSON.stringify({email_verified: false})),
         ]]);
-  
+
         loadStatus();
-  
+
         it('displays a verification warning', () => {
           expect(document.querySelector('.kite-warning-box')).not.to.be(null);
         });
