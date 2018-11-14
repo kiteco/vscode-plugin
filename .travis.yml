@@ -1,7 +1,7 @@
 sudo: false
 
 os:
-  - osx
+  - linux
 
 before_install:
   - if [ $TRAVIS_OS_NAME == "linux" ]; then
@@ -14,4 +14,4 @@ install:
   - npm install
 
 script:
-  - npm test --silent
+  - npm test

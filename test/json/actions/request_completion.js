@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 
 module.exports = () => {
-  beforeEach(() => {
+  beforeEach('requesting completions', () => {
     vscode.commands.executeCommand('editor.action.triggerSuggest');
   })
 }

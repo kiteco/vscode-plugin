@@ -8,7 +8,7 @@ const {loadPayload, substituteFromContext, buildContext, itForExpectation} = req
 const {waitsFor, formatCall} = require('../../helpers')
 
 let closeMatches;
-const getDesc = (expectation) => () => {
+const getDesc = (expectation, root) => () => {
   const base = [
     'request to',
     expectation.properties.method,
@@ -19,7 +19,7 @@ const getDesc = (expectation) => () => {
 
   if(expectation.properties.body) {
     base.push('with');
-    base.push(JSON.stringify(substituteFromContext(loadPayload(expectation.properties.body), buildContext())))
+    base.push(JSON.stringify(substituteFromContext(loadPayload(expectation.properties.body), buildContext(root))))
   }
 
   if (closeMatches.length > 0) {
@@ -45,7 +45,7 @@ const getDesc = (expectation) => () => {
 
   return base.join(' ');
 };
-const getNotDesc = (expectation) => {
+const getNotDesc = (expectation, root) => {
   const base = [
     'no request to',
     expectation.properties.method,
@@ -56,7 +56,7 @@ const getNotDesc = (expectation) => {
 
   if(expectation.properties.body) {
     base.push('with');
-    base.push(JSON.stringify(substituteFromContext(loadPayload(expectation.properties.body), buildContext())))
+    base.push(JSON.stringify(substituteFromContext(loadPayload(expectation.properties.body), buildContext(root))))
   }
 
   base.push('\nbut calls were found');
@@ -113,20 +113,20 @@ const mostRecentCallMatching = (exPath, exMethod, exPayload, context = {}, env) 
   }, true);
 };
 
-module.exports = (expectation, not) => {
+module.exports = ({expectation, not, root}) => {
   beforeEach('request matching', function() {
-    const promise = waitsFor(getDesc(expectation), () => {
+    const promise = waitsFor(getDesc(expectation, root), () => {
       return mostRecentCallMatching(
         expectation.properties.path,
         expectation.properties.method,
         expectation.properties.body,
-        buildContext(),
+        buildContext(root),
         this.env);
     }, 300);
 
     if(not) {
       return promise.then(() => {
-        throw new Error(getNotDesc(expectation));
+        throw new Error(getNotDesc(expectation, root));
       }, () => {})
     } else {
       return promise;

@@ -3,13 +3,11 @@
 const vscode = require('vscode');
 const path = require('path');
 const KiteAPI = require('kite-api');
-const {jsonPath} = require('../utils');
 const {waitsFor} = require('../../helpers');
-const {kite} = require('../../../src/kite');
 
-module.exports = (action) => {
-  beforeEach('new file action', () => { 
-    return vscode.window.showTextDocument(vscode.Uri.parse('untitled:' + jsonPath(action.properties.file)))
+module.exports = ({action, root}) => {
+  beforeEach('new file action', () => {
+    return vscode.window.showTextDocument(vscode.Uri.parse('untitled:' + path.join(root(), action.properties.file)))
     .then((editor) => {
       return editor;
     })
@@ -24,13 +22,17 @@ module.exports = (action) => {
       })
       .then(() => editor);
     })
-    .then((editor) => 
-      /\.py$/.test(path.extname(editor.document.fileName)) && 
-      waitsFor(`kite editor focus event`, () => 
+    .then((editor) =>
+      /\.py$/.test(path.extname(editor.document.fileName)) &&
+      waitsFor(`kite editor focus event`, () =>
         KiteAPI.request.getCalls().some(c => c.args[0].path === '/clientapi/editor/event' && /"(focus|skip)"/.test(c.args[1]))
       ), err => {
         console.log(err)
       })
     // .then(() => console.log('kite editor found for file'))
   });
+
+  afterEach('close action', () => { 
+    return vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+  })
 };

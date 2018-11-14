@@ -5,7 +5,7 @@ const vscode = require('vscode');
 const {substituteFromContext, buildContext, itForExpectation, NotificationsMock} = require('../utils');
 const {waitsFor} = require('../../helpers')
 
-module.exports = (expectation, not) => {
+module.exports = ({expectation, not, root}) => {
   beforeEach(() => {
     const spy = vscode.window[NotificationsMock.LEVELS[expectation.properties.level]]
     const promise = waitsFor(`${expectation.properties.level} notification`, () => {
@@ -26,7 +26,7 @@ module.exports = (expectation, not) => {
       expect(NotificationsMock.lastNotification.level).to.eql(expectation.properties.level)
   
       if(expectation.properties.message) {
-        const message = substituteFromContext(expectation.properties.message, buildContext(vscode.window.activeTextEditor))
+        const message = substituteFromContext(expectation.properties.message, buildContext(root))
   
         expect(NotificationsMock.lastNotification.message).to.eql(message);
       }
