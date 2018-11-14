@@ -8,7 +8,7 @@ describe('initStatus', () => {
   before(function () {
     this.jsdom = require('jsdom-global')()
   })
-  
+
   after(function () {
     this.jsdom()
   })
@@ -18,7 +18,7 @@ describe('initStatus', () => {
 
     document.body.innerHTML = `
     <div class="kite-warning-box">
-      <a href="#" 
+      <a href="#"
          class="resend-email"
          data-confirmation="confirmation text"
          data-failure="failure text">test</a>
@@ -27,10 +27,8 @@ describe('initStatus', () => {
 
     infoBox = document.querySelector('.kite-warning-box');
     link = infoBox.querySelector('.resend-email');
-    window.acquireVsCodeApi = () => {
-      return {
-        postMessage: sinon.stub()
-      }
+    window.vscode = {
+      postMessage: sinon.stub()
     }
     window.initStatus();
   })
@@ -42,12 +40,12 @@ describe('initStatus', () => {
       metric: 'fulfilled',
     })).to.be.ok()
   });
-  
+
   describe('clicking on the resend email link', () => {
     describe('when the resendEmail request succeeds', () => {
       it('changes the info box class and message', () => {
         click(link);
-        
+
         return new Promise((resolve) => {
           setTimeout(() => {
             expect(window.vscode.postMessage.calledWith({
@@ -61,19 +59,5 @@ describe('initStatus', () => {
         })
       });
     });
-
-    describe.skip('when the request fails', () => {
-      it('changes the info box message', () => {
-        click(link);
-        
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            expect(window.vscode.postMessage.calledWith('/status/resendEmail')).to.be.ok()
-            expect(infoBox.textContent).to.eql(link.getAttribute('data-failure'))
-            resolve();
-          }, 10)
-        })
-      });
-    })
   });
 });

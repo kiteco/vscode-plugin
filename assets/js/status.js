@@ -1,6 +1,11 @@
 
 window.initStatus = function() {
-  const vscode = window.vscode = acquireVsCodeApi();
+  let vscode;
+  if(typeof acquireVsCodeApi != 'undefined') {
+    vscode = window.vscode = acquireVsCodeApi();
+  } else {
+    vscode = window.vscode;
+  }
 
   const link = document.querySelector('.kite-warning-box .resend-email');
   const box = document.querySelector('.kite-warning-box');

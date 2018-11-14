@@ -1,9 +1,14 @@
 window.initDownloadProgress = function initDownloadProgress() {
-  const vscode = window.vscode = acquireVsCodeApi();
+  let vscode;
+  if(typeof acquireVsCodeApi != 'undefined') {
+    vscode = window.vscode = acquireVsCodeApi();
+  } else {
+    vscode = window.vscode;
+  }
   const downloadKiteContainer = document.querySelector('.download-kite');
   const progress = document.querySelector('progress');
 
-  window.addEventListener('message', event => { 
+  window.addEventListener('message', event => {
     const message = event.data; // The JSON data our extension sent
     switch (message.command) {
       case 'progress':
@@ -18,14 +23,19 @@ window.initDownloadProgress = function initDownloadProgress() {
 }
 
 window.submitEvent = function(event) {
-  const vscode = window.vscode = acquireVsCodeApi();
+  let vscode;
+  if(typeof acquireVsCodeApi != 'undefined') {
+    vscode = window.vscode = acquireVsCodeApi();
+  } else {
+    vscode = window.vscode;
+  }
   const form = document.querySelector('form');
   const fd = new FormData(form);
   const message = {command: 'event', event};
 
-  for (let a of fd.entries()) { 
+  for (let a of fd.entries()) {
     message[a[0]] = a[1];
   }
-  
+
   vscode.postMessage(message);
 }
