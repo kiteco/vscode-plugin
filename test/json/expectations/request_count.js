@@ -10,7 +10,7 @@ const KiteAPI = require('kite-api');
 const callsMatching = (exPath, exMethod, exPayload, context={}) => {
   const calls = KiteAPI.request.getCalls();
 
-  exPath = substituteFromContext(exPath, context) 
+  exPath = substituteFromContext(exPath, context)
   exPayload = exPayload && substituteFromContext(loadPayload(exPayload), context);
 
   // console.log('--------------------')
@@ -21,22 +21,22 @@ const callsMatching = (exPath, exMethod, exPayload, context={}) => {
   return calls.reverse().filter((c) => {
     let [{path, method}, payload] = c.args;
     method = method || 'GET'
-    
+
     // console.log(path, method, payload)
-    
+
     return path === exPath && method === exMethod && (!exPayload || expect.eql(JSON.parse(payload), exPayload))
   });
 }
 
 module.exports = ({expectation, not, root}) => {
-  beforeEach(() => {
+  beforeEach('request count', () => {
     const promise = waitsFor(`${expectation.properties.count} requests to '${expectation.properties.path}' for test '${expectation.description}'`, () => {
         const calls = callsMatching(
           expectation.properties.path,
           expectation.properties.method,
           expectation.properties.body,
           buildContext(root));
-          
+
         return calls.length === expectation.properties.count;
       }, 300)
       .catch(err => {

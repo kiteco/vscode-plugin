@@ -86,7 +86,7 @@ function buildTest(data, file) {
 
     withKite(kiteSetup(data.setup.kited), () => {
       withKitePaths({}, undefined, () => {
-        beforeEach(() => {
+        beforeEach('mock kited paths setup', () => {
           updateKitePaths(pathsSetup(data.setup, root))
         })
         withKiteRoutes([

@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 
 module.exports = ({action}) => {
-  beforeEach(() => {
+  beforeEach('moving cursor', () => {
     const editor = vscode.window.activeTextEditor;
     if (action.properties.offset) {
       const {line, character} = editor.document.positionAt(action.properties.offset);

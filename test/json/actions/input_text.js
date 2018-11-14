@@ -5,11 +5,11 @@ const vscode = require('vscode');
 let sigCalled = false;
 let alphaCompletionCalled = false;
 module.exports = ({action}) => {
-  afterEach(() => {
+  afterEach('cleaning typing simulation', () => {
     sigCalled = false;
     alphaCompletionCalled = false;
   });
-  beforeEach(() => {
+  beforeEach('typing in editor', () => {
     const editor = vscode.window.activeTextEditor;
     if (action.properties.text) {
       const range = new vscode.Range(editor.selection.start, editor.selection.end);
