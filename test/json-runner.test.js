@@ -56,7 +56,7 @@ function pathsSetup(setup, root) {
 
 const featureSet = require(featureSetPath());
 
-describe.only('JSON tests', () => {
+describe('JSON tests', () => {
   featureSet.forEach(feature => {
     walk(jsonPath('tests', feature), (testFile) => {
       buildTest(require(testFile), testFile);
