@@ -3,7 +3,7 @@
 const KiteAPI = require('kite-api');
 const {MAX_PAYLOAD_SIZE, MAX_FILE_SIZE} = require('./constants');
 const {normalizeDriveLetter} = require('./urls');
- 
+
 module.exports = class EditorEvents {
   constructor(Kite, editor) {
     this.Kite = Kite;
@@ -50,12 +50,18 @@ module.exports = class EditorEvents {
   }
 
   mergeEvents() {
+    if (!this.document || !this.editor) {
+      return;
+    }
+
+    const doc = this.document;
+    const editor= this.editor;
     let focus = this.pendingEvents.filter(e => e === 'focus')[0];
     let action = this.pendingEvents.some(e => e === 'edit') ? 'edit' : this.pendingEvents.pop();
 
     this.reset();
 
-    const payload = JSON.stringify(this.buildEvent(action));
+    const payload = JSON.stringify(this.buildEvent(action, doc, editor.selection));
 
     if (payload.length > MAX_PAYLOAD_SIZE) {
       return this.reset();
@@ -67,19 +73,19 @@ module.exports = class EditorEvents {
       promise = promise.then(() => this.Kite.request({
         path: '/clientapi/editor/event',
         method: 'POST',
-      }, JSON.stringify(this.buildEvent(focus)), this.document))
+      }, JSON.stringify(this.buildEvent(focus, doc, editor.selection)), doc))
     }
 
     return promise
     .then(() => this.Kite.request({
       path: '/clientapi/editor/event',
       method: 'POST',
-    }, payload, this.document))
+    }, payload, doc))
     .then((res) => {
       this.pendingPromiseResolve(res);
     })
-    .then(KiteAPI.emitWhitelistedPathDetected(this.document.fileName))
-    .catch(KiteAPI.emitNonWhitelistedPathDetected(this.document.fileName))
+    .then(KiteAPI.emitWhitelistedPathDetected(doc.fileName))
+    .catch(KiteAPI.emitNonWhitelistedPathDetected(doc.fileName))
     .catch((err) => {
       this.pendingPromiseReject(err);
       // on connection error send a metric, but not too often or we will generate too many events
@@ -96,17 +102,17 @@ module.exports = class EditorEvents {
     });
   }
 
-  buildEvent(action) {
-    const content = this.document.getText();
+  buildEvent(action, document, selection) {
+    const content = document.getText();
     return content.length > MAX_FILE_SIZE
       ? {
         source: 'vscode',
         action: 'skip',
         text: '',
-        filename: normalizeDriveLetter(this.document.fileName),
+        filename: normalizeDriveLetter(document.fileName),
         selections: [{start: 0, end: 0}]
       }
-      : this.makeEvent(action, this.document, content, this.editor.selection);
+      : this.makeEvent(action, document, content, selection);
   }
 
   makeEvent(action, document, text, selection) {

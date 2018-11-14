@@ -75,7 +75,6 @@ function buildTest(data, file) {
     const root = () => rootDirPath;
 
     beforeEach('package activation', () => {
-      console.log(`------------------------------------\n start ${data.description}\n------------------------------------`);
       rootDirPath = fsp.absolute(temp.mkdirSync('kite'));
       spy = sinon.spy(KiteAPI, 'request');
       kite._activate();
@@ -83,21 +82,6 @@ function buildTest(data, file) {
     afterEach('package deactivation', () => {
       spy.restore();
       kite.deactivate();
-      
-      console.log(`------------------------------------\n end ${data.description}\n------------------------------------`);
-      // return clearWorkspace();
-
-      // function clearWorkspace() {
-      //   const editor = vscode.window.activeTextEditor;
-      //   console.log(vscode.workspace.textDocuments.length);
-      //   if(editor) {
-      //     return vscode.commands.executeCommand('workbench.action.closeActiveEditor')
-      //     .then(clearWorkspace);
-      //   } else {
-      //     console.log('workspace cleaned');
-      //     return;
-      //   }
-      // }
     })
 
     withKite(kiteSetup(data.setup.kited), () => {
@@ -137,9 +121,9 @@ function buildAction(action, block, root) {
 
 function buildExpectation(expectation, block, root, not) {
   return () => {
-  
+
     EXPECTATIONS[expectation.type] && EXPECTATIONS[expectation.type]({expectation, root, not});
-  
+
     describe('', () => {
       block && block();
     })
