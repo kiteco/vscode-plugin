@@ -109,13 +109,13 @@ describe('KiteHoverProvider', () => {
           ]
         ]);
 
-        it('returns null', () => {
+        it('returns undefined', () => {
           const uri = vscode.Uri.file(fixtureURI('sample.py'));
 
           return vscode.workspace.openTextDocument(uri)
           .then(doc => provider.provideHover(doc, new vscode.Position(19, 13), null))
           .then(res => {
-            expect(res).to.be(null);
+            expect(res).to.be(undefined);
           });
         });
       });
