@@ -164,19 +164,21 @@ module.exports = class KiteStatus {
         giftLink = `<li>
           <a href='#'
              title="Invite friends to use Kite"
-             onclick='kite.web-url?"http://localhost:46624/redirect/invite"'
+             onclick="vscode.postMessage({command: 'command', name: 'kite.web-url', args: ['http://localhost:46624/redirect/invite']})"
              class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
         </li>`;
       } else {
         if (Plan.referralsCredited() < Plan.referralsCredits()) {
           giftLink = `<li>
-            <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
+            <a href='#'
                title="Get a free pro account"
+               onclick="vscode.postMessage({command: 'command', name: 'kite.web-url', args: ['http://localhost:46624/redirect/invite']})"
                class="kite-gift account-dependent">Get free Pro! <i class="icon-kite-gift"></i></a>
           </li>`;
         } else {
           giftLink = `<li>
-            <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
+            <a href='#'
+              onclick="vscode.postMessage({command: 'command', name: 'kite.web-url', args: ['http://localhost:46624/redirect/invite']})"
                title="Invite friends to use Kite"
                class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
           </li>`;
