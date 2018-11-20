@@ -163,6 +163,7 @@ module.exports = class KiteStatus {
       if (Plan.isPro()) {
         giftLink = `<li>
           <a href='#'
+             title="Invite friends to use Kite"
              onclick='kite.web-url?"http://localhost:46624/redirect/invite"'
              class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
         </li>`;
@@ -170,11 +171,13 @@ module.exports = class KiteStatus {
         if (Plan.referralsCredited() < Plan.referralsCredits()) {
           giftLink = `<li>
             <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
+               title="Get a free pro account"
                class="kite-gift account-dependent">Get free Pro! <i class="icon-kite-gift"></i></a>
           </li>`;
         } else {
           giftLink = `<li>
             <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
+               title="Invite friends to use Kite"
                class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
           </li>`;
         }
@@ -185,15 +188,20 @@ module.exports = class KiteStatus {
     <ul class="links ${account ? 'has-account' : 'no-account'}">
       ${giftLink}
       <li><a href='#'
+             title="Open Kite web docs search"
              onclick="vscode.postMessage({command: 'command', name: 'kite.web-url', args: ['http://localhost:46624/clientapi/desktoplogin?d=/docs']})"
              class="account-dependent">Kite Search</a></li>
       <li><a href="#"
+             title="Open Kite settings in the copilot application"
              onclick="vscode.postMessage({command: 'command', name: 'kite.open-settings'})"
              class="account-dependent">Settings</a></li>
-             <li><a href='#'
+             <li>
+             <a href='#'
+             title="Open Kite permissions in the copilot application"
              onclick="vscode.postMessage({command: 'command', name: 'kite.open-permissions'})"
              class="account-dependent">Permissions</a></li>
-      <li><a href="http://help.kite.com/category/46-vs-code-integration">Help</a></li>
+      <li><a href="http://help.kite.com/category/46-vs-code-integration"
+             title="Open Kite help in your browser">Help</a></li>
     </ul>
     `;
   }
@@ -206,6 +214,7 @@ module.exports = class KiteStatus {
 
         <div  class="actions">
           <a href="/foo"
+          title="Resend a comfirmation email to ${account.email}"
           class="resend-email"
           data-failure="We were unable to send a verification email,<br/>please contact feedback@kite.com."
           data-confirmation="A new verification email was sent to ${account.email}">Resend email</a>
@@ -321,9 +330,9 @@ module.exports = class KiteStatus {
               <a href="#"
                  onclick="vscode.postMessage({command: 'whitelist', dirpath:'${projectDir}'});"
                  class="btn warning">Enable for ${projectDir}</a><br/>
-              <a href="${settingsURL}" class="btn warning">Whitelist settings…</a>`
+              <a href="${settingsURL}" title="Open Kite permissions in the copilot application" class="btn warning">Whitelist settings…</a>`
             : `<div>The current file is ignored by Kite ${dot}</div>
-              <a href="${settingsURL}" class="btn">Whitelist settings…</a>`;
+              <a href="${settingsURL}" title="Open Kite permissions in the copilot application" class="btn">Whitelist settings…</a>`;
         }
         break;
     }
@@ -340,14 +349,19 @@ module.exports = class KiteStatus {
     if (Plan.isEnterprise()) {
       leftSide = `<div class="enterprise">${enterpriseLogoSvg}</div>`;
       rightSide = `<a is="kite-localtoken-anchor"
-      href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a>`;
+                      title="Open your account page"
+                      href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a>`;
     } else if (!Plan.isPro() && Plan.isActive()) {
       leftSide = `<div class="logo">${logo}</div> Kite Basic`;
       
       if (Plan.hasStartedTrial()) {
-        rightSide = `<a href="#" onclick="vscode.postMessage({command: 'command', name:'kite.web-url', args:['http://localhost:46624/redirect/pro']})">Upgrade</a>`;
+        rightSide = `<a href="#" 
+                        title="Upgrade your plan to Kite Pro"
+                        onclick="vscode.postMessage({command: 'command', name:'kite.web-url', args:['http://localhost:46624/redirect/pro']})">Upgrade</a>`;
       } else {
-        rightSide = `<a href="#" onclick="vscode.postMessage({command: 'command', name:'kite.web-url', args:['http://localhost:46624/redirect/trial']})">Start Pro trial</a>`;
+        rightSide = `<a href="#" 
+                        title="Start your Kite Pro trial"
+                        onclick="vscode.postMessage({command: 'command', name:'kite.web-url', args:['http://localhost:46624/redirect/trial']})">Start Pro trial</a>`;
       }
     } else if (Plan.isPro()) {
       leftSide = `<div class="pro">${proLogoSvg}</div>`;
@@ -368,14 +382,17 @@ module.exports = class KiteStatus {
           leftSide += `<span class="kite-trial-days">${remains.join(' ')}</span>`;
           rightSide = `<a is="kite-localtoken-anchor"
                           href="#"
+                          title="Upgrade your plan to Kite Pro"
                           onclick="vscode.postMessage({command: 'command', name:'kite.web-url', args:['http://localhost:46624/redirect/pro']})">Upgrade</a>`;
         } else {
           rightSide = `<a href='#'
+                          title="Need more information about Kite Pro?"
                           onclick="vscode.postMessage({command: 'command', name:'kite.web-url', args:['https://help.kite.com/article/65-kite-pro']})">What's this?</a>`;
         }
 
       } else {
         rightSide = `<a is="kite-localtoken-anchor"
+                        title="Open your account page"
                         href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a>`;
       }
     }
