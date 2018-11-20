@@ -3,7 +3,6 @@
 const os = require('os');
 const vscode = require('vscode');
 const {workspace} = vscode;
-const formidable = require('formidable');
 const {wrapHTML, debugHTML, logo, spinner} = require('./html-utils');
 
 const {
@@ -18,19 +17,14 @@ const {
     InputEmail,
     Install,
     Login,
-    ParallelSteps,
     VoidStep,
   }
 } = require('kite-installer');
 
-const URI = vscode.Uri.parse('kite-vscode-install://install');
 const screenshot = '';
-let Kite;
 
 module.exports = class KiteInstall {
-  constructor(K) {
-    Kite = K;
-  }
+  constructor(K) {}
 
   update() {
     this.getHTML()
