@@ -232,7 +232,7 @@ const Kite = {
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.open-copilot', () => {
-      kiteOpen('kite://open');
+      kiteOpen('kite://home');
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.open-permissions', () => {
