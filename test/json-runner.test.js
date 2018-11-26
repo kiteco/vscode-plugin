@@ -58,6 +58,10 @@ function pathsSetup(setup, root) {
 
 const featureSet = require(featureSetPath());
 
+if(inLiveEnvironment()) {
+  console.log("---------------------------------------", "LIVE TESTING ENABLED", "---------------------------------------");
+}
+
 describe('JSON tests', () => {
   featureSet.forEach(feature => {
     walk(jsonPath('tests', feature), (testFile) => {
