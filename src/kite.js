@@ -10,7 +10,6 @@ const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
 const KiteDefinitionProvider = require('./definition');
-const KiteLogin = require('./login');
 const KiteInstall = require('./install');
 const KiteStatus = require('./status');
 const KiteTour = require('./tour');
@@ -61,7 +60,6 @@ const Kite = {
       }
     })
 
-    const login = new KiteLogin(Kite);
     const install = new KiteInstall(Kite);
     const status = new KiteStatus(Kite);
     const tour = new KiteTour(Kite);
@@ -102,8 +100,6 @@ const Kite = {
     server.start();
 
     this.disposables.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-login', login));
-    this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-install', install));
     this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
@@ -120,7 +116,7 @@ const Kite = {
       vscode.languages.registerCompletionItemProvider(PYTHON_MODE, new KiteCompletionProvider(Kite), '.', ' '));
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
-    
+
       this.disposables.push(
       vscode.languages.registerHoverProvider(NEW_PYTHON_MODE, new KiteHoverProvider(Kite)));
     this.disposables.push(
@@ -222,7 +218,7 @@ const Kite = {
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.login', () => {
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+      kiteOpen('kite://home');
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.install', () => {
@@ -236,7 +232,7 @@ const Kite = {
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.open-copilot', () => {
-      kiteOpen('kite://open')
+      kiteOpen('kite://home');
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.open-permissions', () => {
@@ -491,8 +487,7 @@ const Kite = {
             this.checkConnectivity().then(() => {
               this.showErrorMessage('You need to login to the Kite engine', 'Login').then(item => {
                 if (item) {
-                  // opn('http://localhost:46624/settings');
-                  vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-login://login', vscode.ViewColumn.Two, 'Kite Login');
+                  kiteOpen('kite://home');
                 }
               });
             })
