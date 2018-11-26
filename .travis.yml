@@ -13,7 +13,7 @@ before_install:
   - export LD_LIBRARY_PATH="$HOME/lib:$LD_LIBRARY_PATH"
   - curl --silent --compressed --output "$HOME/kited-test" "https://s3-us-west-1.amazonaws.com/kited-test/linux/kited-test"
   - chmod u+x "$HOME/kited-test"
-  - $HOME/kited-test > ~/kited-test.log 2>&1
+  - $HOME/kited-test > ~/kited-test.log 2>&1 & sleep 10
 
 install:
   - npm install
