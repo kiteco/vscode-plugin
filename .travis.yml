@@ -9,9 +9,15 @@ before_install:
       sh -e /etc/init.d/xvfb start;
       sleep 3;
     fi
+  - curl --silent -L "https://s3-us-west-1.amazonaws.com/kite-data/tensorflow/libtensorflow-cpu-linux-x86_64-1.9.0.tar.gz" | tar -C $HOME -xz
+  - export LD_LIBRARY_PATH="$HOME/lib:$LD_LIBRARY_PATH"
+  - curl --silent --compressed --output "$HOME/kited-test" "https://s3-us-west-1.amazonaws.com/kited-test/linux/kited-test"
+  - chmod u+x "$HOME/kited-test"
 
 install:
   - npm install
 
 script:
+  - $HOME/kited-test > ~/kited-test.log 2>&1 & sleep 20 && KITED_TEST=true bash ./build-plugin.bash CI
   - npm test
+  - LIVE_ENVIRONMENT=1 npm test
