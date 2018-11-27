@@ -144,7 +144,7 @@
         "mocha": "^5.2.0",
         "sinon": "^2.3.5",
         "typescript": "^2.0.3",
-        "vscode": "^1.1.21",
+        "vscode": "^1.1.22",
         "widjet-test-utils": "^1.8.0"
     }
 }
