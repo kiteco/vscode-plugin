@@ -205,7 +205,7 @@ const Kite = {
     // }));
 
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-    this.statusBarItem.text = '$(primitive-dot) Kite';
+    this.statusBarItem.text = 'Kite';
     this.statusBarItem.color = '#abcdef';
     this.statusBarItem.command = 'kite.status';
     this.statusBarItem.show();
@@ -537,7 +537,7 @@ const Kite = {
     const statusLabelPromise = this.getDocsAvailabilityLabel(state, status);
 
     statusLabelPromise.then(label => {
-      this.statusBarItem.text = compact(['$(primitive-dot) Kite', label]).join(': ')
+      this.statusBarItem.text = compact([' Kite', label]).join(': ')
 
       switch (state) {
         case KiteAPI.STATES.UNSUPPORTED:
