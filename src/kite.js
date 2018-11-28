@@ -467,7 +467,7 @@ const Kite = {
           }
           break;
         case KiteAPI.STATES.INSTALLED:
-          if(vscode.workspace.getConfiguration('kite').startKitedAtStartup) {
+          if(vscode.workspace.getConfiguration('kite').startKiteAtStartup) {
             KiteAPI.runKiteAndWait().then(() => this.checkState(src));
           }
           break;

@@ -11,14 +11,24 @@ const {waitsFor} = require('./helpers');
 withKite({running: false}, () => {
   let spy, spy2;
 
-  describe('when startKitedAtStartup is disabled', () => {
+  describe('when startKiteAtStartup is disabled', () => {
     beforeEach('package activation', () => {
+      spy2 = sinon.stub(vscode.workspace, 'getConfiguration').callsFake((conf) => {
+        return { 
+          startKiteAtStartup: false,
+          loggingLevel: 'info',
+          get(key) {
+            return this[key]
+          }
+        }
+      });
       spy = sinon.spy(KiteAPI, 'runKiteAndWait');
       kite._activate();
     });
   
     afterEach('package deactivation', () => {
       spy.restore();
+      spy2.restore();
       kite.deactivate();
     });
 
@@ -27,17 +37,17 @@ withKite({running: false}, () => {
     });
   });
   
-  describe('when startKitedAtStartup is enabled', () => {
+  describe('when startKiteAtStartup is enabled', () => {
     beforeEach('package activation', () => {
       spy2 = sinon.stub(vscode.workspace, 'getConfiguration').callsFake((conf) => {
         return { 
-          startKitedAtStartup: true,
+          startKiteAtStartup: true,
           loggingLevel: 'info',
           get(key) {
             return this[key]
           }
         }
-      })
+      });
       spy = sinon.spy(KiteAPI, 'runKiteAndWait');
       kite._activate();
     });
