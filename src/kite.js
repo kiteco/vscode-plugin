@@ -467,6 +467,9 @@ const Kite = {
           }
           break;
         case KiteAPI.STATES.INSTALLED:
+          if(vscode.workspace.getConfiguration('kite').startKitedAtStartup) {
+            KiteAPI.runKiteAndWait().then(() => this.checkState(src));
+          }
           break;
         case KiteAPI.STATES.RUNNING:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }

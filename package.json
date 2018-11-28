@@ -98,6 +98,11 @@
                     "default": false,
                     "description": "Displays JSON data used by a view"
                 },
+                "kite.startKitedAtStartup": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Automatically start Kite process on startup if it's not already running."
+                },
                 "kite.loggingLevel": {
                     "type": "string",
                     "default": "info",
