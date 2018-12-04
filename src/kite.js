@@ -558,9 +558,10 @@ const Kite = {
           this.statusBarItem.tooltip = 'Kite engine is not reachable';
           this.statusBarItem.color = ERROR_COLOR;
           break;
-        case KiteAPI.STATES.REACHABLE:
-          this.statusBarItem.text = 'kite: not logged in'
+          case KiteAPI.STATES.REACHABLE:
+          this.statusBarItem.text = 'Kite: not logged in'
           this.statusBarItem.color = ERROR_COLOR;
+          this.statusBarItem.tooltip = 'Kite engine is not authenticated';
           break;
         default:
           if(status) {
