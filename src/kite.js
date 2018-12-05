@@ -537,6 +537,7 @@ const Kite = {
     const supported = this.isGrammarSupported(vscode.window.activeTextEditor);
 
     if(supported) {
+      this.statusBarItem.show();
       switch (state) {
         case KiteAPI.STATES.UNSUPPORTED:
           this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
@@ -570,6 +571,7 @@ const Kite = {
                 this.statusBarItem.text = '';
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.tooltip = '';
+                this.statusBarItem.hide();
                 break;
               case 'indexing':
                 this.statusBarItem.color = undefined;
@@ -586,6 +588,7 @@ const Kite = {
                 this.statusBarItem.text = '';
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.tooltip = '';
+                this.statusBarItem.hide();
                 break;
               case 'ready':
                 this.statusBarItem.text = 'Kite';
@@ -597,12 +600,14 @@ const Kite = {
             this.statusBarItem.text = '';
             this.statusBarItem.color = undefined;
             this.statusBarItem.tooltip = '';
+            this.statusBarItem.hide();
           }
       }
     } else {
       this.statusBarItem.text = '';
       this.statusBarItem.color = undefined;
       this.statusBarItem.tooltip = '';
+      this.statusBarItem.hide();
     }
   },
 
