@@ -47,6 +47,7 @@ module.exports = class KiteCompletionProvider {
         cursor_runes: cursorPosition,
       };
       Logger.debug(payload);
+      console.log('sending payload', payload);
 
       return this.Kite.request({
         path: completionsPath(),
@@ -54,16 +55,17 @@ module.exports = class KiteCompletionProvider {
       }, JSON.stringify(payload), document)
       .then(data => {
         data = parseJSON(data, {});
+
+        console.log('received data', data);
+
         const completions = data.completions || [];
 
         const length = String(completions.length).length;
 
-        // this.lastCompletions = completions.reduce((m, c) => {
-
-        // }, {});
+        console.log(`got ${ completions.length } completions: ${ completions.map(c => c.display).join(', ') }`);
 
         return completions.map((c, i) => {
-          const item = new CompletionItem(c.display);
+          const item = new CompletionItem('⟠ ' + c.display);
           item.sortText = fill(String(i), length, '0');
           item.insertText = c.insert;
           if (c.documentation_text !== '') {
