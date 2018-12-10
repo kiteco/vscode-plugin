@@ -148,6 +148,7 @@ const Kite = {
     }));
 
     this.disposables.push(vscode.window.onDidChangeActiveTextEditor(e => {
+      this.setStatusBarLabel();
       if (e) {
         if (/Code[\/\\]User[\/\\]settings.json$/.test(e.document.fileName)){
           metrics.featureRequested('settings');
@@ -166,7 +167,6 @@ const Kite = {
     this.disposables.push(vscode.window.onDidChangeTextEditorSelection(e => {
       const evt = this.eventsByEditor.get(e.textEditor.document.fileName);
       evt.selectionChanged();
-      this.setStatusBarLabel();
     }));
 
     this.disposables.push(vscode.workspace.onDidChangeTextDocument(e => {
@@ -205,7 +205,7 @@ const Kite = {
     // }));
 
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-    this.statusBarItem.text = '$(primitive-dot) Kite';
+    this.statusBarItem.text = 'Kite';
     this.statusBarItem.color = '#abcdef';
     this.statusBarItem.command = 'kite.status';
     this.statusBarItem.show();
@@ -534,109 +534,81 @@ const Kite = {
     const state = this.lastState;
     const status = this.lastStatus;
 
-    const statusLabelPromise = this.getDocsAvailabilityLabel(state, status);
+    const supported = this.isGrammarSupported(vscode.window.activeTextEditor);
 
-    statusLabelPromise.then(label => {
-      this.statusBarItem.text = compact(['$(primitive-dot) Kite', label]).join(': ')
-
+    if(supported) {
+      this.statusBarItem.show();
       switch (state) {
         case KiteAPI.STATES.UNSUPPORTED:
           this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
           this.statusBarItem.color = ERROR_COLOR;
+          this.statusBarItem.text = 'Kite: not supported';
           break;
         case KiteAPI.STATES.UNINSTALLED:
+        this.statusBarItem.text = 'Kite: not installed';
           this.statusBarItem.tooltip = 'Kite engine is not installed';
           this.statusBarItem.color = ERROR_COLOR;
           break;
         case KiteAPI.STATES.INSTALLED:
+          this.statusBarItem.text = 'Kite: not running';
           this.statusBarItem.tooltip = 'Kite engine is not running';
           this.statusBarItem.color = ERROR_COLOR;
           break;
         case KiteAPI.STATES.RUNNING:
+          this.statusBarItem.text = 'Kite: not reachable';
           this.statusBarItem.tooltip = 'Kite engine is not reachable';
           this.statusBarItem.color = ERROR_COLOR;
           break;
-        case KiteAPI.STATES.REACHABLE:
-          this.statusBarItem.color = WARNING_COLOR;
+          case KiteAPI.STATES.REACHABLE:
+          this.statusBarItem.text = 'Kite: not logged in'
+          this.statusBarItem.color = ERROR_COLOR;
+          this.statusBarItem.tooltip = 'Kite engine is not authenticated';
           break;
         default:
           if(status) {
             switch(status.status) {
               case 'not whitelisted':
-                this.statusBarItem.color = WARNING_COLOR;
-                this.statusBarItem.tooltip = 'Current path is not whitelisted';
+                this.statusBarItem.text = '';
+                this.statusBarItem.color = undefined;
+                this.statusBarItem.tooltip = '';
+                this.statusBarItem.hide();
                 break;
               case 'indexing':
                 this.statusBarItem.color = undefined;
+                this.statusBarItem.text = 'Kite: indexing'
                 this.statusBarItem.tooltip = 'Kite engine is indexing your code';
                 break;
               case 'syncing':
+                this.statusBarItem.text = 'Kite: syncing'
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.tooltip = 'Kite engine is syncing your code';
                 break;
               case 'blacklisted':
               case 'ignored':
+                this.statusBarItem.text = '';
                 this.statusBarItem.color = undefined;
-                this.statusBarItem.tooltip = 'Current path is ignored by Kite';
+                this.statusBarItem.tooltip = '';
+                this.statusBarItem.hide();
                 break;
               case 'ready':
+                this.statusBarItem.text = 'Kite';
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.tooltip = 'Kite is ready';
                 break;
             }
           } else {
+            this.statusBarItem.text = '';
             this.statusBarItem.color = undefined;
             this.statusBarItem.tooltip = '';
+            this.statusBarItem.hide();
           }
       }
-    })
-  },
-
-  getDocsAvailabilityLabel(state, status) {
-    let statusLabel = 'ready';
-    let hoverPromise;
-    switch(state) {
-      case KiteAPI.STATES.UNINSTALLED:
-        statusLabel = 'not installed';
-        break;
-      case KiteAPI.STATES.INSTALLED:
-        statusLabel = 'not running';
-        break;
-      case KiteAPI.STATES.REACHABLE:
-        statusLabel = 'not logged in';
-        break;
-      default:
-        if(status) {
-          switch(status.status) {
-            case 'indexing':
-              statusLabel = 'indexing';
-              break;
-            case 'syncing':
-              statusLabel = 'syncing';
-              break;
-            case 'not whitelisted':
-            case 'blacklisted':
-            case 'ignored':
-              break;
-            default:
-              const editor = vscode.window.activeTextEditor;
-              if (editor && this.isEditorWhitelisted(editor)) {
-                const path = hoverPath(editor.document, editor.selection.active);
-                hoverPromise = KiteAPI.request({path})
-                  .then(resp => {
-                    if(resp.statusCode === 200) {
-                      return 'Docs available at cursor';
-                    } else {
-                      return 'ready';
-                    }
-                  }).catch(() => 'ready');
-              }
-              break;
-          }
-        }
+    } else {
+      this.statusBarItem.text = '';
+      this.statusBarItem.color = undefined;
+      this.statusBarItem.tooltip = '';
+      this.statusBarItem.hide();
     }
-    if(hoverPromise) { return hoverPromise; }
-    return Promise.resolve(statusLabel);
   },
 
   setStatus(state = this.lastState, document) {
