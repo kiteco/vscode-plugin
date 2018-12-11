@@ -22,7 +22,6 @@ module.exports = class KiteHoverProvider {
       .then(data => {
         if (data && data.symbol && data.symbol.length) {
           const [symbol] = data.symbol;
-          const id = symbolId(symbol);
 
           const docsLink = `[Docs](command:kite.more-position?${escapeCommandArguments({
             position,
@@ -39,12 +38,14 @@ module.exports = class KiteHoverProvider {
             defLink = `[Def](command:kite.def?${defData})`;
           }
 
-          const content = new vscode.MarkdownString(`[𝕜𝕚𝕥𝕖] ${symbolName(symbol)} (${docsLink}${defLink ? ', ' + defLink : ''})&nbsp;&nbsp;&nbsp;&nbsp;${symbolKind(symbol)}`);
+          const content = new vscode.MarkdownString(`[𝕜𝕚𝕥𝕖]&nbsp;&nbsp;__${symbolName(symbol)}__&nbsp;&nbsp;${docsLink}${defLink ? '&nbsp;&nbsp;' + defLink : ''}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_${symbolKind(symbol)}_`);
           content.isTrusted = true;
 
           const texts = [
             content
           ];
+
+
 
           // const texts = [{
           //     language: 'python',
