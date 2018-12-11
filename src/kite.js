@@ -32,8 +32,7 @@ const Kite = {
     }
   },
 
-  _activate()
-  {
+  _activate() {
     metrics.featureRequested('starting');
 
     this.reset();

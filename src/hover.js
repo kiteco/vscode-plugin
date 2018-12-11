@@ -45,8 +45,6 @@ module.exports = class KiteHoverProvider {
             content
           ];
 
-
-
           // const texts = [{
           //     language: 'python',
           //     value: `[𝕜𝕚𝕥𝕖] ${symbolName(symbol)}${docsLink}    ${symbolKind(symbol)}`

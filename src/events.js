@@ -76,6 +76,8 @@ module.exports = class EditorEvents {
       }, JSON.stringify(this.buildEvent(focus, doc, editor.selection)), doc))
     }
 
+    console.log('sending event payload', payload);
+
     return promise
     .then(() => this.Kite.request({
       path: '/clientapi/editor/event',
