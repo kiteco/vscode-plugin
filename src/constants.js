@@ -30,7 +30,7 @@ const AUTOCORRECT_SHOW_SIDEBAR = 'Reopen sidebar';
 const AUTOCORRECT_DONT_SHOW_SIDEBAR = 'Fix code quietly';
 
 module.exports = {
-  ATTEMPTS, 
+  ATTEMPTS,
   INTERVAL,
   PYTHON_MODE,
   NEW_PYTHON_MODE,
