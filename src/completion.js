@@ -69,12 +69,11 @@ module.exports = class KiteCompletionProvider {
           item.sortText = fill(String(i), length, '0');
           item.insertText = c.insert;
           if (c.documentation_text !== '') {
-            item.documentation = new MarkdownString(`**${c.symbol.value[0].repr}** _${c.hint}_
+            item.documentation = new MarkdownString(`__${c.symbol.value[0].repr}__&nbsp;&nbsp;&nbsp;&nbsp;_${c.hint}_
 
   ${c.documentation_text}
 
             `);
-            item.detail = `Kite docs`;
           }
           item.kind = kindForHint(c.hint);
           return item;
