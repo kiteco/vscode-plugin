@@ -4,7 +4,7 @@ const vscode = require('vscode');
 const {Hover} = vscode;
 const {hoverPath} = require('./urls');
 const {compact, escapeCommandArguments} = require('./utils');
-const {symbolName, symbolKind, symbolId, idIsEmpty} = require('./data-utils');
+const {symbolName, symbolKind} = require('./data-utils');
 
 module.exports = class KiteHoverProvider {
   constructor (Kite, isTest) {
