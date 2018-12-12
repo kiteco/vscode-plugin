@@ -2,7 +2,7 @@
   "language": "python",
   "completions": [
     {
-      "display": "dumps",
+      "display": "⟠ dumps",
       "insert": "idumps",
       "hint": "function",
       "id": "json.dumps",
@@ -15,7 +15,7 @@
         ]
       }
     }, {
-      "display": "dump",
+      "display": "⟠ dump",
       "insert": "idump",
       "hint": "function",
       "id": "json.dump",
