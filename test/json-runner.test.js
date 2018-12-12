@@ -7,7 +7,9 @@ const {kite} = require('../src/kite');
 const sinon = require('sinon');
 const vscode = require('vscode');
 const KiteAPI = require('kite-api');
-const {jsonPath, walk, describeForTest, featureSetPath} = require('./json/utils');
+const KiteConnect = require('kite-connector');
+const NodeClient = require('kite-connector/lib/clients/node');
+const {jsonPath, walk, describeForTest, featureSetPath, inLiveEnvironment} = require('./json/utils');
 const {withKite, withKitePaths, withKiteRoutes, updateKitePaths} = require('kite-api/test/helpers/kite');
 const {fakeResponse} = require('kite-api/test/helpers/http');
 const ACTIONS = {};
@@ -56,6 +58,10 @@ function pathsSetup(setup, root) {
 
 const featureSet = require(featureSetPath());
 
+if(inLiveEnvironment()) {
+  console.log("---------------------------------------", "LIVE TESTING ENABLED", "---------------------------------------");
+}
+
 describe('JSON tests', () => {
   featureSet.forEach(feature => {
     walk(jsonPath('tests', feature), (testFile) => {
@@ -65,6 +71,11 @@ describe('JSON tests', () => {
 });
 
 function buildTest(data, file) {
+
+  if (data.live_environment === false) {
+    return;
+  }
+
   if (data.ignore) {
     return;
   }
@@ -85,13 +96,7 @@ function buildTest(data, file) {
     })
 
     withKite(kiteSetup(data.setup.kited), () => {
-      withKitePaths({}, undefined, () => {
-        beforeEach('mock kited paths setup', () => {
-          updateKitePaths(pathsSetup(data.setup, root))
-        })
-        withKiteRoutes([
-          [o => o.path === '/clientapi/plan', o => fakeResponse(200, '{}')]
-        ])
+      const block = () => {
         data.test.reverse().reduce((f, s) => {
           switch (s.step) {
             case 'action':
@@ -104,7 +109,29 @@ function buildTest(data, file) {
               return f;
           }
         }, () => {})();
-      });
+      };
+
+      if(!inLiveEnvironment()) {
+        withKitePaths({}, undefined, () => {
+          beforeEach('mock kited paths setup', () => {
+            updateKitePaths(pathsSetup(data.setup, root))
+          })
+          withKiteRoutes([
+            [o => o.path === '/clientapi/plan', o => fakeResponse(200, '{}')]
+          ])
+          block();
+        });
+      } else {
+        beforeEach('live setup', () => {
+          KiteConnect.client = new NodeClient('localhost', '56624');
+          return KiteConnect.request({
+            path: '/testapi/request-history/reset',
+            method: 'POST',
+          });
+        });
+
+        block();
+      }
     });
   });
 }

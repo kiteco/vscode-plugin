@@ -4,10 +4,11 @@ const expect = require('expect.js')
 const vscode = require('vscode');
 const http = require('http');
 const KiteAPI = require('kite-api');
-const {loadPayload, substituteFromContext, buildContext, itForExpectation} = require('../utils');
+const KiteConnect = require('kite-connector');
+const {loadPayload, substituteFromContext, buildContext, itForExpectation, inLiveEnvironment} = require('../utils');
 const {waitsFor, formatCall} = require('../../helpers')
 
-let closeMatches;
+let closeMatches, calls;
 const getDesc = (expectation, root) => () => {
   const base = [
     'request to',
@@ -27,12 +28,6 @@ const getDesc = (expectation, root) => () => {
     closeMatches.forEach((call) => {
       base.push(`\n - ${formatCall(call)}`) 
     });
-    base.push(`\nAll calls:\n${KiteAPI.request.getCalls().map(c => { 
-      let [{path, method}, payload] = c.args;
-      method = method || 'GET';
-
-      return `- ${formatCall({path, method, payload})}`
-    }).join('\n')}`)
   } else {
     //   .map(({args: [{path, method}, payload]}) => `${method || 'GET'} ${path} '${payload || ''}'`));
     base.push(`\nbut no calls were anywhere close\n${KiteAPI.request.getCalls().map(c => { 
@@ -64,8 +59,14 @@ const getNotDesc = (expectation, root) => {
   return base.join(' ');
 };
 
-const mostRecentCallMatching = (exPath, exMethod, exPayload, context = {}, env) => {
-  const calls = KiteAPI.request.getCalls();
+const mostRecentCallMatching = (data, exPath, exMethod, exPayload, context = {}, env) => {
+  const calls = data || KiteAPI.request.getCalls().map(c => {
+    return {
+      path: c.args[0].path,
+      method: c.args[0].method,
+      body: c.args[1],
+    };
+  });
   closeMatches = [];
   let matched = false;
 
@@ -78,7 +79,7 @@ const mostRecentCallMatching = (exPath, exMethod, exPayload, context = {}, env) 
   if (calls.length === 0) { return false; }
 
   return calls.reverse().reduce((b, c, i, a) => {
-    let [{path, method}, payload] = c.args;
+    let {path, method, body} = c;
     method = method || 'GET';
 
     // b is false here only if we found a call that partially matches
@@ -91,8 +92,8 @@ const mostRecentCallMatching = (exPath, exMethod, exPayload, context = {}, env) 
 
     if (path === exPath) {
       if (method === exMethod) {
-        closeMatches.push({path, method, payload});
-        if (!exPayload || expect.eql(JSON.parse(payload), exPayload)) {
+        closeMatches.push({path, method, body});
+        if (!exPayload || expect.eql(JSON.parse(body), exPayload)) {
           matched = true;
           return true;
         } else {
@@ -116,12 +117,28 @@ const mostRecentCallMatching = (exPath, exMethod, exPayload, context = {}, env) 
 module.exports = ({expectation, not, root}) => {
   beforeEach('request matching', function() {
     const promise = waitsFor(getDesc(expectation, root), () => {
-      return mostRecentCallMatching(
-        expectation.properties.path,
-        expectation.properties.method,
-        expectation.properties.body,
-        buildContext(root),
-        this.env);
+      if (inLiveEnvironment()) {
+        return KiteAPI.requestJSON({path: '/testapi/request-history'})
+        .then((data) => {
+          if (!mostRecentCallMatching(
+            data,
+            expectation.properties.path,
+            expectation.properties.method,
+            expectation.properties.body,
+            buildContext(root),
+            this.env)) {
+            throw new Error('fail');
+          }
+        });
+      } else {
+        return mostRecentCallMatching(
+          null,
+          expectation.properties.path,
+          expectation.properties.method,
+          expectation.properties.body,
+          buildContext(root),
+          this.env);
+      }
     }, 300);
 
     if(not) {
