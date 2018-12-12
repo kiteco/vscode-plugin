@@ -45,41 +45,6 @@ module.exports = class KiteHoverProvider {
             content
           ];
 
-          // const texts = [{
-          //     language: 'python',
-          //     value: `[𝕜𝕚𝕥𝕖] ${symbolName(symbol)}${docsLink}    ${symbolKind(symbol)}`
-          //   },
-          // ];
-
-          // const links = [];
-
-          // if (!idIsEmpty(id)) {
-          //   links.push(`[docs](command:kite.more-position?${escapeCommandArguments({
-          //     position,
-          //     source: 'Hover',
-          //   })})`);
-          // } else {
-          //   links.push(`[docs](command:kite.more-position?${escapeCommandArguments({
-          //     position,
-          //     source: 'Hover',
-          //   })})`);
-          // }
-
-          // if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
-          //   const defData = escapeCommandArguments({
-          //     file: data.report.definition.filename,
-          //     line: data.report.definition.line,
-          //     source: 'Hover',
-          //   });
-          //   links.push(`[def](command:kite.def?${defData})`);
-          // }
-
-          // if (links.length) {
-          //   const md = new vscode.MarkdownString('**Kite:** ' + links.join(' '))
-          //   md.isTrusted = true;
-          //   texts.push(md);
-          // }
-
           return new Hover(compact(texts));
         }
       })
