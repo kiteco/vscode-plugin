@@ -28,6 +28,7 @@ module.exports = class KiteCompletionProvider {
     this.Kite = Kite;
     this.isTest = isTest;
   }
+
   provideCompletionItems(document, position, token) {
     // hueristic - based on how editors are registered for whitelisting based on
     // documents, it should be sufficient to see if just one passes the check below
@@ -46,6 +47,7 @@ module.exports = class KiteCompletionProvider {
         filename: normalizeDriveLetter(document.fileName),
         cursor_runes: cursorPosition,
       };
+
       Logger.debug(payload);
 
       return this.Kite.request({
@@ -55,24 +57,18 @@ module.exports = class KiteCompletionProvider {
       .then(data => {
         data = parseJSON(data, {});
         const completions = data.completions || [];
-
         const length = String(completions.length).length;
 
-        // this.lastCompletions = completions.reduce((m, c) => {
-
-        // }, {});
-
         return completions.map((c, i) => {
-          const item = new CompletionItem(c.display);
+          const item = new CompletionItem('⟠ ' + c.display);
           item.sortText = fill(String(i), length, '0');
           item.insertText = c.insert;
           if (c.documentation_text !== '') {
-            item.documentation = new MarkdownString(`**${c.symbol.value[0].repr}** _${c.hint}_
+            item.documentation = new MarkdownString(`[𝕜𝕚𝕥𝕖]&nbsp;&nbsp;__${c.symbol.value[0].repr}__&nbsp;&nbsp;&nbsp;&nbsp;_${c.hint}_
 
   ${c.documentation_text}
 
             `);
-            item.detail = `Kite docs`;
           }
           item.kind = kindForHint(c.hint);
           return item;

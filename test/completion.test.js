@@ -32,11 +32,11 @@ describe('KiteCompletionProvider', () => {
           .then(res => {
             expect(res.length).to.eql(2);
 
-            expect(res[0].label).to.eql('dumps');
+            expect(res[0].label).to.eql('⟠ dumps');
             expect(res[0].insertText).to.eql('idumps');
             expect(res[0].sortText).to.eql('0');
 
-            expect(res[1].label).to.eql('dump');
+            expect(res[1].label).to.eql('⟠ dump');
             expect(res[1].insertText).to.eql('idump');
             expect(res[1].sortText).to.eql('1');
           });
