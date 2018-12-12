@@ -158,6 +158,7 @@ module.exports = class KiteInstall {
       new CheckEmail({
         name: 'check-email',
         failureStep: 'input-email',
+        view: accountVerificationView,
       }),
       new BranchStep([
         {
@@ -170,7 +171,7 @@ module.exports = class KiteInstall {
           }),
         }, {
           match: (data) => !data.account.exists,
-          step: new CreateAccount({name: 'create-account'}),
+          step: new CreateAccount({name: 'create-account', view: accountCreationView}),
         },
       ], {
         name: 'account-switch',
@@ -219,6 +220,13 @@ function inputEmailView (state) {
     <button class="btn btn-primary btn-block"
             onclick="return submitEvent('did-submit-email')">Continue</button>
   </form>`;
+}
+
+function accountVerificationView (state) {
+  return `Please wait, we're currently verifying whether an account exist or not for this email.`;
+}
+function accountCreationView (state) {
+  return `Please wait, we're currently creating your account.`;
 }
 
 function loginView(state) {
