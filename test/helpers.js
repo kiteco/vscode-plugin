@@ -3,7 +3,6 @@
 const path = require('path');
 const sinon = require('sinon');
 const {Logger} = require('kite-installer');
-const Plan = require('../src/plan');
 const KiteAPI = require('kite-api');
 const {promisifyReadResponse} = require('../src/utils');
 const {withKiteRoutes} = require('kite-api/test/helpers/kite');
@@ -71,38 +70,6 @@ function fixtureURI (filepath) {
   return path.resolve(__dirname, 'fixtures', filepath);
 }
 
-function withPlan(description, plan, block) {
-  describe(description, () => {
-    withKiteRoutes([
-      [
-        o => o.path.indexOf('/clientapi/plan') === 0,
-        o => fakeResponse(200, JSON.stringify(plan)),
-      ], [
-        o => o.path.indexOf('/clientapi/status') === 0,
-        o => fakeResponse(200, JSON.stringify({status: 'ready'})),
-      ], [
-        o => /^\/api\/account\/user/.test(o.path),
-        o => fakeResponse(200, JSON.stringify({email_verified: true})),
-      ],
-    ]);
-
-
-    beforeEach(() => Plan.queryPlan());
-
-    block();
-  });
-}
-
-function withFakePlan(description, plan, block) {
-  describe(description, () => {
-    beforeEach(() => {
-      Plan.plan = plan;
-    });
-
-    block();
-  });
-}
-
 function log(v) {
   console.log(v);
   return v;
@@ -113,7 +80,6 @@ function formatCall({method, path, payload}) {
 }
 
 module.exports = {
-  withPlan, withFakePlan,
   sleep, delay, fixtureURI, waitsFor,
   Kite, log, formatCall,
 };

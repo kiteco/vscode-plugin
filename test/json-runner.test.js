@@ -89,9 +89,6 @@ function buildTest(data, file) {
         beforeEach('mock kited paths setup', () => {
           updateKitePaths(pathsSetup(data.setup, root))
         })
-        withKiteRoutes([
-          [o => o.path === '/clientapi/plan', o => fakeResponse(200, '{}')]
-        ])
         data.test.reverse().reduce((f, s) => {
           switch (s.step) {
             case 'action':

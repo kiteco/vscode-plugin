@@ -5,7 +5,6 @@ const vscode = require('vscode');
 const KiteAPI = require('kite-api')
 const server = require('./server');
 const {wrapHTML, debugHTML, proLogoSvg, enterpriseLogoSvg, logo, pluralize} = require('./html-utils');
-const Plan = require('./plan');
 const {accountPath, statusPath, normalizeDriveLetter} = require('./urls');
 const {kiteOpen, params} = require('./utils');
 const {MAX_FILE_SIZE} = require('./constants');
@@ -131,7 +130,6 @@ module.exports = class KiteStatus {
   renderCurrent() {
     const editor = vscode.window.activeTextEditor;
     const promises = [
-      Plan.queryPlan().catch(() => null),
       KiteAPI.checkHealth().then(state => {
         return Promise.all([
           KiteAPI.isKiteInstalled().then(() => true, () => false),
@@ -155,11 +153,9 @@ module.exports = class KiteStatus {
     return Promise.all(promises).then(data => this.render(...data));
   }
 
-  render(plan, status, account, syncStatus, projectDir, shouldOfferWhitelist) {
+  render(status, account, syncStatus, projectDir, shouldOfferWhitelist) {
     return `
-      ${this.renderSubscription(plan, status)}
-      ${this.renderEmailWarning(account)}
-      ${this.renderReferralsCredited(plan)}
+      ${this.renderSubscription(status)}
       ${this.renderLinks(account)}
       ${this.renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist)}
       <script>initStatus();</script>
@@ -167,32 +163,12 @@ module.exports = class KiteStatus {
   }
 
   renderLinks(account) {
-    let giftLink = '';
-
-    if (!Plan.isEnterprise()) {
-      if (Plan.isPro()) {
-        giftLink = `<li>
-          <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
-             class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
-        </li>`;
-      } else {
-        if (Plan.referralsCredited() < Plan.referralsCredits()) {
-          giftLink = `<li>
-            <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
-               class="kite-gift account-dependent">Get free Pro! <i class="icon-kite-gift"></i></a>
-          </li>`;
-        } else {
-          giftLink = `<li>
-            <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
-               class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
-          </li>`;
-        }
-      }
-    }
-
     return `
     <ul class="links ${account ? 'has-account' : 'no-account'}">
-      ${giftLink}
+      <li>
+        <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
+          class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
+      </li>
       <li><a href='command:kite.web-url?"http://localhost:46624/clientapi/desktoplogin?d=/docs"'
              class="account-dependent">Kite Search</a></li>
       <li><a href='command:kite.open-settings'
@@ -202,39 +178,6 @@ module.exports = class KiteStatus {
       <li><a href="http://help.kite.com/category/46-vs-code-integration">Help</a></li>
     </ul>
     `;
-  }
-
-  renderEmailWarning(account) {
-    return !account || account.email_verified
-      ? ''
-      : `<div class="kite-warning-box">
-        Please verify your email address
-
-        <div  class="actions">
-          <a href="/foo"
-          class="resend-email"
-          data-failure="We were unable to send a verification email,<br/>please contact feedback@kite.com."
-          data-confirmation="A new verification email was sent to ${account.email}">Resend email</a>
-        </div>
-      </div>`;
-  }
-
-  renderReferralsCredited(plan) {
-    return '';
-    // return Plan.hasReferralCredits()
-    //   ? `<div class="kite-info-box">
-    //     ${Plan.referralsCredited()}
-    //     ${pluralize(Plan.referralsCredited(), 'user', 'users')}
-    //     accepted your invite.<br/>We've credited
-    //     ${Plan.daysCredited()}
-    //     ${pluralize(Plan.daysCredited(), 'day', 'days')}
-    //     of Kite Pro to your account!
-    //     <div class="actions">
-    //       <a is="kite-localtoken-anchor"
-    //          href="http://localhost:46624/redirect/invite">Invite more people</a>
-    //     </div>
-    //   </div>`
-    //   : '';
   }
 
   renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist) {
@@ -337,56 +280,13 @@ module.exports = class KiteStatus {
     return `<div class="status">${content}</div>`;
   }
 
-  renderSubscription(plan, status) {
-    if (!plan || (status && status.state < STATES.AUTHENTICATED)) { return ''; }
-
-    let leftSide = '';
-    let rightSide = '';
-    
-    if (Plan.isEnterprise()) {
-      leftSide = `<div class="enterprise">${enterpriseLogoSvg}</div>`;
-      rightSide = `<a is="kite-localtoken-anchor"
-      href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a>`;
-    } else if (!Plan.isPro() && Plan.isActive()) {
-      leftSide = `<div class="logo">${logo}</div> Kite Basic`;
-      
-      if (Plan.hasStartedTrial()) {
-        rightSide = `<a href='command:kite.web-url?"http://localhost:46624/redirect/pro"'>Upgrade</a>`;
-      } else {
-        rightSide = `<a href='command:kite.web-url?"http://localhost:46624/redirect/trial"'>Start Pro trial</a>`;
-      }
-    } else if (Plan.isPro()) {
-      leftSide = `<div class="pro">${proLogoSvg}</div>`;
-      
-      if (Plan.isTrialing() || Plan.hasReferralCredits()) {
-        const days = Plan.remainingTrialDays();
-        const remains = [
-          days,
-          pluralize(days, 'day', 'days'),
-          'left',
-        ];
-
-        if (Plan.isTrialing()) {
-          remains.unshift('Trial:');
-        }
-
-        if (days < 7) {
-          leftSide += `<span class="kite-trial-days">${remains.join(' ')}</span>`;
-          rightSide = `<a is="kite-localtoken-anchor"
-                          href="command:kite.web-url?%22http://localhost:46624/redirect/pro%22">Upgrade</a>`;
-        } else {
-          rightSide = `<a href='command:kite.web-url?"https://help.kite.com/article/65-kite-pro"'>What's this?</a>`;
-        }
-
-      } else {
-        rightSide = `<a is="kite-localtoken-anchor"
-                        href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a>`;
-      }
-    }
+  renderSubscription(status) {
+    if (status && status.state < STATES.AUTHENTICATED) { return ''; }
 
     return `<div class="split-line">
-      <div class="left">${leftSide}</div>
-      <div class="right">${rightSide}</div>
+      <div class="left"><div class="logo">${logo}</div> Kite Basic</div>
+      <div class="right"><a is="kite-localtoken-anchor"
+      href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a></div>
     </div>`;
   }
 }
