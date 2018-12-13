@@ -170,11 +170,9 @@ module.exports = class KiteStatus {
           class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
       </li>
       <li><a href='command:kite.web-url?"http://localhost:46624/clientapi/desktoplogin?d=/docs"'
-             class="account-dependent">Kite Search</a></li>
+             class="account-dependent">Search Python Docs</a></li>
       <li><a href='command:kite.open-settings'
-             class="account-dependent">Settings</a></li>
-      <li><a href='command:kite.open-permissions'
-             class="account-dependent">Permissions</a></li>
+             class="account-dependent">Kite Engine Settings</a></li>
       <li><a href="http://help.kite.com/category/46-vs-code-integration">Help</a></li>
     </ul>
     `;
