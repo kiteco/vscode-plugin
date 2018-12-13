@@ -316,6 +316,22 @@ const Kite = {
       })
     }));
 
+    this.disposables.push(vscode.commands.registerCommand('kite.hover-docs', (payload) => {
+      vscode.commands.executeCommand('kite.more-position', {
+        position: payload,
+        source: 'Hover',
+      });
+    }));
+
+    this.disposables.push(vscode.commands.registerCommand('kite.hover-def', (payload) => {
+      vscode.commands.executeCommand('kite.def', {
+        file: payload.file,
+        line: payload.line,
+        character: payload.character,
+        source: 'Hover',
+      });
+    }));
+
     const config = vscode.workspace.getConfiguration('kite');
     if (config.showDocsNotificationOnStartup) {
       vscode.window.showInformationMessage('Welcome to Kite for VS Code', 'Learn how to use Kite', "Don't show this again").then(item => {

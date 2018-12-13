@@ -23,19 +23,16 @@ module.exports = class KiteHoverProvider {
         if (data && data.symbol && data.symbol.length) {
           const [symbol] = data.symbol;
 
-          const docsLink = `[Docs](command:kite.more-position?${escapeCommandArguments({
-            position,
-            source: 'Hover',
-          })})`;
+          const docsLink = `[Docs](command:kite.hover-docs?${JSON.stringify(position)})`;
 
           let defLink;
           if (data && data.report && data.report.definition && data.report.definition.filename !== '') {
-            const defData = escapeCommandArguments({
+            const defData = {
               file: data.report.definition.filename,
               line: data.report.definition.line,
               source: 'Hover',
-            });
-            defLink = `[Def](command:kite.def?${defData})`;
+            };
+            defLink = `[Def](command:kite.hover-def?${JSON.stringify(defData)})`;
           }
 
           const content = new vscode.MarkdownString(`[𝕜𝕚𝕥𝕖]&nbsp;&nbsp;__${symbolName(symbol)}__&nbsp;&nbsp;${docsLink}${defLink ? '&nbsp;&nbsp;' + defLink : ''}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_${symbolKind(symbol)}_`);
