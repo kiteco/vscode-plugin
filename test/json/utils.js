@@ -9,6 +9,10 @@ const sinon = require('sinon');
 const base = path.resolve(__dirname, '..');
 const testBase = path.join(base, '..', 'node_modules', 'editors-json-tests');
 
+function inLiveEnvironment() {
+  return process.env.LIVE_ENVIRONMENT != undefined;
+}
+
 function jsonPath(...p) {
   return path.join(testBase, ...p);
 }
@@ -200,5 +204,6 @@ module.exports = {
   describeForTest,
   NotificationsMock,
   featureSetPath,
+  inLiveEnvironment,
 };
 
