@@ -169,11 +169,11 @@ module.exports = class KiteStatus {
         <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
           class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
       </li>
+      <li><a href="http://help.kite.com/category/46-vs-code-integration">Help</a></li>
       <li><a href='command:kite.web-url?"http://localhost:46624/clientapi/desktoplogin?d=/docs"'
              class="account-dependent">Search Python Docs</a></li>
       <li><a href='command:kite.open-settings'
              class="account-dependent">Kite Engine Settings</a></li>
-      <li><a href="http://help.kite.com/category/46-vs-code-integration">Help</a></li>
     </ul>
     `;
   }
@@ -282,7 +282,7 @@ module.exports = class KiteStatus {
     if (status && status.state < STATES.AUTHENTICATED) { return ''; }
 
     return `<div class="split-line">
-      <div class="left"><div class="logo">${logo}</div> Kite Basic</div>
+      <div class="left"><div class="logo">${logo}</div> Kite</div>
       <div class="right"><a is="kite-localtoken-anchor"
       href="http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount">Account</a></div>
     </div>`;
