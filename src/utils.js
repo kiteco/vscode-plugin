@@ -122,7 +122,12 @@ function params (url) {
   }, {})
 };
 
-const escapeCommandArguments = (o) => JSON.stringify(o).replace(/"/g, '&quot;');
+const escapeCommandArguments = (o) => {
+  if(vscode.version < "1.30.0") {
+    return JSON.stringify(o).replace(/"/g, '&quot;');
+  }
+  return JSON.stringify(o)
+}
 
 const kiteOpen = (url) => {
   const env = Object.assign({}, process.env)
