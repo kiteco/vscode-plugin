@@ -169,11 +169,11 @@ module.exports = class KiteStatus {
         <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'
           class="kite-gift account-dependent">Invite friends <i class="icon-kite-gift"></i></a>
       </li>
-      <li><a href="http://help.kite.com/category/46-vs-code-integration">Help</a></li>
       <li><a href='command:kite.web-url?"http://localhost:46624/clientapi/desktoplogin?d=/docs"'
-             class="account-dependent">Search Python Docs</a></li>
+      class="account-dependent">Search Python Docs</a></li>
+      <li><a href="http://help.kite.com/category/46-vs-code-integration">Help</a></li>
       <li><a href='command:kite.open-settings'
-             class="account-dependent">Kite Engine Settings</a></li>
+      class="account-dependent">Kite Engine Settings</a></li>
     </ul>
     `;
   }
