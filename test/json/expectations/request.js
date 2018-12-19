@@ -26,11 +26,11 @@ const getDesc = (expectation, root) => () => {
   if (closeMatches.length > 0) {
     base.push('\nbut some calls were close');
     closeMatches.forEach((call) => {
-      base.push(`\n - ${formatCall(call)}`) 
+      base.push(`\n - ${formatCall(call)}`)
     });
   } else {
     //   .map(({args: [{path, method}, payload]}) => `${method || 'GET'} ${path} '${payload || ''}'`));
-    base.push(`\nbut no calls were anywhere close\n${KiteAPI.request.getCalls().map(c => { 
+    base.push(`\nbut no calls were anywhere close\n${KiteAPI.request.getCalls().map(c => {
       let [{path, method}, payload] = c.args;
       method = method || 'GET';
 
@@ -139,7 +139,7 @@ module.exports = ({expectation, not, root}) => {
           buildContext(root),
           this.env);
       }
-    }, 300);
+    }, 3000);
 
     if(not) {
       return promise.then(() => {

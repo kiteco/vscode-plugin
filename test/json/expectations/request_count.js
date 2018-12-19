@@ -46,7 +46,7 @@ module.exports = ({expectation, not, root}) => {
             expectation.properties.method,
             expectation.properties.body,
             buildContext(root));
-            
+
           if (calls.length !== expectation.properties.count) {
             throw new Error('fail');
           }
@@ -61,7 +61,7 @@ module.exports = ({expectation, not, root}) => {
 
         return calls.length === expectation.properties.count;
       }
-      }, 300)
+      }, 3000)
       .catch(err => {
         console.log(err);
         throw err;
