@@ -17,7 +17,6 @@ const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
 const localconfig = require('./localconfig');
 const metrics = require('./metrics');
-const Plan = require('./plan');
 const server = require('./server');
 const {projectDirPath, shouldNotifyPath, statusPath, languagesPath, hoverPath} = require('./urls');
 const Rollbar = require('rollbar');
@@ -473,13 +472,13 @@ const Kite = {
         case KiteAPI.STATES.REACHABLE:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           if(src && (src === 'pollingInterval' || src === 'activationCheck')) this.lastPolledState = state
-          return Plan.queryPlan().then(() => state);
+          return state;
         default:
           if (this.isGrammarSupported(vscode.window.activeTextEditor)) {
             this.registerEditor(vscode.window.activeTextEditor);
           }
           if(src && (src === 'pollingInterval' || src === 'activationCheck')) this.lastPolledState = state
-          return Plan.queryPlan().then(() => state)
+          return state;
       }
       //state caching for capturihg false positives in kited restart race condition
       //we do this only for checkState invocations coming from the polling or initial activation

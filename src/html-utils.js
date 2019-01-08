@@ -36,20 +36,7 @@ const SCRIPTS = fs.readdirSync(path.resolve(ASSETS_PATH, 'js'))
 //   wrapPre,
 // } = require('../highlighter');
 
-const Plan = require('./plan');
-
 const pluralize = (a, s, p) => a.length === 1 ? s : p;
-
-function proFeatures(message) {
-  return Plan.hasStartedTrial()
-    ? `<div class="kite-pro-features">
-      ${message},
-      <a href='command:kite.web-url?"http://localhost:46624/redirect/pro"'>upgrade to Kite Pro</a>, or
-      <a href='command:kite.web-url?"http://localhost:46624/redirect/invite"'>get Kite Pro for free</a>
-      </div>`
-    : `${message},
-      <a href='command:kite.web-url?"http://localhost:46624/redirect/trial"'>start your Kite Pro trial</a> at any time`;
-}
 
 function debugHTML (html) {
   if (vscode.workspace.getConfiguration('kite').sidebarDebugMode && process.env.NODE_ENV !== 'test') {
@@ -470,11 +457,9 @@ function additionalExamplesLink(examplesCount, data) {
 function renderUsages(symbol) {
   return symbol.report && symbol.report.usages && symbol.report.usages.length
     ? section('Examples From Your Code',
-      Plan.can('usages_editor')
-        ? `<ul class="usages-box">
-          ${symbol.report.usages.map(renderUsage).join('')}
-        </ul>`
-        : proFeatures(`To see ${symbol.report.usages.length} ${pluralize(symbol.report.usages, 'usage', 'usages')}`))
+    `<ul class="usages-box">
+    ${symbol.report.usages.map(renderUsage).join('')}
+    </ul>`)
     : '';
 }
 
@@ -525,27 +510,17 @@ function renderPatterns(name, data) {
   let patterns = '';
   const detail = getFunctionDetails(data);
   if (detail && detail.signatures && detail.signatures.length) {
-    patterns = Plan.can('common_invocations_editor')
-      ? `
-        <section class="patterns">
-        <h4>How Others Used This</h4>
-        <div class="section-content">${
-          highlightCode(
-            detail.signatures
-            .map(s => callSignature(s))
-            .map(s => `${name}(${s})`)
-            .join('\n'))
-          }</div>
-        </section>`
-      : `<section class="patterns">
-          <h4>How Others Used This</h4>
-          <div class="section-content">
-          ${proFeatures(
-            `To see ${detail.signatures.length} ${
-              pluralize(detail.signatures.length, 'pattern', 'patterns')
-            }`
-          )}</div>
-        </section>`;
+    patterns = `
+    <section class="patterns">
+    <h4>How Others Used This</h4>
+    <div class="section-content">${
+      highlightCode(
+        detail.signatures
+        .map(s => callSignature(s))
+        .map(s => `${name}(${s})`)
+        .join('\n'))
+      }</div>
+    </section>`;
   }
   return patterns;
 }
@@ -691,7 +666,6 @@ module.exports = {
   logoLarge,
   proLogoSvg,
   pluralize,
-  proFeatures,
   handleInternalLinks,
   renderDefinition,
   renderExample,
