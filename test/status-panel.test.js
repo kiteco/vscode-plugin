@@ -4,7 +4,7 @@ const expect = require('expect.js');
 const vscode = require('vscode');
 const KiteStatus = require('../src/status');
 const {kite: Kite} = require('../src/kite');
-const {fixtureURI, withPlan} = require('./helpers');
+const {fixtureURI} = require('./helpers');
 
 const {withKite, withKiteRoutes} = require('kite-api/test/helpers/kite');
 const {fakeResponse} = require('kite-api/test/helpers/http');
@@ -131,194 +131,19 @@ describe('status panel', () => {
       });
     });
 
-    withPlan('enterprise', {
-      status: 'active',
-      active_subscription: 'enterprise',
-      features: {},
-      trial_days_remaining: 0,
-      started_kite_pro_trial: false,
-    }, () => {
+    describe('header', () => {
       loadStatus();
-
-      it('displays an enterprise logo icon', () => {
-        expect(document.querySelector('.split-line .left .enterprise svg')).not.to.be(null);
-      });
-
-      it('displays a link to the user account', () => {
-        const link = document.querySelector('.split-line .right a');
-        expect(link).not.to.be(null);
-        expect(link.textContent).to.eql('Account');
-        expect(link.href).to.eql('http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount');
-      });
-    });
-
-    withPlan('active pro', {
-      status: 'active',
-      active_subscription: 'pro',
-      features: {},
-      trial_days_remaining: 0,
-      started_kite_pro_trial: false,
-    }, () => {
-      loadStatus();
-
+  
       it('displays a pro icon', () => {
-        expect(document.querySelector('.split-line .left .pro svg')).not.to.be(null);
+        expect(document.querySelector('.split-line .left svg')).not.to.be(null);
       });
-
+  
       it('displays a link to the user account', () => {
         const link = document.querySelector('.split-line .right a');
         expect(link).not.to.be(null);
         expect(link.textContent).to.eql('Account');
         expect(link.href).to.eql('http://localhost:46624/clientapi/desktoplogin?d=/settings/acccount');
       });
-    });
-    
-    withPlan('trialing pro with more than 6 days remaining', {
-      status: 'trialing',
-      active_subscription: 'pro',
-      features: {},
-      trial_days_remaining: 9,
-      started_kite_pro_trial: true,
-    }, () => {
-      loadStatus();
-  
-      it('displays a pro badge without the remaining days', () => {
-        expect(document.querySelector('.split-line .left .pro svg')).not.to.be(null);
-        const days = document.querySelector('.split-line .left .kite-trial-days');
-        expect(days).to.be(null);
-      });
-
-      it('displays a link to the pro account help page', () => {
-        const link = document.querySelector('.split-line .right a');
-        expect(link).not.to.be(null);
-        expect(link.textContent).to.eql("What's this?");
-        expect(link.href).to.eql('command:kite.web-url?%22https://help.kite.com/article/65-kite-pro%22');
-      });
-    });
-
-    withPlan('trialing pro with less than 5 days remaining', {
-      status: 'trialing',
-      active_subscription: 'pro',
-      features: {},
-      trial_days_remaining: 3,
-      started_kite_pro_trial: true,
-    }, () => {
-      loadStatus();
-
-      it('displays a pro badge with the remaining days in normal text', () => {
-        expect(document.querySelector('.split-line .left .pro')).not.to.be(null);
-        const days = document.querySelector('.split-line .left .kite-trial-days');
-        expect(days).not.to.be(null);
-        expect(days.textContent).to.eql('Trial: 3 days left');
-        expect(days.classList.contains('text-danger')).to.be(false);
-      });
-
-      it('displays a link to upgrade to a pro account', () => {
-        const link = document.querySelector('.split-line .right a');
-        expect(link).not.to.be(null);
-        expect(link.textContent).to.eql('Upgrade');
-        expect(link.href).to.eql('command:kite.web-url?%22http://localhost:46624/redirect/pro%22');
-      });
-    });
-
-    withPlan('trialing pro with 0 days remaining', {
-      status: 'trialing',
-      active_subscription: 'pro',
-      features: {},
-      trial_days_remaining: 0,
-      started_kite_pro_trial: true,
-    }, () => {
-      loadStatus();
-
-      it('displays a pro badge with the remaining days in normal text', () => {
-        expect(document.querySelector('.split-line .left .pro')).not.to.be(null);
-        const days = document.querySelector('.split-line .left .kite-trial-days');
-        expect(days).not.to.be(null);
-        expect(days.textContent).to.eql('Trial: 0 days left');
-        expect(days.classList.contains('text-danger')).to.be(false);
-      });
-
-      it('displays a link to upgrade to a pro account', () => {
-        const link = document.querySelector('.split-line .right a');
-        expect(link).not.to.be(null);
-        expect(link.textContent).to.eql('Upgrade');
-        expect(link.href).to.eql('command:kite.web-url?%22http://localhost:46624/redirect/pro%22');
-      });
-    });
-
-    withPlan('community that did not trialed Kite yet', {
-      status: 'active',
-      active_subscription: 'community',
-      features: {},
-      trial_days_remaining: 0,
-      started_kite_pro_trial: false,
-    }, () => {
-      loadStatus();
-
-      it('displays as a kite basic account', () => {
-        expect(
-          document.querySelector('.split-line .left')
-          .textContent
-          .replace(/\s+/g, ' ')
-          .trim()
-        )
-        .to.eql('kite_vector_icon Kite Basic');
-      });
-
-      it('displays a link to start a trial', () => {
-        const link = document.querySelector('.split-line .right a');
-        expect(link).not.to.be(null);
-        expect(link.textContent).to.eql('Start Pro trial');
-        expect(link.href).to.eql('command:kite.web-url?%22http://localhost:46624/redirect/trial%22');
-      });
-    });
-
-    withPlan('community that already did the Kite trial', {
-      status: 'active',
-      active_subscription: 'community',
-      features: {},
-      trial_days_remaining: 0,
-      started_kite_pro_trial: true,
-    }, () => {
-      loadStatus();
-
-      it('displays as a kite basic account', () => {
-        expect(
-          document.querySelector('.split-line .left')
-          .textContent
-          .replace(/\s+/g, ' ')
-          .trim()
-        )
-        .to.eql('kite_vector_icon Kite Basic');
-      });
-
-      it('displays a link to upgrade to a pro account', () => {
-        const link = document.querySelector('.split-line .right a');
-        expect(link).not.to.be(null);
-        expect(link.textContent).to.eql('Upgrade');
-        expect(link.href).to.eql('command:kite.web-url?%22http://localhost:46624/redirect/pro%22');
-      });
-
-      describe('when the user has a verified email', () => {
-        loadStatus();
-  
-        it('does not display a verification warning', () => {
-          expect(document.querySelector('.kite-warning-box')).to.be(null);
-        });
-      });
-  
-      describe('when the user has an unverified email', () => {
-        withKiteRoutes([[
-          o => /^\/api\/account\/user/.test(o.path),
-          o => fakeResponse(200, JSON.stringify({email_verified: false})),
-        ]]);
-  
-        loadStatus();
-  
-        it('displays a verification warning', () => {
-          expect(document.querySelector('.kite-warning-box')).not.to.be(null);
-        });
-      });
-    });
+    })
   });
 });
