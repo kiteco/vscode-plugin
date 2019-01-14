@@ -86,7 +86,7 @@ describe('status panel', () => {
     });
   });
   
-  withKite({logged: false}, () => {
+  withKite({reachable: true}, () => {
     loadStatus();
     
     it('shows a warning message stating the use is not logged in', () => {
@@ -105,7 +105,7 @@ describe('status panel', () => {
     });
   });  
   
-  withKite({logged: true}, () => {
+  withKite({reachable: true}, () => {
     describe('with no editor open', () => {
       loadStatus();
       
