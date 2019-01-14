@@ -2,7 +2,8 @@
 
 
 const vscode = require('vscode');
-const KiteAPI = require('kite-api')
+const KiteAPI = require('kite-api');
+const KiteConnect = require('kite-connector');
 const server = require('./server');
 const {wrapHTML, debugHTML, proLogoSvg, enterpriseLogoSvg, logo, pluralize} = require('./html-utils');
 const {accountPath, statusPath, normalizeDriveLetter} = require('./urls');
@@ -36,20 +37,6 @@ server.addRoute('GET', '/status/start-enterprise', (req, res, url) => {
     res.end();
   });
 });
-
-server.addRoute('GET', '/status/whitelist', (req, res, url) => {
-  const dirpath = params(url).dirpath;
-  KiteAPI.whitelistPath(dirpath)
-  .then(() => {
-    res.writeHead(200),
-    res.end();
-  })
-  .catch(() => {
-    res.writeHead(500);
-    res.end();
-  });
-});
-
 
 server.addRoute('GET', '/status/login', (req, res, url) => {
   kiteOpen('kite://home')
@@ -112,6 +99,14 @@ module.exports = class KiteStatus {
     .then(account => JSON.parse(account));
   }
 
+  isUserAuthenticated() {
+    return KiteConnect.client.request({
+      path: '/clientapi/user',
+      method: 'GET',
+    })
+    .then((resp) => resp.statusCode !== 401);
+  }
+
   getStatus(editor) {
     const def = {status: 'ready'}
     if (!editor || !this.Kite.isGrammarSupported(editor)) {
@@ -144,20 +139,17 @@ module.exports = class KiteStatus {
       }),
       this.getUserAccountInfo().catch(() => {}),
       this.getStatus(editor),
+      this.isUserAuthenticated().catch(() => {}),
     ];
-    if (this.Kite.isGrammarSupported(editor)) {
-      promises.push(this.Kite.projectDirForEditor(editor.document).catch(() => null));
-      promises.push(this.Kite.shouldOfferWhitelist(editor.document).catch(() => null));
-    }
-
+  
     return Promise.all(promises).then(data => this.render(...data));
   }
 
-  render(status, account, syncStatus, projectDir, shouldOfferWhitelist) {
+  render(status, account, syncStatus, isUserAuthenticated) {
     return `
       ${this.renderSubscription(status)}
       ${this.renderLinks(account)}
-      ${this.renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist)}
+      ${this.renderStatus(status, syncStatus, isUserAuthenticated)}
       <script>initStatus();</script>
     `;
   }
@@ -178,7 +170,7 @@ module.exports = class KiteStatus {
     `;
   }
 
-  renderStatus(status, syncStatus, projectDir, shouldOfferWhitelist) {
+  renderStatus(status, syncStatus, isUserAuthenticated) {
     let content = '';
     switch (status.state) {
       case STATES.UNSUPPORTED:
@@ -226,21 +218,13 @@ module.exports = class KiteStatus {
           <div class="text-danger">Kite engine is not reachable</div>
         `;
         break;
-      case STATES.REACHABLE:
-        content = `
-          <div class="text-danger">Kite engine is not logged in ${dot}</div>
-          <a href="#"
-             onclick="requestGet('/status/login')"
-             class="btn error">Login now</a>
-        `;
-        break;
-      case STATES.AUTHENTICATED:
+      case STATES.READY:
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
           content = `<div>Open a supported file to see Kite's status ${dot}</div>`;
         } else if (!this.Kite.isGrammarSupported(editor)) {
           content = `<div>Open a supported file to see Kite's status ${dot}</div>`;
-        } else if (this.Kite.isEditorWhitelisted(editor)) {
+        } else {
           if (editor.document.getText().length >= MAX_FILE_SIZE) {
             content = `
             <div class="text-warning">The current file is too large for Kite to handle ${dot}</div>`;
@@ -260,17 +244,6 @@ module.exports = class KiteStatus {
                 break;
             }
           }
-        } else {
-          const path = encodeURI(normalizeDriveLetter(editor.document.fileName));
-          const settingsURL = `http://localhost:46624/settings/permissions?filename=${path}`;
-          content = shouldOfferWhitelist
-            ? `<div class="text-warning">Kite engine is not enabled for this file ${dot}</div>
-              <a href="#"
-                 onclick="requestGet('/status/whitelist?dirpath=${projectDir}').then(() => requestGet('/status/reload'))"
-                 class="btn warning">Enable for ${projectDir}</a><br/>
-              <a href="${settingsURL}" class="btn warning">Whitelist settings…</a>`
-            : `<div>The current file is ignored by Kite ${dot}</div>
-              <a href="${settingsURL}" class="btn">Whitelist settings…</a>`;
         }
         break;
     }
@@ -279,7 +252,7 @@ module.exports = class KiteStatus {
   }
 
   renderSubscription(status) {
-    if (status && status.state < STATES.AUTHENTICATED) { return ''; }
+    if (status && status.state < STATES.READY) { return ''; }
 
     return `<div class="split-line">
       <div class="left"><div class="logo">${logo}</div> Kite</div>

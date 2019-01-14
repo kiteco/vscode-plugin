@@ -6,8 +6,7 @@ const KiteStatus = require('../src/status');
 const {kite: Kite} = require('../src/kite');
 const {fixtureURI} = require('./helpers');
 
-const {withKite, withKiteRoutes} = require('kite-api/test/helpers/kite');
-const {fakeResponse} = require('kite-api/test/helpers/http');
+const {withKite} = require('kite-api/test/helpers/kite');
 
 const dot = '•';
 
@@ -85,25 +84,6 @@ describe('status panel', () => {
       expect(document.querySelector('.split-line')).to.be(null);
     });
   });
-  
-  withKite({reachable: true}, () => {
-    loadStatus();
-    
-    it('shows a warning message stating the use is not logged in', () => {
-      const msg = document.querySelector('.status .text-danger');
-      expect(msg.textContent).to.eql(`Kite engine is not logged in ${dot}`);
-    });
-    
-    it('shows a login action', () => {
-      const link = document.querySelector('.status a');
-      
-      expect(link.textContent).to.eql('Login now')
-    });
-    
-    it('does not render the account information', () => {
-      expect(document.querySelector('.split-line')).to.be(null);
-    });
-  });  
   
   withKite({reachable: true}, () => {
     describe('with no editor open', () => {
