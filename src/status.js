@@ -245,6 +245,18 @@ module.exports = class KiteStatus {
             }
           }
         }
+
+        if (!isUserAuthenticated) {
+          content = `
+          <div>
+            Kite engine is not logged
+            <a href="#"
+              onclick="requestGet('/status/login')"
+              class="btn">Login now</a>
+          </div>
+          ${content}`;
+        }
+
         break;
     }
 
