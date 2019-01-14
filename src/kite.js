@@ -5,7 +5,7 @@ const os = require('os');
 const opn = require('opn');
 const KiteAPI = require('kite-api');
 const {AccountManager, Logger} = require('kite-installer');
-const {PYTHON_MODE, NEW_PYTHON_MODE, JAVASCRIPT_MODE, ERROR_COLOR, WARNING_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
+const {PYTHON_MODE, NEW_PYTHON_MODE, ERROR_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
@@ -20,7 +20,7 @@ const metrics = require('./metrics');
 const server = require('./server');
 const {projectDirPath, shouldNotifyPath, statusPath, languagesPath, hoverPath} = require('./urls');
 const Rollbar = require('rollbar');
-const {editorsForDocument, promisifyReadResponse, compact, params, kiteOpen} = require('./utils');
+const {editorsForDocument, promisifyReadResponse, params, kiteOpen} = require('./utils');
 const {version} = require('../package.json');
 
 const Kite = {
@@ -124,19 +124,9 @@ const Kite = {
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(NEW_PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
 
-    this.disposables.push(
-      vscode.languages.registerHoverProvider(JAVASCRIPT_MODE, new KiteHoverProvider(Kite)));
-    this.disposables.push(
-      vscode.languages.registerDefinitionProvider(JAVASCRIPT_MODE, new KiteDefinitionProvider(Kite)));
-
-    this.disposables.push(
-      vscode.languages.registerCompletionItemProvider(JAVASCRIPT_MODE, new KiteCompletionProvider(Kite), '.', ' '));
-    this.disposables.push(
-      vscode.languages.registerSignatureHelpProvider(JAVASCRIPT_MODE, new KiteSignatureProvider(Kite), '(', ','));
-
     this.disposables.push(vscode.workspace.onWillSaveTextDocument((e) => {
       const kiteEditor = this.kiteEditorByEditor.get(e.document.fileName);
-      if(this.isDocumentGrammarSupported(e.document) && kiteEditor && kiteEditor.isWhitelisted) {
+      if(this.isDocumentGrammarSupported(e.document) && KiteEditor) {
         e.waitUntil(kiteEditor.onWillSave())
       }
     }));
@@ -181,21 +171,6 @@ const Kite = {
           this.registerDocument(e.document);
         }
       })
-    }));
-
-    this.whitelistedEditorIDs = {};
-    this.disposables.push(KiteAPI.onDidDetectWhitelistedPath(path => {
-      // console.log('whitelisted', path);
-      this.whitelistedEditorIDs[path] = true;
-    }));
-
-    this.disposables.push(KiteAPI.onDidDetectNonWhitelistedPath(path => {
-      // console.log('not whitelisted', path);
-      this.whitelistedEditorIDs[path] = false;
-      const document = this.documentForPath(path);
-      this.shouldOfferWhitelist(document)
-      .then(res => { if (res) { this.warnNotWhitelisted(document, res); }})
-      .catch(err => console.error(err));
     }));
 
     // this.disposables.push(KiteAPI.onDidFailRequest(err => {
@@ -284,7 +259,7 @@ const Kite = {
     this.disposables.push(vscode.commands.registerCommand('kite.docs-for-cursor', () => {
       const editor = vscode.window.activeTextEditor;
 
-      if (editor && this.isGrammarSupported(editor)) {
+      if (editor) {
         const pos = editor.selection.active;
         const {document} = editor;
 
