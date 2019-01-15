@@ -11,7 +11,6 @@ const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
 const KiteDefinitionProvider = require('./definition');
 const KiteInstall = require('./install');
-const KiteTour = require('./tour');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
 const localconfig = require('./localconfig');
@@ -58,7 +57,6 @@ const Kite = {
     })
 
     const install = new KiteInstall(Kite);
-    const tour = new KiteTour(Kite);
     // const errorRescue = new KiteErrorRescue(Kite);
 
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
@@ -95,8 +93,6 @@ const Kite = {
 
     this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-install', install));
-    this.disposables.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-tour', tour));
     // this.disposables.push(
     //   vscode.workspace.registerTextDocumentContentProvider('kite-vscode-error-rescue', errorRescue));
 
