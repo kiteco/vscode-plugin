@@ -203,7 +203,7 @@ const Kite = {
     // }));
 
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-    this.statusBarItem.text = 'Kite';
+    this.statusBarItem.text = '𝕜𝕚𝕥𝕖';
     this.statusBarItem.color = '#abcdef';
     this.statusBarItem.command = 'kite.status';
     this.statusBarItem.show();
@@ -524,25 +524,25 @@ const Kite = {
         case KiteAPI.STATES.UNSUPPORTED:
           this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
           this.statusBarItem.color = ERROR_COLOR;
-          this.statusBarItem.text = 'Kite: not supported';
+          this.statusBarItem.text = '𝕜𝕚𝕥𝕖: not supported';
           break;
         case KiteAPI.STATES.UNINSTALLED:
-        this.statusBarItem.text = 'Kite: not installed';
+        this.statusBarItem.text = '𝕜𝕚𝕥𝕖: not installed';
           this.statusBarItem.tooltip = 'Kite engine is not installed';
           this.statusBarItem.color = ERROR_COLOR;
           break;
         case KiteAPI.STATES.INSTALLED:
-          this.statusBarItem.text = 'Kite: not running';
+          this.statusBarItem.text = '𝕜𝕚𝕥𝕖: not running';
           this.statusBarItem.tooltip = 'Kite engine is not running';
           this.statusBarItem.color = ERROR_COLOR;
           break;
         case KiteAPI.STATES.RUNNING:
-          this.statusBarItem.text = 'Kite: not reachable';
+          this.statusBarItem.text = '𝕜𝕚𝕥𝕖: not reachable';
           this.statusBarItem.tooltip = 'Kite engine is not reachable';
           this.statusBarItem.color = ERROR_COLOR;
           break;
           case KiteAPI.STATES.REACHABLE:
-          this.statusBarItem.text = 'Kite: not logged in'
+          this.statusBarItem.text = '𝕜𝕚𝕥𝕖: not logged in'
           this.statusBarItem.color = ERROR_COLOR;
           this.statusBarItem.tooltip = 'Kite engine is not authenticated';
           break;
@@ -557,11 +557,11 @@ const Kite = {
                 break;
               case 'indexing':
                 this.statusBarItem.color = undefined;
-                this.statusBarItem.text = 'Kite: indexing'
+                this.statusBarItem.text = '𝕜𝕚𝕥𝕖: indexing'
                 this.statusBarItem.tooltip = 'Kite engine is indexing your code';
                 break;
               case 'syncing':
-                this.statusBarItem.text = 'Kite: syncing'
+                this.statusBarItem.text = '𝕜𝕚𝕥𝕖: syncing'
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.tooltip = 'Kite engine is syncing your code';
                 break;
@@ -573,7 +573,7 @@ const Kite = {
                 this.statusBarItem.hide();
                 break;
               case 'ready':
-                this.statusBarItem.text = 'Kite';
+                this.statusBarItem.text = '𝕜𝕚𝕥𝕖';
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.tooltip = 'Kite is ready';
                 break;
