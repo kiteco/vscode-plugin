@@ -11,7 +11,6 @@ const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
 const KiteDefinitionProvider = require('./definition');
 const KiteInstall = require('./install');
-const KiteStatus = require('./status');
 const KiteTour = require('./tour');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
@@ -59,7 +58,6 @@ const Kite = {
     })
 
     const install = new KiteInstall(Kite);
-    const status = new KiteStatus(Kite);
     const tour = new KiteTour(Kite);
     // const errorRescue = new KiteErrorRescue(Kite);
 
@@ -69,12 +67,10 @@ const Kite = {
     metrics.track('activated');
 
     this.disposables.push(server);
-    this.disposables.push(status);
     this.disposables.push(install);
     // this.disposables.push(errorRescue);
 
 
-    this.status = status;
     this.install = install;
     // this.errorRescue = errorRescue;
 
@@ -99,8 +95,6 @@ const Kite = {
 
     this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-install', install));
-    this.disposables.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
     this.disposables.push(
       vscode.workspace.registerTextDocumentContentProvider('kite-vscode-tour', tour));
     // this.disposables.push(
@@ -205,15 +199,9 @@ const Kite = {
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
     this.statusBarItem.text = '𝕜𝕚𝕥𝕖';
     this.statusBarItem.color = '#abcdef';
-    this.statusBarItem.command = 'kite.status';
     this.statusBarItem.show();
 
     this.disposables.push(this.statusBarItem);
-
-    this.disposables.push(vscode.commands.registerCommand('kite.status', () => {
-      metrics.featureRequested('status_panel');
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
-    }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.login', () => {
       kiteOpen('kite://home');
@@ -231,10 +219,6 @@ const Kite = {
 
     this.disposables.push(vscode.commands.registerCommand('kite.open-copilot', () => {
       kiteOpen('kite://home');
-    }));
-
-    this.disposables.push(vscode.commands.registerCommand('kite.open-permissions', () => {
-      kiteOpen('kite://settings/permissions');
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.more', ({id, source}) => {
@@ -595,7 +579,6 @@ const Kite = {
 
   setStatus(state = this.lastState, document) {
     this.lastState = state;
-    this.status.update();
     this.getStatus(document).then(status => {
       this.lastStatus = status;
       this.setStatusBarLabel();

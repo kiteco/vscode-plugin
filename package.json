@@ -29,43 +29,22 @@
     "contributes": {
         "commands": [
             {
-                "command": "kite.status",
-                "title": "Kite: Status"
-            },
-            {
                 "command": "kite.help",
                 "title": "Kite: Help"
             },
             {
                 "command": "kite.docs-for-cursor",
-                "title": "Kite: Docs at cursor"
+                "title": "Kite: Docs At Cursor"
             },
             {
                 "command": "kite.open-settings",
-                "title": "Kite: General settings"
-            },
-            {
-                "command": "kite.open-permissions",
-                "title": "Kite: Permissions"
+                "title": "Kite: Engine Settings"
             },
             {
                 "command": "kite.open-copilot",
                 "title": "Kite: Open Copilot"
             }
         ],
-        "menus": {
-            "editor/context": [
-                {
-                    "command": "kite.open-settings"
-                },
-                {
-                    "command": "kite.open-permissions"
-                },
-                {
-                    "command": "kite.docs-for-cursor"
-                }
-            ]
-        },
         "configuration": {
             "type": "object",
             "title": "Kite Configuration",
