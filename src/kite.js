@@ -521,6 +521,7 @@ const Kite = {
                 this.statusBarItem.text = '';
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.tooltip = '';
+                console.log('hiding status icon')
                 this.statusBarItem.hide();
                 break;
               case 'indexing':
@@ -538,6 +539,7 @@ const Kite = {
                 this.statusBarItem.text = '';
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.tooltip = '';
+                console.log('hiding status icon')
                 this.statusBarItem.hide();
                 break;
               case 'ready':
@@ -550,6 +552,7 @@ const Kite = {
             this.statusBarItem.text = '';
             this.statusBarItem.color = undefined;
             this.statusBarItem.tooltip = '';
+            console.log('hiding status icon')
             this.statusBarItem.hide();
           }
       }
@@ -557,6 +560,7 @@ const Kite = {
       this.statusBarItem.text = '';
       this.statusBarItem.color = undefined;
       this.statusBarItem.tooltip = '';
+      console.log('hiding status icon')
       this.statusBarItem.hide();
     }
   },
