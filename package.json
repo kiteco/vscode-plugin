@@ -49,33 +49,19 @@
             "type": "object",
             "title": "Kite Configuration",
             "properties": {
-                "kite.showDocsNotificationOnStartup": {
+                "kite.showWelcomeNotificationOnStartup": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether to show the Kite docs notification on startup or not."
+                    "description": "Whether or not to show the Kite welcome notification on startup."
                 },
                 "kite.pollingInterval": {
                     "type": "integer",
                     "default": 5000
                 },
-                "kite.editorMetricsEnabled": {
-                    "type": "string",
-                    "default": "undefined",
-                    "enum": [
-                        "undefined",
-                        "no",
-                        "yes"
-                    ]
-                },
-                "kite.sidebarDebugMode": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "When enabled, each time a view is rendered in the kite sidebar the sample.html file will be updated with the sidebar content. It allows for quick inspection in a real browser."
-                },
                 "kite.developerMode": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Displays JSON data used by a view"
+                    "description": "Displays JSON data used by a view and also updates sample.html with the last rendered HTML."
                 },
                 "kite.startKiteAtStartup": {
                     "type": "boolean",

@@ -300,7 +300,7 @@ const Kite = {
     }));
 
     const config = vscode.workspace.getConfiguration('kite');
-    if (config.showDocsNotificationOnStartup) {
+    if (config.showWelcomeNotificationOnStartup) {
       vscode.window.showInformationMessage('Welcome to Kite for VS Code', 'Learn how to use Kite', "Don't show this again").then(item => {
         if (item) {
           switch(item) {
@@ -308,21 +308,9 @@ const Kite = {
               opn('http://help.kite.com/category/46-vs-code-integration');
               break;
             case "Don't show this again":
-              config.update('showDocsNotificationOnStartup', false, true);
+              config.update('showWelcomeNotificationOnStartup', false, true);
               break;
           }
-        }
-      });
-    }
-
-    if (config.editorMetricsEnabled === 'undefined') {
-      vscode.window.showInformationMessage(
-        `Allow Kite to send information to our servers about the status of the Kite application`,
-        `Yes`,
-        `No`
-      ).then(item => {
-        if (item) {
-          config.update('editorMetricsEnabled', item.toLowerCase(), true);
         }
       });
     }
