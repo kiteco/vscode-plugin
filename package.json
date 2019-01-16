@@ -56,17 +56,18 @@
                 },
                 "kite.pollingInterval": {
                     "type": "integer",
-                    "default": 5000
+                    "default": 5000,
+                    "description": "Interval in milliseconds at which the Kite extension polls Kite Engine to get the status of the current file."
                 },
                 "kite.developerMode": {
                     "type": "boolean",
                     "default": false,
                     "description": "Displays JSON data used by a view and also updates sample.html with the last rendered HTML."
                 },
-                "kite.startKiteAtStartup": {
+                "kite.startKiteEngineAtStartup": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Automatically start Kite process on startup if it's not already running."
+                    "description": "Automatically start Kite Engine on editor startup if it's not already running."
                 },
                 "kite.loggingLevel": {
                     "type": "string",
