@@ -70,6 +70,7 @@ module.exports = class KiteCompletionProvider {
 
             `);
           }
+          item.detail = c.hint;
           item.kind = kindForHint(c.hint);
           return item;
         });
