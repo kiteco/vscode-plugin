@@ -39,7 +39,7 @@ const SCRIPTS = fs.readdirSync(path.resolve(ASSETS_PATH, 'js'))
 const pluralize = (a, s, p) => a.length === 1 ? s : p;
 
 function debugHTML (html) {
-  if (vscode.workspace.getConfiguration('kite').sidebarDebugMode && process.env.NODE_ENV !== 'test') {
+  if (vscode.workspace.getConfiguration('kite').developerMode && process.env.NODE_ENV !== 'test') {
     fs.writeFileSync(path.resolve(__dirname, '..', 'sample.html'), `
       <!doctype html>
       <html class="vscode-dark">
