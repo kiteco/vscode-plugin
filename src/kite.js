@@ -5,7 +5,7 @@ const os = require('os');
 const opn = require('opn');
 const KiteAPI = require('kite-api');
 const {Logger} = require('kite-installer');
-const {PYTHON_MODE, NEW_PYTHON_MODE, ERROR_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
+const {PYTHON_MODE, ERROR_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
@@ -89,15 +89,6 @@ const Kite = {
       vscode.languages.registerCompletionItemProvider(PYTHON_MODE, new KiteCompletionProvider(Kite), '.', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
-
-    this.disposables.push(
-      vscode.languages.registerHoverProvider(NEW_PYTHON_MODE, new KiteHoverProvider(Kite)));
-    this.disposables.push(
-      vscode.languages.registerDefinitionProvider(NEW_PYTHON_MODE, new KiteDefinitionProvider(Kite)));
-    this.disposables.push(
-      vscode.languages.registerCompletionItemProvider(NEW_PYTHON_MODE, new KiteCompletionProvider(Kite), '.', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
-    this.disposables.push(
-      vscode.languages.registerSignatureHelpProvider(NEW_PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
 
     this.disposables.push(vscode.workspace.onWillSaveTextDocument((e) => {
       const kiteEditor = this.kiteEditorByEditor.get(e.document.fileName);
