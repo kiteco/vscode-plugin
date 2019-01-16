@@ -160,7 +160,7 @@ const Kite = {
 
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
     this.statusBarItem.text = '𝕜𝕚𝕥𝕖';
-    this.statusBarItem.color = '#abcdef';
+    this.statusBarItem.color = undefined;
     this.statusBarItem.show();
 
     this.disposables.push(this.statusBarItem);
