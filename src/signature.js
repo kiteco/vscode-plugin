@@ -63,6 +63,10 @@ module.exports = class KiteSignatureProvider {
           return param;
         });
 
+        if (Array.isArray(detail.return_value) && detail.return_value.length && detail.return_value[0].type) {
+          sig.documentation = `Returns → ${detail.return_value[0].type}`;
+        }
+
         help.signatures = [sig];
 
         return help;

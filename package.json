@@ -33,7 +33,7 @@
                 "title": "Kite: Help"
             },
             {
-                "command": "kite.docs-for-cursor",
+                "command": "kite.docs-at-cursor",
                 "title": "Kite: Docs At Cursor"
             },
             {
@@ -57,7 +57,7 @@
                 "kite.pollingInterval": {
                     "type": "integer",
                     "default": 5000,
-                    "description": "The interval at which the Kite extension pings the Kite Engine to get the status of the current file."
+                    "description": "Interval in milliseconds at which the Kite extension polls Kite Engine to get the status of the current file."
                 },
                 "kite.developerMode": {
                     "type": "boolean",
@@ -67,7 +67,7 @@
                 "kite.startKiteEngineOnStartup": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Automatically start Kite Engine on startup if it's not already running."
+                    "description": "Automatically start Kite Engine on editor startup if it's not already running."
                 },
                 "kite.loggingLevel": {
                     "type": "string",
