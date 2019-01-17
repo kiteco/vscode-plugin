@@ -157,7 +157,7 @@ const wrapType = (o) => {
     : null;
 };
 
-const unionType = (vs, map) => 
+const unionType = (vs, map) =>
   uniq(flatten(compact(vs.map(map))).map(wrapType)).join(' | ');
 
 const returnType = (v) =>
@@ -165,7 +165,14 @@ const returnType = (v) =>
 
 const symbolValue = s => head(s.value);
 
-const symbolKind = s => symbolValue(s).kind;
+const symbolKindMarkdown = s => {
+  const value = symbolValue(s);
+  if (value.kind !== 'instance') {
+    return `[_${value.kind}_]`;
+  }
+  let types = uniq(s.value.filter(v => v.kind === 'instance').map(v => `_${v.type}_`));
+  return `[${types.join(' | ')}]`;
+}
 
 const reportFromHover = hover => {
   const symbol = head(hover.symbol);
@@ -211,7 +218,7 @@ module.exports = {
   returnType,
   signature,
   symbolId,
-  symbolKind,
+  symbolKindMarkdown,
   symbolLabel,
   symbolName,
   symbolType,
