@@ -90,10 +90,10 @@ Kite comes with sevaral commands that you can run from VS Code's command palette
 
 |Command|Description|
 |:---|:---|
-|`kite:open-copilot`|Open the Copilot|
-|`kite:docs-at-cursor`|Show documentation of the symbol underneath your cursor in the Copilot|
-|`kite:engine-settings`|Open the settings for the Kite Engine|
-|`kite:help`|Open Kite's help website in the browser|
+|`kite.open-copilot`|Open the Copilot|
+|`kite.docs-at-cursor`|Show documentation of the symbol underneath your cursor in the Copilot|
+|`kite.engine-settings`|Open the settings for the Kite Engine|
+|`kite.help`|Open Kite's help website in the browser|
 
 
 ## Contact Us
