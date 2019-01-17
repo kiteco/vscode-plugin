@@ -221,7 +221,7 @@ const Kite = {
       opn('https://help.kite.com/category/46-vs-code-integration');
     }));
 
-    this.disposables.push(vscode.commands.registerCommand('kite.docs-for-cursor', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.docs-at-cursor', () => {
       const editor = vscode.window.activeTextEditor;
 
       if (editor && this.isGrammarSupported(editor)) {
