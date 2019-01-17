@@ -29,74 +29,39 @@
     "contributes": {
         "commands": [
             {
-                "command": "kite.status",
-                "title": "Kite: Status"
-            },
-            {
                 "command": "kite.help",
                 "title": "Kite: Help"
             },
             {
                 "command": "kite.docs-for-cursor",
-                "title": "Kite: Docs at cursor"
+                "title": "Kite: Docs At Cursor"
             },
             {
                 "command": "kite.open-settings",
-                "title": "Kite: General settings"
-            },
-            {
-                "command": "kite.open-permissions",
-                "title": "Kite: Permissions"
+                "title": "Kite: Engine Settings"
             },
             {
                 "command": "kite.open-copilot",
                 "title": "Kite: Open Copilot"
             }
         ],
-        "menus": {
-            "editor/context": [
-                {
-                    "command": "kite.open-settings"
-                },
-                {
-                    "command": "kite.open-permissions"
-                },
-                {
-                    "command": "kite.docs-for-cursor"
-                }
-            ]
-        },
         "configuration": {
             "type": "object",
             "title": "Kite Configuration",
             "properties": {
-                "kite.showDocsNotificationOnStartup": {
+                "kite.showWelcomeNotificationOnStartup": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether to show the Kite docs notification on startup or not."
+                    "description": "Whether or not to show the Kite welcome notification on startup."
                 },
                 "kite.pollingInterval": {
                     "type": "integer",
                     "default": 5000
                 },
-                "kite.editorMetricsEnabled": {
-                    "type": "string",
-                    "default": "undefined",
-                    "enum": [
-                        "undefined",
-                        "no",
-                        "yes"
-                    ]
-                },
-                "kite.sidebarDebugMode": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "When enabled, each time a view is rendered in the kite sidebar the sample.html file will be updated with the sidebar content. It allows for quick inspection in a real browser."
-                },
                 "kite.developerMode": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Displays JSON data used by a view"
+                    "description": "Displays JSON data used by a view and also updates sample.html with the last rendered HTML."
                 },
                 "kite.startKiteAtStartup": {
                     "type": "boolean",

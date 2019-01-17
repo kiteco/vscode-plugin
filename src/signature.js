@@ -24,7 +24,7 @@ module.exports = class KiteSignatureProvider {
       // console.log('whitelist condition passed')
       if (text.length > MAX_FILE_SIZE) {
         Logger.warn('buffer contents too large, not attempting signature');
-        return Promise.resolve([]);
+        return null;
       }
 
       const cursorPosition = document.offsetAt(position);
@@ -47,12 +47,12 @@ module.exports = class KiteSignatureProvider {
         const [call] = data.calls;
 
         const {callee} = call;
-        
+
         const help = new SignatureHelp();
         help.activeParameter = call.arg_index;
         help.activeSignature = 0;
 
-        const label = stripTags(valueLabel(callee));
+        const label = '⟠ ' + stripTags(valueLabel(callee));
         const sig = new SignatureInformation(label);
         const detail = getFunctionDetails(callee);
         sig.parameters = (detail.parameters || []).map(p => {
@@ -69,7 +69,7 @@ module.exports = class KiteSignatureProvider {
       })
       .catch(() => null);
     } else {
-      return Promise.resolve(null);
+      return null;
     }
   }
 }
