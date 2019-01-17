@@ -170,7 +170,7 @@ const symbolKindMarkdown = s => {
   if (value.kind !== 'instance') {
     return `[_${value.kind}_]`;
   }
-  let types = uniq(s.value.filter(v => v.kind === 'instance').map(v => `_${v.type}_`));
+  let types = uniq(s.value.filter(v => v.kind === 'instance').map(v => `_${v.type.replace('_', '\\_')}_`));
   return `[${types.join(' | ')}]`;
 }
 

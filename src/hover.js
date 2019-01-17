@@ -38,7 +38,7 @@ module.exports = class KiteHoverProvider {
             defLink = `[Def](command:kite.def?${defData})`;
           }
 
-          const content = new vscode.MarkdownString(`⟠&nbsp;&nbsp;__${symbolName(symbol)}__:&nbsp;${symbolKindMarkdown(symbol)}&nbsp;&nbsp;&nbsp;&nbsp;${docsLink}${defLink ? '&nbsp;&nbsp;' + defLink : ''}`);
+          const content = new vscode.MarkdownString(`⟠&nbsp;&nbsp;__${symbolName(symbol).replace('_', '\\_')}__:&nbsp;${symbolKindMarkdown(symbol)}&nbsp;&nbsp;&nbsp;&nbsp;${docsLink}${defLink ? '&nbsp;&nbsp;' + defLink : ''}`);
           content.isTrusted = true;
 
           const texts = [
