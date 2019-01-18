@@ -2,7 +2,7 @@
     "name": "kite",
     "displayName": "kite",
     "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
-    "version": "0.57.0",
+    "version": "0.64.0",
     "publisher": "kiteco",
     "engines": {
         "vscode": "^1.28.0"
