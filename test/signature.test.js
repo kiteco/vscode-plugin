@@ -31,11 +31,11 @@ describe('KiteSignatureProvider', () => {
         .then(doc => provider.provideSignatureHelp(doc, new vscode.Position(19, 13), null))
         .then(res => {
           expect(res.signatures.length).to.eql(1);
-          expect(res.signatures[0].label).to.eql('plot(x:list|uint64, y:list|str)');
+          expect(res.signatures[0].label).to.eql('⟠ plot(x:list|uint64, y:list|str)');
           expect(res.signatures[0].parameters.length).to.eql(2);
           expect(res.signatures[0].parameters[0].label).to.eql('x:list|uint64');
           expect(res.signatures[0].parameters[1].label).to.eql('y:list|str');
-          
+
           expect(res.activeParameter).to.eql(1);
           expect(res.activeSignature).to.eql(0);
         });
