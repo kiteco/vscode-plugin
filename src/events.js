@@ -82,10 +82,10 @@ module.exports = class EditorEvents {
       method: 'POST',
     }, payload, doc))
     .then((res) => {
-      this.pendingPromiseResolve(res);
+      this.pendingPromiseResolve && this.pendingPromiseResolve(res);
     })
     .catch((err) => {
-      this.pendingPromiseReject(err);
+      this.pendingPromiseReject && this.pendingPromiseReject(err);
       // on connection error send a metric, but not too often or we will generate too many events
       // if (!this.lastErrorAt ||
       //     secondsSince(this.lastErrorAt) >= CONNECT_ERROR_LOCKOUT) {

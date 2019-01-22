@@ -67,10 +67,11 @@ ${c.documentation_text}
 
           `);
         }
+        item.detail = c.hint;
         item.kind = kindForHint(c.hint);
         return item;
       });
     })
-    .catch(err => []);
+    .catch(() => []);
   }
 }

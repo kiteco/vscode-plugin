@@ -4,21 +4,18 @@ const vscode = require('vscode');
 const os = require('os');
 const opn = require('opn');
 const KiteAPI = require('kite-api');
-const {AccountManager, Logger} = require('kite-installer');
-const {PYTHON_MODE, NEW_PYTHON_MODE, ERROR_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
+const {Logger} = require('kite-installer');
+const {PYTHON_MODE, ERROR_COLOR, SUPPORTED_EXTENSIONS} = require('./constants');
 const KiteHoverProvider = require('./hover');
 const KiteCompletionProvider = require('./completion');
 const KiteSignatureProvider = require('./signature');
 const KiteDefinitionProvider = require('./definition');
-const KiteInstall = require('./install');
-const KiteStatus = require('./status');
-const KiteTour = require('./tour');
 const KiteEditor = require('./kite-editor');
 const EditorEvents = require('./events');
 const localconfig = require('./localconfig');
 const metrics = require('./metrics');
 const server = require('./server');
-const {projectDirPath, shouldNotifyPath, statusPath, languagesPath, hoverPath} = require('./urls');
+const {statusPath, languagesPath, hoverPath} = require('./urls');
 const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyReadResponse, params, kiteOpen} = require('./utils');
 const {version} = require('../package.json');
@@ -58,25 +55,12 @@ const Kite = {
       }
     })
 
-    const install = new KiteInstall(Kite);
-    const status = new KiteStatus(Kite);
-    const tour = new KiteTour(Kite);
-    // const errorRescue = new KiteErrorRescue(Kite);
-
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
     // send the activated event
     metrics.track('activated');
 
     this.disposables.push(server);
-    this.disposables.push(status);
-    this.disposables.push(install);
-    // this.disposables.push(errorRescue);
-
-
-    this.status = status;
-    this.install = install;
-    // this.errorRescue = errorRescue;
 
     server.addRoute('GET', '/check', (req, res) => {
       this.checkState('/check route');
@@ -98,31 +82,13 @@ const Kite = {
     server.start();
 
     this.disposables.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-install', install));
-    this.disposables.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-status', status));
-    this.disposables.push(
-      vscode.workspace.registerTextDocumentContentProvider('kite-vscode-tour', tour));
-    // this.disposables.push(
-    //   vscode.workspace.registerTextDocumentContentProvider('kite-vscode-error-rescue', errorRescue));
-
-    this.disposables.push(
       vscode.languages.registerHoverProvider(PYTHON_MODE, new KiteHoverProvider(Kite)));
     this.disposables.push(
       vscode.languages.registerDefinitionProvider(PYTHON_MODE, new KiteDefinitionProvider(Kite)));
     this.disposables.push(
-      vscode.languages.registerCompletionItemProvider(PYTHON_MODE, new KiteCompletionProvider(Kite), '.', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
+      vscode.languages.registerCompletionItemProvider(PYTHON_MODE, new KiteCompletionProvider(Kite), '.', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
-
-    this.disposables.push(
-      vscode.languages.registerHoverProvider(NEW_PYTHON_MODE, new KiteHoverProvider(Kite)));
-    this.disposables.push(
-      vscode.languages.registerDefinitionProvider(NEW_PYTHON_MODE, new KiteDefinitionProvider(Kite)));
-    this.disposables.push(
-      vscode.languages.registerCompletionItemProvider(NEW_PYTHON_MODE, new KiteCompletionProvider(Kite), '.', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
-    this.disposables.push(
-      vscode.languages.registerSignatureHelpProvider(NEW_PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
 
     this.disposables.push(vscode.workspace.onWillSaveTextDocument((e) => {
       const kiteEditor = this.kiteEditorByEditor.get(e.document.fileName);
@@ -173,31 +139,15 @@ const Kite = {
       })
     }));
 
-    // this.disposables.push(KiteAPI.onDidFailRequest(err => {
-    //   // TODO
-    // }));
-
-    this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-    this.statusBarItem.text = 'Kite';
-    this.statusBarItem.color = '#abcdef';
-    this.statusBarItem.command = 'kite.status';
+    this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
+    this.statusBarItem.text = '𝕜𝕚𝕥𝕖';
+    this.statusBarItem.color = undefined;
     this.statusBarItem.show();
 
     this.disposables.push(this.statusBarItem);
 
-    this.disposables.push(vscode.commands.registerCommand('kite.status', () => {
-      metrics.featureRequested('status_panel');
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-status://status', vscode.ViewColumn.Two, 'Kite Status');
-    }));
-
     this.disposables.push(vscode.commands.registerCommand('kite.login', () => {
       kiteOpen('kite://home');
-    }));
-
-    this.disposables.push(vscode.commands.registerCommand('kite.install', () => {
-      install.reset();
-      AccountManager.initClient('alpha.kite.com', -1, '', true);
-      vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.open-settings', () => {
@@ -206,10 +156,6 @@ const Kite = {
 
     this.disposables.push(vscode.commands.registerCommand('kite.open-copilot', () => {
       kiteOpen('kite://home');
-    }));
-
-    this.disposables.push(vscode.commands.registerCommand('kite.open-permissions', () => {
-      kiteOpen('kite://settings/permissions');
     }));
 
     this.disposables.push(vscode.commands.registerCommand('kite.more', ({id, source}) => {
@@ -256,7 +202,7 @@ const Kite = {
       opn('https://help.kite.com/category/46-vs-code-integration');
     }));
 
-    this.disposables.push(vscode.commands.registerCommand('kite.docs-for-cursor', () => {
+    this.disposables.push(vscode.commands.registerCommand('kite.docs-at-cursor', () => {
       const editor = vscode.window.activeTextEditor;
 
       if (editor) {
@@ -291,7 +237,7 @@ const Kite = {
     }));
 
     const config = vscode.workspace.getConfiguration('kite');
-    if (config.showDocsNotificationOnStartup) {
+    if (config.showWelcomeNotificationOnStartup) {
       vscode.window.showInformationMessage('Welcome to Kite for VS Code', 'Learn how to use Kite', "Don't show this again").then(item => {
         if (item) {
           switch(item) {
@@ -299,21 +245,9 @@ const Kite = {
               opn('http://help.kite.com/category/46-vs-code-integration');
               break;
             case "Don't show this again":
-              config.update('showDocsNotificationOnStartup', false, true);
+              config.update('showWelcomeNotificationOnStartup', false, true);
               break;
           }
-        }
-      });
-    }
-
-    if (config.editorMetricsEnabled === 'undefined') {
-      vscode.window.showInformationMessage(
-        `Allow Kite to send information to our servers about the status of the Kite application`,
-        `Yes`,
-        `No`
-      ).then(item => {
-        if (item) {
-          config.update('editorMetricsEnabled', item.toLowerCase(), true);
         }
       });
     }
@@ -432,11 +366,6 @@ const Kite = {
             return state;
           }
           this.shown[state] = true;
-          if (!localconfig.get('wasInstalled', false) || true) {
-            this.install.reset();
-            AccountManager.initClient('alpha.kite.com', -1, '', true);
-            vscode.commands.executeCommand('vscode.previewHtml', 'kite-vscode-install://install', vscode.ViewColumn.One, 'Kite Install');
-          }
           break;
         case KiteAPI.STATES.INSTALLED:
           if(vscode.workspace.getConfiguration('kite').startKiteAtStartup) {
@@ -494,20 +423,20 @@ const Kite = {
         case KiteAPI.STATES.UNSUPPORTED:
           this.statusBarItem.tooltip = 'Kite engine is currently not supported on your platform';
           this.statusBarItem.color = ERROR_COLOR;
-          this.statusBarItem.text = 'Kite: not supported';
+          this.statusBarItem.text = '𝕜𝕚𝕥𝕖: not supported';
           break;
         case KiteAPI.STATES.UNINSTALLED:
-        this.statusBarItem.text = 'Kite: not installed';
+          this.statusBarItem.text = '𝕜𝕚𝕥𝕖: not installed';
           this.statusBarItem.tooltip = 'Kite engine is not installed';
           this.statusBarItem.color = ERROR_COLOR;
           break;
         case KiteAPI.STATES.INSTALLED:
-          this.statusBarItem.text = 'Kite: not running';
+          this.statusBarItem.text = '𝕜𝕚𝕥𝕖: not running';
           this.statusBarItem.tooltip = 'Kite engine is not running';
           this.statusBarItem.color = ERROR_COLOR;
           break;
         case KiteAPI.STATES.RUNNING:
-          this.statusBarItem.text = 'Kite: not reachable';
+          this.statusBarItem.text = '𝕜𝕚𝕥𝕖: not reachable';
           this.statusBarItem.tooltip = 'Kite engine is not reachable';
           this.statusBarItem.color = ERROR_COLOR;
           break;
@@ -516,16 +445,16 @@ const Kite = {
             switch(status.status) {
               case 'indexing':
                 this.statusBarItem.color = undefined;
-                this.statusBarItem.text = 'Kite: indexing'
+                this.statusBarItem.text = '𝕜𝕚𝕥𝕖: indexing'
                 this.statusBarItem.tooltip = 'Kite engine is indexing your code';
                 break;
               case 'syncing':
-                this.statusBarItem.text = 'Kite: syncing'
+                this.statusBarItem.text = '𝕜𝕚𝕥𝕖: syncing'
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.tooltip = 'Kite engine is syncing your code';
                 break;
               case 'ready':
-                this.statusBarItem.text = 'Kite';
+                this.statusBarItem.text = '𝕜𝕚𝕥𝕖';
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.tooltip = 'Kite is ready';
                 break;
@@ -547,7 +476,6 @@ const Kite = {
 
   setStatus(state = this.lastState, document) {
     this.lastState = state;
-    this.status.update();
     this.getStatus(document).then(status => {
       this.lastStatus = status;
       this.setStatusBarLabel();

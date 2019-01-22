@@ -1,5 +1,7 @@
-const PYTHON_MODE = {language: 'python', scheme: 'file'};
-const NEW_PYTHON_MODE = {language: 'python', scheme: 'untitled'};
+const PYTHON_MODE = [
+  {language: 'python', scheme: 'file'},
+  {language: 'python', scheme: 'untitled'}
+];
 
 const JAVASCRIPT_MODE = {language: 'javascript', scheme: 'file'};
 
@@ -31,7 +33,6 @@ module.exports = {
   ATTEMPTS,
   INTERVAL,
   PYTHON_MODE,
-  NEW_PYTHON_MODE,
   JAVASCRIPT_MODE,
   MAX_PAYLOAD_SIZE,
   MAX_FILE_SIZE,
