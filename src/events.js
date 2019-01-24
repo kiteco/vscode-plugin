@@ -84,8 +84,6 @@ module.exports = class EditorEvents {
     .then((res) => {
       this.pendingPromiseResolve && this.pendingPromiseResolve(res);
     })
-    .then(KiteAPI.emitWhitelistedPathDetected(doc.fileName))
-    .catch(KiteAPI.emitNonWhitelistedPathDetected(doc.fileName))
     .catch((err) => {
       this.pendingPromiseReject && this.pendingPromiseReject(err);
       // on connection error send a metric, but not too often or we will generate too many events

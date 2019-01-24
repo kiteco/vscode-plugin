@@ -10,8 +10,7 @@ const KiteAPI = require('kite-api');
 const KiteConnect = require('kite-connector');
 const NodeClient = require('kite-connector/lib/clients/node');
 const {jsonPath, walk, describeForTest, featureSetPath, inLiveEnvironment} = require('./json/utils');
-const {withKite, withKitePaths, withKiteRoutes, updateKitePaths} = require('kite-api/test/helpers/kite');
-const {fakeResponse} = require('kite-api/test/helpers/http');
+const {withKite} = require('kite-api/test/helpers/kite');
 const ACTIONS = {};
 const EXPECTATIONS = {};
 
@@ -28,7 +27,7 @@ walk(path.resolve(__dirname, 'json', 'expectations'), '.js', file => {
 function kiteSetup(setup) {
   switch (setup) {
     case 'authenticated':
-      return {logged: true};
+      return {reachable: true};
     case 'unsupported':
     case 'not_supported':
       return {supported: false};
@@ -42,18 +41,10 @@ function kiteSetup(setup) {
       return {reachable: false};
     case 'unlogged':
     case 'not_logged':
-      return {logged: false};
+      return {reachable: true};
     default:
       return {supported: false};
   }
-}
-
-function pathsSetup(setup, root) {
-  return {
-    whitelist: setup.whitelist && setup.whitelist.map(p => path.join(root(), p)),
-    blacklist: setup.blacklist && setup.blacklist.map(p => path.join(root(), p)),
-    ignored: setup.ignored && setup.ignored.map(p => path.join(root(), p)),
-  };
 }
 
 const featureSet = require(featureSetPath());
@@ -112,15 +103,7 @@ function buildTest(data, file) {
       };
 
       if(!inLiveEnvironment()) {
-        withKitePaths({}, undefined, () => {
-          beforeEach('mock kited paths setup', () => {
-            updateKitePaths(pathsSetup(data.setup, root))
-          })
-          withKiteRoutes([
-            [o => o.path === '/clientapi/plan', o => fakeResponse(200, '{}')]
-          ])
-          block();
-        });
+        block();
       } else {
         beforeEach('live setup', () => {
           KiteConnect.client = new NodeClient('localhost', '56624');

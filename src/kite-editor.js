@@ -26,7 +26,6 @@ module.exports = class KiteEditor {
     this.Kite = Kite;
     this.editor = editor;
     this.document = editor.document;
-    this.whitelisted = false;
     this.fixesHistory = [];
   }
 
@@ -36,10 +35,6 @@ module.exports = class KiteEditor {
     delete this.document;
   }
 
-  isWhitelisted() {
-    return this.Kite.isDocumentWhitelisted(this.document);
-  }
-  
   onWillSave() {
     if (!md5) { md5 = require('md5'); }
     
@@ -143,8 +138,6 @@ module.exports = class KiteEditor {
       path: onSaveValidationPath(),
       method: 'POST',
     }, JSON.stringify(payload))
-    .then(KiteAPI.emitWhitelistedPathDetected(this.document.fileName))
-    .catch(KiteAPI.emitNonWhitelistedPathDetected(this.document.fileName))
     .catch(err => console.error(err));
   }
 
@@ -202,8 +195,6 @@ module.exports = class KiteEditor {
       path: errorRescuePath(),
       method: 'POST',
     }, JSON.stringify(payload))
-    .then(KiteAPI.emitWhitelistedPathDetected(this.document.fileName))
-    .catch(KiteAPI.emitNonWhitelistedPathDetected(this.document.fileName))
   }
 
   getErrorRescueModelInfo(version) {

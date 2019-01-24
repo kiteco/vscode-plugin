@@ -15,7 +15,7 @@ const EditorEvents = require('./events');
 const localconfig = require('./localconfig');
 const metrics = require('./metrics');
 const server = require('./server');
-const {projectDirPath, shouldNotifyPath, statusPath, languagesPath, hoverPath} = require('./urls');
+const {statusPath, languagesPath, hoverPath} = require('./urls');
 const Rollbar = require('rollbar');
 const {editorsForDocument, promisifyReadResponse, params, kiteOpen} = require('./utils');
 const {version} = require('../package.json');
@@ -92,7 +92,7 @@ const Kite = {
 
     this.disposables.push(vscode.workspace.onWillSaveTextDocument((e) => {
       const kiteEditor = this.kiteEditorByEditor.get(e.document.fileName);
-      if(this.isDocumentGrammarSupported(e.document) && kiteEditor && kiteEditor.isWhitelisted) {
+      if(this.isDocumentGrammarSupported(e.document) && KiteEditor) {
         e.waitUntil(kiteEditor.onWillSave())
       }
     }));
@@ -138,25 +138,6 @@ const Kite = {
         }
       })
     }));
-
-    this.whitelistedEditorIDs = {};
-    this.disposables.push(KiteAPI.onDidDetectWhitelistedPath(path => {
-      // console.log('whitelisted', path);
-      this.whitelistedEditorIDs[path] = true;
-    }));
-
-    this.disposables.push(KiteAPI.onDidDetectNonWhitelistedPath(path => {
-      // console.log('not whitelisted', path);
-      this.whitelistedEditorIDs[path] = false;
-      const document = this.documentForPath(path);
-      this.shouldOfferWhitelist(document)
-      .then(res => { if (res) { this.warnNotWhitelisted(document, res); }})
-      .catch(err => console.error(err));
-    }));
-
-    // this.disposables.push(KiteAPI.onDidFailRequest(err => {
-    //   // TODO
-    // }));
 
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
     this.statusBarItem.text = '𝕜𝕚𝕥𝕖';
@@ -224,7 +205,7 @@ const Kite = {
     this.disposables.push(vscode.commands.registerCommand('kite.docs-at-cursor', () => {
       const editor = vscode.window.activeTextEditor;
 
-      if (editor && this.isGrammarSupported(editor)) {
+      if (editor) {
         const pos = editor.selection.active;
         const {document} = editor;
 
@@ -305,7 +286,6 @@ const Kite = {
     this.supportedLanguages = [];
     this.shown = {};
     this.disposables = [];
-    this.whitelistedEditorIDs = {};
     delete this.shownNotifications;
     delete this.lastState;
     delete this.lastStatus;
@@ -395,10 +375,6 @@ const Kite = {
         case KiteAPI.STATES.RUNNING:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           break;
-        case KiteAPI.STATES.REACHABLE:
-          if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
-          if(src && (src === 'pollingInterval' || src === 'activationCheck')) this.lastPolledState = state
-          return state;
         default:
           if (this.isGrammarSupported(vscode.window.activeTextEditor)) {
             this.registerEditor(vscode.window.activeTextEditor);
@@ -464,20 +440,9 @@ const Kite = {
           this.statusBarItem.tooltip = 'Kite engine is not reachable';
           this.statusBarItem.color = ERROR_COLOR;
           break;
-          case KiteAPI.STATES.REACHABLE:
-          this.statusBarItem.text = '𝕜𝕚𝕥𝕖: not logged in'
-          this.statusBarItem.color = ERROR_COLOR;
-          this.statusBarItem.tooltip = 'Kite engine is not authenticated';
-          break;
         default:
           if(status) {
             switch(status.status) {
-              case 'not whitelisted':
-                this.statusBarItem.text = '';
-                this.statusBarItem.color = undefined;
-                this.statusBarItem.tooltip = '';
-                this.statusBarItem.hide();
-                break;
               case 'indexing':
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.text = '𝕜𝕚𝕥𝕖: indexing'
@@ -487,13 +452,6 @@ const Kite = {
                 this.statusBarItem.text = '𝕜𝕚𝕥𝕖: syncing'
                 this.statusBarItem.color = undefined;
                 this.statusBarItem.tooltip = 'Kite engine is syncing your code';
-                break;
-              case 'blacklisted':
-              case 'ignored':
-                this.statusBarItem.text = '';
-                this.statusBarItem.color = undefined;
-                this.statusBarItem.tooltip = '';
-                this.statusBarItem.hide();
                 break;
               case 'ready':
                 this.statusBarItem.text = '𝕜𝕚𝕥𝕖';
@@ -534,14 +492,6 @@ const Kite = {
            SUPPORTED_EXTENSIONS[d.languageId](d.fileName);
   },
 
-  isEditorWhitelisted(e) {
-    return this.isDocumentWhitelisted(e.document);
-  },
-
-  isDocumentWhitelisted(d) {
-    return this.whitelistedEditorIDs[d.fileName];
-  },
-
   documentForPath(path) {
     return vscode.workspace.textDocuments.filter(d => d.fileName === path).shift();
   },
@@ -555,8 +505,6 @@ const Kite = {
     .then(resp => {
       if (resp.statusCode === 200) {
         return promisifyReadResponse(resp).then(json => JSON.parse(json));
-      } else if (resp.statusCode === 403) {
-        return {status: 'not whitelisted'}
       }
     })
     .catch(() => ({status: 'ready'}));
@@ -567,64 +515,6 @@ const Kite = {
     return this.request({path})
     .then(json => JSON.parse(json))
     .catch(() => ['python']);
-  },
-
-  shouldOfferWhitelist(document) {
-    return this.shouldNotify(document)
-      .then((shouldNotify) => shouldNotify && this.projectDirForEditor(document))
-      .catch(() => null);
-  },
-
-  warnNotWhitelisted(document, res) {
-    this.shownNotifications = this.shownNotifications || {};
-
-    if (!this.shownNotifications['whitelist']) {
-      this.shownNotifications['whitelist'] = true;
-      vscode.window.showWarningMessage(
-        `Kite is not whitelisted for ${document.fileName}`,
-        `Whitelist ${res}`
-      ).then(item => {
-        delete this.shownNotifications['whitelist'];
-        return item
-          ? KiteAPI.whitelistPath(res)
-            .then(() => Logger.debug('whitelisted'))
-          : KiteAPI.blacklistPath(document.fileName)
-            .then(() => Logger.debug('blacklisted'));
-      });
-    } else {
-      return Promise.resolve();
-    }
-  },
-
-  projectDirForEditor(document) {
-    const filepath = document.fileName;
-    const path = projectDirPath(filepath);
-
-    return KiteAPI.request({path})
-    .then(resp => {
-      if (resp.statusCode === 200) {
-        return promisifyReadResponse(resp)
-      } else if (resp.statusCode === 403) {
-        return null;
-      } else if (resp.statusCode === 404) {
-        return (
-          vscode.workspace.workspaceFolders
-            ? vscode.workspace.workspaceFolders[0].uri.fsPath
-            : vscode.workspace.rootPath
-        ) || os.homedir();
-      } else {
-        throw new Error('Invalid status');
-      }
-    });
-  },
-
-  shouldNotify(document) {
-    const filepath = document.fileName;
-    const path = shouldNotifyPath(filepath);
-
-    return KiteAPI.request({path})
-    .then(resp => resp.statusCode === 200)
-    .catch(() => false);
   },
 
   request(req, data) {
