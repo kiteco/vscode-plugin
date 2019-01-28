@@ -286,6 +286,7 @@ const Kite = {
     this.supportedLanguages = [];
     this.shown = {};
     this.disposables = [];
+    this.attemptedToStartKite = false;
     delete this.shownNotifications;
     delete this.lastState;
     delete this.lastStatus;
@@ -368,8 +369,10 @@ const Kite = {
           this.shown[state] = true;
           break;
         case KiteAPI.STATES.INSTALLED:
-          if(vscode.workspace.getConfiguration('kite').startKiteAtStartup) {
+          if(!this.attemptedToStartKite && vscode.workspace.getConfiguration('kite').startKiteEngineOnStartup) {
+            console.log('starting kite...');
             KiteAPI.runKiteAndWait().then(() => this.checkState(src));
+            this.attemptedToStartKite = true;
           }
           break;
         case KiteAPI.STATES.RUNNING:
