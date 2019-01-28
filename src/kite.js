@@ -370,7 +370,6 @@ const Kite = {
           break;
         case KiteAPI.STATES.INSTALLED:
           if(!this.attemptedToStartKite && vscode.workspace.getConfiguration('kite').startKiteEngineOnStartup) {
-            console.log('starting kite...');
             KiteAPI.runKiteAndWait().then(() => this.checkState(src));
             this.attemptedToStartKite = true;
           }
