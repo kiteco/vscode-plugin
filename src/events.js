@@ -1,6 +1,9 @@
 'use strict';
 
 const KiteAPI = require('kite-api');
+const { version: editor_version } = require('vscode');
+
+const { version: plugin_version } = require('./metrics');
 const {MAX_PAYLOAD_SIZE, MAX_FILE_SIZE} = require('./constants');
 const {normalizeDriveLetter} = require('./urls');
 
@@ -102,13 +105,16 @@ module.exports = class EditorEvents {
 
   buildEvent(action, document, selection) {
     const content = document.getText();
+    console.log('versions', editor_version, plugin_version)
     return content.length > MAX_FILE_SIZE
       ? {
         source: 'vscode',
         action: 'skip',
         text: '',
         filename: normalizeDriveLetter(document.fileName),
-        selections: [{start: 0, end: 0}]
+        selections: [{start: 0, end: 0}],
+        editor_version,
+        plugin_version
       }
       : this.makeEvent(action, document, content, selection);
   }
