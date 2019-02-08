@@ -105,7 +105,6 @@ module.exports = class EditorEvents {
 
   buildEvent(action, document, selection) {
     const content = document.getText();
-    console.log('versions', editor_version, plugin_version)
     return content.length > MAX_FILE_SIZE
       ? {
         source: 'vscode',
