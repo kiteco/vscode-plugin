@@ -26,9 +26,6 @@ const ERROR_COLOR = '#ff0000';
 
 const WARNING_COLOR = '#929497';
 
-const AUTOCORRECT_SHOW_SIDEBAR = 'Reopen sidebar';
-const AUTOCORRECT_DONT_SHOW_SIDEBAR = 'Fix code quietly';
-
 module.exports = {
   ATTEMPTS,
   INTERVAL,
@@ -40,6 +37,4 @@ module.exports = {
   ERROR_COLOR,
   WARNING_COLOR,
   SUPPORTED_EXTENSIONS,
-  AUTOCORRECT_SHOW_SIDEBAR,
-  AUTOCORRECT_DONT_SHOW_SIDEBAR,
 };
