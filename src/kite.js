@@ -90,13 +90,6 @@ const Kite = {
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(PYTHON_MODE, new KiteSignatureProvider(Kite), '(', ','));
 
-    this.disposables.push(vscode.workspace.onWillSaveTextDocument((e) => {
-      const kiteEditor = this.kiteEditorByEditor.get(e.document.fileName);
-      if(this.isDocumentGrammarSupported(e.document) && KiteEditor) {
-        e.waitUntil(kiteEditor.onWillSave())
-      }
-    }));
-
     this.disposables.push(vscode.workspace.onDidChangeConfiguration(() => {
       Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
     }));
