@@ -527,10 +527,6 @@ const Kite = {
       });
     });
   },
-
-  errorRescueVersion() {
-    return localconfig.get('autocorrect_model_version');
-  },
 }
 
 module.exports = {
