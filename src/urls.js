@@ -26,26 +26,6 @@ function signaturePath() {
   return '/clientapi/editor/signatures';
 }
 
-function errorRescuePath() {
-  return '/clientapi/editor/autocorrect';
-}
-
-function errorRescueModelInfoPath() {
-  return '/api/editor/autocorrect/model-info';
-}
-
-function errorRescueMetricsPath() {
-  return '/clientapi/editor/autocorrect/metrics';
-}
-
-function errorRescueFeedbackPath() {
-  return '/clientapi/editor/autocorrect/feedback';
-}
-
-function onSaveValidationPath() {
-  return '/clientapi/editor/autocorrect/validation/on-save';
-}
-
 function searchPath(query, offset = 0, limit = 10) {
   return [
     '/api/editor/search',
@@ -164,10 +144,6 @@ function normalizeDriveLetter(str) {
 
 module.exports = {
   accountPath,
-  errorRescueFeedbackPath,
-  errorRescueMetricsPath,
-  errorRescueModelInfoPath,
-  errorRescuePath,
   completionsPath,
   examplePath,
   hoverPath,
@@ -175,7 +151,6 @@ module.exports = {
   membersPath,
   metricsCounterPath,
   normalizeDriveLetter,
-  onSaveValidationPath,
   openDocumentationInWebURL,
   openExampleInWebURL,
   openSignatureInWebURL,
