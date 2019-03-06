@@ -2,7 +2,7 @@
     "name": "kite",
     "displayName": "kite",
     "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
-    "version": "0.73.0",
+    "version": "0.75.0",
     "publisher": "kiteco",
     "engines": {
         "vscode": "^1.28.0"
@@ -94,8 +94,8 @@
         "atob": "^2.1.2",
         "formidable": "^1.1.1",
         "getmac": "^1.2.1",
-        "kite-api": "^2.3.0",
-        "kite-connector": "^2.1.0",
+        "kite-api": "^2.6.0",
+        "kite-connector": "^2.5.0",
         "kite-installer": "^3.0.2",
         "md5": "^2.2.0",
         "opn": "^5.0.0",
