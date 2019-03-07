@@ -125,6 +125,8 @@ module.exports = class EditorEvents {
       text,
       action,
       filename: normalizeDriveLetter(document.fileName),
+      editor_version,
+      plugin_version
     };
 
     if (selection && selection.start != null && selection.end != null) {
