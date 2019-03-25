@@ -348,9 +348,9 @@ const Kite = {
         case KiteAPI.STATES.UNSUPPORTED:
           if (this.shown[state] || !this.isGrammarSupported(vscode.window.activeTextEditor)) { return state; }
           this.shown[state] = true;
-          if (!Kite.isOSSupported()) {
+          if (!KiteAPI.isOSSupported()) {
             metrics.track('OS unsupported');
-          } else if (!Kite.isOSVersionSupported()) {
+          } else if (!KiteAPI.isOSVersionSupported()) {
             metrics.track('OS version unsupported');
           }
           this.showErrorMessage('Sorry, the Kite engine is currently not supported on your platform');
