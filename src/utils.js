@@ -139,6 +139,8 @@ const kiteOpen = (url) => {
     case 'win32':
       cp.spawnSync("cmd", ["/b", "/c", "start","", url], {env: env});
       break;
+    case 'linux':
+      cp.spawnSync("xdg-open", [url], {env: env});
   }
 }
 
