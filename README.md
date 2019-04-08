@@ -34,6 +34,7 @@ __Windows Instructions__
 1. Download the [installer](https://kite.com/download) and run the downloaded `.exe` file.
 2. The installer should run the Kite Engine automatically after installation is complete.
 
+[Learn more about Kite for VS Code](https://www.kite.com/integrations/vs-code)
 
 ### Installing the Kite Assistant for Visual Studio Code
 
@@ -101,3 +102,16 @@ Kite comes with sevaral commands that you can run from VS Code's command palette
 Feel free to contact us with bug reports, feature requests, or general comments at feedback@kite.com.
 
 Happy coding!
+
+
+---
+
+#### About Kite
+
+Kite is built by a team in San Francisco devoted to making programming easier and more enjoyable for all. Follow Kite on
+[Twitter](https://twitter.com/kitehq) and get the latest news and programming tips on the
+[Kite Blog](https://kite.com/blog).
+Kite has been featured in [Wired](https://www.wired.com/2016/04/kites-coding-asssitant-spots-errors-finds-better-open-source/), 
+[VentureBeat](https://venturebeat.com/2019/01/28/kite-raises-17-million-for-its-ai-powered-developer-environment/), 
+[The Next Web](https://thenextweb.com/dd/2016/04/14/kite-plugin/), and 
+[TechCrunch](https://techcrunch.com/2019/01/28/kite-raises-17m-for-its-ai-driven-code-completion-tool/). 
