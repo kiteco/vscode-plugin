@@ -34,8 +34,6 @@ __Windows Instructions__
 1. Download the [installer](https://kite.com/download) and run the downloaded `.exe` file.
 2. The installer should run the Kite Engine automatically after installation is complete.
 
-[Learn more about Kite for VS Code](https://www.kite.com/integrations/vs-code)
-
 ### Installing the Kite Assistant for Visual Studio Code
 
 When running the Kite Engine for the first time, you'll be guided through a setup process which will allow you to install
@@ -45,6 +43,8 @@ manager](https://help.kite.com/article/62-managing-editor-plugins).
 Alternatively, you have 2 options to manually install the package:
 1. Search for "Kite" in VS Code's built-in extension marketplace and install from there.
 2. Run the command `code --install-extension kiteco.kite` in your terminal.
+
+[Learn more about Kite for VS Code](https://www.kite.com/integrations/vs-code)
 
 
 ## Usage
