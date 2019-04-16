@@ -7,7 +7,7 @@
             "type": "extensionHost",
             "request": "launch",
             "runtimeExecutable": "${execPath}",
-            "args": ["--extensionDevelopmentPath=${workspaceFolder}/src/index.js" ],
+            "args": ["--extensionDevelopmentPath=${workspaceFolder}/src/kite.js" ],
             "stopOnEntry": false,
             "env": {
                 "NODE_ENV": "development"
@@ -18,7 +18,7 @@
             "type": "extensionHost",
             "request": "launch",
             "runtimeExecutable": "${execPath}",
-            "args": ["--extensionDevelopmentPath=${workspaceFolder}/src/index.js", "--extensionTestsPath=${workspaceFolder}/test", "--disable-extensions" ],
+            "args": ["--extensionDevelopmentPath=${workspaceFolder}/src/kite.js", "--extensionTestsPath=${workspaceFolder}/test", "--disable-extensions" ],
             "stopOnEntry": false
         }
     ]
