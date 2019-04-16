@@ -42,3 +42,6 @@ package-lock.json
 sample.html
 
 .vscode-test
+
+# bundled assets
+dist
