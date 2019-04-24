@@ -57,6 +57,20 @@ const Kite = {
 
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
+    KiteAPI.isKiteInstalled().catch(err => {
+      if (err.message.includes("Unable to find Kite application install")) {
+        vscode.window.showInformationMessage('Unable to find Kite application install.', 'Install').then(item => {
+          if (item) {
+            switch(item) {
+              case 'Install':
+                opn('https://github.com/kiteco/vscode-plugin#installation');
+                break;
+            }
+          }
+        });
+      }
+    });
+
     // send the activated event
     metrics.track('activated');
 
