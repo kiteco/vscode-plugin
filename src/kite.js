@@ -59,7 +59,7 @@ const Kite = {
 
     KiteAPI.isKiteInstalled().catch(err => {
       if (err.message.includes("Unable to find Kite application install")) {
-        vscode.window.showInformationMessage('Unable to find Kite application install.', 'Install').then(item => {
+        vscode.window.showInformationMessage('Unable to find Kite Engine. The Kite Engine is needed to power Kite\'s completions experience.', 'Install').then(item => {
           if (item) {
             switch(item) {
               case 'Install':
