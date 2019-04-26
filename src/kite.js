@@ -57,6 +57,20 @@ const Kite = {
 
     Logger.LEVEL = Logger.LEVELS[vscode.workspace.getConfiguration('kite').loggingLevel.toUpperCase()];
 
+    KiteAPI.isKiteInstalled().catch(err => {
+      if (err.message.includes("Unable to find Kite application install")) {
+        vscode.window.showInformationMessage('Unable to find Kite Engine. The Kite Engine is needed to power Kite\'s completions experience.', 'Install').then(item => {
+          if (item) {
+            switch(item) {
+              case 'Install':
+                opn('https://github.com/kiteco/vscode-plugin#installation');
+                break;
+            }
+          }
+        });
+      }
+    });
+
     // send the activated event
     metrics.track('activated');
 
@@ -107,13 +121,13 @@ const Kite = {
         }
 
         const evt = this.eventsByEditor.get(e.document.fileName);
-        evt.focus();
+        evt && evt.focus();
       }
     }));
 
     this.disposables.push(vscode.window.onDidChangeTextEditorSelection(e => {
       const evt = this.eventsByEditor.get(e.textEditor.document.fileName);
-      evt.selectionChanged();
+      evt && evt.selectionChanged();
     }));
 
     this.disposables.push(vscode.workspace.onDidChangeTextDocument(e => {
@@ -253,7 +267,7 @@ const Kite = {
 
           if (e === vscode.window.activeTextEditor) {
             const evt = this.eventsByEditor.get(e.document.fileName)
-            evt.focus();
+            evt && evt.focus();
           }
         }
       })
@@ -289,10 +303,10 @@ const Kite = {
 
   deactivate() {
     for(const [, ke] of this.kiteEditorByEditor) {
-      ke.dispose();
+      ke && ke.dispose();
     }
     for(const [, evt] of this.eventsByEditor) {
-      evt.dispose();
+      evt && evt.dispose();
     }
     metrics.featureRequested('stopping');
     // send the activated event
