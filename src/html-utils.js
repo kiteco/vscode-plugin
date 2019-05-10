@@ -12,15 +12,16 @@ const {
   memberLabel, parameterName, parameterDefault, parameterTypeLink,
   symbolReturnType,
 } = require('./data-utils');
-const logo = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-small.svg')).toString();
-const spinner = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'spinner.svg')).toString();
-const logoLarge = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'logo-no-text.svg')).toString();
-const proLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kitepro.svg')).toString();
-const enterpriseLogoSvg = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'images', 'kiteenterprise.svg')).toString();
-const giftLogoPath = path.resolve(__dirname, '..', 'assets', 'images', 'icon-gift.png');
+const ASSETS_PATH = path.resolve(__dirname, '..', 'assets');
+
+const logo = fs.readFileSync(path.resolve(ASSETS_PATH, 'images', 'logo-small.svg')).toString();
+const spinner = fs.readFileSync(path.resolve(ASSETS_PATH, 'images', 'spinner.svg')).toString();
+const logoLarge = fs.readFileSync(path.resolve(ASSETS_PATH, 'images', 'logo-no-text.svg')).toString();
+const proLogoSvg = fs.readFileSync(path.resolve(ASSETS_PATH, 'images', 'kitepro.svg')).toString();
+const enterpriseLogoSvg = fs.readFileSync(path.resolve(ASSETS_PATH, 'images', 'kiteenterprise.svg')).toString();
+const giftLogoPath = path.resolve(ASSETS_PATH, 'images', 'icon-gift.png');
 const server = require('./server');
 
-const ASSETS_PATH = path.resolve(__dirname, '..', 'assets');
 const STYLESHEETS = fs.readdirSync(path.resolve(ASSETS_PATH, 'css'))
 .map(p => path.resolve(ASSETS_PATH, 'css', p))
 .map(p => `<link href="file://${p}" rel="stylesheet"/>`)
