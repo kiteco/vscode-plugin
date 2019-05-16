@@ -118,9 +118,13 @@ function hoverPath(document, position) {
   const filename = document.fileName;
   const buffer = cleanPath(filename);
   const pos = document.offsetAt(position);
+  const encoding = 'utf-16'
   return [
     `/api/buffer/vscode/${buffer}/${state}/hover`,
-    `cursor_runes=${pos}`,
+    [
+      `cursor_runes=${pos}`,
+      `offset_encoding=${encoding}`,
+    ].join('&'),
   ].join('?');
 }
 
