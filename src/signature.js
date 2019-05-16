@@ -29,6 +29,7 @@ module.exports = class KiteSignatureProvider {
       editor: 'vscode',
       filename: normalizeDriveLetter(document.fileName),
       cursor_runes: cursorPosition,
+      offset_encoding: 'utf-16'
     };
     Logger.debug(payload);
 
