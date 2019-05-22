@@ -81,6 +81,11 @@
                         "error"
                     ],
                     "description": "The verbosity level of Kite's logs."
+                },
+                "kite.enableSnippets": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable snippets feature (Experimental)"
                 }
             }
         }
