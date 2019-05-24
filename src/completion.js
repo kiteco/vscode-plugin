@@ -61,6 +61,7 @@ module.exports = class KiteCompletionProvider {
         const item = new CompletionItem('⟠ ' + c.display);
         item.sortText = fill(String(i), length, '0');
         item.insertText = c.insert;
+        item.filterText = c.insert;
         if (c.documentation_text !== '') {
           item.documentation = new MarkdownString(`[𝕜𝕚𝕥𝕖]&nbsp;&nbsp;__${c.symbol.value[0].repr}__&nbsp;&nbsp;&nbsp;&nbsp;_${c.hint}_
 
