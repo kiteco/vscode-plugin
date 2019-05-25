@@ -31,13 +31,13 @@ ${documentation_text}
             `);
 }
 // Transforms Kite snippet completion into a CompletionItem
-const processSnippetCompletion = (document, c, displayPrefix) => {
+const processSnippetCompletion = (document, c, displayPrefix, length, i) => {
   const item = new CompletionItem('⟠' + displayPrefix + c.display);
   item.insertText = c.snippet.text;
   // Use c.snippet.text, not c.display for Code's fuzzy filtering
   // and sorting algorithm.
   item.filterText = c.snippet.text;
-  item.sortText = item.insertText;
+  item.sortText = fill(String(i), length, '0');
 
   const start = document.positionAt(c.replace.begin);
   const end = document.positionAt(c.replace.end);
@@ -147,12 +147,13 @@ module.exports = class KiteCompletionProvider {
     .then(data => {
       data = parseJSON(data, {});
       const completions = data.completions || [];
+      const length = String(completions.length).length;
       const completionItems = [];
-      completions.forEach(c => {
-        completionItems.push(processSnippetCompletion(document, c, ' '));
+      completions.forEach((c, i) => {
+        completionItems.push(processSnippetCompletion(document, c, ' ', length, i));
         const children = c.children || [];
         children.forEach(child => {
-          completionItems.push(processSnippetCompletion(document, child, '   '));
+          completionItems.push(processSnippetCompletion(document, child, '   ', length, i));
         })
       });
       return completionItems;
