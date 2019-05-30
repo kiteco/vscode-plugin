@@ -149,12 +149,17 @@ module.exports = class KiteCompletionProvider {
       const completions = data.completions || [];
       const length = String(completions.length).length;
       const completionItems = [];
-      completions.forEach((c, i) => {
-        completionItems.push(processSnippetCompletion(document, c, ' ', length, i));
+      // Used to track order in suggestion list
+      let idx = 0;
+      completions.forEach(c => {
+        completionItems.push(processSnippetCompletion(document, c, ' ', length, idx));
         const children = c.children || [];
+        let offset = 1;
         children.forEach(child => {
-          completionItems.push(processSnippetCompletion(document, child, '   ', length, i));
+          completionItems.push(processSnippetCompletion(document, child, '   ', length, idx + offset));
+          offset += 1;
         })
+        idx += offset;
       });
       return new CompletionList(completionItems, true);
     })
