@@ -1,5 +1,5 @@
 'use strict';
-const {CompletionItem, CompletionItemKind, MarkdownString, Range, SnippetString, window, workspace} = require('vscode');
+const {CompletionItem, CompletionItemKind, CompletionList, MarkdownString, Range, SnippetString, window, workspace} = require('vscode');
 const {Logger} = require('kite-installer');
 const {MAX_FILE_SIZE} = require('./constants');
 const {parseJSON} = require('./utils');
@@ -156,7 +156,7 @@ module.exports = class KiteCompletionProvider {
           completionItems.push(processSnippetCompletion(document, child, '   ', length, i));
         })
       });
-      return completionItems;
+      return new CompletionList(completionItems, true);
     })
     .catch(() => []);
   }
