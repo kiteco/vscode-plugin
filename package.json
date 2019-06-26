@@ -84,8 +84,8 @@
                 },
                 "kite.enableSnippets": {
                     "type": "boolean",
-                    "default": false,
-                    "description": "Enable snippets feature (Experimental)"
+                    "default": true,
+                    "description": "Enable snippet completions"
                 }
             }
         }
@@ -119,7 +119,7 @@
         "@types/node": "^6.0.40",
         "copy-webpack-plugin": "^5.0.2",
         "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
-        "eslint": "^3.6.0",
+        "eslint": ">=4.18.2",
         "expect.js": "^0.3.1",
         "fs-plus": "^3.0.2",
         "jsdom": "^10",

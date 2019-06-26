@@ -31,13 +31,13 @@ ${documentation_text}
             `);
 }
 // Transforms Kite snippet completion into a CompletionItem
-const processSnippetCompletion = (document, c, displayPrefix, length, i) => {
+const processSnippetCompletion = (document, c, displayPrefix, numDigits, i) => {
   const item = new CompletionItem('⟠' + displayPrefix + c.display);
   item.insertText = c.snippet.text;
   // Use c.snippet.text, not c.display for Code's fuzzy filtering
   // and sorting algorithm.
   item.filterText = c.snippet.text;
-  item.sortText = fill(String(i), length, '0');
+  item.sortText = fill(String(i), numDigits, '0');
 
   const start = document.positionAt(c.replace.begin);
   const end = document.positionAt(c.replace.end);
@@ -147,16 +147,25 @@ module.exports = class KiteCompletionProvider {
     .then(data => {
       data = parseJSON(data, {});
       const completions = data.completions || [];
-      const length = String(completions.length).length;
+      // # of completion items + its children
+      const totalCompletions = completions.reduce((total, completion) => {
+        let toReturn = total + 1;
+        if (completion.children) {
+          toReturn += completion.children.length;
+        }
+        return toReturn;
+      }, 0);
+      // # of digits needed to represent totalCompletions. Used for sortText.
+      const numDigits = String(totalCompletions).length;
       const completionItems = [];
       // Used to track order in suggestion list
       let idx = 0;
       completions.forEach(c => {
-        completionItems.push(processSnippetCompletion(document, c, ' ', length, idx));
+        completionItems.push(processSnippetCompletion(document, c, ' ', numDigits, idx));
         const children = c.children || [];
         let offset = 1;
         children.forEach(child => {
-          completionItems.push(processSnippetCompletion(document, child, '   ', length, idx + offset));
+          completionItems.push(processSnippetCompletion(document, child, '   ', numDigits, idx + offset));
           offset += 1;
         })
         idx += offset;
