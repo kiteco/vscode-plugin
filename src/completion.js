@@ -165,7 +165,7 @@ module.exports = class KiteCompletionProvider {
         const children = c.children || [];
         let offset = 1;
         children.forEach(child => {
-          completionItems.push(processSnippetCompletion(document, child, '   ', numDigits, idx + offset));
+          completionItems.push(processSnippetCompletion(document, child, ' ', numDigits, idx + offset));
           offset += 1;
         })
         idx += offset;
