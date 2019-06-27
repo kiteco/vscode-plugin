@@ -55,6 +55,10 @@ function completionsPath() {
   return '/clientapi/editor/completions';
 }
 
+function snippetsCompletionsPath() {
+  return '/clientapi/editor/complete';
+}
+
 function reportPath(data) {
   const symbol = head(data.symbol);
 
@@ -149,6 +153,7 @@ function normalizeDriveLetter(str) {
 module.exports = {
   accountPath,
   completionsPath,
+  snippetsCompletionsPath,
   examplePath,
   hoverPath,
   languagesPath,
