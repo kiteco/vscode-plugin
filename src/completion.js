@@ -30,13 +30,21 @@ ${documentation_text}
   
             `);
 }
+
+const buildFilterText = (document, position) => {
+  const wordRange = document.getWordRangeAtPosition(position);
+  if (!wordRange) {
+    return null;
+  }
+  return document.getText(wordRange);
+}
+
 // Transforms Kite snippet completion into a CompletionItem
-const processSnippetCompletion = (document, c, displayPrefix, numDigits, i) => {
+const processSnippetCompletion = (document, c, displayPrefix, numDigits, i, filterText) => {
   const item = new CompletionItem('⟠' + displayPrefix + c.display);
   item.insertText = c.snippet.text;
-  // Use c.snippet.text, not c.display for Code's fuzzy filtering
-  // and sorting algorithm.
-  item.filterText = c.snippet.text;
+  // Use previous word, otherwise default to c.snippet.text.
+  item.filterText = filterText ? filterText : c.snippet.text;
   item.sortText = fill(String(i), numDigits, '0');
 
   const start = document.positionAt(c.replace.begin);
@@ -74,7 +82,7 @@ module.exports = class KiteCompletionProvider {
     this.isTest = isTest;
   }
 
-  provideCompletionItems(document, position, token) {
+  provideCompletionItems(document, position) {
     const text = document.getText();
 
     if (text.length > MAX_FILE_SIZE) {
@@ -83,9 +91,10 @@ module.exports = class KiteCompletionProvider {
     }
 
     const filename =  normalizeDriveLetter(document.fileName)
+    const filterText = buildFilterText(document, position)
     // Use snippets completions.
     if (workspace.getConfiguration('kite').enableSnippets) {
-      return this.getSnippetCompletions(document, text, filename);
+      return this.getSnippetCompletions(document, text, filename, filterText);
     }
     // Use legacy completions.
     const cursorPosition = document.offsetAt(position);
@@ -112,7 +121,8 @@ module.exports = class KiteCompletionProvider {
         const item = new CompletionItem('⟠ ' + c.display);
         item.sortText = fill(String(i), length, '0');
         item.insertText = c.insert;
-        item.filterText = c.insert;
+        // Use previous word, otherwise default to c.insert.
+        item.filterText = filterText ? filterText : c.insert;
         if (c.documentation_text !== '') {
           item.documentation = buildMarkdown(c.symbol.value[0].repr, c.hint, c.documentation_text);
         }
@@ -124,7 +134,7 @@ module.exports = class KiteCompletionProvider {
     .catch(() => []);
   }
 
-  getSnippetCompletions(document, text, filename) {
+  getSnippetCompletions(document, text, filename, filterText) {
     const selection = window.activeTextEditor.selection;
     const begin = document.offsetAt(selection.start);
     const end = document.offsetAt(selection.end);
@@ -161,11 +171,11 @@ module.exports = class KiteCompletionProvider {
       // Used to track order in suggestion list
       let idx = 0;
       completions.forEach(c => {
-        completionItems.push(processSnippetCompletion(document, c, ' ', numDigits, idx));
+        completionItems.push(processSnippetCompletion(document, c, ' ', numDigits, idx, filterText));
         const children = c.children || [];
         let offset = 1;
         children.forEach(child => {
-          completionItems.push(processSnippetCompletion(document, child, ' ', numDigits, idx + offset));
+          completionItems.push(processSnippetCompletion(document, child, ' ', numDigits, idx + offset, filterText));
           offset += 1;
         })
         idx += offset;
