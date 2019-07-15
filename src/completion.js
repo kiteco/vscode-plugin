@@ -25,9 +25,9 @@ const kindForHint = hint => {
 
 const buildMarkdown = (id, hint, documentation_text) => {
   return new MarkdownString(`[𝕜𝕚𝕥𝕖]&nbsp;&nbsp;__${id}__&nbsp;&nbsp;&nbsp;&nbsp;_${hint}_
-  
+
 ${documentation_text}
-  
+
             `);
 }
 
@@ -41,7 +41,7 @@ const buildFilterText = (document, position) => {
 
 // Transforms Kite snippet completion into a CompletionItem
 const processSnippetCompletion = (document, c, displayPrefix, numDigits, i, filterText) => {
-  const item = new CompletionItem('⟠' + displayPrefix + c.display);
+  const item = new CompletionItem(c.display);
   item.insertText = c.snippet.text;
   // Use previous word, otherwise default to c.snippet.text.
   item.filterText = filterText ? filterText : c.snippet.text;
@@ -53,7 +53,9 @@ const processSnippetCompletion = (document, c, displayPrefix, numDigits, i, filt
   if (c.documentation.text !== '') {
     item.documentation = buildMarkdown(c.web_id, c.hint, c.documentation.text)
   }
-  item.detail = c.hint;
+  // Note: The space following the Kite icon is the unicode space U+2003 instead
+  // of the normal space U+0020 because VS Code strips the detail.
+  item.detail = c.hint + ' ⟠ ';
   item.kind = kindForHint(c.hint);
 
   if (c.snippet.placeholders.length > 0) {
@@ -65,7 +67,7 @@ const processSnippetCompletion = (document, c, displayPrefix, numDigits, i, filt
       placeholder.begin += offset;
       placeholder.end += offset;
       item.insertText = item.insertText.slice(0, placeholder.begin)
-      + '${' + (i + 1).toString() + ':' + item.insertText.slice(placeholder.begin, placeholder.end) 
+      + '${' + (i + 1).toString() + ':' + item.insertText.slice(placeholder.begin, placeholder.end)
       + '}' + item.insertText.slice(placeholder.end);
       offset += 5;
     }
@@ -118,7 +120,8 @@ module.exports = class KiteCompletionProvider {
       const length = String(completions.length).length;
 
       return completions.map((c, i) => {
-        const item = new CompletionItem('⟠ ' + c.display);
+        console.log(`displaying completion: ${c.display}`);
+        const item = new CompletionItem(c.display);
         item.sortText = fill(String(i), length, '0');
         item.insertText = c.insert;
         // Use previous word, otherwise default to c.insert.
@@ -126,7 +129,9 @@ module.exports = class KiteCompletionProvider {
         if (c.documentation_text !== '') {
           item.documentation = buildMarkdown(c.symbol.value[0].repr, c.hint, c.documentation_text);
         }
-        item.detail = c.hint;
+        // Note: The space following the Kite icon is the unicode space U+2003
+        // instead of the normal space U+0020 because VS Code strips the detail.
+        item.detail = c.hint + ' ⟠ ';
         item.kind = kindForHint(c.hint);
         return item;
       });
