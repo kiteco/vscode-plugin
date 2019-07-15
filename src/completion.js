@@ -120,7 +120,6 @@ module.exports = class KiteCompletionProvider {
       const length = String(completions.length).length;
 
       return completions.map((c, i) => {
-        console.log(`displaying completion: ${c.display}`);
         const item = new CompletionItem(c.display);
         item.sortText = fill(String(i), length, '0');
         item.insertText = c.insert;
