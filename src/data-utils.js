@@ -1,6 +1,6 @@
 'use strict';
 
-const {compact, flatten, head, last, uniq, detailGet, detailLang, detailNotEmpty, getFunctionDetails} = require('./utils');
+const { compact, flatten, head, last, uniq, detailGet, detailLang, detailNotEmpty, getFunctionDetails } = require('./utils');
 
 const idIsEmpty = (id) =>
   !id || id === '' ||
@@ -72,11 +72,11 @@ const gatherParameters = (detail, withType) => {
   }
 };
 
-const signature = (data, withType = true, current = -1) =>{
+const signature = (data, withType = true, current = -1) => {
   const detail = getFunctionDetails(data);
   return detail
     ? `(<span class="signature">${
-      compact(flatten(gatherParameters(detail, withType)))
+    compact(flatten(gatherParameters(detail, withType)))
       .map((p, i, a) => {
         const s = i === a.length - 1 ? '' : ', ';
         return i === current
@@ -110,7 +110,7 @@ const callSignature = (data) =>
     (data.args || []).map(callParameterName),
     callKwargParameters(data),
   ]))
-  .join(', ');
+    .join(', ');
 
 const valueName = value =>
   last(last(value.repr.replace(/\(|\)/g, '').split('|').map(s => s.trim().split(':'))));
@@ -148,7 +148,7 @@ const memberLabel = (s) => {
 };
 
 const wrapType = (o) => {
-  const {name, id} = o || {};
+  const { name, id } = o || {};
   return name
     ? (!idIsEmpty(id)
       ? `<a href='command:kite.navigate?"value/${id}"' class="type-value">${name}</a>`
@@ -168,10 +168,10 @@ const symbolValue = s => head(s.value);
 const symbolKindMarkdown = s => {
   const value = symbolValue(s);
   if (value.kind !== 'instance') {
-    return `[_${value.kind}_]`;
+    return `[ _${value.kind}_ ]`;
   }
   let types = uniq(s.value.filter(v => v.kind === 'instance').map(v => `_${v.type.replace('_', '\\_')}_`));
-  return `[${types.join(' | ')}]`;
+  return `[ ${types.join(' | ')} ]`;
 }
 
 const reportFromHover = hover => {
@@ -184,11 +184,11 @@ const reportFromHover = hover => {
   return data;
 };
 
-const extractInstanceType = v => ({name: v.type, id: v.type_id});
+const extractInstanceType = v => ({ name: v.type, id: v.type_id });
 const extractFunctionType = v => {
   const detail = getFunctionDetails(v);
   return detail && detail.return_value
-    ? detail.return_value.map(v => ({name: v.type, id: v.type_id}))
+    ? detail.return_value.map(v => ({ name: v.type, id: v.type_id }))
     : [];
 };
 
