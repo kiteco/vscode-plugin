@@ -169,7 +169,7 @@ module.exports = class KiteCompletionProvider {
           }
           // Note: The space following the Kite icon is the unicode space U+2003
           // instead of the normal space U+0020 because VS Code strips the detail.
-          item.detail = c.hint + " ⟠ ";
+          item.detail = c.hint + " 𝕜𝕚𝕥𝕖 ";
           item.kind = kindForHint(c.hint);
           return item;
         });
