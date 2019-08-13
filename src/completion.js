@@ -10,7 +10,11 @@ const {
   workspace
 } = require("vscode");
 const { Logger } = require("kite-installer");
-const { MAX_FILE_SIZE } = require("./constants");
+const {
+  KITE_BRANDING,
+  OFFSET_ENCODING,
+  MAX_FILE_SIZE
+} = require("./constants");
 const { parseJSON } = require("./utils");
 const {
   completionsPath,
@@ -72,8 +76,8 @@ const processSnippetCompletion = (
   item.insertText = c.snippet.text;
   // Use previous word, otherwise default to c.snippet.text.
   item.filterText = filterText ? filterText : c.snippet.text;
-  item.sortText = fill(String(i), numDigits, "0");
 
+  item.sortText = fill(String(i), numDigits, "0");
   const start = document.positionAt(c.replace.begin);
   const end = document.positionAt(c.replace.end);
   item.range = new Range(start, end);
@@ -82,7 +86,7 @@ const processSnippetCompletion = (
   }
   // Note: The space following the Kite icon is the unicode space U+2003 instead
   // of the normal space U+0020 because VS Code strips the detail.
-  item.detail = c.hint + " 𝕜𝕚𝕥𝕖 ";
+  item.detail = c.hint + KITE_BRANDING;
   item.kind = kindForHint(c.hint);
 
   if (c.snippet.placeholders.length > 0) {
@@ -136,7 +140,7 @@ module.exports = class KiteCompletionProvider {
       editor: "vscode",
       filename,
       cursor_runes: cursorPosition,
-      offset_encoding: "utf-16"
+      offset_encoding: OFFSET_ENCODING
     };
 
     Logger.debug(payload);
@@ -169,7 +173,7 @@ module.exports = class KiteCompletionProvider {
           }
           // Note: The space following the Kite icon is the unicode space U+2003
           // instead of the normal space U+0020 because VS Code strips the detail.
-          item.detail = c.hint + " 𝕜𝕚𝕥𝕖 ";
+          item.detail = c.hint + KITE_BRANDING;
           item.kind = kindForHint(c.hint);
           return item;
         });
@@ -190,7 +194,7 @@ module.exports = class KiteCompletionProvider {
         begin,
         end
       },
-      offset_encoding: "utf-16"
+      offset_encoding: OFFSET_ENCODING
     };
 
     return this.Kite.request(

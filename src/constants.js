@@ -1,14 +1,14 @@
 const PYTHON_MODE = [
-  {language: 'python', scheme: 'file'},
-  {language: 'python', scheme: 'untitled'}
+  { language: "python", scheme: "file" },
+  { language: "python", scheme: "untitled" }
 ];
 
-const JAVASCRIPT_MODE = {language: 'javascript', scheme: 'file'};
+const JAVASCRIPT_MODE = { language: "javascript", scheme: "file" };
 
 const SUPPORTED_EXTENSIONS = {
   javascript: fileName => /\.js$/.test(fileName),
-  python: fileName => /\.py$/.test(fileName),
-}
+  python: fileName => /\.py$/.test(fileName)
+};
 
 // MAX_FILE_SIZE is the maximum file size to send to Kite
 const MAX_FILE_SIZE = 75 * Math.pow(2, 10); // 75 KB
@@ -22,9 +22,13 @@ const ATTEMPTS = 30;
 
 const INTERVAL = 2500;
 
-const ERROR_COLOR = '#ff0000';
+const ERROR_COLOR = "#ff0000";
 
-const WARNING_COLOR = '#929497';
+const WARNING_COLOR = "#929497";
+
+const KITE_BRANDING = " 𝕜𝕚𝕥𝕖 ";
+
+const OFFSET_ENCODING = "utf-16";
 
 module.exports = {
   ATTEMPTS,
@@ -37,4 +41,6 @@ module.exports = {
   ERROR_COLOR,
   WARNING_COLOR,
   SUPPORTED_EXTENSIONS,
+  KITE_BRANDING,
+  OFFSET_ENCODING
 };
