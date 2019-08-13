@@ -59,8 +59,8 @@ const buildFilterText = (document, position) => {
 };
 
 // Transforms Kite snippet completion into a CompletionItem
-const processSnippetCompletion = (document, c, numDigits, i, filterText) => {
-  const item = new CompletionItem(c.display);
+const processSnippetCompletion = (document, c, displayPrefix, numDigits, i, filterText) => {
+  const item = new CompletionItem(displayPrefix + c.display);
   item.insertText = c.snippet.text;
   // Use previous word, otherwise default to c.snippet.text.
   item.filterText = filterText ? filterText : c.snippet.text;
@@ -211,7 +211,7 @@ module.exports = class KiteCompletionProvider {
         let idx = 0;
         completions.forEach(c => {
           completionItems.push(
-            processSnippetCompletion(document, c, numDigits, idx, filterText)
+            processSnippetCompletion(document, c, '', numDigits, idx, filterText)
           );
           const children = c.children || [];
           let offset = 1;
@@ -220,6 +220,7 @@ module.exports = class KiteCompletionProvider {
               processSnippetCompletion(
                 document,
                 child,
+                '  ',
                 numDigits,
                 idx + offset,
                 filterText
