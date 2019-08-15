@@ -107,7 +107,6 @@
         "getmac": "^1.2.1",
         "kite-api": "^3.3.0",
         "kite-connector": "^3.4.0",
-        "kite-installer": "^3.0.2",
         "md5": "^2.2.0",
         "opn": "^5.0.0",
         "rollbar": "^2.3.8",
