@@ -9,7 +9,7 @@ const {
   window,
   workspace
 } = require("vscode");
-const { Logger } = require("kite-installer");
+const Logger = require("kite-connector/lib/logger");
 const {
   KITE_BRANDING,
   OFFSET_ENCODING,
