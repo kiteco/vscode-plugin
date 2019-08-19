@@ -637,9 +637,9 @@ const Kite = {
         default:
           if (status) {
             switch (status.status) {
-              case "noindex":
+              case "noIndex":
                 this.statusBarItem.color = undefined;
-                this.statusBarItem.text = "𝕜𝕚𝕥𝕖: (unindexed)";
+                this.statusBarItem.text = "𝕜𝕚𝕥𝕖: ready (unindexed)";
                 this.statusBarItem.tooltip =
                   "Kite is ready, but no index available";
                 break;
