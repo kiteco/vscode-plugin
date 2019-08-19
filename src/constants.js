@@ -1,3 +1,5 @@
+const vscode = require("vscode");
+
 const PYTHON_MODE = [
   { language: "python", scheme: "file" },
   { language: "python", scheme: "untitled" }
@@ -22,7 +24,14 @@ const ATTEMPTS = 30;
 
 const INTERVAL = 2500;
 
-const ERROR_COLOR = "#ff0000";
+const ERROR_COLOR = () => {
+  // For the High Contrast Theme, editorWarning.foreground renders the text invisible.
+  return vscode.workspace
+    .getConfiguration("workbench")
+    .colorTheme.includes("High Contrast")
+    ? "#ff0000"
+    : vscode.ThemeColor("editorWarning.foreground");
+};
 
 const WARNING_COLOR = "#929497";
 

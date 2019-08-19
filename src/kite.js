@@ -616,23 +616,23 @@ const Kite = {
         case KiteAPI.STATES.UNSUPPORTED:
           this.statusBarItem.tooltip =
             "Kite engine is currently not supported on your platform";
-          this.statusBarItem.color = ERROR_COLOR;
+          this.statusBarItem.color = ERROR_COLOR();
           this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not supported";
           break;
         case KiteAPI.STATES.UNINSTALLED:
           this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not installed";
           this.statusBarItem.tooltip = "Kite engine is not installed";
-          this.statusBarItem.color = ERROR_COLOR;
+          this.statusBarItem.color = ERROR_COLOR();
           break;
         case KiteAPI.STATES.INSTALLED:
           this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not running";
           this.statusBarItem.tooltip = "Kite engine is not running";
-          this.statusBarItem.color = ERROR_COLOR;
+          this.statusBarItem.color = ERROR_COLOR();
           break;
         case KiteAPI.STATES.RUNNING:
           this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not reachable";
           this.statusBarItem.tooltip = "Kite engine is not reachable";
-          this.statusBarItem.color = ERROR_COLOR;
+          this.statusBarItem.color = ERROR_COLOR();
           break;
         default:
           if (status) {
