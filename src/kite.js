@@ -29,6 +29,9 @@ const {
 } = require("./utils");
 const { version } = require("../package.json");
 
+const RUN_KITE_ATTEMPTS = 30;
+const RUN_KITE_INTERVAL = 2500;
+
 const Kite = {
   activate(ctx) {
     if (process.env.NODE_ENV !== "test") {
@@ -549,7 +552,7 @@ const Kite = {
               !this.attemptedToStartKite &&
               vscode.workspace.getConfiguration("kite").startKiteEngineOnStartup
             ) {
-              KiteAPI.runKiteAndWait().then(() => this.checkState(src));
+              KiteAPI.runKiteAndWait(RUN_KITE_ATTEMPTS, RUN_KITE_INTERVAL).then(() => this.checkState(src));
               this.attemptedToStartKite = true;
             }
             break;
