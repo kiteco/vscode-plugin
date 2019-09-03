@@ -56,7 +56,11 @@ ${documentation_text}
 };
 
 const buildFilterText = (document, position) => {
-  const wordRange = document.getWordRangeAtPosition(position);
+  const selection =
+    window.activeTextEditor && window.activeTextEditor.selection;
+  const wordRange =
+    document.getWordRangeAtPosition(position) ||
+    (selection && new Range(selection.start, selection.end)); // Snippet placeholder selection range
   if (!wordRange) {
     return null;
   }
