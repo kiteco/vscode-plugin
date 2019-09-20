@@ -58,7 +58,7 @@ Alternatively, you have 2 options to manually install the package:
 1. Search for "Kite" in VS Code's built-in extension marketplace and install from there.
 2. Run the command `code --install-extension kiteco.kite` in your terminal.
 
-[Learn why to use Kite with VS Code.](https://www.kite.com/integrations/vs-code/)
+[Learn about the additional capabilities Kite adds to VS Code.](https://www.kite.com/integrations/vs-code/)
 
 
 ## Usage
