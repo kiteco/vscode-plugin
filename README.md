@@ -38,14 +38,8 @@ __Windows Instructions__
 2. The installer should run the Kite Engine automatically after installation is complete.
 
 __Linux Instructions__
-
-Install Kite on Linux by running one command:
-
-```
-bash -c "$(wget -q -O - https://linux.kite.com/dls/linux/current)"
-```
-
-Kite will launch automatically after installation.
+1. Visit https://kite.com/linux/ to install Kite.
+2. The installer should run the Kite Engine automatically after installation is complete.
 
 
 ### Installing the Kite Assistant for Visual Studio Code
