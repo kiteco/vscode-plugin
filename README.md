@@ -1,13 +1,6 @@
 # Kite Python Plugin for Visual Studio Code
 
-Kite is an AI-powered programming assistant that helps you write Python code inside Visual Studio Code. The
-[Kite Engine](https://kite.com/) needs to be installed in order for the extension to work properly. The extension itself
-provides the frontend that interfaces with the Kite Engine, which runs 100% locally on your computer performing all the code analysis and machine learning (no code is sent to a cloud server).
-
-
-## Features
-
-Kite helps you write code faster by showing you the right information at the right time. Learn more about how Kite heightens VS Code's capabilities at https://kite.com/integrations/vs-code/.
+Kite is an AI-powered programming assistant that helps you write Python code inside Visual Studio Code. Kite helps you write code faster by showing you the right information at the right time. Learn more about how Kite heightens VS Code's capabilities at https://kite.com/integrations/vs-code/.
 
 At a high level, Kite provides you with:
 * 🧠 __[Line-of-Code Completions](https://kite.com/blog/product/launching-line-of-code-completions-going-cloudless-and-17-million-in-funding/)__ powered by machine learning models trained on the entire open source code universe
@@ -27,6 +20,9 @@ Use another editor? Check out [Kite’s other editor integrations](https://kite.
 ## Installation
 
 ### Installing the Kite Engine
+
+The [Kite Engine](https://kite.com/) needs to be installed in order for the package to work properly. The package itself
+provides the frontend that interfaces with the Kite Engine, which performs all the code analysis and machine learning 100% locally on your computer (no code is sent to a cloud server).
 
 __macOS Instructions__
 1. Download the [installer](https://kite.com/download/) and open the downloaded `.dmg` file.
@@ -52,7 +48,7 @@ Alternatively, you have 2 options to manually install the package:
 1. Search for "Kite" in VS Code's built-in extension marketplace and install from there.
 2. Run the command `code --install-extension kiteco.kite` in your terminal.
 
-[Learn about the additional capabilities Kite adds to VS Code.](https://kite.com/integrations/vs-code/)
+[Learn about the capabilities Kite adds to VS Code.](https://kite.com/integrations/vs-code/)
 
 
 ## Usage
