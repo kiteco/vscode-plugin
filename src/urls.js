@@ -1,7 +1,7 @@
 'use strict';
 const vscode = require('vscode');
 const md5 = require('md5');
-const {head} = require('./utils');
+const { head } = require('./utils');
 
 function metricsCounterPath() {
   return '/clientapi/metrics/counters';
@@ -52,10 +52,6 @@ function shouldNotifyPath(path) {
 }
 
 function completionsPath() {
-  return '/clientapi/editor/completions';
-}
-
-function snippetsCompletionsPath() {
   return '/clientapi/editor/complete';
 }
 
@@ -138,8 +134,8 @@ function escapeId(id) {
 
 function cleanPath(p) {
   return encodeURI(normalizeDriveLetter(p))
-  .replace(/^([a-zA-Z]):/, (m, d) => `/windows/${d}`)
-  .replace(/\/|\\|%5C/g, ':');
+    .replace(/^([a-zA-Z]):/, (m, d) => `/windows/${d}`)
+    .replace(/\/|\\|%5C/g, ':');
 }
 
 function serializeRangeForPath(range) {
@@ -153,7 +149,6 @@ function normalizeDriveLetter(str) {
 module.exports = {
   accountPath,
   completionsPath,
-  snippetsCompletionsPath,
   examplePath,
   hoverPath,
   languagesPath,

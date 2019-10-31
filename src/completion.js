@@ -18,8 +18,7 @@ const {
 const { parseJSON } = require("./utils");
 const {
   completionsPath,
-  normalizeDriveLetter,
-  snippetsCompletionsPath
+  normalizeDriveLetter
 } = require("./urls");
 
 const fill = (s, l, f = " ") => {
@@ -67,8 +66,8 @@ const buildFilterText = (document, position) => {
   return document.getText(wordRange);
 };
 
-// Transforms Kite snippet completion into a CompletionItem
-const processSnippetCompletion = (
+// Transforms Kite completion into a CompletionItem
+const processCompletion = (
   document,
   c,
   displayPrefix,
@@ -133,63 +132,14 @@ module.exports = class KiteCompletionProvider {
 
     const filename = normalizeDriveLetter(document.fileName);
     const filterText = buildFilterText(document, position);
-    // Use snippets completions.
-    if (workspace.getConfiguration("kite").enableSnippets) {
-      return this.getSnippetCompletions(document, text, filename, filterText);
-    }
-    // Use legacy completions.
-    const cursorPosition = document.offsetAt(position);
-    const payload = {
-      text,
-      editor: "vscode",
-      filename,
-      cursor_runes: cursorPosition,
-      offset_encoding: OFFSET_ENCODING
-    };
-
-    Logger.debug(payload);
-
-    return this.Kite.request(
-      {
-        path: completionsPath(),
-        method: "POST"
-      },
-      JSON.stringify(payload),
-      document
-    )
-      .then(data => {
-        data = parseJSON(data, {});
-        const completions = data.completions || [];
-        const length = String(completions.length).length;
-
-        return completions.map((c, i) => {
-          const item = new CompletionItem(c.display);
-          item.sortText = fill(String(i), length, "0");
-          item.insertText = c.insert;
-          // Use previous word, otherwise default to c.insert.
-          item.filterText = filterText ? filterText : c.insert;
-          if (c.documentation_text !== "") {
-            item.documentation = buildMarkdown(
-              c.symbol.value[0].repr,
-              c.hint,
-              c.documentation_text
-            );
-          }
-          // Note: The space following the Kite icon is the unicode space U+2003
-          // instead of the normal space U+0020 because VS Code strips the detail.
-          item.detail = c.hint + KITE_BRANDING;
-          item.kind = kindForHint(c.hint);
-          return item;
-        });
-      })
-      .catch(() => []);
+    return this.getCompletions(document, text, filename, filterText);
   }
 
-  getSnippetCompletions(document, text, filename, filterText) {
+  getCompletions(document, text, filename, filterText) {
     const selection = window.activeTextEditor.selection;
     const begin = document.offsetAt(selection.start);
     const end = document.offsetAt(selection.end);
-
+    const enableSnippets = workspace.getConfiguration("kite").enableSnippets;
     const payload = {
       text,
       editor: "vscode",
@@ -198,12 +148,13 @@ module.exports = class KiteCompletionProvider {
         begin,
         end
       },
+      no_snippets: !enableSnippets,
       offset_encoding: OFFSET_ENCODING
     };
 
     return this.Kite.request(
       {
-        path: snippetsCompletionsPath(),
+        path: completionsPath(),
         method: "POST"
       },
       JSON.stringify(payload)
@@ -226,7 +177,7 @@ module.exports = class KiteCompletionProvider {
         let idx = 0;
         completions.forEach(c => {
           completionItems.push(
-            processSnippetCompletion(
+            processCompletion(
               document,
               c,
               "",
@@ -239,7 +190,7 @@ module.exports = class KiteCompletionProvider {
           let offset = 1;
           children.forEach(child => {
             completionItems.push(
-              processSnippetCompletion(
+              processCompletion(
                 document,
                 child,
                 "  ",
