@@ -73,7 +73,6 @@ const processCompletion = (
   displayPrefix,
   numDigits,
   i,
-  filterText
 ) => {
   const item = new CompletionItem(displayPrefix + c.display);
   item.insertText = c.snippet.text;
@@ -153,6 +152,7 @@ module.exports = class KiteCompletionProvider {
         end
       },
       no_snippets: !enableSnippets,
+      no_attribute_to_subscript: true,
       offset_encoding: OFFSET_ENCODING
     };
 
@@ -187,7 +187,6 @@ module.exports = class KiteCompletionProvider {
               "",
               numDigits,
               idx,
-              filterText
             )
           );
           const children = c.children || [];
@@ -200,7 +199,6 @@ module.exports = class KiteCompletionProvider {
                 "  ",
                 numDigits,
                 idx + offset,
-                filterText
               )
             );
             offset += 1;
