@@ -1,15 +1,12 @@
 const vscode = require("vscode");
 
-const PYTHON_MODE = [
-  { language: "python", scheme: "file" },
-  { language: "python", scheme: "untitled" }
+const DOCUMENT_SELECTOR = [
+  { language: "", scheme: "file" },
 ];
 
-const JAVASCRIPT_MODE = { language: "javascript", scheme: "file" };
-
 const SUPPORTED_EXTENSIONS = {
-  javascript: fileName => /\.js$/.test(fileName),
-  python: fileName => /\.py$/.test(fileName)
+  python: fileName => /\.py$/.test(fileName),
+  golang: fileName => /\.go$/.test(fileName)
 };
 
 // MAX_FILE_SIZE is the maximum file size to send to Kite
@@ -42,8 +39,7 @@ const OFFSET_ENCODING = "utf-16";
 module.exports = {
   ATTEMPTS,
   INTERVAL,
-  PYTHON_MODE,
-  JAVASCRIPT_MODE,
+  DOCUMENT_SELECTOR,
   MAX_PAYLOAD_SIZE,
   MAX_FILE_SIZE,
   CONNECT_ERROR_LOCKOUT,
