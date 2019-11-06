@@ -1,7 +1,7 @@
 'use strict';
 const vscode = require('vscode');
 const md5 = require('md5');
-const {head} = require('./utils');
+const { head } = require('./utils');
 
 function metricsCounterPath() {
   return '/clientapi/metrics/counters';
@@ -24,26 +24,6 @@ function statusPath(path) {
 
 function signaturePath() {
   return '/clientapi/editor/signatures';
-}
-
-function errorRescuePath() {
-  return '/clientapi/editor/autocorrect';
-}
-
-function errorRescueModelInfoPath() {
-  return '/api/editor/autocorrect/model-info';
-}
-
-function errorRescueMetricsPath() {
-  return '/clientapi/editor/autocorrect/metrics';
-}
-
-function errorRescueFeedbackPath() {
-  return '/clientapi/editor/autocorrect/feedback';
-}
-
-function onSaveValidationPath() {
-  return '/clientapi/editor/autocorrect/validation/on-save';
 }
 
 function searchPath(query, offset = 0, limit = 10) {
@@ -72,7 +52,7 @@ function shouldNotifyPath(path) {
 }
 
 function completionsPath() {
-  return '/clientapi/editor/completions';
+  return '/clientapi/editor/complete';
 }
 
 function reportPath(data) {
@@ -138,9 +118,13 @@ function hoverPath(document, position) {
   const filename = document.fileName;
   const buffer = cleanPath(filename);
   const pos = document.offsetAt(position);
+  const encoding = 'utf-16'
   return [
     `/api/buffer/vscode/${buffer}/${state}/hover`,
-    `cursor_runes=${pos}`,
+    [
+      `cursor_runes=${pos}`,
+      `offset_encoding=${encoding}`,
+    ].join('&'),
   ].join('?');
 }
 
@@ -150,8 +134,8 @@ function escapeId(id) {
 
 function cleanPath(p) {
   return encodeURI(normalizeDriveLetter(p))
-  .replace(/^([a-zA-Z]):/, (m, d) => `/windows/${d}`)
-  .replace(/\/|\\|%5C/g, ':');
+    .replace(/^([a-zA-Z]):/, (m, d) => `/windows/${d}`)
+    .replace(/\/|\\|%5C/g, ':');
 }
 
 function serializeRangeForPath(range) {
@@ -164,10 +148,6 @@ function normalizeDriveLetter(str) {
 
 module.exports = {
   accountPath,
-  errorRescueFeedbackPath,
-  errorRescueMetricsPath,
-  errorRescueModelInfoPath,
-  errorRescuePath,
   completionsPath,
   examplePath,
   hoverPath,
@@ -175,7 +155,6 @@ module.exports = {
   membersPath,
   metricsCounterPath,
   normalizeDriveLetter,
-  onSaveValidationPath,
   openDocumentationInWebURL,
   openExampleInWebURL,
   openSignatureInWebURL,

@@ -1,17 +1,16 @@
-const PYTHON_MODE = [
-  {language: 'python', scheme: 'file'},
-  {language: 'python', scheme: 'untitled'}
+const vscode = require("vscode");
+
+const DOCUMENT_SELECTOR = [
+  { language: "", scheme: "file" },
 ];
 
-const JAVASCRIPT_MODE = {language: 'javascript', scheme: 'file'};
-
 const SUPPORTED_EXTENSIONS = {
-  javascript: fileName => /\.js$/.test(fileName),
   python: fileName => /\.py$/.test(fileName),
-}
+  golang: fileName => /\.go$/.test(fileName)
+};
 
 // MAX_FILE_SIZE is the maximum file size to send to Kite
-const MAX_FILE_SIZE = Math.pow(2, 20); // 1048576
+const MAX_FILE_SIZE = 75 * Math.pow(2, 10); // 75 KB
 
 // MAX_PAYLOAD_SIZE is the maximum length for a POST reqest body
 const MAX_PAYLOAD_SIZE = Math.pow(2, 21); // 2097152
@@ -22,24 +21,31 @@ const ATTEMPTS = 30;
 
 const INTERVAL = 2500;
 
-const ERROR_COLOR = '#ff0000';
+const ERROR_COLOR = () => {
+  // For the High Contrast Theme, editorWarning.foreground renders the text invisible.
+  return vscode.workspace
+    .getConfiguration("workbench")
+    .colorTheme.includes("High Contrast")
+    ? "#ff0000"
+    : vscode.ThemeColor("editorWarning.foreground");
+};
 
-const WARNING_COLOR = '#929497';
+const WARNING_COLOR = "#929497";
 
-const AUTOCORRECT_SHOW_SIDEBAR = 'Reopen sidebar';
-const AUTOCORRECT_DONT_SHOW_SIDEBAR = 'Fix code quietly';
+const KITE_BRANDING = " 𝕜𝕚𝕥𝕖 ";
+
+const OFFSET_ENCODING = "utf-16";
 
 module.exports = {
   ATTEMPTS,
   INTERVAL,
-  PYTHON_MODE,
-  JAVASCRIPT_MODE,
+  DOCUMENT_SELECTOR,
   MAX_PAYLOAD_SIZE,
   MAX_FILE_SIZE,
   CONNECT_ERROR_LOCKOUT,
   ERROR_COLOR,
   WARNING_COLOR,
   SUPPORTED_EXTENSIONS,
-  AUTOCORRECT_SHOW_SIDEBAR,
-  AUTOCORRECT_DONT_SHOW_SIDEBAR,
+  KITE_BRANDING,
+  OFFSET_ENCODING
 };

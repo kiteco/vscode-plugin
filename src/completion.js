@@ -1,27 +1,123 @@
-'use strict';
-const {CompletionItem, CompletionItemKind, MarkdownString} = require('vscode');
-const {Logger} = require('kite-installer');
-const {MAX_FILE_SIZE} = require('./constants');
-const {parseJSON} = require('./utils');
-const {completionsPath, normalizeDriveLetter} = require('./urls');
+"use strict";
+const {
+  CompletionItem,
+  CompletionItemKind,
+  CompletionList,
+  MarkdownString,
+  Range,
+  SnippetString,
+  window,
+  workspace
+} = require("vscode");
+const Logger = require("kite-connector/lib/logger");
+const {
+  KITE_BRANDING,
+  OFFSET_ENCODING,
+  MAX_FILE_SIZE
+} = require("./constants");
+const { parseJSON } = require("./utils");
+const {
+  completionsPath,
+  normalizeDriveLetter
+} = require("./urls");
 
-const fill = (s, l, f = ' ') => {
-  while(s.length < l) {
-    s = `${f}${s}`
+const fill = (s, l, f = " ") => {
+  while (s.length < l) {
+    s = `${f}${s}`;
   }
   return s;
-}
+};
 
 const kindForHint = hint => {
-  switch(hint) {
-    case 'function': return CompletionItemKind.Function;
-    case 'module': return CompletionItemKind.Module;
-    case 'type': return CompletionItemKind.Class;
-    case 'keyword': return CompletionItemKind.Keyword;
-    case 'string': return CompletionItemKind.Value;
-    default: return CompletionItemKind.Value;
+  switch (hint) {
+    case "call":
+    case "function":
+      return CompletionItemKind.Function;
+    case "module":
+      return CompletionItemKind.Module;
+    case "type":
+      return CompletionItemKind.Class;
+    case "keyword":
+      return CompletionItemKind.Keyword;
+    case "string":
+      return CompletionItemKind.Value;
+    default:
+      return CompletionItemKind.Value;
   }
-}
+};
+
+const buildMarkdown = (id, hint, documentation_text) => {
+  return new MarkdownString(`[𝕜𝕚𝕥𝕖]&nbsp;&nbsp;__${id}__&nbsp;&nbsp;&nbsp;&nbsp;_${hint}_
+
+${documentation_text}
+
+            `);
+};
+
+const buildFilterText = (document, position) => {
+  const selection =
+    window.activeTextEditor && window.activeTextEditor.selection;
+  const wordRange =
+    document.getWordRangeAtPosition(position) ||
+    (selection && new Range(selection.start, selection.end)); // Snippet placeholder selection range
+  if (!wordRange) {
+    return null;
+  }
+  return document.getText(wordRange);
+};
+
+// Transforms Kite completion into a CompletionItem
+const processCompletion = (
+  document,
+  c,
+  displayPrefix,
+  numDigits,
+  i,
+) => {
+  const item = new CompletionItem(displayPrefix + c.display);
+  item.insertText = c.snippet.text;
+
+  const start = document.positionAt(c.replace.begin);
+  const end = document.positionAt(c.replace.end);
+  const replaceRange = new Range(start, end);
+  item.filterText = document.getText(replaceRange);
+
+  if (i === 0) {
+    item.preselect = true;
+  }
+  item.sortText = fill(String(i), numDigits, "\0");
+  item.range = replaceRange
+  if (c.documentation.text !== "") {
+    item.documentation = buildMarkdown(c.web_id, c.hint, c.documentation.text);
+  }
+  // Note: The space following the Kite icon is the unicode space U+2003 instead
+  // of the normal space U+0020 because VS Code strips the detail.
+  item.detail = c.hint + KITE_BRANDING;
+  item.kind = kindForHint(c.hint);
+
+  if (c.snippet.placeholders.length > 0) {
+    var offset = 0;
+    let i = 0;
+    for (i = 0; i < c.snippet.placeholders.length; i++) {
+      let placeholder = c.snippet.placeholders[i];
+      placeholder.begin += offset;
+      placeholder.end += offset;
+      item.insertText =
+        item.insertText.slice(0, placeholder.begin) +
+        "${" +
+        (i + 1).toString() +
+        ":" +
+        item.insertText.slice(placeholder.begin, placeholder.end) +
+        "}" +
+        item.insertText.slice(placeholder.end);
+      offset += 5;
+    }
+    // Add closing tab stop
+    item.insertText += "$0";
+    item.insertText = new SnippetString(item.insertText);
+  }
+  return item;
+};
 
 module.exports = class KiteCompletionProvider {
   constructor(Kite, isTest) {
@@ -29,49 +125,88 @@ module.exports = class KiteCompletionProvider {
     this.isTest = isTest;
   }
 
-  provideCompletionItems(document, position, token) {
+  provideCompletionItems(document, position) {
     const text = document.getText();
 
     if (text.length > MAX_FILE_SIZE) {
-      Logger.warn('buffer contents too large, not attempting completions');
+      Logger.warn("buffer contents too large, not attempting completions");
       return Promise.resolve([]);
     }
 
-    const cursorPosition = document.offsetAt(position);
+    const filename = normalizeDriveLetter(document.fileName);
+    const filterText = buildFilterText(document, position);
+    return this.getCompletions(document, text, filename, filterText);
+  }
+
+  getCompletions(document, text, filename, filterText) {
+    const selection = window.activeTextEditor.selection;
+    const begin = document.offsetAt(selection.start);
+    const end = document.offsetAt(selection.end);
+    const enableSnippets = workspace.getConfiguration("kite").enableSnippets;
     const payload = {
       text,
-      editor: 'vscode',
-      filename: normalizeDriveLetter(document.fileName),
-      cursor_runes: cursorPosition,
+      editor: "vscode",
+      filename,
+      position: {
+        begin,
+        end
+      },
+      no_snippets: !enableSnippets,
+      no_attribute_to_subscript: true,
+      offset_encoding: OFFSET_ENCODING
     };
 
-    Logger.debug(payload);
-
-    return this.Kite.request({
-      path: completionsPath(),
-      method: 'POST',
-    }, JSON.stringify(payload), document)
-    .then(data => {
-      data = parseJSON(data, {});
-      const completions = data.completions || [];
-      const length = String(completions.length).length;
-
-      return completions.map((c, i) => {
-        const item = new CompletionItem('⟠ ' + c.display);
-        item.sortText = fill(String(i), length, '0');
-        item.insertText = c.insert;
-        if (c.documentation_text !== '') {
-          item.documentation = new MarkdownString(`[𝕜𝕚𝕥𝕖]&nbsp;&nbsp;__${c.symbol.value[0].repr}__&nbsp;&nbsp;&nbsp;&nbsp;_${c.hint}_
-
-${c.documentation_text}
-
-          `);
-        }
-        item.detail = c.hint;
-        item.kind = kindForHint(c.hint);
-        return item;
-      });
-    })
-    .catch(() => []);
+    return this.Kite.request(
+      {
+        path: completionsPath(),
+        method: "POST"
+      },
+      JSON.stringify(payload)
+    )
+      .then(data => {
+        data = parseJSON(data, {});
+        const completions = data.completions || [];
+        // # of completion items + its children
+        const totalCompletions = completions.reduce((total, completion) => {
+          let toReturn = total + 1;
+          if (completion.children) {
+            toReturn += completion.children.length;
+          }
+          return toReturn;
+        }, 0);
+        // # of digits needed to represent totalCompletions. Used for sortText.
+        const numDigits = String(totalCompletions).length;
+        const completionItems = [];
+        // Used to track order in suggestion list
+        let idx = 0;
+        completions.forEach(c => {
+          completionItems.push(
+            processCompletion(
+              document,
+              c,
+              "",
+              numDigits,
+              idx,
+            )
+          );
+          const children = c.children || [];
+          let offset = 1;
+          children.forEach(child => {
+            completionItems.push(
+              processCompletion(
+                document,
+                child,
+                "  ",
+                numDigits,
+                idx + offset,
+              )
+            );
+            offset += 1;
+          });
+          idx += offset;
+        });
+        return new CompletionList(completionItems, true);
+      })
+      .catch(() => []);
   }
-}
+};

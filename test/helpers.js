@@ -1,29 +1,29 @@
-'use strict';
+"use strict";
 
-const path = require('path');
-const sinon = require('sinon');
-const {Logger} = require('kite-installer');
-const KiteAPI = require('kite-api');
-const {promisifyReadResponse} = require('../src/utils');
-const {withKiteRoutes} = require('kite-api/test/helpers/kite');
-const {fakeResponse} = require('kite-api/test/helpers/http');
+const path = require("path");
+const sinon = require("sinon");
+const Logger = require("kite-connector/lib/logger");
+const KiteAPI = require("kite-api");
+const { promisifyReadResponse } = require("../src/utils");
+const { withKiteRoutes } = require("kite-api/test/helpers/kite");
+const { fakeResponse } = require("kite-api/test/helpers/http");
 
 before(() => {
-  sinon.stub(Logger, 'log')
-})
+  sinon.stub(Logger, "log");
+});
 
 const Kite = {
   request(req, data) {
     return KiteAPI.request(req, data).then(resp => promisifyReadResponse(resp));
-  },
-}
+  }
+};
 
 function waitsFor(m, f, t, i) {
-  if (typeof m == 'function' && typeof f != 'function') {
+  if (typeof m == "function" && typeof f != "function") {
     i = t;
     t = f;
     f = m;
-    m = 'something to happen';
+    m = "something to happen";
   }
 
   const intervalTime = i || 10;
@@ -34,11 +34,14 @@ function waitsFor(m, f, t, i) {
       const res = f();
       if (res) {
         if (res.then) {
-          res.then(() => {
-            clearTimeout(timeout);
-            clearInterval(interval);
-            resolve();
-          }, (err) => {});
+          res.then(
+            () => {
+              clearTimeout(timeout);
+              clearInterval(interval);
+              resolve();
+            },
+            err => {}
+          );
         } else {
           clearTimeout(timeout);
           clearInterval(interval);
@@ -50,7 +53,7 @@ function waitsFor(m, f, t, i) {
     const timeout = setTimeout(() => {
       clearInterval(interval);
       let msg;
-      if (typeof m == 'function') {
+      if (typeof m == "function") {
         msg = `Waited ${timeoutDuration}ms for ${m()}`;
       } else {
         msg = `Waited ${timeoutDuration}ms for ${m} but nothing happened`;
@@ -62,11 +65,13 @@ function waitsFor(m, f, t, i) {
 
 function sleep(duration) {
   const t = new Date();
-  return waitsFor(`${duration}ms`, () => { return new Date() - t > duration; });
+  return waitsFor(`${duration}ms`, () => {
+    return new Date() - t > duration;
+  });
 }
 
 function delay(duration, block) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
       block();
       resolve();
@@ -74,9 +79,8 @@ function delay(duration, block) {
   });
 }
 
-
-function fixtureURI (filepath) {
-  return path.resolve(__dirname, 'fixtures', filepath);
+function fixtureURI(filepath) {
+  return path.resolve(__dirname, "fixtures", filepath);
 }
 
 function log(v) {
@@ -84,11 +88,16 @@ function log(v) {
   return v;
 }
 
-function formatCall({method, path, payload}) {
-  return `${method} ${path} ${payload || ''}`;
+function formatCall({ method, path, payload }) {
+  return `${method} ${path} ${payload || ""}`;
 }
 
 module.exports = {
-  sleep, delay, fixtureURI, waitsFor,
-  Kite, log, formatCall,
+  sleep,
+  delay,
+  fixtureURI,
+  waitsFor,
+  Kite,
+  log,
+  formatCall
 };

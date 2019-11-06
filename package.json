@@ -2,7 +2,7 @@
     "name": "kite",
     "displayName": "kite",
     "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
-    "version": "0.75.0",
+    "version": "0.99.0",
     "publisher": "kiteco",
     "engines": {
         "vscode": "^1.28.0"
@@ -25,7 +25,7 @@
     "activationEvents": [
         "*"
     ],
-    "main": "./src/kite",
+    "main": "./dist/kite-extension",
     "contributes": {
         "commands": [
             {
@@ -81,22 +81,32 @@
                         "error"
                     ],
                     "description": "The verbosity level of Kite's logs."
+                },
+                "kite.enableSnippets": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable snippet completions"
                 }
             }
         }
     },
     "scripts": {
         "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "node ./node_modules/vscode/bin/test"
+        "test": "node ./node_modules/vscode/bin/test",
+        "cleanup": "rm -f package-lock.json && rm -rf node_modules",
+        "vscode:prepublish": "webpack --config config/webpack.config.js --mode production",
+        "compile-prod": "webpack --config config/webpack.config.js --mode production",
+        "compile": "webpack --config config/webpack.config.js --mode none",
+        "watch": "webpack --config config/webpack.config.js --mode none --watch",
+        "install-local": "vsce package && code --install-extension kite-*.vsix && rm kite-*.vsix"
     },
     "dependencies": {
         "analytics-node": "^3.1.1",
         "atob": "^2.1.2",
         "formidable": "^1.1.1",
         "getmac": "^1.2.1",
-        "kite-api": "^2.6.0",
-        "kite-connector": "^2.5.0",
-        "kite-installer": "^3.0.2",
+        "kite-api": "=3.9.0",
+        "kite-connector": "=3.10.0",
         "md5": "^2.2.0",
         "opn": "^5.0.0",
         "rollbar": "^2.3.8",
@@ -104,18 +114,24 @@
     },
     "devDependencies": {
         "@atom/temp": "^0.8.4",
-        "fs-plus": "^3.0.2",
         "@types/mocha": "^2.2.32",
         "@types/node": "^6.0.40",
+        "copy-webpack-plugin": "^5.0.2",
         "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
-        "eslint": "^3.6.0",
+        "eslint": ">=4.18.2",
         "expect.js": "^0.3.1",
+        "fs-plus": "^3.0.2",
         "jsdom": "^10",
         "jsdom-global": "^3",
         "mocha": "^5.2.0",
         "sinon": "^2.3.5",
+        "terser": "^3.17.0",
         "typescript": "^2.0.3",
+        "vsce": "^1.59.0",
         "vscode": "^1.1.22",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0",
+        "webpack-merge-and-include-globally": "^2.1.16",
         "widjet-test-utils": "^1.8.0"
     }
 }
