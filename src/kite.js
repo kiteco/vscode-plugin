@@ -18,7 +18,6 @@ const KiteEditor = require("./kite-editor");
 const EditorEvents = require("./events");
 const localconfig = require("./localconfig");
 const metrics = require("./metrics");
-const server = require("./server");
 const { statusPath, languagesPath, hoverPath } = require("./urls");
 const Rollbar = require("rollbar");
 const {
@@ -93,27 +92,6 @@ const Kite = {
 
     // send the activated event
     metrics.track("activated");
-
-    this.disposables.push(server);
-
-    server.addRoute("GET", "/check", (req, res) => {
-      this.checkState("/check route");
-      res.writeHead(200);
-      res.end();
-    });
-
-    server.addRoute("GET", "/count", (req, res, url) => {
-      const { metric, name } = params(url);
-      if (metric === "requested") {
-        metrics.featureRequested(name);
-      } else if (metric === "fulfilled") {
-        metrics.featureFulfilled(name);
-      }
-      res.writeHead(200);
-      res.end();
-    });
-
-    server.start();
 
     this.disposables.push(
       vscode.languages.registerHoverProvider(
