@@ -73,17 +73,20 @@ const processCompletion = (
   displayPrefix,
   numDigits,
   i,
-  filterText
 ) => {
   const item = new CompletionItem(displayPrefix + c.display);
   item.insertText = c.snippet.text;
-  // Use previous word, otherwise default to c.snippet.text.
-  item.filterText = filterText ? filterText : c.snippet.text;
 
-  item.sortText = fill(String(i), numDigits, "0");
   const start = document.positionAt(c.replace.begin);
   const end = document.positionAt(c.replace.end);
-  item.range = new Range(start, end);
+  const replaceRange = new Range(start, end);
+  item.filterText = document.getText(replaceRange);
+
+  if (i === 0) {
+    item.preselect = true;
+  }
+  item.sortText = fill(String(i), numDigits, "\0");
+  item.range = replaceRange
   if (c.documentation.text !== "") {
     item.documentation = buildMarkdown(c.web_id, c.hint, c.documentation.text);
   }
@@ -110,7 +113,7 @@ const processCompletion = (
       offset += 5;
     }
     // Add closing tab stop
-    item.insertText += "$" + (i + 1).toString();
+    item.insertText += "$0";
     item.insertText = new SnippetString(item.insertText);
   }
   return item;
@@ -149,6 +152,7 @@ module.exports = class KiteCompletionProvider {
         end
       },
       no_snippets: !enableSnippets,
+      no_attribute_to_subscript: true,
       offset_encoding: OFFSET_ENCODING
     };
 
@@ -183,7 +187,6 @@ module.exports = class KiteCompletionProvider {
               "",
               numDigits,
               idx,
-              filterText
             )
           );
           const children = c.children || [];
@@ -196,7 +199,6 @@ module.exports = class KiteCompletionProvider {
                 "  ",
                 numDigits,
                 idx + offset,
-                filterText
               )
             );
             offset += 1;

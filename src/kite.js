@@ -187,7 +187,9 @@ const Kite = {
         "(",
         "[",
         ",",
-        " "
+        " ",
+        "'",
+        "\"",
       )
     );
     this.disposables.push(
