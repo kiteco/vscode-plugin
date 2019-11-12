@@ -6,7 +6,7 @@ const DOCUMENT_SELECTOR = [
 
 const SUPPORTED_EXTENSIONS = {
   python: fileName => /\.py$/.test(fileName),
-  golang: fileName => /\.go$/.test(fileName)
+  go: fileName => /\.go$/.test(fileName)
 };
 
 // MAX_FILE_SIZE is the maximum file size to send to Kite
