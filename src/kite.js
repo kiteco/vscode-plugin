@@ -6,7 +6,7 @@ const opn = require("opn");
 const KiteAPI = require("kite-api");
 const Logger = require("kite-connector/lib/logger");
 const {
-  DOCUMENT_SELECTOR,
+  PYTHON_MODE,
   ERROR_COLOR,
   SUPPORTED_EXTENSIONS
 } = require("./constants");
@@ -68,7 +68,7 @@ const Kite = {
 
     Logger.LEVEL =
       Logger.LEVELS[
-      vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
+        vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
       ];
 
     KiteAPI.isKiteInstalled().catch(err => {
@@ -95,19 +95,19 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerHoverProvider(
-        DOCUMENT_SELECTOR,
+        PYTHON_MODE,
         new KiteHoverProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerDefinitionProvider(
-        DOCUMENT_SELECTOR,
+        PYTHON_MODE,
         new KiteDefinitionProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
-        DOCUMENT_SELECTOR,
+        PYTHON_MODE,
         new KiteCompletionProvider(Kite),
         "a",
         "b",
@@ -172,7 +172,7 @@ const Kite = {
     );
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(
-        DOCUMENT_SELECTOR,
+        PYTHON_MODE,
         new KiteSignatureProvider(Kite),
         "(",
         ","
@@ -183,7 +183,7 @@ const Kite = {
       vscode.workspace.onDidChangeConfiguration(() => {
         Logger.LEVEL =
           Logger.LEVELS[
-          vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
+            vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
           ];
       })
     );

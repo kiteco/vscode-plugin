@@ -1,8 +1,11 @@
 const vscode = require("vscode");
 
-const DOCUMENT_SELECTOR = [
-  { language: "", scheme: "file" },
+const PYTHON_MODE = [
+  { language: "python", scheme: "file" },
+  { language: "python", scheme: "untitled" }
 ];
+
+const JAVASCRIPT_MODE = { language: "javascript", scheme: "file" };
 
 const SUPPORTED_EXTENSIONS = {
   python: fileName => /\.py$/.test(fileName),
@@ -39,7 +42,8 @@ const OFFSET_ENCODING = "utf-16";
 module.exports = {
   ATTEMPTS,
   INTERVAL,
-  DOCUMENT_SELECTOR,
+  PYTHON_MODE,
+  JAVASCRIPT_MODE,
   MAX_PAYLOAD_SIZE,
   MAX_FILE_SIZE,
   CONNECT_ERROR_LOCKOUT,
