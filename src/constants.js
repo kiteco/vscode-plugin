@@ -1,5 +1,11 @@
 const vscode = require("vscode");
 
+const EVENT_SUPPORT = (fileName) => {
+  const path = require("path");
+  const fileExt = path.extname(fileName);
+  return SUPPORTED_EXTENSIONS.includes(fileExt);
+}
+
 const COMPLETIONS_SUPPORT = [
   { pattern: "**/*.{py,go}", scheme: "file" },
   { pattern: "**/*.{py,go}", scheme: "untitled" }
@@ -20,10 +26,7 @@ const SIGNATURES_SUPPORT = [
   { pattern: "**/*.{py}", scheme: "untitled" }
 ];
 
-const SUPPORTED_EXTENSIONS = {
-  python: fileName => /\.py$/.test(fileName),
-  go: fileName => /\.go$/.test(fileName)
-};
+const SUPPORTED_EXTENSIONS = [".go", ".py"]
 
 // MAX_FILE_SIZE is the maximum file size to send to Kite
 const MAX_FILE_SIZE = 75 * Math.pow(2, 10); // 75 KB
@@ -55,6 +58,7 @@ const OFFSET_ENCODING = "utf-16";
 module.exports = {
   ATTEMPTS,
   INTERVAL,
+  EVENT_SUPPORT,
   COMPLETIONS_SUPPORT,
   DEFINITIONS_SUPPORT,
   HOVER_SUPPORT,

@@ -7,6 +7,7 @@ const KiteAPI = require("kite-api");
 const Logger = require("kite-connector/lib/logger");
 const {
   ERROR_COLOR,
+  EVENT_SUPPORT,
   COMPLETIONS_SUPPORT,
   DEFINITIONS_SUPPORT,
   HOVER_SUPPORT,
@@ -230,7 +231,7 @@ const Kite = {
     this.disposables.push(
       vscode.window.onDidChangeVisibleTextEditors(editors => {
         editors.forEach(e => {
-          if (e.document.languageId === "python", e.document.languageId === "go") {
+          if (EVENT_SUPPORT(e.document.fileName)) {
             this.registerDocumentEvents(e.document);
             this.registerDocument(e.document);
           }
@@ -400,7 +401,7 @@ const Kite = {
 
     setTimeout(() => {
       vscode.window.visibleTextEditors.forEach(e => {
-        if (e.document.languageId === "python" || e.document.languageId === "go") {
+        if (EVENT_SUPPORT(e.document.fileName)) {
           this.registerEvents(e);
           this.registerEditor(e);
 
@@ -430,7 +431,7 @@ const Kite = {
       });
     this.kiteEditorByEditor = new Map();
     this.eventsByEditor = new Map();
-    this.supportedLanguages = [];
+    this.supportedExtensions = [];
     this.shown = {};
     this.disposables = [];
     this.attemptedToStartKite = false;
@@ -494,10 +495,10 @@ const Kite = {
   checkState(src) {
     return Promise.all([
       KiteAPI.checkHealth(),
-      this.getSupportedLanguages().catch(() => [])
+      this.getSupportedExtensions().catch(() => [])
     ])
-      .then(([state, languages]) => {
-        this.supportedLanguages = languages;
+      .then(([state, extensions]) => {
+        this.supportedExtensions = extensions;
 
         if (state > KiteAPI.STATES.INSTALLED) {
           localconfig.set("wasInstalled", true);
@@ -677,8 +678,7 @@ const Kite = {
   isDocumentGrammarSupported(d) {
     return (
       d &&
-      this.supportedLanguages.includes(d.languageId) &&
-      SUPPORTED_EXTENSIONS[d.languageId](d.fileName)
+      EVENT_SUPPORT(d.fileName)
     );
   },
 
@@ -704,11 +704,9 @@ const Kite = {
       .catch(() => ({ status: "ready" }));
   },
 
-  getSupportedLanguages() {
+  getSupportedExtensions() {
     const path = languagesPath();
-    return this.request({ path })
-      .then(json => JSON.parse(json))
-      .catch(() => ["python", "go"]);
+    return Promise.resolve(SUPPORTED_EXTENSIONS);
   },
 
   request(req, data) {
