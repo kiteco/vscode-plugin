@@ -6,8 +6,8 @@ const opn = require("opn");
 const KiteAPI = require("kite-api");
 const Logger = require("kite-connector/lib/logger");
 const {
-  PYTHON_MODE,
   ERROR_COLOR,
+  SUPPORTED_DOCUMENTS,
   SUPPORTED_EXTENSIONS
 } = require("./constants");
 const KiteHoverProvider = require("./hover");
@@ -68,7 +68,7 @@ const Kite = {
 
     Logger.LEVEL =
       Logger.LEVELS[
-        vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
+      vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
       ];
 
     KiteAPI.isKiteInstalled().catch(err => {
@@ -95,19 +95,19 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerHoverProvider(
-        PYTHON_MODE,
+        SUPPORTED_DOCUMENTS,
         new KiteHoverProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerDefinitionProvider(
-        PYTHON_MODE,
+        SUPPORTED_DOCUMENTS,
         new KiteDefinitionProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
-        PYTHON_MODE,
+        SUPPORTED_DOCUMENTS,
         new KiteCompletionProvider(Kite),
         "a",
         "b",
@@ -172,7 +172,7 @@ const Kite = {
     );
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(
-        PYTHON_MODE,
+        SUPPORTED_DOCUMENTS,
         new KiteSignatureProvider(Kite),
         "(",
         ","
@@ -183,7 +183,7 @@ const Kite = {
       vscode.workspace.onDidChangeConfiguration(() => {
         Logger.LEVEL =
           Logger.LEVELS[
-            vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
+          vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
           ];
       })
     );
@@ -227,7 +227,7 @@ const Kite = {
     this.disposables.push(
       vscode.window.onDidChangeVisibleTextEditors(editors => {
         editors.forEach(e => {
-          if (e.document.languageId === "python") {
+          if (e.document.languageId === "python", e.document.languageId === "go") {
             this.registerDocumentEvents(e.document);
             this.registerDocument(e.document);
           }
@@ -397,7 +397,7 @@ const Kite = {
 
     setTimeout(() => {
       vscode.window.visibleTextEditors.forEach(e => {
-        if (e.document.languageId === "python") {
+        if (e.document.languageId === "python" || e.document.languageId === "go") {
           this.registerEvents(e);
           this.registerEditor(e);
 
@@ -705,7 +705,7 @@ const Kite = {
     const path = languagesPath();
     return this.request({ path })
       .then(json => JSON.parse(json))
-      .catch(() => ["python"]);
+      .catch(() => ["python", "go"]);
   },
 
   request(req, data) {
