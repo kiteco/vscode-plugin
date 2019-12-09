@@ -1,8 +1,23 @@
 const vscode = require("vscode");
 
-const SUPPORTED_DOCUMENTS = [
+const COMPLETIONS_SUPPORT = [
   { pattern: "**/*.{py,go}", scheme: "file" },
   { pattern: "**/*.{py,go}", scheme: "untitled" }
+];
+
+const DEFINITIONS_SUPPORT = [
+  { pattern: "**/*.{py}", scheme: "file" },
+  { pattern: "**/*.{py}", scheme: "untitled" }
+];
+
+const HOVER_SUPPORT = [
+  { pattern: "**/*.{py}", scheme: "file" },
+  { pattern: "**/*.{py}", scheme: "untitled" }
+];
+
+const SIGNATURES_SUPPORT = [
+  { pattern: "**/*.{py}", scheme: "file" },
+  { pattern: "**/*.{py}", scheme: "untitled" }
 ];
 
 const SUPPORTED_EXTENSIONS = {
@@ -40,7 +55,10 @@ const OFFSET_ENCODING = "utf-16";
 module.exports = {
   ATTEMPTS,
   INTERVAL,
-  SUPPORTED_DOCUMENTS,
+  COMPLETIONS_SUPPORT,
+  DEFINITIONS_SUPPORT,
+  HOVER_SUPPORT,
+  SIGNATURES_SUPPORT,
   MAX_PAYLOAD_SIZE,
   MAX_FILE_SIZE,
   CONNECT_ERROR_LOCKOUT,

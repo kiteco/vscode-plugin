@@ -7,7 +7,10 @@ const KiteAPI = require("kite-api");
 const Logger = require("kite-connector/lib/logger");
 const {
   ERROR_COLOR,
-  SUPPORTED_DOCUMENTS,
+  COMPLETIONS_SUPPORT,
+  DEFINITIONS_SUPPORT,
+  HOVER_SUPPORT,
+  SIGNATURES_SUPPORT,
   SUPPORTED_EXTENSIONS
 } = require("./constants");
 const KiteHoverProvider = require("./hover");
@@ -95,19 +98,19 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerHoverProvider(
-        SUPPORTED_DOCUMENTS,
+        HOVER_SUPPORT,
         new KiteHoverProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerDefinitionProvider(
-        SUPPORTED_DOCUMENTS,
+        DEFINITIONS_SUPPORT,
         new KiteDefinitionProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
-        SUPPORTED_DOCUMENTS,
+        COMPLETIONS_SUPPORT,
         new KiteCompletionProvider(Kite),
         "a",
         "b",
@@ -172,7 +175,7 @@ const Kite = {
     );
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(
-        SUPPORTED_DOCUMENTS,
+        SIGNATURES_SUPPORT,
         new KiteSignatureProvider(Kite),
         "(",
         ","
