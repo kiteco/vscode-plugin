@@ -6,8 +6,12 @@ const opn = require("opn");
 const KiteAPI = require("kite-api");
 const Logger = require("kite-connector/lib/logger");
 const {
-  DOCUMENT_SELECTOR,
   ERROR_COLOR,
+  EVENT_SUPPORT,
+  COMPLETIONS_SUPPORT,
+  DEFINITIONS_SUPPORT,
+  HOVER_SUPPORT,
+  SIGNATURES_SUPPORT,
   SUPPORTED_EXTENSIONS
 } = require("./constants");
 const KiteHoverProvider = require("./hover");
@@ -95,19 +99,19 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerHoverProvider(
-        DOCUMENT_SELECTOR,
+        HOVER_SUPPORT,
         new KiteHoverProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerDefinitionProvider(
-        DOCUMENT_SELECTOR,
+        DEFINITIONS_SUPPORT,
         new KiteDefinitionProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
-        DOCUMENT_SELECTOR,
+        COMPLETIONS_SUPPORT,
         new KiteCompletionProvider(Kite),
         "a",
         "b",
@@ -172,7 +176,7 @@ const Kite = {
     );
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(
-        DOCUMENT_SELECTOR,
+        SIGNATURES_SUPPORT,
         new KiteSignatureProvider(Kite),
         "(",
         ","
@@ -227,7 +231,7 @@ const Kite = {
     this.disposables.push(
       vscode.window.onDidChangeVisibleTextEditors(editors => {
         editors.forEach(e => {
-          if (e.document.languageId === "python") {
+          if (EVENT_SUPPORT(e.document.fileName)) {
             this.registerDocumentEvents(e.document);
             this.registerDocument(e.document);
           }
@@ -397,7 +401,7 @@ const Kite = {
 
     setTimeout(() => {
       vscode.window.visibleTextEditors.forEach(e => {
-        if (e.document.languageId === "python") {
+        if (EVENT_SUPPORT(e.document.fileName)) {
           this.registerEvents(e);
           this.registerEditor(e);
 
@@ -427,7 +431,7 @@ const Kite = {
       });
     this.kiteEditorByEditor = new Map();
     this.eventsByEditor = new Map();
-    this.supportedLanguages = [];
+    this.supportedExtensions = [];
     this.shown = {};
     this.disposables = [];
     this.attemptedToStartKite = false;
@@ -491,10 +495,10 @@ const Kite = {
   checkState(src) {
     return Promise.all([
       KiteAPI.checkHealth(),
-      this.getSupportedLanguages().catch(() => [])
+      this.getSupportedExtensions().catch(() => [])
     ])
-      .then(([state, languages]) => {
-        this.supportedLanguages = languages;
+      .then(([state, extensions]) => {
+        this.supportedExtensions = extensions;
 
         if (state > KiteAPI.STATES.INSTALLED) {
           localconfig.set("wasInstalled", true);
@@ -674,8 +678,7 @@ const Kite = {
   isDocumentGrammarSupported(d) {
     return (
       d &&
-      this.supportedLanguages.includes(d.languageId) &&
-      SUPPORTED_EXTENSIONS[d.languageId](d.fileName)
+      EVENT_SUPPORT(d.fileName)
     );
   },
 
@@ -701,11 +704,9 @@ const Kite = {
       .catch(() => ({ status: "ready" }));
   },
 
-  getSupportedLanguages() {
+  getSupportedExtensions() {
     const path = languagesPath();
-    return this.request({ path })
-      .then(json => JSON.parse(json))
-      .catch(() => ["python"]);
+    return Promise.resolve(SUPPORTED_EXTENSIONS);
   },
 
   request(req, data) {
