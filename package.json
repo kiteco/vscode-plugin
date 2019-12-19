@@ -106,7 +106,7 @@
         "formidable": "^1.1.1",
         "getmac": "^1.2.1",
         "kite-api": "=3.9.0",
-        "kite-connector": "=3.10.0",
+        "kite-connector": "=3.11.0",
         "md5": "^2.2.0",
         "opn": "^5.0.0",
         "rollbar": "^2.3.8",
