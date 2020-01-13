@@ -22,12 +22,11 @@ const KiteEditor = require("./kite-editor");
 const EditorEvents = require("./events");
 const localconfig = require("./localconfig");
 const metrics = require("./metrics");
-const { statusPath, languagesPath, hoverPath } = require("./urls");
+const { statusPath, hoverPath } = require("./urls");
 const Rollbar = require("rollbar");
 const {
   editorsForDocument,
   promisifyReadResponse,
-  params,
   kiteOpen
 } = require("./utils");
 const { version } = require("../package.json");
@@ -109,71 +108,18 @@ const Kite = {
         new KiteDefinitionProvider(Kite)
       )
     );
+
+    const lower = "abcdefghijklmnopqrstuvwxyz";
+    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const special = ".([, '\\";
+    var completionsTriggers = (lower + upper + special).split("");
+
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
         COMPLETIONS_SUPPORT,
-        new KiteCompletionProvider(Kite),
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "u",
-        "v",
-        "w",
-        "x",
-        "y",
-        "z",
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "I",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-        "O",
-        "P",
-        "Q",
-        "R",
-        "S",
-        "T",
-        "U",
-        "V",
-        "W",
-        "X",
-        "Y",
-        "Z",
-        ".",
-        "(",
-        "[",
-        ",",
-        " ",
-        "'",
-        "\"",
-      )
+        new KiteCompletionProvider(Kite), ...completionsTriggers)
     );
+
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(
         SIGNATURES_SUPPORT,
@@ -705,7 +651,6 @@ const Kite = {
   },
 
   getSupportedExtensions() {
-    const path = languagesPath();
     return Promise.resolve(SUPPORTED_EXTENSIONS);
   },
 
