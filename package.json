@@ -49,6 +49,11 @@
             "type": "object",
             "title": "Kite Configuration",
             "properties": {
+                "kite.showGoBetaNotification": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether or not to show the Go beta notification."
+                },
                 "kite.showWelcomeNotificationOnStartup": {
                     "type": "boolean",
                     "default": true,

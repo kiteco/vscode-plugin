@@ -30,6 +30,7 @@ const {
   kiteOpen
 } = require("./utils");
 const { version } = require("../package.json");
+const { showGoBetaNotification } = require('./notifications');
 
 const RUN_KITE_ATTEMPTS = 30;
 const RUN_KITE_INTERVAL = 2500;
@@ -138,6 +139,11 @@ const Kite = {
       })
     );
 
+    if (vscode.window.activeTextEditor &&
+      vscode.window.activeTextEditor.document.languageId === "go") {
+      showGoBetaNotification();
+    }
+
     this.disposables.push(
       vscode.window.onDidChangeActiveTextEditor(e => {
         this.setStatusBarLabel();
@@ -149,6 +155,10 @@ const Kite = {
           if (this.isGrammarSupported(e)) {
             this.registerEvents(e);
             this.registerEditor(e);
+          }
+
+          if (e.document.languageId === "go") {
+            showGoBetaNotification();
           }
 
           const evt = this.eventsByEditor.get(e.document.fileName);
