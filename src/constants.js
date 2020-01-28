@@ -4,11 +4,11 @@ const EVENT_SUPPORT = (fileName) => {
   const path = require("path");
   const fileExt = path.extname(fileName);
   return SUPPORTED_EXTENSIONS.includes(fileExt);
-}
+};
 
 const COMPLETIONS_SUPPORT = [
-  { pattern: "**/*.{py,go}", scheme: "file" },
-  { pattern: "**/*.{py,go}", scheme: "untitled" }
+  { pattern: "**/*.{py,go,js,jsx,vue}", scheme: "file" },
+  { pattern: "**/*.{py,go,js,jsx,vue}", scheme: "untitled" }
 ];
 
 const DEFINITIONS_SUPPORT = [
@@ -26,7 +26,7 @@ const SIGNATURES_SUPPORT = [
   { pattern: "**/*.{py}", scheme: "untitled" }
 ];
 
-const SUPPORTED_EXTENSIONS = [".go", ".py"]
+const SUPPORTED_EXTENSIONS = [".go", ".py", ".js", ".jsx", ".vue"];
 
 // MAX_FILE_SIZE is the maximum file size to send to Kite
 const MAX_FILE_SIZE = 75 * Math.pow(2, 10); // 75 KB
