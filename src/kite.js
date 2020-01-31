@@ -1,6 +1,7 @@
 "use strict";
 
 const vscode = require("vscode");
+var path = require('path');
 const os = require("os");
 const opn = require("opn");
 const KiteAPI = require("kite-api");
@@ -30,7 +31,10 @@ const {
   kiteOpen
 } = require("./utils");
 const { version } = require("../package.json");
-const { showGoBetaNotification } = require('./notifications');
+const {
+  showGoBetaNotification,
+  showJSBetaNotification
+} = require('./notifications');
 
 const RUN_KITE_ATTEMPTS = 30;
 const RUN_KITE_INTERVAL = 2500;
@@ -139,9 +143,16 @@ const Kite = {
       })
     );
 
-    if (vscode.window.activeTextEditor &&
-      vscode.window.activeTextEditor.document.languageId === "go") {
-      showGoBetaNotification();
+    switch (vscode.window.activeTextEditor &&
+    path.extname(vscode.window.activeTextEditor.document.fileName)) {
+      case ".go":
+        showGoBetaNotification();
+        break;
+      case ".js":
+      case ".jsx":
+      case ".vue":
+        showJSBetaNotification();
+        break;
     }
 
     this.disposables.push(
@@ -157,8 +168,15 @@ const Kite = {
             this.registerEditor(e);
           }
 
-          if (e.document.languageId === "go") {
-            showGoBetaNotification();
+          switch (path.extname(e.document.fileName)) {
+            case ".go":
+              showGoBetaNotification();
+              break;
+            case ".js":
+            case ".jsx":
+            case ".vue":
+              showJSBetaNotification();
+              break;
           }
 
           const evt = this.eventsByEditor.get(e.document.fileName);
