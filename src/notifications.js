@@ -1,6 +1,8 @@
 "use strict";
 
 const vscode = require("vscode");
+var path = require('path');
+
 const { kiteOpen } = require("./utils");
 const config = vscode.workspace.getConfiguration("kite");
 
@@ -56,7 +58,19 @@ const showJSBetaNotification = () => {
     }
 };
 
+const showNotification = (filename) => {
+    switch (path.extname(filename)) {
+        case ".go":
+            showGoBetaNotification();
+            break;
+        case ".js":
+        case ".jsx":
+        case ".vue":
+            showJSBetaNotification();
+            break;
+    }
+};
+
 module.exports = {
-    showGoBetaNotification,
-    showJSBetaNotification
+    showNotification
 };
