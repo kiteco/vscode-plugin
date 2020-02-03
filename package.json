@@ -49,10 +49,10 @@
             "type": "object",
             "title": "Kite Configuration",
             "properties": {
-                "kite.showJSBetaNotification": {
+                "kite.showJavascriptBetaNotification": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether or not to show the JS beta notification."
+                    "description": "Whether or not to show the JavaScript beta notification."
                 },
                 "kite.showGoBetaNotification": {
                     "type": "boolean",
