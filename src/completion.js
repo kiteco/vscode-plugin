@@ -72,7 +72,7 @@ const processCompletion = (
   c,
   displayPrefix,
   numDigits,
-  i,
+  i
 ) => {
   const item = new CompletionItem(displayPrefix + c.display);
   item.insertText = c.snippet.text;

@@ -110,10 +110,8 @@ const Kite = {
       )
     );
 
-    const lower = "abcdefghijklmnopqrstuvwxyz";
-    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const special = ".([, '\\";
-    var completionsTriggers = (lower + upper + special).split("");
+    var completionsTriggers = special.split("");
 
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
