@@ -33,8 +33,8 @@ const showGoBetaNotification = () => {
 };
 
 var hasSeenJSBetaNotification = false;
-const showJavascriptBetaNotification = () => {
-    if (config.showJavascriptBetaNotification &&
+const showJSBetaNotification = () => {
+    if (config.showJSBetaNotification &&
         !hasSeenJSBetaNotification) {
         vscode.window
             .showInformationMessage(
@@ -49,7 +49,7 @@ const showJavascriptBetaNotification = () => {
                             kiteOpen("kite://home");
                             break;
                         case "Hide Forever":
-                            config.update("showJavascriptBetaNotification", false, true);
+                            config.update("showJSBetaNotification", false, true);
                             break;
                     }
                 }
@@ -66,7 +66,7 @@ const showNotification = (filename) => {
         case ".js":
         case ".jsx":
         case ".vue":
-            showJavascriptBetaNotification();
+            showJSBetaNotification();
             break;
     }
 };
