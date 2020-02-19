@@ -425,9 +425,14 @@ const Kite = {
   },
 
   registerEvents(e) {
-    if (e && e.document && !this.eventsByEditor.has(e.document.fileName)) {
-      const evt = new EditorEvents(this, e);
-      this.eventsByEditor.set(e.document.fileName, evt);
+    if (e && e.document) {
+      let evt = this.eventsByEditor.get(e.document.fileName);
+      if (evt && evt.editor) {
+        evt.editor = e;
+      } else {
+        evt = new EditorEvents(this, e);
+        this.eventsByEditor.set(e.document.fileName, evt);
+      }
     }
   },
 
