@@ -1,6 +1,6 @@
 {
     "name": "kite",
-    "displayName": "kite",
+    "displayName": "Kite Python Autocomplete",
     "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
     "version": "0.107.0",
     "publisher": "kiteco",
