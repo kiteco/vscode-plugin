@@ -88,6 +88,20 @@ module.exports = {
   track: (event, props) => {
     if (process.env.NODE_ENV === "test") {
       console.log(`tracking ${event}`, props);
+      return;
     }
+
+    const eventData = {
+      distinct_id = distinctID(),
+      editor_uuid: EDITOR_UUID,
+      os_name: os.type(),
+      os_release: os.release(),
+    };
+
+    for(var key in props) {
+      eventData[key] = props[key];
+    }
+
+    mpClient.track(event, eventData);
   },
 };;
