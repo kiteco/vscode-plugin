@@ -104,4 +104,4 @@ module.exports = {
 
     mpClient.track(event, eventData);
   },
-};;
+};
