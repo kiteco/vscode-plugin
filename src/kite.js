@@ -388,6 +388,7 @@ const Kite = {
     this.supportedExtensions = [];
     this.shown = {};
     this.disposables = [];
+    this.attemptedToInstallKite = false;
     this.attemptedToStartKite = false;
     delete this.shownNotifications;
     delete this.lastState;
@@ -482,6 +483,25 @@ const Kite = {
             );
             break;
           case KiteAPI.STATES.UNINSTALLED:
+            if (
+              !this.attemptedToInstallKite
+              && vscode.workspace.getConfiguration("kite").installKiteEngineOnStartup
+            ) {
+              const msg = "Kite requires the Kite Engine backend to provide completions and documentation.";
+              const ok = "Install Kite Engine";
+              const hide = "Don't show this again";
+              metrics.track("vscode_kite_installer_notification_shown");
+              vscode.window.showInformationMessage(msg, ok, hide).then(item => {
+                if (item === ok) {
+                  opn("https://kite.com/download?utm_source=vscode")
+                  metrics.track("vscode_kite_installer_download_opened");
+                }
+                if (item === hide) {
+                  config.update("installKiteEngineOnStartup", false, true);
+                }
+              });
+              this.attemptedToInstallKite = true;
+            }
             if (
               this.shown[state] ||
               (vscode.window.activeTextEditor &&
