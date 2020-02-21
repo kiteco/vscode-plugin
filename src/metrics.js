@@ -86,11 +86,7 @@ module.exports = {
   getOsName,
   version: kitePkg.version,
   track: (event, props) => {
-    if (process.env.NODE_ENV === "development") {
-      // TODO: This doesn't actually seem to work. NODE_ENV is set to "none"
-      // when running the extension from VS Code debug. Logging it in the
-      // console from the dev tools while running the extension shows that it
-      // becomes "development", so not sure what's going on here.
+    if (process.env.NODE_ENV !== "production") {
       console.log(`tracking ${event}`, props);
       return;
     }
