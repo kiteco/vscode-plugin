@@ -80,7 +80,7 @@ const Kite = {
         metrics.track("vscode_kite_installer_notification_shown");
         vscode.window
           .showInformationMessage(
-            "Unable to find Kite Engine. The Kite Engine is needed to power Kite's completions experience.",
+            "Kite requires the Kite Engine backend to provide completions and documentation. Please install it to use Kite.",
             "Install"
           )
           .then(item => {
@@ -88,7 +88,7 @@ const Kite = {
               switch (item) {
                 case "Install":
                   opn("https://github.com/kiteco/vscode-plugin#installation");
-                  metrics.track("vscode_kite_installer_download_opened");
+                  metrics.track("vscode_kite_installer_github_link_clicked");
                   break;
               }
             }
