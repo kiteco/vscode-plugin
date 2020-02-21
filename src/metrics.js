@@ -3,6 +3,7 @@
 const os = require("os");
 const vscode = require("vscode");
 const crypto = require("crypto");
+const mixpanel = require("mixpanel");
 const Logger = require("kite-connector/lib/logger");
 const kitePkg = require("../package.json");
 const localconfig = require("./localconfig.js");
@@ -12,7 +13,13 @@ const OS_VERSION = os.type() + " " + os.release();
 
 const EDITOR_UUID = vscode.env.machineId;
 
+const MIXPANEL_TOKEN = "fb6b9b336122a8b29c60f4c28dab6d03";
+
 let Kite;
+
+const mpClient = mixpanel.init(MIXPANEL_TOKEN, {
+  protocol: "https",
+});
 
 // Generate a unique ID for this user and save it for future use.
 function distinctID() {
@@ -78,5 +85,23 @@ module.exports = {
   featureFulfilled,
   getOsName,
   version: kitePkg.version,
-  track: () => {}
+  track: (event, props) => {
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`tracking ${event}`, props);
+      return;
+    }
+
+    const eventData = {
+      distinct_id: distinctID(),
+      editor_uuid: EDITOR_UUID,
+      os_name: os.type(),
+      os_release: os.release(),
+    };
+
+    for(var key in props) {
+      eventData[key] = props[key];
+    }
+
+    mpClient.track(event, eventData);
+  },
 };
