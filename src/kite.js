@@ -76,7 +76,7 @@ const Kite = {
       ];
 
     KiteAPI.isKiteInstalled().catch(err => {
-      if (err.data.state = KiteAPI.STATES.UNINSTALLED) {
+      if (err.data.state === KiteAPI.STATES.UNINSTALLED) {
         metrics.track("vscode_kite_installer_notification_shown");
         vscode.window
           .showInformationMessage(
