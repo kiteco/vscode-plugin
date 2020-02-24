@@ -49,6 +49,11 @@
             "type": "object",
             "title": "Kite Configuration",
             "properties": {
+                "kite.showJavascriptBetaNotification": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether or not to show the JavaScript beta notification."
+                },
                 "kite.showGoBetaNotification": {
                     "type": "boolean",
                     "default": true,

@@ -1,6 +1,7 @@
 "use strict";
 
 const vscode = require("vscode");
+
 const os = require("os");
 const opn = require("opn");
 const KiteAPI = require("kite-api");
@@ -30,7 +31,7 @@ const {
   kiteOpen
 } = require("./utils");
 const { version } = require("../package.json");
-const { showGoBetaNotification } = require('./notifications');
+const { showNotification } = require('./notifications');
 
 const RUN_KITE_ATTEMPTS = 30;
 const RUN_KITE_INTERVAL = 2500;
@@ -139,10 +140,8 @@ const Kite = {
       })
     );
 
-    if (vscode.window.activeTextEditor &&
-      vscode.window.activeTextEditor.document.languageId === "go") {
-      showGoBetaNotification();
-    }
+    vscode.window.activeTextEditor &&
+      showNotification(vscode.window.activeTextEditor.document.fileName);
 
     this.disposables.push(
       vscode.window.onDidChangeActiveTextEditor(e => {
@@ -157,9 +156,7 @@ const Kite = {
             this.registerEditor(e);
           }
 
-          if (e.document.languageId === "go") {
-            showGoBetaNotification();
-          }
+          showNotification(e.document.fileName);
 
           const evt = this.eventsByEditor.get(e.document.fileName);
           evt && evt.focus();
