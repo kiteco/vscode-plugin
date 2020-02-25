@@ -76,7 +76,7 @@ const Kite = {
       ];
 
     KiteAPI.isKiteInstalled().catch(err => {
-      if (err.message.includes("Unable to find Kite application install")) {
+      if (typeof err.data !== 'undefined' && err.data.state === KiteAPI.STATES.UNINSTALLED) {
         metrics.track("vscode_kite_installer_notification_shown");
         vscode.window
           .showInformationMessage(
