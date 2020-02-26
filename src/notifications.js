@@ -4,6 +4,7 @@ const vscode = require("vscode");
 var path = require('path');
 
 const { kiteOpen } = require("./utils");
+const { settingsPath } = require("./urls")
 const config = vscode.workspace.getConfiguration("kite");
 
 var hasSeenGoBetaNotification = false;
@@ -33,9 +34,19 @@ const showGoBetaNotification = () => {
 };
 
 var hasSeenJSBetaNotification = false;
-const showJavascriptBetaNotification = () => {
-    if (config.showJavascriptBetaNotification &&
-        !hasSeenJSBetaNotification) {
+const showJavascriptBetaNotification = (kite) => {
+    if (!config.showJavascriptBetaNotification ||
+        hasSeenJSBetaNotification) {
+        return
+    }
+    kite.request({
+        path: settingsPath("kite_js_enabled"),
+        method: "GET"
+    }).then((isEnabled) => {
+        if (isEnabled !== "true") {
+            return
+        }
+
         vscode.window
             .showInformationMessage(
                 "Welcome to the Kite for JavaScript Beta! You\'ve got early access to our line-of-code completions for JavaScript, powered by machine learning. If you\'d like to disable the beta, you can do so in the Copilot.",
@@ -54,11 +65,11 @@ const showJavascriptBetaNotification = () => {
                     }
                 }
             });
-        hasSeenJSBetaNotification = true;
-    }
+            hasSeenJSBetaNotification = true;
+    })
 };
 
-const showNotification = (filename) => {
+const showNotification = (kite, filename) => {
     switch (path.extname(filename)) {
         case ".go":
             showGoBetaNotification();
@@ -66,7 +77,7 @@ const showNotification = (filename) => {
         case ".js":
         case ".jsx":
         case ".vue":
-            showJavascriptBetaNotification();
+            showJavascriptBetaNotification(kite);
             break;
     }
 };

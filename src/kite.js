@@ -141,7 +141,7 @@ const Kite = {
     );
 
     vscode.window.activeTextEditor &&
-      showNotification(vscode.window.activeTextEditor.document.fileName);
+      showNotification(this, vscode.window.activeTextEditor.document.fileName);
 
     this.disposables.push(
       vscode.window.onDidChangeActiveTextEditor(e => {
@@ -156,7 +156,7 @@ const Kite = {
             this.registerEditor(e);
           }
 
-          showNotification(e.document.fileName);
+          showNotification(this, e.document.fileName);
 
           const evt = this.eventsByEditor.get(e.document.fileName);
           evt && evt.focus();
