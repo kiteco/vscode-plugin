@@ -51,6 +51,10 @@ function shouldNotifyPath(path) {
   ].join('?');
 }
 
+function settingsPath(key) {
+  return '/clientapi/settings/' + key
+}
+
 function completionsPath() {
   return '/clientapi/editor/complete';
 }
@@ -163,6 +167,7 @@ module.exports = {
   searchPath,
   serializeRangeForPath,
   shouldNotifyPath,
+  settingsPath,
   signaturePath,
   statusPath,
   symbolReportPath,
