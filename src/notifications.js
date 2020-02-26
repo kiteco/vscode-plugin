@@ -33,9 +33,10 @@ const showGoBetaNotification = () => {
     }
 };
 
+const hideJSBetaNotificationKey = "hideJavascriptBetaNotification";
 var hasSeenJSBetaNotification = false;
 const showJavascriptBetaNotification = (kite) => {
-    if (!config.showJavascriptBetaNotification ||
+    if (kite.globalState.get(hideJSBetaNotificationKey, false) ||
         hasSeenJSBetaNotification) {
         return
     }
@@ -60,7 +61,7 @@ const showJavascriptBetaNotification = (kite) => {
                             kiteOpen("kite://home");
                             break;
                         case "Hide Forever":
-                            config.update("showJavascriptBetaNotification", false, true);
+                            kite.globalState.update(hideJSBetaNotificationKey, true);
                             break;
                     }
                 }

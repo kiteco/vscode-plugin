@@ -38,6 +38,7 @@ const RUN_KITE_INTERVAL = 2500;
 
 const Kite = {
   activate(ctx) {
+    this.globalState = ctx.globalState
     if (process.env.NODE_ENV !== "test") {
       this._activate();
       ctx.subscriptions.push(this);
