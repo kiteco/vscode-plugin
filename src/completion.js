@@ -152,9 +152,7 @@ module.exports = class KiteCompletionProvider {
         end
       },
       no_snippets: !enableSnippets,
-      no_attribute_to_subscript: true,
       offset_encoding: OFFSET_ENCODING,
-      prepend_completion_context: true
     };
 
     return this.Kite.request(
