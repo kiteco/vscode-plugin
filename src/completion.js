@@ -81,6 +81,7 @@ const processCompletion = (
   const end = document.positionAt(c.replace.end);
   const replaceRange = new Range(start, end);
   item.filterText = document.getText(replaceRange);
+  item.keepWhitespace = true;
 
   if (i === 0) {
     item.preselect = true;
