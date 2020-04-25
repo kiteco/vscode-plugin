@@ -283,6 +283,37 @@ const Kite = {
       )
     );
 
+    const openKiteTutorial = async language => {
+      try {
+        const path = await KiteAPI.getOnboardingFilePath("vscode", language)
+        const tutorial = await vscode.workspace.openTextDocument(path);
+        vscode.window.showTextDocument(tutorial);
+        KiteAPI.setKiteSetting("has_done_onboarding", true);
+      } catch(e) {
+        vscode.window.showErrorMessage(
+          "We were unable to open the tutorial. Try again later or email us at feedback@kite.com",
+        );
+      }
+    };
+
+    this.disposables.push(
+      vscode.commands.registerCommand("kite.python-tutorial", () => {
+        openKiteTutorial("python");
+      })
+    );
+
+    this.disposables.push(
+      vscode.commands.registerCommand("kite.javascript-tutorial", () => {
+        openKiteTutorial("javascript");
+      })
+    );
+
+    this.disposables.push(
+      vscode.commands.registerCommand("kite.go-tutorial", () => {
+        openKiteTutorial("go");
+      })
+    );
+
     this.disposables.push(
       vscode.commands.registerCommand("kite.help", () => {
         opn("https://help.kite.com/category/46-vs-code-integration");
@@ -351,6 +382,9 @@ const Kite = {
             }
           }
         });
+
+      KiteAPI.getKiteSetting("has_done_onboarding")
+        .then(hasDone => !hasDone && openKiteTutorial('python'));
     }
 
     setTimeout(() => {
