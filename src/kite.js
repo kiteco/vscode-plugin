@@ -142,7 +142,7 @@ const Kite = {
     );
 
     vscode.window.activeTextEditor &&
-      showNotification(this, vscode.window.activeTextEditor.document.fileName);
+      showNotification(vscode.window.activeTextEditor.document.fileName);
 
     this.disposables.push(
       vscode.window.onDidChangeActiveTextEditor(e => {
