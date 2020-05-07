@@ -43,7 +43,20 @@
             {
                 "command": "kite.open-copilot",
                 "title": "Kite: Open Copilot"
+            },
+            {
+                "command": "kite.python-tutorial",
+                "title": "Kite: Python Tutorial"
+            },
+            {
+                "command": "kite.javascript-tutorial",
+                "title": "Kite: Javascript Tutorial"
+            },
+            {
+                "command": "kite.go-tutorial",
+                "title": "Kite: Go Tutorial"
             }
+
         ],
         "configuration": {
             "type": "object",
