@@ -1,7 +1,7 @@
 {
     "name": "kite",
-    "displayName": "Kite Python Autocomplete",
-    "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
+    "displayName": "Kite Autocomplete for Python and JavaScript",
+    "description": "AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
     "version": "0.109.0",
     "publisher": "kiteco",
     "engines": {
@@ -15,6 +15,7 @@
     "author": {
         "name": "Kite"
     },
+    "categories": ["Programming Languages", "Snippets", "Other"],
     "repository": {
         "type": "git",
         "url": "https://github.com/kiteco/vscode-plugin.git"
