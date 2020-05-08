@@ -15,12 +15,13 @@
     "author": {
         "name": "Kite"
     },
-    "categories": ["Programming Languages", "Snippets", "Other"],
     "repository": {
         "type": "git",
         "url": "https://github.com/kiteco/vscode-plugin.git"
     },
     "categories": [
+        "Programming Languages", 
+        "Snippets",
         "Other"
     ],
     "activationEvents": [
