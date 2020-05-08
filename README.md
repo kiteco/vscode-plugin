@@ -1,11 +1,10 @@
-# Kite Python Plugin for Visual Studio Code
+# Kite Autocomplete Plugin for Visual Studio Code
 
-Kite is an AI-powered programming assistant that helps you write Python code inside Visual Studio Code. Kite helps you write code faster by showing you the right information at the right time. Learn more about how Kite heightens VS Code's capabilities at https://kite.com/integrations/vs-code/.
+Kite is an AI-powered programming assistant that helps you write Python & JavaScript code inside Visual Studio Code. Kite helps you write code faster by saving you keystokes and showing you the right information at the right time. Learn more about how Kite heightens VS Code's capabilities at https://kite.com/integrations/vs-code/.
 
 At a high level, Kite provides you with:
-* 🧠 __[Line-of-Code Completions](https://kite.com/blog/product/launching-line-of-code-completions-going-cloudless-and-17-million-in-funding/)__ powered by machine learning models trained on the entire open source code universe
-* 📝 __[Intelligent Snippets](https://kite.com/blog/product/announcing-intelligent-snippets-for-python/)__ that automatically provide context-relevant code snippets for your function calls
-* 🔍 __[Instant documentation](https://kite.com/copilot/)__ for the symbol underneath your cursor so you save time searching for Python docs
+* 🧠 __[Line-of-Code Completions](https://kite.com/blog/product/launching-line-of-code-completions-going-cloudless-and-17-million-in-funding/)__ powered by machine learning models trained on over 25 million open-source code files
+* 🔍 __[Instant documentation](https://kite.com/copilot/)__ for the symbol underneath your cursor so you save time searching for Python docs (not yet available for JavaScript docs)
 
 
 ## Requirements
@@ -74,8 +73,7 @@ If a `Def` link is available in the hover popup, clicking on it will jump to the
 
 ### Autocompletions
 
-Simply start typing in a saved Python file and Kite will automatically suggest completions for what you're typing. Kite's
-autocompletions are all labeled with the `⟠` symbol.
+Simply start typing in a saved Python or JavaScript file and Kite will automatically suggest completions for what you're typing. Kite's autocompletions are all labeled with the `⟠` symbol.
 
 ![completions](https://s3.amazonaws.com/helpscout.net/docs/assets/589ced522c7d3a784630c348/images/5c3eb54f04286304a71e4292/file-jJZznGIq2t.png)
 
@@ -101,9 +99,9 @@ Kite comes with sevaral commands that you can run from VS Code's command palette
 |`kite.help`|Open Kite's help website in the browser|
 
 
-## Contact Us
+## Troubleshooting
 
-Feel free to contact us with bug reports, feature requests, or general comments at feedback@kite.com.
+Visit our [help docs](https://help.kite.com) for FAQs and troubleshooting support.
 
 Happy coding!
 
