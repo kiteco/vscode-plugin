@@ -1,7 +1,7 @@
 {
     "name": "kite",
-    "displayName": "Kite Python Autocomplete",
-    "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
+    "displayName": "Kite Autocomplete for Python and JavaScript",
+    "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
     "version": "0.110.0",
     "publisher": "kiteco",
     "engines": {
@@ -20,13 +20,33 @@
         "url": "https://github.com/kiteco/vscode-plugin.git"
     },
     "categories": [
+        "Programming Languages", 
         "Other"
+    ],
+    "keywords": [
+        "autocomplete",
+        "documentation",
+        "python",
+        "javascript"        
     ],
     "activationEvents": [
         "*"
     ],
     "main": "./dist/kite-extension",
     "contributes": {
+        "languages": [
+            {
+                "id": "python",
+                "aliases": ["Python", "python"],
+                "extensions": [".py"]
+            },
+            {
+                "id": "javascript",
+                "aliases": ["JavaScript", "Javascript", "js", "javascript"],
+                "extensions": [".js", ".jsx", ".vue"]
+            }
+            
+        ],
         "commands": [
             {
                 "command": "kite.help",
@@ -43,7 +63,20 @@
             {
                 "command": "kite.open-copilot",
                 "title": "Kite: Open Copilot"
+            },
+            {
+                "command": "kite.python-tutorial",
+                "title": "Kite: Python Tutorial"
+            },
+            {
+                "command": "kite.javascript-tutorial",
+                "title": "Kite: Javascript Tutorial"
+            },
+            {
+                "command": "kite.go-tutorial",
+                "title": "Kite: Go Tutorial"
             }
+
         ],
         "configuration": {
             "type": "object",
