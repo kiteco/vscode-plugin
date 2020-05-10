@@ -98,9 +98,6 @@ const Kite = {
       }
     });
 
-    // send the activated event
-    metrics.track("activated");
-
     this.disposables.push(
       vscode.languages.registerHoverProvider(
         HOVER_SUPPORT,
@@ -438,8 +435,6 @@ const Kite = {
       evt && evt.dispose();
     }
     metrics.featureRequested("stopping");
-    // send the activated event
-    metrics.track("deactivated");
     metrics.featureFulfilled("stopping");
     this.dispose();
     this.reset();
