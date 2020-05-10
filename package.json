@@ -2,7 +2,7 @@
     "name": "kite",
     "displayName": "Kite Autocomplete for Python",
     "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python autocompletions, advanced function signatures, and instant documentation.",
-    "version": "0.112.0",
+    "version": "0.113.0",
     "publisher": "kiteco",
     "engines": {
         "vscode": "^1.28.0"
