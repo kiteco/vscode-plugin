@@ -20,46 +20,15 @@
         "url": "https://github.com/kiteco/vscode-plugin.git"
     },
     "categories": [
-        "Programming Languages",
+        "Programming Languages", 
+        "Snippets",
         "Other"
-    ],
-    "keywords": [
-        "autocomplete",
-        "documentation",
-        "python",
-        "javascript"
     ],
     "activationEvents": [
         "*"
     ],
     "main": "./dist/kite-extension",
     "contributes": {
-        "languages": [
-            {
-                "id": "python",
-                "aliases": [
-                    "Python",
-                    "python"
-                ],
-                "extensions": [
-                    ".py"
-                ]
-            },
-            {
-                "id": "javascript",
-                "aliases": [
-                    "JavaScript",
-                    "Javascript",
-                    "js",
-                    "javascript"
-                ],
-                "extensions": [
-                    ".js",
-                    ".jsx",
-                    ".vue"
-                ]
-            }
-        ],
         "commands": [
             {
                 "command": "kite.help",
