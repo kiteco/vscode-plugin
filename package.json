@@ -1,7 +1,7 @@
 {
     "name": "kite",
-    "displayName": "Kite Autocomplete for Python and JavaScript",
-    "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+    "displayName": "Kite Autocomplete for Python",
+    "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python autocompletions, advanced function signatures, and instant documentation.",
     "version": "0.112.0",
     "publisher": "kiteco",
     "engines": {
