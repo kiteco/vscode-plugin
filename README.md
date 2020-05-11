@@ -54,30 +54,30 @@ Alternatively, you have 2 options to manually install the package:
 
 The following is a brief guide to using Kite in its default configuration.
 
-### Hover
-
-Hover your mouse cursor over a symbol to view a short summary of what the symbol represents.
-
-![hover](https://s3.amazonaws.com/helpscout.net/docs/assets/589ced522c7d3a784630c348/images/5c3eb72c2c7d3a3194501270/file-LaHSHhYTkH.png)
-
-### Documentation
-
-Click on the `Docs` link in the hover popup to open the documentation for the symbol inside the Copilot, Kite's standalone
-reference tool.
-
-![copilot](https://github.com/kiteco/atom-plugin/blob/master/docs/images/copilot.png?raw=true)
-
-### Definitions
-
-If a `Def` link is available in the hover popup, clicking on it will jump to the definition of the symbol.
-
 ### Autocompletions
 
 Simply start typing in a saved Python or JavaScript file and Kite will automatically suggest completions for what you're typing. Kite's autocompletions are all labeled with the `⟠` symbol.
 
 ![completions](https://s3.amazonaws.com/helpscout.net/docs/assets/589ced522c7d3a784630c348/images/5c3eb54f04286304a71e4292/file-jJZznGIq2t.png)
 
-### Function Signatures
+### Hover (Python only)
+
+Hover your mouse cursor over a symbol to view a short summary of what the symbol represents.
+
+![hover](https://s3.amazonaws.com/helpscout.net/docs/assets/589ced522c7d3a784630c348/images/5c3eb72c2c7d3a3194501270/file-LaHSHhYTkH.png)
+
+### Documentation (Python only)
+
+Click on the `Docs` link in the hover popup to open the documentation for the symbol inside the Copilot, Kite's standalone
+reference tool.
+
+![copilot](https://github.com/kiteco/atom-plugin/blob/master/docs/images/copilot.png?raw=true)
+
+### Definitions (Python only)
+
+If a `Def` link is available in the hover popup, clicking on it will jump to the definition of the symbol.
+
+### Function Signatures (Python only)
 
 When you call a function, Kite will show you the arguments required to call it. Kite's function signatures are also all
 labeled with the `⟠` symbol.
@@ -96,6 +96,9 @@ Kite comes with sevaral commands that you can run from VS Code's command palette
 |`kite.open-copilot`|Open the Copilot|
 |`kite.docs-at-cursor`|Show documentation of the symbol underneath your cursor in the Copilot|
 |`kite.engine-settings`|Open the settings for the Kite Engine|
+|`kite.python-tutorial`|Open the Kite Python tutorial file|
+|`kite.javascript-tutorial`|Open the Kite JavaScript tutorial file|
+|`kite.go-tutorial`|Open the Kite Go tutorial file|
 |`kite.help`|Open Kite's help website in the browser|
 
 
