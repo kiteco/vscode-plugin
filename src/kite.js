@@ -111,7 +111,7 @@ const Kite = {
       )
     );
 
-    const special = ".([, '\\";
+    const special = ".\'\"\`";
     var completionsTriggers = special.split("");
 
     this.disposables.push(
