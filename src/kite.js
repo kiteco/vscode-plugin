@@ -111,7 +111,7 @@ const Kite = {
       )
     );
 
-    var completionsTriggers = ['.', '"', '\'', '`', ' '];
+    var completionsTriggers = ['.', '"', '\'', '`', ' ', '(', '['];
 
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
