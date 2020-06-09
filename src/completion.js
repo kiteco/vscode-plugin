@@ -121,8 +121,10 @@ const processCompletion = (
 };
 
 module.exports = class KiteCompletionProvider {
-  constructor(Kite, isTest) {
+  constructor(Kite, triggers, optionalTriggers, isTest) {
     this.Kite = Kite;
+    this.triggers = triggers;
+    this.optionalTriggers = optionalTriggers || [];
     this.isTest = isTest;
   }
 
@@ -144,7 +146,9 @@ module.exports = class KiteCompletionProvider {
     const begin = document.offsetAt(selection.start);
     const end = document.offsetAt(selection.end);
     const enableSnippets = workspace.getConfiguration("kite").enableSnippets;
-    const isSpace = context.triggerCharacter === ' ';
+
+    const isOptionalTrigger = this.optionalTriggers.indexOf(context.triggerCharacter) !== -1;
+    const shouldShowOptionalTrigger = workspace.getConfiguration('kite').enableOptionalCompletionsTriggers;
 
     const payload = {
       text,
@@ -166,7 +170,7 @@ module.exports = class KiteCompletionProvider {
       JSON.stringify(payload)
     )
       .then(data => {
-        if (isSpace) {
+        if (isOptionalTrigger && !shouldShowOptionalTrigger) {
           // Don't return anything because if we're wrong, it'll block all other
           // VS Code completions that come after the space.
           return [];
