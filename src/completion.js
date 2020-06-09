@@ -158,7 +158,6 @@ module.exports = class KiteCompletionProvider {
       offset_encoding: OFFSET_ENCODING,
     };
 
-    console.log('triggering completions');
     return this.Kite.request(
       {
         path: completionsPath(),
@@ -168,7 +167,8 @@ module.exports = class KiteCompletionProvider {
     )
       .then(data => {
         if (isSpace) {
-          console.log('no completions after space');
+          // Don't return anything because if we're wrong, it'll block all other
+          // VS Code completions that come after the space.
           return [];
         }
 
@@ -213,12 +213,8 @@ module.exports = class KiteCompletionProvider {
           });
           idx += offset;
         });
-        console.log('got completions', completions);
         return new CompletionList(completionItems, true);
       })
-      .catch(() => {
-        console.log('no completions on error');
-        return [];
-      });
+      .catch(() => []);
   }
 };
