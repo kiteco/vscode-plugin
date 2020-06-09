@@ -126,7 +126,7 @@ module.exports = class KiteCompletionProvider {
     this.isTest = isTest;
   }
 
-  provideCompletionItems(document, position) {
+  provideCompletionItems(document, position, token, context) {
     const text = document.getText();
 
     if (text.length > MAX_FILE_SIZE) {
@@ -136,14 +136,16 @@ module.exports = class KiteCompletionProvider {
 
     const filename = normalizeDriveLetter(document.fileName);
     const filterText = buildFilterText(document, position);
-    return this.getCompletions(document, text, filename, filterText);
+    return this.getCompletions(document, text, filename, filterText, context);
   }
 
-  getCompletions(document, text, filename, filterText) {
+  getCompletions(document, text, filename, filterText, context) {
     const selection = window.activeTextEditor.selection;
     const begin = document.offsetAt(selection.start);
     const end = document.offsetAt(selection.end);
     const enableSnippets = workspace.getConfiguration("kite").enableSnippets;
+    const isSpace = context.triggerCharacter === ' ';
+
     const payload = {
       text,
       editor: "vscode",
@@ -164,6 +166,12 @@ module.exports = class KiteCompletionProvider {
       JSON.stringify(payload)
     )
       .then(data => {
+        if (isSpace) {
+          // Don't return anything because if we're wrong, it'll block all other
+          // VS Code completions that come after the space.
+          return [];
+        }
+
         data = parseJSON(data, {});
         const completions = data.completions || [];
         // # of completion items + its children
