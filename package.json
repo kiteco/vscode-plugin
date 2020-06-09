@@ -141,7 +141,7 @@
                 "kite.enableOptionalCompletionsTriggers": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Enabling this will cause Kite to trigger completions after a space, ( and [. Note that this may cause completions from other providers from not showing up."
+                    "description": "Enabling this will cause Kite to trigger completions after a space, ( and [. Note that this may cause completions from other providers to not show up."
                 }
             }
         }

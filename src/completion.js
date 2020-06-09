@@ -121,8 +121,10 @@ const processCompletion = (
 };
 
 module.exports = class KiteCompletionProvider {
-  constructor(Kite, isTest) {
+  constructor(Kite, triggers, optionalTriggers, isTest) {
     this.Kite = Kite;
+    this.triggers = triggers;
+    this.optionalTriggers = optionalTriggers || [];
     this.isTest = isTest;
   }
 
@@ -145,11 +147,8 @@ module.exports = class KiteCompletionProvider {
     const end = document.offsetAt(selection.end);
     const enableSnippets = workspace.getConfiguration("kite").enableSnippets;
 
-    const isOptionalTrigger = context.triggerCharacter === ' '
-      || context.triggerCharacter === '('
-      || context.triggerCharacter === '[';
-
-      const shouldShowOptionalTrigger = workspace.getConfiguration('kite').enableOptionalCompletionsTriggers;
+    const isOptionalTrigger = this.optionalTriggers.indexOf(context.triggerCharacter) !== -1;
+    const shouldShowOptionalTrigger = workspace.getConfiguration('kite').enableOptionalCompletionsTriggers;
 
     const payload = {
       text,
