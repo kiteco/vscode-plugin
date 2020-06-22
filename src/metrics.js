@@ -83,6 +83,7 @@ module.exports = {
   OS_VERSION,
   featureRequested,
   featureFulfilled,
+  increment: name => sendFeatureMetric(name),
   getOsName,
   version: kitePkg.version,
   track: (event, props) => {

@@ -200,6 +200,13 @@ const Kite = {
     this.disposables.push(this.statusBarItem);
 
     this.disposables.push(
+      vscode.commands.registerCommand("kite.insert-completion", () => {
+        metrics.increment("vscode_completions_inserted");
+        metrics.increment("editor_completions_inserted");
+      })
+    );
+
+    this.disposables.push(
       vscode.commands.registerCommand("kite.login", () => {
         kiteOpen("kite://home");
       })

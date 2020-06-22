@@ -117,6 +117,9 @@ const processCompletion = (
     item.insertText += "$0";
     item.insertText = new SnippetString(item.insertText);
   }
+
+  item.command = {command: "kite.insert-completion"};
+
   return item;
 };
 
