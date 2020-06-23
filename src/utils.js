@@ -96,7 +96,7 @@ function promisifyReadResponse(response) {
     response.on('error', err => reject(err));
   });
 }
-  
+
 function delayPromise(factory, timeout) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -144,6 +144,26 @@ const kiteOpen = (url) => {
   }
 }
 
+const getSupportedLanguage = document => {
+  if (document.isUntitled) {
+    return null;
+  }
+
+  const ext = document.fileName.split(".").slice(-1)[0];
+  switch (ext) {
+    case "py":
+      return "python";
+    case "go":
+      return "go";
+    case "js":
+    case "jsx":
+    case "vue":
+      return "javascript";
+    default:
+      return null;
+  }
+}
+
 module.exports = {
   compact,
   delayPromise,
@@ -170,4 +190,5 @@ module.exports = {
   getDetails,
   getFunctionDetails,
   kiteOpen,
+  getSupportedLanguage,
 };
