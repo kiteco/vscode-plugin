@@ -15,11 +15,15 @@ const {
   OFFSET_ENCODING,
   MAX_FILE_SIZE
 } = require("./constants");
-const { parseJSON } = require("./utils");
+const {
+  parseJSON,
+  getSupportedLanguage
+} = require("./utils");
 const {
   completionsPath,
   normalizeDriveLetter
 } = require("./urls");
+
 
 const fill = (s, l, f = " ") => {
   while (s.length < l) {
@@ -118,7 +122,10 @@ const processCompletion = (
     item.insertText = new SnippetString(item.insertText);
   }
 
-  item.command = {command: "kite.insert-completion"};
+  item.command = {
+    command: "kite.insert-completion",
+    arguments: [{lang: getSupportedLanguage(document)}]
+  };
 
   return item;
 };

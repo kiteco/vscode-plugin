@@ -200,9 +200,9 @@ const Kite = {
     this.disposables.push(this.statusBarItem);
 
     this.disposables.push(
-      vscode.commands.registerCommand("kite.insert-completion", () => {
-        metrics.increment("vscode_completions_inserted");
-        metrics.increment("editor_completions_inserted");
+      vscode.commands.registerCommand("kite.insert-completion", ({lang}) => {
+        metrics.increment(`vscode_kite_${lang}_completions_inserted`);
+        metrics.increment(`kite_${lang}_completions_inserted`);
       })
     );
 
