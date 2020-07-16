@@ -219,6 +219,12 @@ const Kite = {
     );
 
     this.disposables.push(
+      vscode.commands.registerTextEditorCommand("kite.related-files", (textEditor) => {
+        opn(`http://localhost:46624/codenav/related/${encodeURIComponent(textEditor.document.fileName)}`);
+      })
+    );
+
+    this.disposables.push(
       vscode.commands.registerCommand("kite.open-copilot", () => {
         kiteOpen("kite://home");
       })
