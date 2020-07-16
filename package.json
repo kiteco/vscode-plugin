@@ -79,6 +79,10 @@
                 "title": "Kite: Open Copilot"
             },
             {
+                "command": "kite.related-files",
+                "title": "Kite: Find related files"
+            },
+            {
                 "command": "kite.python-tutorial",
                 "title": "Kite: Python Tutorial"
             },
