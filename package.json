@@ -80,7 +80,7 @@
             },
             {
                 "command": "kite.related-files",
-                "title": "Kite: Find related files"
+                "title": "Kite: Find related files (Experimental)"
             },
             {
                 "command": "kite.python-tutorial",
@@ -95,6 +95,13 @@
                 "title": "Kite: Go Tutorial"
             }
         ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "kite.related-files"
+                }
+            ]
+        },
         "configuration": {
             "type": "object",
             "title": "Kite Configuration",
