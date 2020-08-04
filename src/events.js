@@ -43,7 +43,7 @@ module.exports = class EditorEvents {
     this.timeout = setTimeout(() => this.mergeEvents(), 0);
     // was resulting in unhandled Promise rejection from `this.pendingPromiseReject(err)`
     // below... so we catch it
-    return this.pendingPromise.catch((err) => {});
+    return this.pendingPromise.catch(() => {});
   }
 
   reset() {
@@ -75,7 +75,7 @@ module.exports = class EditorEvents {
       promise = promise.then(() => this.Kite.request({
         path: '/clientapi/editor/event',
         method: 'POST',
-      }, JSON.stringify(this.buildEvent(focus, doc, editor.selection)), doc))
+      }, JSON.stringify(this.buildEvent(focus, doc, editor.selection)), doc));
     }
 
     return promise
@@ -88,12 +88,6 @@ module.exports = class EditorEvents {
     })
     .catch((err) => {
       this.pendingPromiseReject && this.pendingPromiseReject(err);
-      // on connection error send a metric, but not too often or we will generate too many events
-      // if (!this.lastErrorAt ||
-      //     secondsSince(this.lastErrorAt) >= CONNECT_ERROR_LOCKOUT) {
-      //   this.lastErrorAt = new Date();
-      //   // metrics.track('could not connect to event endpoint', err);
-      // }
     })
     .then(() => {
       delete this.pendingPromise;
@@ -131,9 +125,9 @@ module.exports = class EditorEvents {
       event.selections = [{
         start: document.offsetAt(selection.start),
         end: document.offsetAt(selection.end),
-      }]
+      }];
     }
 
     return event;
   }
-}
+};
