@@ -11,14 +11,12 @@ module.exports = class EditorEvents {
   constructor(Kite, editor) {
     this.Kite = Kite;
     this.editor = editor;
-    this.document = editor.document;
     this.reset();
   }
 
   dispose() {
     delete this.Kite;
     delete this.editor;
-    delete this.document;
   }
 
   focus() {
@@ -54,12 +52,12 @@ module.exports = class EditorEvents {
   }
 
   mergeEvents() {
-    if (!this.document || !this.editor) {
+    if (!this.editor || !this.editor.document) {
       return;
     }
 
-    const doc = this.document;
-    const editor= this.editor;
+    const editor = this.editor;
+    const doc = editor.document;
     let focus = this.pendingEvents.filter(e => e === 'focus')[0];
     let action = this.pendingEvents.some(e => e === 'edit') ? 'edit' : this.pendingEvents.pop();
 
