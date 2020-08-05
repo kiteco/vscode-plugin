@@ -10,6 +10,7 @@ const {
   ERROR_COLOR,
   EVENT_SUPPORT,
   COMPLETIONS_SUPPORT,
+  FULL_COMPLETIONS_SUPPORT,
   DEFINITIONS_SUPPORT,
   HOVER_SUPPORT,
   SIGNATURES_SUPPORT,
@@ -118,6 +119,16 @@ const Kite = {
       vscode.languages.registerCompletionItemProvider(
         COMPLETIONS_SUPPORT,
         new KiteCompletionProvider(Kite, completionsTriggers, optionalCompletionsTriggers), ...completionsTriggers.concat(optionalCompletionsTriggers))
+    );
+
+    // More triggers for Python because we have semantic completions.
+    // We leave out open quotes because we can't suggest string constants.
+    var pythonCompletionsTriggers = ['.', ',', ' ', '(', '[', '{', '='];
+
+    this.disposables.push(
+      vscode.languages.registerCompletionItemProvider(
+        FULL_COMPLETIONS_SUPPORT,
+        new KiteCompletionProvider(Kite, pythonCompletionsTriggers), ...pythonCompletionsTriggers)
     );
 
     this.disposables.push(
