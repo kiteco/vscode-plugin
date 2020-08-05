@@ -7,8 +7,13 @@ const EVENT_SUPPORT = (fileName) => {
 };
 
 const COMPLETIONS_SUPPORT = [
-  { pattern: "**/*.{py,go,js,jsx,vue}", scheme: "file" },
-  { pattern: "**/*.{py,go,js,jsx,vue}", scheme: "untitled" }
+  { pattern: "**/*.{go,js,jsx,vue}", scheme: "file" },
+  { pattern: "**/*.{go,js,jsx,vue}", scheme: "untitled" }
+];
+
+const FULL_COMPLETIONS_SUPPORT = [
+  { pattern: "**/*.{py}", scheme: "file" },
+  { pattern: "**/*.{py}", scheme: "untitled" }
 ];
 
 const DEFINITIONS_SUPPORT = [
@@ -60,6 +65,7 @@ module.exports = {
   INTERVAL,
   EVENT_SUPPORT,
   COMPLETIONS_SUPPORT,
+  FULL_COMPLETIONS_SUPPORT,
   DEFINITIONS_SUPPORT,
   HOVER_SUPPORT,
   SIGNATURES_SUPPORT,
