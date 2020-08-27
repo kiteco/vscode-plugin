@@ -90,7 +90,7 @@ const Kite = {
             if (item) {
               switch (item) {
                 case "Install":
-                  opn("https://www.kite.com/install/?utm_source=github");
+                  opn("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
                   metrics.track("vscode_kite_installer_github_link_clicked");
                   break;
               }
