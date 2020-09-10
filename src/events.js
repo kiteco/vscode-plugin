@@ -104,7 +104,7 @@ module.exports = class EditorEvents {
         action: 'skip',
         text: '',
         filename: normalizeDriveLetter(document.fileName),
-        selections: [{start: 0, end: 0}],
+        selections: [{start: 0, end: 0, encoding: 'utf-16'}],
         editor_version,
         plugin_version
       }
@@ -125,6 +125,7 @@ module.exports = class EditorEvents {
       event.selections = [{
         start: document.offsetAt(selection.start),
         end: document.offsetAt(selection.end),
+        encoding: 'utf-16',  
       }];
     }
 
