@@ -7,6 +7,10 @@ function metricsCounterPath() {
   return '/clientapi/metrics/counters';
 }
 
+function metricsCompletionSelectedPath() {
+  return '/clientapi/metrics/completions/selected';
+}
+
 function languagesPath() {
   return '/clientapi/languages';
 }
@@ -158,6 +162,7 @@ module.exports = {
   languagesPath,
   membersPath,
   metricsCounterPath,
+  metricsCompletionSelectedPath,
   normalizeDriveLetter,
   openDocumentationInWebURL,
   openExampleInWebURL,

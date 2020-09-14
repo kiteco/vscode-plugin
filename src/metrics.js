@@ -7,7 +7,7 @@ const mixpanel = require("mixpanel");
 const Logger = require("kite-connector/lib/logger");
 const kitePkg = require("../package.json");
 const localconfig = require("./localconfig.js");
-const { metricsCounterPath } = require("./urls");
+const { metricsCounterPath, metricsCompletionSelectedPath} = require("./urls");
 
 const OS_VERSION = os.type() + " " + os.release();
 
@@ -30,6 +30,29 @@ function distinctID() {
     localconfig.set("distinctID", id);
   }
   return id;
+}
+
+function sendCompletionSelected(lang, completion) {
+  if (process.env.NODE_ENV === "test") {
+    return;
+  }
+
+  if (!Kite) {
+    Kite = require("./kite");
+  }
+  const path = metricsCompletionSelectedPath();
+
+  return Kite.request(
+      {
+        path,
+        method: "POST"
+      },
+      JSON.stringify({
+        editor: 'vscode',
+        language: lang,
+        completion: completion
+      })
+  );
 }
 
 function sendFeatureMetric(name) {
@@ -85,6 +108,7 @@ module.exports = {
   featureFulfilled,
   increment: name => sendFeatureMetric(name),
   getOsName,
+  sendCompletionSelected,
   version: kitePkg.version,
   track: (event, props) => {
     if (process.env.NODE_ENV !== "production") {

@@ -124,7 +124,7 @@ const processCompletion = (
 
   item.command = {
     command: "kite.insert-completion",
-    arguments: [{lang: getSupportedLanguage(document)}]
+    arguments: [{lang: getSupportedLanguage(document), completion: {snippet: {text: c.snippet.text}}}]
   };
 
   return item;
