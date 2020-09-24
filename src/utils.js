@@ -126,7 +126,10 @@ const escapeCommandArguments = (o) => {
   if(vscode.version < "1.30.0") {
     return JSON.stringify(o).replace(/"/g, '&quot;');
   }
-  return JSON.stringify(o)
+  if (os.platform()) == 'win32') {
+    return JSON.stringify(o).replace(/\\\\/g, "\/")
+  }
+    return JSON.stringify(o)
 }
 
 const kiteOpen = (url) => {
