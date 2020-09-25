@@ -126,7 +126,7 @@ const escapeCommandArguments = (o) => {
   if(vscode.version < "1.30.0") {
     return JSON.stringify(o).replace(/"/g, '&quot;');
   }
-  if (os.platform()) == 'win32') {
+  if (os.platform() == 'win32') {
     return JSON.stringify(o).replace(/\\\\/g, "\/")
   }
     return JSON.stringify(o)
