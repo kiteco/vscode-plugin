@@ -5,7 +5,6 @@ const {
   ParameterInformation
 } = require("vscode");
 const Logger = require("kite-connector/lib/logger");
-const { MAX_FILE_SIZE } = require("./constants");
 const { parseJSON, stripTags, getFunctionDetails } = require("./utils");
 const { signaturePath, normalizeDriveLetter } = require("./urls");
 const { valueLabel, parameterType } = require("./data-utils");
@@ -17,14 +16,7 @@ module.exports = class KiteSignatureProvider {
   }
 
   provideSignatureHelp(document, position, token) {
-    // console.log('signature called', this.isTest, editorsForDocument(document).length)
-    // console.log('document', document.fileName)
     const text = document.getText();
-
-    if (text.length > MAX_FILE_SIZE) {
-      Logger.warn("buffer contents too large, not attempting signature");
-      return null;
-    }
 
     const cursorPosition = document.offsetAt(position);
     const payload = {

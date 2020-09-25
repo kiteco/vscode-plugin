@@ -13,7 +13,6 @@ const Logger = require("kite-connector/lib/logger");
 const {
   KITE_BRANDING,
   OFFSET_ENCODING,
-  MAX_FILE_SIZE
 } = require("./constants");
 const {
   parseJSON,
@@ -140,12 +139,6 @@ module.exports = class KiteCompletionProvider {
 
   provideCompletionItems(document, position, token, context) {
     const text = document.getText();
-
-    if (text.length > MAX_FILE_SIZE) {
-      Logger.warn("buffer contents too large, not attempting completions");
-      return Promise.resolve([]);
-    }
-
     const filename = normalizeDriveLetter(document.fileName);
     const filterText = buildFilterText(document, position);
     return this.getCompletions(document, text, filename, filterText, context);

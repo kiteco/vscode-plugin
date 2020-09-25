@@ -1,10 +1,8 @@
 'use strict';
 
-const KiteAPI = require('kite-api');
 const { version: editor_version } = require('vscode');
 
 const { version: plugin_version } = require('./metrics');
-const {MAX_PAYLOAD_SIZE, MAX_FILE_SIZE} = require('./constants');
 const {normalizeDriveLetter} = require('./urls');
 
 module.exports = class EditorEvents {
@@ -65,10 +63,6 @@ module.exports = class EditorEvents {
 
     const payload = JSON.stringify(this.buildEvent(action, doc, editor.selection));
 
-    if (payload.length > MAX_PAYLOAD_SIZE) {
-      return this.reset();
-    }
-
     let promise = Promise.resolve();
 
     if (focus && action !== focus) {
@@ -98,17 +92,7 @@ module.exports = class EditorEvents {
 
   buildEvent(action, document, selection) {
     const content = document.getText();
-    return content.length > MAX_FILE_SIZE
-      ? {
-        source: 'vscode',
-        action: 'skip',
-        text: '',
-        filename: normalizeDriveLetter(document.fileName),
-        selections: [{start: 0, end: 0, encoding: 'utf-16'}],
-        editor_version,
-        plugin_version
-      }
-      : this.makeEvent(action, document, content, selection);
+    return this.makeEvent(action, document, content, selection);
   }
 
   makeEvent(action, document, text, selection) {
