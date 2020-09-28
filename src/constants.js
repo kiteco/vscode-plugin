@@ -7,8 +7,8 @@ const EVENT_SUPPORT = (fileName) => {
 };
 
 const COMPLETIONS_SUPPORT = [
-  { pattern: "**/*.{go,js,jsx,vue}", scheme: "file" },
-  { pattern: "**/*.{go,js,jsx,vue}", scheme: "untitled" }
+  { pattern: "**/*.{c,cc,cpp,cs,css,go,h,hpp,html,java,js,jsx,kt,less,m,php,rb,scala,sh,ts,tsx,vue}", scheme: "file" },
+  { pattern: "**/*.{c,cc,cpp,cs,css,go,h,hpp,html,java,js,jsx,kt,less,m,php,rb,scala,sh,ts,tsx,vue}", scheme: "untitled" }
 ];
 
 const FULL_COMPLETIONS_SUPPORT = [
@@ -31,7 +31,31 @@ const SIGNATURES_SUPPORT = [
   { pattern: "**/*.{py}", scheme: "untitled" }
 ];
 
-const SUPPORTED_EXTENSIONS = [".go", ".py", ".js", ".jsx", ".vue"];
+const SUPPORTED_EXTENSIONS = [
+    ".c",
+    ".cc",
+    ".cpp",
+    ".cs",
+    ".css",
+    ".go",
+    ".h",
+    ".hpp",
+    ".html",
+    ".java",
+    ".js",
+    ".jsx",
+    ".kt",
+    ".less",
+    ".m",
+    ".php",
+    ".py",
+    ".rb",
+    ".scala",
+    ".sh",
+    ".ts",
+    ".tsx",
+    ".vue"
+];
 
 const CONNECT_ERROR_LOCKOUT = 15 * 60;
 
