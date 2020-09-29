@@ -1,13 +1,13 @@
 {
-    "extends": "eslint:recommended",
-    "env": {
-        "browser": false,
-        "commonjs": true,
-        "es6": true,
-        "node": true
-    },
-    "rules": {
-        "max-len": "warn",
-        "semi": "error"
-    }
+  "extends": "eslint:recommended",
+  "env": {
+    "browser": false,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "max-len": "off",
+    "semi": "error"
+  }
 }
