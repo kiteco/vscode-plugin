@@ -4,8 +4,7 @@ const KiteAPI = require('kite-api');
 const { version: editor_version } = require('vscode');
 
 const { version: plugin_version } = require('./metrics');
-const {MAX_PAYLOAD_SIZE, MAX_FILE_SIZE} = require('./constants');
-const {normalizeDriveLetter} = require('./urls');
+const { normalizeDriveLetter } = require('./urls');
 
 module.exports = class EditorEvents {
   constructor(Kite, editor) {
@@ -43,7 +42,7 @@ module.exports = class EditorEvents {
     this.timeout = setTimeout(() => this.mergeEvents(), 0);
     // was resulting in unhandled Promise rejection from `this.pendingPromiseReject(err)`
     // below... so we catch it
-    return this.pendingPromise.catch(() => {});
+    return this.pendingPromise.catch(() => { });
   }
 
   reset() {
@@ -58,57 +57,49 @@ module.exports = class EditorEvents {
 
     const editor = this.editor;
     const doc = editor.document;
-    let focus = this.pendingEvents.filter(e => e === 'focus')[0];
-    let action = this.pendingEvents.some(e => e === 'edit') ? 'edit' : this.pendingEvents.pop();
+    return KiteAPI.getMaxFileSizeBytes().then(max => {
+      const text = doc.getText();
+      if (text.length > max) {
+        return Promise.resolve();
+      }
+      const focus = this.pendingEvents.filter(e => e === 'focus')[0];
+      const action = this.pendingEvents.some(e => e === 'edit') ? 'edit' : this.pendingEvents.pop();
 
-    this.reset();
+      this.reset();
 
-    const payload = JSON.stringify(this.buildEvent(action, doc, editor.selection));
+      const payload = JSON.stringify(this.buildEvent(action, doc, editor.selection));
 
-    if (payload.length > MAX_PAYLOAD_SIZE) {
-      return this.reset();
-    }
+      let promise = Promise.resolve();
 
-    let promise = Promise.resolve();
+      if (focus && action !== focus) {
+        promise = promise.then(() => this.Kite.request({
+          path: '/clientapi/editor/event',
+          method: 'POST',
+        }, JSON.stringify(this.buildEvent(focus, doc, editor.selection)), doc));
+      }
 
-    if (focus && action !== focus) {
-      promise = promise.then(() => this.Kite.request({
-        path: '/clientapi/editor/event',
-        method: 'POST',
-      }, JSON.stringify(this.buildEvent(focus, doc, editor.selection)), doc));
-    }
-
-    return promise
-    .then(() => this.Kite.request({
-      path: '/clientapi/editor/event',
-      method: 'POST',
-    }, payload, doc))
-    .then((res) => {
-      this.pendingPromiseResolve && this.pendingPromiseResolve(res);
-    })
-    .catch((err) => {
-      this.pendingPromiseReject && this.pendingPromiseReject(err);
-    })
-    .then(() => {
-      delete this.pendingPromise;
-      delete this.pendingPromiseResolve;
-      delete this.pendingPromiseReject;
+      return promise
+        .then(() => this.Kite.request({
+          path: '/clientapi/editor/event',
+          method: 'POST',
+        }, payload, doc))
+        .then((res) => {
+          this.pendingPromiseResolve && this.pendingPromiseResolve(res);
+        })
+        .catch((err) => {
+          this.pendingPromiseReject && this.pendingPromiseReject(err);
+        })
+        .finally(() => {
+          delete this.pendingPromise;
+          delete this.pendingPromiseResolve;
+          delete this.pendingPromiseReject;
+        });
     });
   }
 
   buildEvent(action, document, selection) {
     const content = document.getText();
-    return content.length > MAX_FILE_SIZE
-      ? {
-        source: 'vscode',
-        action: 'skip',
-        text: '',
-        filename: normalizeDriveLetter(document.fileName),
-        selections: [{start: 0, end: 0, encoding: 'utf-16'}],
-        editor_version,
-        plugin_version
-      }
-      : this.makeEvent(action, document, content, selection);
+    return this.makeEvent(action, document, content, selection);
   }
 
   makeEvent(action, document, text, selection) {
@@ -125,7 +116,7 @@ module.exports = class EditorEvents {
       event.selections = [{
         start: document.offsetAt(selection.start),
         end: document.offsetAt(selection.end),
-        encoding: 'utf-16',  
+        encoding: 'utf-16',
       }];
     }
 

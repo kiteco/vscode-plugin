@@ -33,12 +33,6 @@ const SIGNATURES_SUPPORT = [
 
 const SUPPORTED_EXTENSIONS = [".go", ".py", ".js", ".jsx", ".vue"];
 
-// MAX_FILE_SIZE is the maximum file size to send to Kite
-const MAX_FILE_SIZE = 75 * Math.pow(2, 10); // 75 KB
-
-// MAX_PAYLOAD_SIZE is the maximum length for a POST reqest body
-const MAX_PAYLOAD_SIZE = Math.pow(2, 21); // 2097152
-
 const CONNECT_ERROR_LOCKOUT = 15 * 60;
 
 const ATTEMPTS = 30;
@@ -69,8 +63,6 @@ module.exports = {
   DEFINITIONS_SUPPORT,
   HOVER_SUPPORT,
   SIGNATURES_SUPPORT,
-  MAX_PAYLOAD_SIZE,
-  MAX_FILE_SIZE,
   CONNECT_ERROR_LOCKOUT,
   ERROR_COLOR,
   WARNING_COLOR,
