@@ -650,6 +650,12 @@ const Kite = {
                 this.statusBarItem.tooltip =
                   "Kite engine is indexing your code";
                 break;
+              case "initializing":
+                this.statusBarItem.color = undefined;
+                this.statusBarItem.text = "𝕜𝕚𝕥𝕖: initializing";
+                this.statusBarItem.tooltip =
+                  "Kite engine is warming up";
+                break;
               case "syncing":
                 this.statusBarItem.text = "𝕜𝕚𝕥𝕖: syncing";
                 this.statusBarItem.color = undefined;
