@@ -9,9 +9,10 @@ const {
   window,
   workspace
 } = require("vscode");
+const Logger = require("kite-connector/lib/logger");
 const {
   KITE_BRANDING,
-  OFFSET_ENCODING,
+  OFFSET_ENCODING
 } = require("./constants");
 const {
   parseJSON,
@@ -21,7 +22,7 @@ const {
   completionsPath,
   normalizeDriveLetter
 } = require("./urls");
-const KiteAPI = require('kite-api');
+
 
 const fill = (s, l, f = " ") => {
   while (s.length < l) {
@@ -50,9 +51,7 @@ const kindForHint = hint => {
 
 const buildMarkdown = (id, hint, documentation_text) => {
   return new MarkdownString(`[𝕜𝕚𝕥𝕖]&nbsp;&nbsp;__${id}__&nbsp;&nbsp;&nbsp;&nbsp;_${hint}_
-
 ${documentation_text}
-
             `);
 };
 
@@ -138,93 +137,95 @@ module.exports = class KiteCompletionProvider {
 
   provideCompletionItems(document, position, token, context) {
     const text = document.getText();
+
+    if (text.length > this.Kite.maxFileSize) {
+      Logger.warn("buffer contents too large, not attempting completions");
+      return Promise.resolve([]);
+    }
+
     const filename = normalizeDriveLetter(document.fileName);
     const filterText = buildFilterText(document, position);
     return this.getCompletions(document, text, filename, filterText, context);
   }
 
   getCompletions(document, text, filename, filterText, context) {
-    return KiteAPI.getMaxFileSizeBytes().then(max => {
-      if (text.length > max) {
-        return Promise.resolve([]);
-      }
-      const selection = window.activeTextEditor.selection;
-      const begin = document.offsetAt(selection.start);
-      const end = document.offsetAt(selection.end);
-      const enableSnippets = workspace.getConfiguration("kite").enableSnippets;
+    const selection = window.activeTextEditor.selection;
+    const begin = document.offsetAt(selection.start);
+    const end = document.offsetAt(selection.end);
+    const enableSnippets = workspace.getConfiguration("kite").enableSnippets;
 
-      const isOptionalTrigger = this.optionalTriggers.indexOf(context.triggerCharacter) !== -1;
-      const shouldShowOptionalTrigger = workspace.getConfiguration('kite').enableOptionalCompletionsTriggers;
+    const isOptionalTrigger = this.optionalTriggers.indexOf(context.triggerCharacter) !== -1;
+    const shouldShowOptionalTrigger = workspace.getConfiguration('kite').enableOptionalCompletionsTriggers;
 
-      const payload = {
-        text,
-        editor: "vscode",
-        filename,
-        position: {
-          begin,
-          end
-        },
-        no_snippets: !enableSnippets,
-        offset_encoding: OFFSET_ENCODING,
-      };
-      return this.Kite.request(
-        {
-          path: completionsPath(),
-          method: "POST"
-        },
-        JSON.stringify(payload)
-      )
-        .then(data => {
-          if (isOptionalTrigger && !shouldShowOptionalTrigger) {
-            // Don't return anything because if we're wrong, it'll block all other
-            // VS Code completions that come after the space.
-            return [];
+    const payload = {
+      text,
+      editor: "vscode",
+      filename,
+      position: {
+        begin,
+        end
+      },
+      no_snippets: !enableSnippets,
+      offset_encoding: OFFSET_ENCODING,
+    };
+
+    return this.Kite.request(
+      {
+        path: completionsPath(),
+        method: "POST"
+      },
+      JSON.stringify(payload)
+    )
+      .then(data => {
+        if (isOptionalTrigger && !shouldShowOptionalTrigger) {
+          // Don't return anything because if we're wrong, it'll block all other
+          // VS Code completions that come after the space.
+          return [];
+        }
+
+        data = parseJSON(data, {});
+        const completions = data.completions || [];
+        // # of completion items + its children
+        const totalCompletions = completions.reduce((total, completion) => {
+          let toReturn = total + 1;
+          if (completion.children) {
+            toReturn += completion.children.length;
           }
-
-          data = parseJSON(data, {});
-          const completions = data.completions || [];
-          // # of completion items + its children
-          const totalCompletions = completions.reduce((total, completion) => {
-            let toReturn = total + 1;
-            if (completion.children) {
-              toReturn += completion.children.length;
-            }
-            return toReturn;
-          }, 0);
-          // # of digits needed to represent totalCompletions. Used for sortText.
-          const numDigits = String(totalCompletions).length;
-          const completionItems = [];
-          // Used to track order in suggestion list
-          let idx = 0;
-          completions.forEach(c => {
+          return toReturn;
+        }, 0);
+        // # of digits needed to represent totalCompletions. Used for sortText.
+        const numDigits = String(totalCompletions).length;
+        const completionItems = [];
+        // Used to track order in suggestion list
+        let idx = 0;
+        completions.forEach(c => {
+          completionItems.push(
+            processCompletion(
+              document,
+              c,
+              "",
+              numDigits,
+              idx
+            )
+          );
+          const children = c.children || [];
+          let offset = 1;
+          children.forEach(child => {
             completionItems.push(
               processCompletion(
                 document,
-                c,
-                "",
+                child,
+                "  ",
                 numDigits,
-                idx
+                idx + offset
               )
             );
-            const children = c.children || [];
-            let offset = 1;
-            children.forEach(child => {
-              completionItems.push(
-                processCompletion(
-                  document,
-                  child,
-                  "  ",
-                  numDigits,
-                  idx + offset
-                )
-              );
-              offset += 1;
-            });
-            idx += offset;
+            offset += 1;
           });
-          return new CompletionList(completionItems, true);
-        })
-        .catch(() => []);
-    });
+          idx += offset;
+        });
+        return new CompletionList(completionItems, true);
+      })
+      .catch(() => []);
   }
 };
