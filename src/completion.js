@@ -51,7 +51,9 @@ const kindForHint = hint => {
 
 const buildMarkdown = (id, hint, documentation_text) => {
   return new MarkdownString(`[𝕜𝕚𝕥𝕖]&nbsp;&nbsp;__${id}__&nbsp;&nbsp;&nbsp;&nbsp;_${hint}_
+
 ${documentation_text}
+
             `);
 };
 

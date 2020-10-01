@@ -56,8 +56,8 @@ module.exports = class EditorEvents {
 
     const editor = this.editor;
     const doc = editor.document;
-    let focus = this.pendingEvents.filter(e => e === 'focus')[0];
-    let action = this.pendingEvents.some(e => e === 'edit') ? 'edit' : this.pendingEvents.pop();
+    const focus = this.pendingEvents.filter(e => e === 'focus')[0];
+    const action = this.pendingEvents.some(e => e === 'edit') ? 'edit' : this.pendingEvents.pop();
 
     this.reset();
 
@@ -83,7 +83,7 @@ module.exports = class EditorEvents {
       .catch((err) => {
         this.pendingPromiseReject && this.pendingPromiseReject(err);
       })
-      .then(() => {
+      .finally(() => {
         delete this.pendingPromise;
         delete this.pendingPromiseResolve;
         delete this.pendingPromiseReject;
