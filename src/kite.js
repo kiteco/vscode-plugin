@@ -641,18 +641,19 @@ const Kite = {
             this.statusBarItem.text = "𝕜𝕚𝕥𝕖: " + status.short
             this.statusBarItem.tooltip = status.long
           } else {
-            this.statusBarItem.text = "";
-            this.statusBarItem.color = undefined;
-            this.statusBarItem.tooltip = "";
-            this.statusBarItem.hide();
+            this._clearStatusBarItem()
           }
       }
     } else {
+      this._clearStatusBarItem()
+    }
+  },
+
+  _clearStatusBarItem() {
       this.statusBarItem.text = "";
       this.statusBarItem.color = undefined;
       this.statusBarItem.tooltip = "";
       this.statusBarItem.hide();
-    }
   },
 
   setStatus(state = this.lastState, document) {
