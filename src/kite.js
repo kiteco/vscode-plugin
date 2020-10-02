@@ -33,11 +33,14 @@ const {
 } = require("./utils");
 const { version } = require("../package.json");
 const { showNotification } = require('./notifications');
+const { DEFAULT_MAX_FILE_SIZE } = require("kite-api");
 
 const RUN_KITE_ATTEMPTS = 30;
 const RUN_KITE_INTERVAL = 2500;
 
 const Kite = {
+  maxFileSize: DEFAULT_MAX_FILE_SIZE,
+
   activate(ctx) {
     this.globalState = ctx.globalState
     if (process.env.NODE_ENV !== "test") {
@@ -99,6 +102,8 @@ const Kite = {
       }
     });
 
+    this.setMaxFileSize();
+
     this.disposables.push(
       vscode.languages.registerHoverProvider(
         HOVER_SUPPORT,
@@ -154,6 +159,7 @@ const Kite = {
 
     this.disposables.push(
       vscode.window.onDidChangeActiveTextEditor(e => {
+        this.setMaxFileSize();
         this.setStatusBarLabel();
         if (e) {
           if (/Code[\/\\]User[\/\\]settings.json$/.test(e.document.fileName)) {
@@ -211,10 +217,10 @@ const Kite = {
     this.disposables.push(this.statusBarItem);
 
     this.disposables.push(
-      vscode.commands.registerCommand("kite.insert-completion", ({lang, completion}) => {
+      vscode.commands.registerCommand("kite.insert-completion", ({ lang, completion }) => {
         metrics.increment(`vscode_kite_${lang}_completions_inserted`);
         metrics.increment(`kite_${lang}_completions_inserted`);
-        metrics.sendCompletionSelected(lang, completion).catch(e => {console.error(e)});
+        metrics.sendCompletionSelected(lang, completion).catch(e => { console.error(e) });
       })
     );
 
@@ -311,7 +317,7 @@ const Kite = {
         const tutorial = await vscode.workspace.openTextDocument(path);
         vscode.window.showTextDocument(tutorial);
         KiteAPI.setKiteSetting("has_done_onboarding", true);
-      } catch(e) {
+      } catch (e) {
         vscode.window.showErrorMessage(
           "We were unable to open the tutorial. Try again later or email us at feedback@kite.com",
         );
@@ -603,6 +609,12 @@ const Kite = {
     } else {
       return Promise.resolve();
     }
+  },
+
+  setMaxFileSize() {
+    KiteAPI.getMaxFileSizeBytes().then(max => {
+      this.maxFileSize = max;
+    })
   },
 
   setStatusBarLabel() {
