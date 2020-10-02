@@ -638,8 +638,8 @@ const Kite = {
         default:
           if (status) {
             this.statusBarItem.color = undefined
-            this.statusBarItem.text = "𝕜𝕚𝕥𝕖: " + status.short
-            this.statusBarItem.tooltip = status.long
+            this.statusBarItem.text = status.short ? ("𝕜𝕚𝕥𝕖: " + status.short) : "𝕜𝕚𝕥𝕖"
+            this.statusBarItem.tooltip = status.long ? status.long : ""
           } else {
             this._clearStatusBarItem()
           }
