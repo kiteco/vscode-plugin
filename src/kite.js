@@ -649,43 +649,23 @@ const Kite = {
           break;
         default:
           if (status) {
-            switch (status.status) {
-              case "noIndex":
-                this.statusBarItem.color = undefined;
-                this.statusBarItem.text = "𝕜𝕚𝕥𝕖: ready (unindexed)";
-                this.statusBarItem.tooltip =
-                  "Kite is ready, but no index available";
-                break;
-              case "indexing":
-                this.statusBarItem.color = undefined;
-                this.statusBarItem.text = "𝕜𝕚𝕥𝕖: indexing";
-                this.statusBarItem.tooltip =
-                  "Kite engine is indexing your code";
-                break;
-              case "syncing":
-                this.statusBarItem.text = "𝕜𝕚𝕥𝕖: syncing";
-                this.statusBarItem.color = undefined;
-                this.statusBarItem.tooltip = "Kite engine is syncing your code";
-                break;
-              case "ready":
-                this.statusBarItem.text = "𝕜𝕚𝕥𝕖";
-                this.statusBarItem.color = undefined;
-                this.statusBarItem.tooltip = "Kite is ready";
-                break;
-            }
+            this.statusBarItem.color = undefined
+            this.statusBarItem.text = status.short ? ("𝕜𝕚𝕥𝕖: " + status.short) : "𝕜𝕚𝕥𝕖"
+            this.statusBarItem.tooltip = status.long ? status.long : ""
           } else {
-            this.statusBarItem.text = "";
-            this.statusBarItem.color = undefined;
-            this.statusBarItem.tooltip = "";
-            this.statusBarItem.hide();
+            this._clearStatusBarItem()
           }
       }
     } else {
+      this._clearStatusBarItem()
+    }
+  },
+
+  _clearStatusBarItem() {
       this.statusBarItem.text = "";
       this.statusBarItem.color = undefined;
       this.statusBarItem.tooltip = "";
       this.statusBarItem.hide();
-    }
   },
 
   setStatus(state = this.lastState, document) {
