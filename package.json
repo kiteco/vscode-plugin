@@ -37,13 +37,73 @@
   "contributes": {
     "languages": [
       {
-        "id": "python",
+        "id": "c",
         "aliases": [
-          "Python",
-          "python"
+          "c",
+          "C"
         ],
         "extensions": [
-          ".py"
+          ".c",
+          ".h"
+        ]
+      },
+      {
+        "id": "cpp",
+        "aliases": [
+          "cpp",
+          "c++",
+          "C++"
+        ],
+        "extensions": [
+          ".cc",
+          ".cpp",
+          ".hpp"
+        ]
+      },
+      {
+        "id": "csharp",
+        "aliases": [
+          "csharp",
+          "Csharp",
+          "CSharp",
+          "c#",
+          "C#"
+        ],
+        "extensions": [
+          ".cs"
+        ]
+      },
+      {
+        "id": "go",
+        "aliases": [
+          "go",
+          "Go",
+          "golang",
+          "Golang"
+        ],
+        "extensions": [
+          ".go"
+        ]
+      },
+      {
+        "id": "html",
+        "aliases": [
+          "html",
+          "Html",
+          "HTML"
+        ],
+        "extensions": [
+          ".go"
+        ]
+      },
+      {
+        "id": "java",
+        "aliases": [
+          "java",
+          "Java"
+        ],
+        "extensions": [
+          ".java"
         ]
       },
       {
@@ -58,6 +118,100 @@
           ".js",
           ".jsx",
           ".vue"
+        ]
+      },
+      {
+        "id": "kotlin",
+        "aliases": [
+          "kotlin",
+          "Kotlin"
+        ],
+        "extensions": [
+          ".kt"
+        ]
+      },
+      {
+        "id": "less",
+        "aliases": [
+          "less",
+          "Less"
+        ],
+        "extensions": [
+          ".less"
+        ]
+      },
+      {
+        "id": "objective-c",
+        "aliases": [
+          "objective-c",
+          "Objective-C"
+        ],
+        "extensions": [
+          ".m"
+        ]
+      },
+      {
+        "id": "php",
+        "aliases": [
+          "php",
+          "PHP",
+          "Php"
+        ],
+        "extensions": [
+          ".php"
+        ]
+      },
+      {
+        "id": "python",
+        "aliases": [
+          "Python",
+          "python"
+        ],
+        "extensions": [
+          ".py"
+        ]
+      },
+      {
+        "id": "ruby",
+        "aliases": [
+          "ruby",
+          "Ruby"
+        ],
+        "extensions": [
+          ".rb"
+        ]
+      },
+      {
+        "id": "scala",
+        "aliases": [
+          "scala",
+          "Scala"
+        ],
+        "extensions": [
+          ".scala"
+        ]
+      },
+      {
+        "id": "shellscript",
+        "aliases": [
+          "bash",
+          "Bash",
+          "shellscript",
+          "Shellscript"
+        ],
+        "extensions": [
+          ".sh"
+        ]
+      },
+      {
+        "id": "typescript",
+        "aliases": [
+          "typescript",
+          "Typescript"
+        ],
+        "extensions": [
+          ".ts",
+          ".tsx"
         ]
       }
     ],

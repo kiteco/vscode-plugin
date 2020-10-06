@@ -147,25 +147,43 @@ const kiteOpen = (url) => {
   }
 }
 
+const extToLangMap = new Map([
+  ["c", "c"],
+  ["cc","cpp"],
+  ["cpp","cpp"],
+  ["cs","csharp"],
+  ["css","css"],
+  ["go","go"],
+  ["h","c"],
+  ["hpp","cpp"],
+  ["html","html"],
+  ["java", "java"],
+  ["js", "javascript"],
+  ["jsx","jsx"],
+  ["kt","kotlin"],
+  ["less","less"],
+  ["m","objectivec"],
+  ["php", "php"],
+  ["py", "python"],
+  ["rb","ruby"],
+  ["scala","scala"],
+  ["sh","bash"],
+  ["ts","typescript"],
+  ["tsx","tsx"],
+  ["vue","vue"],
+]);
+
 const getSupportedLanguage = document => {
   if (document.isUntitled) {
     return null;
   }
 
   const ext = document.fileName.split(".").slice(-1)[0];
-  switch (ext) {
-    case "py":
-      return "python";
-    case "go":
-      return "go";
-    case "js":
-    case "jsx":
-    case "vue":
-      return "javascript";
-    default:
-      return null;
+  if (extToLangMap.has(ext)) {
+    return extToLangMap.get(ext);
   }
-}
+  return null;
+};
 
 module.exports = {
   compact,
