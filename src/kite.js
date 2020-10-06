@@ -32,7 +32,6 @@ const {
   kiteOpen
 } = require("./utils");
 const { version } = require("../package.json");
-const { showNotification } = require('./notifications');
 const { DEFAULT_MAX_FILE_SIZE } = require("kite-api");
 
 const RUN_KITE_ATTEMPTS = 30;
@@ -154,9 +153,6 @@ const Kite = {
       })
     );
 
-    vscode.window.activeTextEditor &&
-      showNotification(vscode.window.activeTextEditor.document.fileName);
-
     this.disposables.push(
       vscode.window.onDidChangeActiveTextEditor(e => {
         this.setMaxFileSize();
@@ -170,8 +166,6 @@ const Kite = {
             this.registerEvents(e);
             this.registerEditor(e);
           }
-
-          showNotification(this, e.document.fileName);
 
           const evt = this.eventsByEditor.get(e.document.fileName);
           evt && evt.focus();
