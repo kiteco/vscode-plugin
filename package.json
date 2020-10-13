@@ -210,7 +210,12 @@
           "Typescript"
         ],
         "extensions": [
-          ".ts",
+          ".ts"
+        ]
+      },
+      {
+        "id": "typescriptreact",
+        "extensions": [
           ".tsx"
         ]
       }
