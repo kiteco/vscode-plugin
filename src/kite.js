@@ -218,19 +218,17 @@ const Kite = {
       vscode.commands.registerTextEditorCommand("kite.related-code-from-file", (textEditor) => {
         KiteAPI
           .requestRelatedCode(textEditor.document.fileName, null, null, "vscode")
-          .then(console.log)
-          .catch(console.log)
+          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName))
       })
     );
 
     this.disposables.push(
       vscode.commands.registerTextEditorCommand("kite.related-code-from-line", (textEditor) => {
-        console.log("0-based: ", textEditor.selection.active.line)
-        const oneBasedLineNo = textEditor.selection.active.line+1
+        const zeroBasedLineNo = textEditor.selection.active.line
+        const oneBasedLineNo = zeroBasedLineNo+1
         KiteAPI
           .requestRelatedCode(textEditor.document.fileName, oneBasedLineNo, null, "vscode")
-          .then(console.log)
-          .catch(console.log)
+          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName))
       })
     );
 

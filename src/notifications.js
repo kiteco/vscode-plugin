@@ -21,6 +21,43 @@ module.exports = class NotificationsManager {
     }
   }
 
+  static getRelatedCodeErrHandler(filename) {
+    return (err) => {
+      if (!err) {
+        return;
+      }
+      const showDefaultErrMsg = () => vscode.window.showWarningMessage(
+        "Oops! Something went wrong with Code Finder. Please try again later."
+      );
+      if (!err.data) {
+        showDefaultErrMsg();
+        return;
+      }
+
+      const { state, responseData } = err.data;
+
+      if (state && state <= KiteAPI.STATES.UNREACHABLE) {
+        vscode.window.showWarningMessage("Kite could not be reached. Please check that Kite engine is running.");
+        return;
+      }
+
+      if (responseData && typeof responseData === 'string') {
+        switch (responseData.trim()) {
+          case "ErrPathNotInSupportedProject":
+            vscode.window.showWarningMessage(`The file ${filename} is not in any Git project. Code finder only works inside Git projects.`);
+            return;
+          case "ErrProjectStillIndexing":
+            vscode.window.showWarningMessage(
+              "Kite is not done indexing your project yet. Please wait for the status icon to switch to ready before using Code Finder."
+            );
+            return;
+        }
+      }
+
+      showDefaultErrMsg();
+    };
+  }
+
   static showWelcomeNotification(config, openKiteTutorial) {
     vscode.window
       .showInformationMessage(
