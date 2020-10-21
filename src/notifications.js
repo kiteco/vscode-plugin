@@ -21,7 +21,7 @@ module.exports = class NotificationsManager {
     }
   }
 
-  static getRelatedCodeErrHandler(filename) {
+  static getRelatedCodeErrHandler(filename, lineNo) {
     return (err) => {
       if (!err) {
         return;
@@ -50,6 +50,9 @@ module.exports = class NotificationsManager {
             vscode.window.showWarningMessage(
               "Kite is not done indexing your project yet. Please wait for the status icon to switch to ready before using Code Finder."
             );
+            return;
+          case "ErrEmptyLine":
+            vscode.window.showWarningMessage(`Line ${lineNo} in file ${filename} is empty. Code finder only works in non-empty lines.`);
             return;
         }
       }
