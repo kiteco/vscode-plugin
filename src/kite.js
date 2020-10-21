@@ -231,8 +231,22 @@ const Kite = {
     );
 
     this.disposables.push(
-      vscode.commands.registerTextEditorCommand("kite.related-files", (textEditor) => {
-        opn(`http://localhost:46624/codenav/related/${encodeURIComponent(textEditor.document.fileName)}`);
+      vscode.commands.registerTextEditorCommand("kite.related-code-from-file", (textEditor) => {
+        KiteAPI
+          .requestRelatedCode(textEditor.document.fileName, null, null, "vscode")
+          .then(console.log)
+          .catch(console.log)
+      })
+    );
+
+    this.disposables.push(
+      vscode.commands.registerTextEditorCommand("kite.related-code-from-line", (textEditor) => {
+        console.log("0-based: ", textEditor.selection.active.line)
+        const oneBasedLineNo = textEditor.selection.active.line+1
+        KiteAPI
+          .requestRelatedCode(textEditor.document.fileName, oneBasedLineNo, null, "vscode")
+          .then(console.log)
+          .catch(console.log)
       })
     );
 

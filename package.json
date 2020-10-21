@@ -239,8 +239,12 @@
         "title": "Kite: Open Copilot"
       },
       {
-        "command": "kite.related-files",
-        "title": "Kite: Find related files (Experimental)"
+        "command": "kite.related-code-from-file",
+        "title": "Kite: Find Related Code From File"
+      },
+      {
+        "command": "kite.related-code-from-line",
+        "title": "Kite: Find Related Code From Line"
       },
       {
         "command": "kite.python-tutorial",
@@ -258,7 +262,9 @@
     "menus": {
       "editor/context": [
         {
-          "command": "kite.related-files"
+          "when": "editorHasSelection",
+          "command": "kite.related-code-from-line",
+          "group": "navigation"
         }
       ]
     },
