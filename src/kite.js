@@ -22,6 +22,7 @@ const KiteSignatureProvider = require("./signature");
 const KiteDefinitionProvider = require("./definition");
 const KiteEditor = require("./kite-editor");
 const EditorEvents = require("./events");
+const NotificationsManager = require("./notifications");
 const localconfig = require("./localconfig");
 const metrics = require("./metrics");
 const { statusPath, hoverPath } = require("./urls");
@@ -80,26 +81,9 @@ const Kite = {
       vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
       ];
 
-    KiteAPI.isKiteInstalled().catch(err => {
-      if (typeof err.data !== 'undefined' && err.data.state === KiteAPI.STATES.UNINSTALLED) {
-        metrics.track("vscode_kite_installer_notification_shown");
-        vscode.window
-          .showInformationMessage(
-            "Kite requires the Kite Engine backend to provide completions and documentation. Please install it to use Kite.",
-            "Install"
-          )
-          .then(item => {
-            if (item) {
-              switch (item) {
-                case "Install":
-                  opn("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
-                  metrics.track("vscode_kite_installer_github_link_clicked");
-                  break;
-              }
-            }
-          });
-      }
-    });
+    KiteAPI
+      .isKiteInstalled()
+      .catch(NotificationsManager.showKiteInstallNotification)
 
     this.setMaxFileSize();
 
@@ -326,7 +310,7 @@ const Kite = {
         vscode.window.showTextDocument(tutorial);
         KiteAPI.setKiteSetting("has_done_onboarding", true);
       } catch (e) {
-        vscode.window.showErrorMessage(
+        this.notifications.showErrorMessage(
           "We were unable to open the tutorial. Try again later or email us at feedback@kite.com",
         );
       }
@@ -400,27 +384,7 @@ const Kite = {
 
     const config = vscode.workspace.getConfiguration("kite");
     if (config.showWelcomeNotificationOnStartup) {
-      vscode.window
-        .showInformationMessage(
-          "Welcome to Kite for VS Code",
-          "Learn how to use Kite",
-          "Don't show this again"
-        )
-        .then(item => {
-          if (item) {
-            switch (item) {
-              case "Learn how to use Kite":
-                opn("http://help.kite.com/category/46-vs-code-integration");
-                break;
-              case "Don't show this again":
-                config.update("showWelcomeNotificationOnStartup", false, true);
-                break;
-            }
-          }
-        });
-
-      KiteAPI.getKiteSetting("has_done_onboarding")
-        .then(hasDone => !hasDone && openKiteTutorial('python'));
+      NotificationsManager.showWelcomeNotification(config, openKiteTutorial)
     }
 
     setTimeout(() => {
@@ -459,7 +423,7 @@ const Kite = {
     this.shown = {};
     this.disposables = [];
     this.attemptedToStartKite = false;
-    delete this.shownNotifications;
+    this.notifications = new NotificationsManager()
     delete this.lastState;
     delete this.lastStatus;
     delete this.lastPolledState;
@@ -545,7 +509,7 @@ const Kite = {
             } else if (!KiteAPI.isOSVersionSupported()) {
               metrics.track("OS version unsupported");
             }
-            this.showErrorMessage(
+            this.notifications.showErrorMessage(
               "Sorry, the Kite engine is currently not supported on your platform"
             );
             break;
@@ -603,20 +567,6 @@ const Kite = {
       .catch(err => {
         console.error(err);
       });
-  },
-
-  showErrorMessage(message, ...actions) {
-    this.shownNotifications = this.shownNotifications || {};
-
-    if (!this.shownNotifications[message]) {
-      this.shownNotifications[message] = true;
-      return vscode.window.showErrorMessage(message, ...actions).then(item => {
-        delete this.shownNotifications[message];
-        return item;
-      });
-    } else {
-      return Promise.resolve();
-    }
   },
 
   setMaxFileSize() {
