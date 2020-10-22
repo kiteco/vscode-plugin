@@ -217,7 +217,7 @@ const Kite = {
     this.disposables.push(
       vscode.commands.registerTextEditorCommand("kite.related-code-from-file", (textEditor) => {
         KiteAPI
-          .requestRelatedCode(textEditor.document.fileName, null, null, "vscode")
+          .requestRelatedCode("vscode", textEditor.document.fileName, null, null)
           .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, 0))
       })
     );
@@ -239,7 +239,7 @@ const Kite = {
         })
 
         requireNonEmptyLine
-          .then(() => KiteAPI.requestRelatedCode(textEditor.document.fileName, oneBasedLineNo, null, "vscode"))
+          .then(() => KiteAPI.requestRelatedCode("vscode", textEditor.document.fileName, oneBasedLineNo, null))
           .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, oneBasedLineNo))
       })
     );
