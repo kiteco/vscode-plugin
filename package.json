@@ -239,8 +239,12 @@
         "title": "Kite: Open Copilot"
       },
       {
-        "command": "kite.related-files",
-        "title": "Kite: Find related files (Experimental)"
+        "command": "kite.related-code-from-file",
+        "title": "Kite: Find Related Code From File (experimental)"
+      },
+      {
+        "command": "kite.related-code-from-line",
+        "title": "Kite: Find Related Code From Line (experimental)"
       },
       {
         "command": "kite.python-tutorial",
@@ -258,7 +262,8 @@
     "menus": {
       "editor/context": [
         {
-          "command": "kite.related-files"
+          "when": "editorHasSelection",
+          "command": "kite.related-code-from-line"
         }
       ]
     },
@@ -266,11 +271,6 @@
       "type": "object",
       "title": "Kite Configuration",
       "properties": {
-        "kite.showGoBetaNotification": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether or not to show the Go beta notification."
-        },
         "kite.showWelcomeNotificationOnStartup": {
           "type": "boolean",
           "default": true,
@@ -332,7 +332,7 @@
     "atob": "^2.1.2",
     "formidable": "^1.1.1",
     "getmac": "^1.2.1",
-    "kite-api": "=3.14.0",
+    "kite-api": "=3.16.0",
     "kite-connector": "=3.12.0",
     "mixpanel": "^0.5.0",
     "md5": "^2.2.0",
