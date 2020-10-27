@@ -146,7 +146,7 @@ const Kite = {
             metrics.featureRequested("settings");
             metrics.featureFulfilled("settings");
           }
-          if (this.isEnabledAndSupported(e)) {
+          if (this.isGrammarSupported(e)) {
             this.registerEvents(e);
             this.registerEditor(e);
           }
@@ -399,7 +399,7 @@ const Kite = {
 
     setTimeout(() => {
       vscode.window.visibleTextEditors.forEach(e => {
-        if (EventSupported(e.document.fileName)) {
+        if (IsSupportedFile(e.document.fileName)) {
           this.registerEvents(e);
           this.registerEditor(e);
 
