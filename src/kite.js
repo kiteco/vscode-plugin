@@ -14,7 +14,6 @@ const {
   DefinitionsSupport,
   HoverSupport,
   SignaturesSupport,
-  SUPPORTED_EXTENSIONS
 } = require("./constants");
 const KiteHoverProvider = require("./hover");
 const KiteCompletionProvider = require("./completion");
@@ -429,7 +428,6 @@ const Kite = {
       });
     this.kiteEditorByEditor = new Map();
     this.eventsByEditor = new Map();
-    this.supportedExtensions = [];
     this.shown = {};
     this.disposables = [];
     this.attemptedToStartKite = false;
@@ -494,13 +492,9 @@ const Kite = {
   },
 
   checkState(src) {
-    return Promise.all([
-      KiteAPI.checkHealth(),
-      this.getSupportedExtensions().catch(() => [])
-    ])
-      .then(([state, extensions]) => {
-        this.supportedExtensions = extensions;
-
+    return KiteAPI
+      .checkHealth()
+      .then(state => {
         if (state > KiteAPI.STATES.INSTALLED) {
           localconfig.set("wasInstalled", true);
         }
@@ -655,12 +649,6 @@ const Kite = {
     );
   },
 
-  documentForPath(path) {
-    return vscode.workspace.textDocuments
-      .filter(d => d.fileName === path)
-      .shift();
-  },
-
   getStatus(document) {
     if (!document) {
       return Promise.resolve({ status: "ready" });
@@ -677,25 +665,9 @@ const Kite = {
       .catch(() => ({ status: "ready" }));
   },
 
-  getSupportedExtensions() {
-    return Promise.resolve(SUPPORTED_EXTENSIONS);
-  },
-
   request(req, data) {
     return KiteAPI.request(req, data).then(resp => promisifyReadResponse(resp));
   },
-
-  checkConnectivity() {
-    return new Promise((resolve, reject) => {
-      require("dns").lookup("kite.com", err => {
-        if (err && err.code == "ENOTFOUND") {
-          reject();
-        } else {
-          resolve();
-        }
-      });
-    });
-  }
 };
 
 module.exports = {
