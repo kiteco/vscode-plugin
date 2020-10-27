@@ -1,35 +1,80 @@
 const vscode = require("vscode");
+const path = require("path");
 
-const EVENT_SUPPORT = (fileName) => {
-  const path = require("path");
+// Cache of type: []string
+let ENABLED_AND_SUPPORTED = null;
+// Cache of type: bool
+let PYTHON_ENABLED = null;
+
+function EnabledAndSupported() {
+  if (ENABLED_AND_SUPPORTED === null) {
+    const disabled = vscode.workspace.getConfiguration('kite').completions.disabledFileExtensions;
+    const enabled = SUPPORTED_EXTENSIONS.filter(ext => !disabled.includes(ext));
+    ENABLED_AND_SUPPORTED = enabled;
+  }
+  return ENABLED_AND_SUPPORTED;
+}
+
+function PythonEnabled() {
+  if (PYTHON_ENABLED === null) {
+    const disabled = vscode.workspace.getConfiguration('kite').completions.disabledFileExtensions;
+    PYTHON_ENABLED = !disabled.includes('.py');
+  }
+  return PYTHON_ENABLED;
+}
+
+function EventSupported(fileName) {
   const fileExt = path.extname(fileName);
-  return SUPPORTED_EXTENSIONS.includes(fileExt);
-};
+  return EnabledAndSupported().includes(fileExt);
+}
 
-const COMPLETIONS_SUPPORT = [
-  { pattern: "**/*.{c,cc,cpp,cs,css,go,h,hpp,html,java,js,jsx,kt,less,m,php,rb,scala,sh,ts,tsx,vue}", scheme: "file" },
-  { pattern: "**/*.{c,cc,cpp,cs,css,go,h,hpp,html,java,js,jsx,kt,less,m,php,rb,scala,sh,ts,tsx,vue}", scheme: "untitled" }
-];
+function CompletionsSupport() {
+  const enabled = EnabledAndSupported().join(',');
+  if (enabled === "") {
+    return [];
+  }
+  return [
+    { pattern: `**/*{${enabled}}`, scheme: "file" },
+    { pattern: `**/*{${enabled}}`, scheme: "untitled" }
+  ];
+}
 
-const FULL_COMPLETIONS_SUPPORT = [
-  { pattern: "**/*.{py}", scheme: "file" },
-  { pattern: "**/*.{py}", scheme: "untitled" }
-];
+function requirePythonEnabled(fn) {
+  return (...args) => {
+    if (!PythonEnabled()) {
+      return [];
+    }
+    return fn(...args);
+  };
+}
 
-const DEFINITIONS_SUPPORT = [
-  { pattern: "**/*.{py}", scheme: "file" },
-  { pattern: "**/*.{py}", scheme: "untitled" }
-];
+function FullCompletionsSupport() {
+  return [
+    { pattern: "**/*.{py}", scheme: "file" },
+    { pattern: "**/*.{py}", scheme: "untitled" }
+  ];
+}
 
-const HOVER_SUPPORT = [
-  { pattern: "**/*.{py}", scheme: "file" },
-  { pattern: "**/*.{py}", scheme: "untitled" }
-];
+function DefinitionsSupport() {
+  return [
+    { pattern: "**/*.{py}", scheme: "file" },
+    { pattern: "**/*.{py}", scheme: "untitled" }
+  ];
+}
 
-const SIGNATURES_SUPPORT = [
-  { pattern: "**/*.{py}", scheme: "file" },
-  { pattern: "**/*.{py}", scheme: "untitled" }
-];
+function HoverSupport() {
+  return [
+    { pattern: "**/*.{py}", scheme: "file" },
+    { pattern: "**/*.{py}", scheme: "untitled" }
+  ];
+}
+
+function SignaturesSupport() {
+  return [
+    { pattern: "**/*.{py}", scheme: "file" },
+    { pattern: "**/*.{py}", scheme: "untitled" }
+  ];
+}
 
 const SUPPORTED_EXTENSIONS = [
     ".c",
@@ -81,12 +126,12 @@ const OFFSET_ENCODING = "utf-16";
 module.exports = {
   ATTEMPTS,
   INTERVAL,
-  EVENT_SUPPORT,
-  COMPLETIONS_SUPPORT,
-  FULL_COMPLETIONS_SUPPORT,
-  DEFINITIONS_SUPPORT,
-  HOVER_SUPPORT,
-  SIGNATURES_SUPPORT,
+  EventSupported,
+  CompletionsSupport,
+  FullCompletionsSupport: requirePythonEnabled(FullCompletionsSupport),
+  DefinitionsSupport: requirePythonEnabled(DefinitionsSupport),
+  HoverSupport: requirePythonEnabled(HoverSupport),
+  SignaturesSupport: requirePythonEnabled(SignaturesSupport),
   CONNECT_ERROR_LOCKOUT,
   ERROR_COLOR,
   WARNING_COLOR,

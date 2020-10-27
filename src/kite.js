@@ -8,12 +8,12 @@ const KiteAPI = require("kite-api");
 const Logger = require("kite-connector/lib/logger");
 const {
   ERROR_COLOR,
-  EVENT_SUPPORT,
-  COMPLETIONS_SUPPORT,
-  FULL_COMPLETIONS_SUPPORT,
-  DEFINITIONS_SUPPORT,
-  HOVER_SUPPORT,
-  SIGNATURES_SUPPORT,
+  EventSupported,
+  CompletionsSupport,
+  FullCompletionsSupport,
+  DefinitionsSupport,
+  HoverSupport,
+  SignaturesSupport,
   SUPPORTED_EXTENSIONS
 } = require("./constants");
 const KiteHoverProvider = require("./hover");
@@ -89,13 +89,13 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerHoverProvider(
-        HOVER_SUPPORT,
+        HoverSupport(),
         new KiteHoverProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerDefinitionProvider(
-        DEFINITIONS_SUPPORT,
+        DefinitionsSupport(),
         new KiteDefinitionProvider(Kite)
       )
     );
@@ -105,7 +105,7 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
-        COMPLETIONS_SUPPORT,
+        CompletionsSupport(),
         new KiteCompletionProvider(Kite, completionsTriggers, optionalCompletionsTriggers), ...completionsTriggers.concat(optionalCompletionsTriggers))
     );
 
@@ -115,13 +115,13 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
-        FULL_COMPLETIONS_SUPPORT,
+        FullCompletionsSupport(),
         new KiteCompletionProvider(Kite, pythonCompletionsTriggers), ...pythonCompletionsTriggers)
     );
 
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(
-        SIGNATURES_SUPPORT,
+        SignaturesSupport(),
         new KiteSignatureProvider(Kite),
         "(",
         ","
@@ -177,7 +177,7 @@ const Kite = {
     this.disposables.push(
       vscode.window.onDidChangeVisibleTextEditors(editors => {
         editors.forEach(e => {
-          if (EVENT_SUPPORT(e.document.fileName)) {
+          if (EventSupported(e.document.fileName)) {
             this.registerDocumentEvents(e.document);
             this.registerDocument(e.document);
           }
@@ -399,7 +399,7 @@ const Kite = {
 
     setTimeout(() => {
       vscode.window.visibleTextEditors.forEach(e => {
-        if (EVENT_SUPPORT(e.document.fileName)) {
+        if (EventSupported(e.document.fileName)) {
           this.registerEvents(e);
           this.registerEditor(e);
 
@@ -651,7 +651,7 @@ const Kite = {
   isDocumentGrammarSupported(d) {
     return (
       d &&
-      EVENT_SUPPORT(d.fileName)
+      EventSupported(d.fileName)
     );
   },
 
