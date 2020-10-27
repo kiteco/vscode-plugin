@@ -14,6 +14,7 @@ const {
   DefinitionsSupport,
   HoverSupport,
   SignaturesSupport,
+  IsSupportedFile,
 } = require("./constants");
 const KiteHoverProvider = require("./hover");
 const KiteCompletionProvider = require("./completion");
@@ -145,7 +146,7 @@ const Kite = {
             metrics.featureRequested("settings");
             metrics.featureFulfilled("settings");
           }
-          if (this.isGrammarSupported(e)) {
+          if (this.isEnabledAndSupported(e)) {
             this.registerEvents(e);
             this.registerEditor(e);
           }
@@ -584,6 +585,7 @@ const Kite = {
     const status = this.lastStatus;
 
     const supported = this.isGrammarSupported(vscode.window.activeTextEditor);
+    const enabledFiletype = this.isEnabledAndSupported(vscode.window.activeTextEditor);
 
     if (supported) {
       this.statusBarItem.show();
@@ -610,7 +612,11 @@ const Kite = {
           this.statusBarItem.color = ERROR_COLOR();
           break;
         default:
-          if (status) {
+          if (!enabledFiletype) {
+            this.statusBarItem.color = undefined
+            this.statusBarItem.text = "𝕜𝕚𝕥𝕖: disabled"
+            this.statusBarItem.tooltip = "Enable this file type in VS Code settings"
+          } else if (status) {
             this.statusBarItem.color = undefined
             this.statusBarItem.text = status.short ? ("𝕜𝕚𝕥𝕖: " + status.short) : "𝕜𝕚𝕥𝕖"
             this.statusBarItem.tooltip = status.long ? status.long : ""
@@ -639,14 +645,13 @@ const Kite = {
   },
 
   isGrammarSupported(e) {
-    return e && this.isDocumentGrammarSupported(e.document);
+    // Whether Kite supports this file extension, regardless of user settings
+    return e && e.document && IsSupportedFile(e.document.fileName)
   },
 
-  isDocumentGrammarSupported(d) {
-    return (
-      d &&
-      EventSupported(d.fileName)
-    );
+  isEnabledAndSupported(e) {
+    // Takes into account whether the user has chosen to disable this file extension
+    return e && e.document && EventSupported(e.document.fileName)
   },
 
   getStatus(document) {

@@ -9,7 +9,7 @@ let PYTHON_ENABLED = null;
 function EnabledAndSupported() {
   if (ENABLED_AND_SUPPORTED === null) {
     const disabled = vscode.workspace.getConfiguration('kite').completions.disabledFileExtensions;
-    const enabled = SUPPORTED_EXTENSIONS.filter(ext => !disabled.includes(ext));
+    const enabled = SupportedExtensions().filter(ext => !disabled.includes(ext));
     ENABLED_AND_SUPPORTED = enabled;
   }
   return ENABLED_AND_SUPPORTED;
@@ -76,31 +76,38 @@ function SignaturesSupport() {
   ];
 }
 
-const SUPPORTED_EXTENSIONS = [
-    ".c",
-    ".cc",
-    ".cpp",
-    ".cs",
-    ".css",
-    ".go",
-    ".h",
-    ".hpp",
-    ".html",
-    ".java",
-    ".js",
-    ".jsx",
-    ".kt",
-    ".less",
-    ".m",
-    ".php",
-    ".py",
-    ".rb",
-    ".scala",
-    ".sh",
-    ".ts",
-    ".tsx",
-    ".vue"
-];
+function SupportedExtensions() {
+  return [
+      ".c",
+      ".cc",
+      ".cpp",
+      ".cs",
+      ".css",
+      ".go",
+      ".h",
+      ".hpp",
+      ".html",
+      ".java",
+      ".js",
+      ".jsx",
+      ".kt",
+      ".less",
+      ".m",
+      ".php",
+      ".py",
+      ".rb",
+      ".scala",
+      ".sh",
+      ".ts",
+      ".tsx",
+      ".vue"
+  ];
+}
+
+function IsSupportedFile(fileName) {
+  const fileExt = path.extname(fileName);
+  return SupportedExtensions().includes(fileExt);
+}
 
 const CONNECT_ERROR_LOCKOUT = 15 * 60;
 
@@ -132,6 +139,8 @@ module.exports = {
   DefinitionsSupport: requirePythonEnabled(DefinitionsSupport),
   HoverSupport: requirePythonEnabled(HoverSupport),
   SignaturesSupport: requirePythonEnabled(SignaturesSupport),
+  SupportedExtensions,
+  IsSupportedFile,
   CONNECT_ERROR_LOCKOUT,
   ERROR_COLOR,
   WARNING_COLOR,
