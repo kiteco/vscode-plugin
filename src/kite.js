@@ -177,7 +177,7 @@ const Kite = {
     this.disposables.push(
       vscode.window.onDidChangeVisibleTextEditors(editors => {
         editors.forEach(e => {
-          if (EventSupported(e.document.fileName)) {
+          if (IsSupportedFile(e.document.fileName)) {
             this.registerDocumentEvents(e.document);
             this.registerDocument(e.document);
           }
