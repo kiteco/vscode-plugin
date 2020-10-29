@@ -2,7 +2,7 @@
   "name": "kite",
   "displayName": "Kite AI Code AutoComplete: Python, Java, Javascript, HTML/CSS, Go, PHP, C/C#/C++",
   "description": "AI powered autocomplete, code snippets, code signatures, and cursor-following documentation for VS Code. Code faster, stay in flow.",
-  "version": "0.132.0",
+  "version": "0.133.0",
   "publisher": "kiteco",
   "engines": {
     "vscode": "^1.28.0"
