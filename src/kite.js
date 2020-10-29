@@ -8,13 +8,13 @@ const KiteAPI = require("kite-api");
 const Logger = require("kite-connector/lib/logger");
 const {
   ERROR_COLOR,
-  EventSupported,
-  CompletionsSupport,
-  FullCompletionsSupport,
-  DefinitionsSupport,
-  HoverSupport,
-  SignaturesSupport,
-  IsSupportedFile,
+  EVENT_SUPPORT,
+  COMPLETIONS_SUPPORT,
+  FULL_COMPLETIONS_SUPPORT,
+  DEFINITIONS_SUPPORT,
+  HOVER_SUPPORT,
+  SIGNATURES_SUPPORT,
+  SUPPORTED_EXTENSIONS
 } = require("./constants");
 const KiteHoverProvider = require("./hover");
 const KiteCompletionProvider = require("./completion");
@@ -89,13 +89,13 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerHoverProvider(
-        HoverSupport(),
+        HOVER_SUPPORT,
         new KiteHoverProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerDefinitionProvider(
-        DefinitionsSupport(),
+        DEFINITIONS_SUPPORT,
         new KiteDefinitionProvider(Kite)
       )
     );
@@ -105,7 +105,7 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
-        CompletionsSupport(),
+        COMPLETIONS_SUPPORT,
         new KiteCompletionProvider(Kite, completionsTriggers, optionalCompletionsTriggers), ...completionsTriggers.concat(optionalCompletionsTriggers))
     );
 
@@ -115,13 +115,13 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
-        FullCompletionsSupport(),
+        FULL_COMPLETIONS_SUPPORT,
         new KiteCompletionProvider(Kite, pythonCompletionsTriggers), ...pythonCompletionsTriggers)
     );
 
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(
-        SignaturesSupport(),
+        SIGNATURES_SUPPORT,
         new KiteSignatureProvider(Kite),
         "(",
         ","
@@ -177,7 +177,7 @@ const Kite = {
     this.disposables.push(
       vscode.window.onDidChangeVisibleTextEditors(editors => {
         editors.forEach(e => {
-          if (IsSupportedFile(e.document.fileName)) {
+          if (EVENT_SUPPORT(e.document.fileName)) {
             this.registerDocumentEvents(e.document);
             this.registerDocument(e.document);
           }
@@ -399,7 +399,7 @@ const Kite = {
 
     setTimeout(() => {
       vscode.window.visibleTextEditors.forEach(e => {
-        if (IsSupportedFile(e.document.fileName)) {
+        if (EVENT_SUPPORT(e.document.fileName)) {
           this.registerEvents(e);
           this.registerEditor(e);
 
@@ -429,6 +429,7 @@ const Kite = {
       });
     this.kiteEditorByEditor = new Map();
     this.eventsByEditor = new Map();
+    this.supportedExtensions = [];
     this.shown = {};
     this.disposables = [];
     this.attemptedToStartKite = false;
@@ -493,9 +494,13 @@ const Kite = {
   },
 
   checkState(src) {
-    return KiteAPI
-      .checkHealth()
-      .then(state => {
+    return Promise.all([
+      KiteAPI.checkHealth(),
+      this.getSupportedExtensions().catch(() => [])
+    ])
+      .then(([state, extensions]) => {
+        this.supportedExtensions = extensions;
+
         if (state > KiteAPI.STATES.INSTALLED) {
           localconfig.set("wasInstalled", true);
         }
@@ -585,7 +590,6 @@ const Kite = {
     const status = this.lastStatus;
 
     const supported = this.isGrammarSupported(vscode.window.activeTextEditor);
-    const enabledFiletype = this.isEnabledAndSupported(vscode.window.activeTextEditor);
 
     if (supported) {
       this.statusBarItem.show();
@@ -612,11 +616,7 @@ const Kite = {
           this.statusBarItem.color = ERROR_COLOR();
           break;
         default:
-          if (!enabledFiletype) {
-            this.statusBarItem.color = undefined
-            this.statusBarItem.text = "𝕜𝕚𝕥𝕖: disabled"
-            this.statusBarItem.tooltip = "Enable this file type in VS Code settings"
-          } else if (status) {
+          if (status) {
             this.statusBarItem.color = undefined
             this.statusBarItem.text = status.short ? ("𝕜𝕚𝕥𝕖: " + status.short) : "𝕜𝕚𝕥𝕖"
             this.statusBarItem.tooltip = status.long ? status.long : ""
@@ -645,13 +645,20 @@ const Kite = {
   },
 
   isGrammarSupported(e) {
-    // Whether Kite supports this file extension, regardless of user settings
-    return e && e.document && IsSupportedFile(e.document.fileName)
+    return e && this.isDocumentGrammarSupported(e.document);
   },
 
-  isEnabledAndSupported(e) {
-    // Takes into account whether the user has chosen to disable this file extension
-    return e && e.document && EventSupported(e.document.fileName)
+  isDocumentGrammarSupported(d) {
+    return (
+      d &&
+      EVENT_SUPPORT(d.fileName)
+    );
+  },
+
+  documentForPath(path) {
+    return vscode.workspace.textDocuments
+      .filter(d => d.fileName === path)
+      .shift();
   },
 
   getStatus(document) {
@@ -670,9 +677,25 @@ const Kite = {
       .catch(() => ({ status: "ready" }));
   },
 
+  getSupportedExtensions() {
+    return Promise.resolve(SUPPORTED_EXTENSIONS);
+  },
+
   request(req, data) {
     return KiteAPI.request(req, data).then(resp => promisifyReadResponse(resp));
   },
+
+  checkConnectivity() {
+    return new Promise((resolve, reject) => {
+      require("dns").lookup("kite.com", err => {
+        if (err && err.code == "ENOTFOUND") {
+          reject();
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
 };
 
 module.exports = {
