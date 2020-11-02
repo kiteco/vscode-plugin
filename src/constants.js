@@ -29,7 +29,10 @@ function EventSupported(fileName) {
 }
 
 function CompletionsSupport() {
-  const enabled = EnabledAndSupported().join(',');
+  // Python has "FullCompletionsSupport" so filter from regular.
+  const enabled = EnabledAndSupported()
+                  .filter(ext => ext != ".py")
+                  .join(',');
   if (enabled === "") {
     return [];
   }
