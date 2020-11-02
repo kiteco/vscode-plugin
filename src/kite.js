@@ -8,7 +8,7 @@ const KiteAPI = require("kite-api");
 const Logger = require("kite-connector/lib/logger");
 const {
   ERROR_COLOR,
-  EventSupported,
+  IsEnabledAndSupported,
   CompletionsSupport,
   FullCompletionsSupport,
   DefinitionsSupport,
@@ -651,7 +651,7 @@ const Kite = {
 
   isEnabledAndSupported(e) {
     // Takes into account whether the user has chosen to disable this file extension
-    return e && e.document && EventSupported(e.document.fileName)
+    return e && e.document && IsEnabledAndSupported(e.document.fileName)
   },
 
   getStatus(document) {

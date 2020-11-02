@@ -23,7 +23,7 @@ function PythonEnabled() {
   return PYTHON_ENABLED;
 }
 
-function EventSupported(fileName) {
+function IsEnabledAndSupported(fileName) {
   const fileExt = path.extname(fileName);
   return EnabledAndSupported().includes(fileExt);
 }
@@ -136,7 +136,7 @@ const OFFSET_ENCODING = "utf-16";
 module.exports = {
   ATTEMPTS,
   INTERVAL,
-  EventSupported,
+  IsEnabledAndSupported,
   CompletionsSupport,
   FullCompletionsSupport: requirePythonEnabled(FullCompletionsSupport),
   DefinitionsSupport: requirePythonEnabled(DefinitionsSupport),
