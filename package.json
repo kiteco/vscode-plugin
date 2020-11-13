@@ -347,6 +347,8 @@
   },
   "devDependencies": {
     "@atom/temp": "^0.8.4",
+    "@types/md5": "^2.2.1",
+    "@types/mixpanel": "^2.14.2",
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.40",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
