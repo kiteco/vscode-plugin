@@ -127,7 +127,7 @@ const escapeCommandArguments = (o) => {
     return JSON.stringify(o).replace(/"/g, '&quot;');
   }
   if (os.platform() == 'win32') {
-    return JSON.stringify(o).replace(/\\\\/g, "\/");
+    return JSON.stringify(o).replace(/\\\\/g, "/");
   }
     return JSON.stringify(o);
 };

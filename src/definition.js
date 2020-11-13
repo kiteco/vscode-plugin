@@ -11,7 +11,7 @@ export default class KiteDefinitionProvider {
     this.isTest = isTest;
   }
 
-  provideDefinition(document, position, token) {
+  provideDefinition(document, position) {
     // No-op if Microsoft Python ext is installed.
     // Putting it here instead of kite.js since the ext can be installed and activated
     // without a restart.

@@ -142,7 +142,7 @@ export const Kite = {
         this.setMaxFileSize();
         this.setStatusBarLabel();
         if (e) {
-          if (/Code[\/\\]User[\/\\]settings.json$/.test(e.document.fileName)) {
+          if (/Code[/\\]User[/\\]settings.json$/.test(e.document.fileName)) {
             metrics.featureRequested("settings");
             metrics.featureFulfilled("settings");
           }
