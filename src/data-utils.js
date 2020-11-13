@@ -76,14 +76,14 @@ const signature = (data, withType = true, current = -1) => {
   const detail = getFunctionDetails(data);
   return detail
     ? `(<span class="signature">${
-    compact(flatten(gatherParameters(detail, withType)))
-      .map((p, i, a) => {
-        const s = i === a.length - 1 ? '' : ', ';
-        return i === current
-          ? `<span class="parameter parameter-highlight">${p}${s}</span>`
-          : `<span class="parameter">${p}${s}</span>`;
-      })
-      .join('')
+      compact(flatten(gatherParameters(detail, withType)))
+        .map((p, i, a) => {
+          const s = i === a.length - 1 ? '' : ', ';
+          return i === current
+            ? `<span class="parameter parameter-highlight">${p}${s}</span>`
+            : `<span class="parameter">${p}${s}</span>`;
+        })
+        .join('')
     }</span>)`
     : '(<span class="signature"></span>)';
 };

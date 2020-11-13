@@ -78,7 +78,7 @@ export const Kite = {
 
     Logger.LEVEL =
       Logger.LEVELS[
-      vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
+        vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
       ];
 
     KiteAPI
@@ -132,7 +132,7 @@ export const Kite = {
       vscode.workspace.onDidChangeConfiguration(() => {
         Logger.LEVEL =
           Logger.LEVELS[
-          vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
+            vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
           ];
       })
     );
@@ -630,10 +630,10 @@ export const Kite = {
   },
 
   _clearStatusBarItem() {
-      this.statusBarItem.text = "";
-      this.statusBarItem.color = undefined;
-      this.statusBarItem.tooltip = "";
-      this.statusBarItem.hide();
+    this.statusBarItem.text = "";
+    this.statusBarItem.color = undefined;
+    this.statusBarItem.tooltip = "";
+    this.statusBarItem.hide();
   },
 
   setStatus(state = this.lastState, document) {

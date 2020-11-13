@@ -8,7 +8,7 @@ import mixpanel from 'mixpanel';
 import Logger from "kite-connector/lib/logger";
 import kitePkg from "../package.json";
 import localconfig from "./localconfig.js";
-import { metricsCounterPath, metricsCompletionSelectedPath} from "./urls";
+import { metricsCounterPath, metricsCompletionSelectedPath } from "./urls";
 
 const OS_VERSION = os.type() + " " + os.release();
 
@@ -16,7 +16,7 @@ const EDITOR_UUID = vscode.env.machineId;
 
 const MIXPANEL_TOKEN = "fb6b9b336122a8b29c60f4c28dab6d03";
 
-import {Kite} from './kite';
+import { Kite } from './kite';
 
 const mpClient = mixpanel.init(MIXPANEL_TOKEN, {
   protocol: "https",
@@ -41,15 +41,15 @@ function sendCompletionSelected(lang, completion) {
   const path = metricsCompletionSelectedPath();
 
   return Kite.request(
-      {
-        path,
-        method: "POST"
-      },
-      JSON.stringify({
-        editor: 'vscode',
-        language: lang,
-        completion: completion
-      })
+    {
+      path,
+      method: "POST"
+    },
+    JSON.stringify({
+      editor: 'vscode',
+      language: lang,
+      completion: completion
+    })
   );
 }
 

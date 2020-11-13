@@ -16,6 +16,19 @@
   },
   "rules": {
     "max-len": "off",
-    "semi": "error"
+    "semi": "error",
+    "indent": ["error", 2,
+      {
+        "VariableDeclarator": "first",
+        "SwitchCase": 1,
+        "MemberExpression": "off"
+      }
+    ],
+    "object-curly-spacing": ["error", "always",
+      {
+        "arraysInObjects": false,
+        "objectsInObjects": false
+      }
+    ]
   }
 }
