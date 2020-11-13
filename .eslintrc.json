@@ -17,6 +17,7 @@
   "rules": {
     "max-len": "off",
     "semi": "error",
+    "no-trailing-spaces": "error",
     "indent": ["error", 2,
       {
         "VariableDeclarator": "first",
