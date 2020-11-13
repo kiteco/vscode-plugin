@@ -12,4 +12,4 @@ module.exports = class KiteEditor {
     delete this.editor;
     delete this.document;
   }
-}
+};

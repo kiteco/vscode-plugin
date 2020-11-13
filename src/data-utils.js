@@ -39,7 +39,7 @@ const parameterType = (p, prefix = '') =>
       `<a href='command:kite.navigate?"value/${v.type_id}"' class="parameter-type">${v.type}</a>`)).join('<i>|</i>')}`
     : '';
 
-const parameterTypeLink = parameterType
+const parameterTypeLink = parameterType;
 
 const parameterValue = p =>
   `${parameterName(p)}${parameterType(p, ':')}${parameterDefault(p)}`;
@@ -86,7 +86,7 @@ const signature = (data, withType = true, current = -1) => {
       .join('')
     }</span>)`
     : '(<span class="signature"></span>)';
-}
+};
 
 const callParameterName = (parameter) => parameter.name;
 
@@ -172,7 +172,7 @@ const symbolKindMarkdown = s => {
   }
   let types = uniq(s.value.filter(v => v.kind === 'instance').map(v => `_${v.type.replace('_', '\\_')}_`));
   return `[ ${types.join(' | ')} ]`;
-}
+};
 
 const reportFromHover = hover => {
   const symbol = head(hover.symbol);

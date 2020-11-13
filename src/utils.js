@@ -119,25 +119,25 @@ function params (url) {
     const [k,v] = p.split('=');
     m[k] = v;
     return m;
-  }, {})
-};
+  }, {});
+}
 
 const escapeCommandArguments = (o) => {
   if(vscode.version < "1.30.0") {
     return JSON.stringify(o).replace(/"/g, '&quot;');
   }
   if (os.platform() == 'win32') {
-    return JSON.stringify(o).replace(/\\\\/g, "\/")
+    return JSON.stringify(o).replace(/\\\\/g, "\/");
   }
-    return JSON.stringify(o)
-}
+    return JSON.stringify(o);
+};
 
 const kiteOpen = (url) => {
-  const env = Object.assign({}, process.env)
-  delete env["ELECTRON_RUN_AS_NODE"]
+  const env = Object.assign({}, process.env);
+  delete env["ELECTRON_RUN_AS_NODE"];
   switch(os.platform()) {
     case 'darwin':
-      cp.spawnSync("open", [url], {env: env})
+      cp.spawnSync("open", [url], {env: env});
       break;
     case 'win32':
       cp.spawnSync("cmd", ["/b", "/c", "start","", url], {env: env});
@@ -145,7 +145,7 @@ const kiteOpen = (url) => {
     case 'linux':
       cp.spawnSync("xdg-open", [url], {env: env});
   }
-}
+};
 
 const extToLangMap = new Map([
   ["c", "c"],
