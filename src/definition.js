@@ -1,17 +1,17 @@
 'use strict';
 
-const vscode = require('vscode');
-const { Location, Position } = vscode;
-const { editorsForDocument, parseJSON, promisifyReadResponse } = require('./utils');
-const { hoverPath } = require('./urls');
+import vscode, { Location, Position } from 'vscode';
 
-module.exports = class KiteDefinitionProvider {
+import { parseJSON } from './utils';
+import { hoverPath } from './urls';
+
+export default class KiteDefinitionProvider {
   constructor(Kite, isTest) {
     this.Kite = Kite;
     this.isTest = isTest;
   }
 
-  provideDefinition(document, position, token) {
+  provideDefinition(document, position) {
     // No-op if Microsoft Python ext is installed.
     // Putting it here instead of kite.js since the ext can be installed and activated
     // without a restart.

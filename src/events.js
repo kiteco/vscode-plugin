@@ -1,11 +1,13 @@
 'use strict';
 
-const { version: editor_version } = require('vscode');
+import { version as editor_version } from 'vscode';
 
-const { version: plugin_version } = require('./metrics');
-const { normalizeDriveLetter } = require('./urls');
+import metrics from './metrics';
+const { version: plugin_version } = metrics;
 
-module.exports = class EditorEvents {
+import { normalizeDriveLetter } from './urls';
+
+export default class EditorEvents {
   constructor(Kite, editor) {
     this.Kite = Kite;
     this.editor = editor;
@@ -125,4 +127,4 @@ module.exports = class EditorEvents {
 
     return event;
   }
-};
+}

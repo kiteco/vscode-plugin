@@ -1,4 +1,12 @@
 {
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
   "extends": "eslint:recommended",
   "env": {
     "browser": false,
@@ -8,6 +16,20 @@
   },
   "rules": {
     "max-len": "off",
-    "semi": "error"
+    "semi": "error",
+    "no-trailing-spaces": "error",
+    "indent": ["error", 2,
+      {
+        "VariableDeclarator": "first",
+        "SwitchCase": 1,
+        "MemberExpression": "off"
+      }
+    ],
+    "object-curly-spacing": ["error", "always",
+      {
+        "arraysInObjects": false,
+        "objectsInObjects": false
+      }
+    ]
   }
 }

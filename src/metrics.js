@@ -1,13 +1,14 @@
 "use strict";
 
-const os = require("os");
-const vscode = require("vscode");
-const crypto = require("crypto");
-const mixpanel = require("mixpanel");
-const Logger = require("kite-connector/lib/logger");
-const kitePkg = require("../package.json");
-const localconfig = require("./localconfig.js");
-const { metricsCounterPath, metricsCompletionSelectedPath} = require("./urls");
+import os from 'os';
+import vscode from 'vscode';
+import crypto from 'crypto';
+import mixpanel from 'mixpanel';
+
+import Logger from "kite-connector/lib/logger";
+import kitePkg from "../package.json";
+import localconfig from "./localconfig.js";
+import { metricsCounterPath, metricsCompletionSelectedPath } from "./urls";
 
 const OS_VERSION = os.type() + " " + os.release();
 
@@ -15,7 +16,7 @@ const EDITOR_UUID = vscode.env.machineId;
 
 const MIXPANEL_TOKEN = "fb6b9b336122a8b29c60f4c28dab6d03";
 
-let Kite;
+import { Kite } from './kite';
 
 const mpClient = mixpanel.init(MIXPANEL_TOKEN, {
   protocol: "https",
@@ -37,21 +38,18 @@ function sendCompletionSelected(lang, completion) {
     return;
   }
 
-  if (!Kite) {
-    Kite = require("./kite");
-  }
   const path = metricsCompletionSelectedPath();
 
   return Kite.request(
-      {
-        path,
-        method: "POST"
-      },
-      JSON.stringify({
-        editor: 'vscode',
-        language: lang,
-        completion: completion
-      })
+    {
+      path,
+      method: "POST"
+    },
+    JSON.stringify({
+      editor: 'vscode',
+      language: lang,
+      completion: completion
+    })
   );
 }
 
@@ -60,9 +58,6 @@ function sendFeatureMetric(name) {
     return;
   }
 
-  if (!Kite) {
-    Kite = require("./kite");
-  }
   const path = metricsCounterPath();
 
   Logger.debug("feature metric:", name);
@@ -100,7 +95,7 @@ function getOsName() {
   }
 }
 
-module.exports = {
+export default {
   distinctID,
   EDITOR_UUID,
   OS_VERSION,

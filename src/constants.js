@@ -1,5 +1,5 @@
-const vscode = require("vscode");
-const path = require("path");
+import vscode from 'vscode';
+import path from 'path';
 
 // Cache of type: []string
 let ENABLED_AND_SUPPORTED = null;
@@ -81,29 +81,29 @@ function SignaturesSupport() {
 
 function SupportedExtensions() {
   return [
-      ".c",
-      ".cc",
-      ".cpp",
-      ".cs",
-      ".css",
-      ".go",
-      ".h",
-      ".hpp",
-      ".html",
-      ".java",
-      ".js",
-      ".jsx",
-      ".kt",
-      ".less",
-      ".m",
-      ".php",
-      ".py",
-      ".rb",
-      ".scala",
-      ".sh",
-      ".ts",
-      ".tsx",
-      ".vue"
+    ".c",
+    ".cc",
+    ".cpp",
+    ".cs",
+    ".css",
+    ".go",
+    ".h",
+    ".hpp",
+    ".html",
+    ".java",
+    ".js",
+    ".jsx",
+    ".kt",
+    ".less",
+    ".m",
+    ".php",
+    ".py",
+    ".rb",
+    ".scala",
+    ".sh",
+    ".ts",
+    ".tsx",
+    ".vue"
   ];
 }
 
@@ -133,15 +133,11 @@ const KITE_BRANDING = " 𝕜𝕚𝕥𝕖 ";
 
 const OFFSET_ENCODING = "utf-16";
 
-module.exports = {
+export {
   ATTEMPTS,
   INTERVAL,
   IsEnabledAndSupported,
   CompletionsSupport,
-  FullCompletionsSupport: requirePythonEnabled(FullCompletionsSupport),
-  DefinitionsSupport: requirePythonEnabled(DefinitionsSupport),
-  HoverSupport: requirePythonEnabled(HoverSupport),
-  SignaturesSupport: requirePythonEnabled(SignaturesSupport),
   SupportedExtensions,
   IsSupportedFile,
   CONNECT_ERROR_LOCKOUT,
@@ -150,3 +146,8 @@ module.exports = {
   KITE_BRANDING,
   OFFSET_ENCODING
 };
+
+export const PythonFullCompletionsSupport = requirePythonEnabled(FullCompletionsSupport);
+export const PythonDefinitionsSupport = requirePythonEnabled(DefinitionsSupport);
+export const PythonHoverSupport = requirePythonEnabled(HoverSupport);
+export const PythonSignaturesSupport = requirePythonEnabled(SignaturesSupport);

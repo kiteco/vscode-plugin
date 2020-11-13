@@ -1,8 +1,8 @@
 'use strict';
 
-const vscode = require('vscode');
-const cp = require('child_process');
-const os = require('os');
+import vscode from 'vscode';
+import cp from 'child_process';
+import os from 'os';
 
 const compact = a => a.filter(v => v && v !== '');
 
@@ -36,9 +36,9 @@ const detailNotEmpty = (o, ...k) => {
 };
 
 const getDetails = (o, ...details) =>
-o.detail || (o.details && details.reduce((m, k) => {
-  return m || o.details[k];
-}, null));
+  o.detail || (o.details && details.reduce((m, k) => {
+    return m || o.details[k];
+  }, null));
 
 const getFunctionDetails = (o) => {
   const type = head(Object.keys(o.details).filter(k => o.details[k]));
@@ -119,33 +119,33 @@ function params (url) {
     const [k,v] = p.split('=');
     m[k] = v;
     return m;
-  }, {})
-};
+  }, {});
+}
 
 const escapeCommandArguments = (o) => {
   if(vscode.version < "1.30.0") {
     return JSON.stringify(o).replace(/"/g, '&quot;');
   }
   if (os.platform() == 'win32') {
-    return JSON.stringify(o).replace(/\\\\/g, "\/")
+    return JSON.stringify(o).replace(/\\\\/g, "/");
   }
-    return JSON.stringify(o)
-}
+  return JSON.stringify(o);
+};
 
 const kiteOpen = (url) => {
-  const env = Object.assign({}, process.env)
-  delete env["ELECTRON_RUN_AS_NODE"]
+  const env = Object.assign({}, process.env);
+  delete env["ELECTRON_RUN_AS_NODE"];
   switch(os.platform()) {
     case 'darwin':
-      cp.spawnSync("open", [url], {env: env})
+      cp.spawnSync("open", [url], { env: env });
       break;
     case 'win32':
-      cp.spawnSync("cmd", ["/b", "/c", "start","", url], {env: env});
+      cp.spawnSync("cmd", ["/b", "/c", "start","", url], { env: env });
       break;
     case 'linux':
-      cp.spawnSync("xdg-open", [url], {env: env});
+      cp.spawnSync("xdg-open", [url], { env: env });
   }
-}
+};
 
 const extToLangMap = new Map([
   ["c", "c"],
@@ -185,7 +185,7 @@ const getSupportedLanguage = document => {
   return null;
 };
 
-module.exports = {
+export {
   compact,
   delayPromise,
   flatten,

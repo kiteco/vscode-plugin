@@ -1,15 +1,16 @@
 "use strict";
-const {
+import {
   SignatureHelp,
   SignatureInformation,
   ParameterInformation
-} = require("vscode");
-const Logger = require("kite-connector/lib/logger");
-const { parseJSON, stripTags, getFunctionDetails } = require("./utils");
-const { signaturePath, normalizeDriveLetter } = require("./urls");
-const { valueLabel, parameterType } = require("./data-utils");
+} from 'vscode';
 
-module.exports = class KiteSignatureProvider {
+import Logger from "kite-connector/lib/logger";
+import { parseJSON, stripTags, getFunctionDetails } from "./utils";
+import { signaturePath, normalizeDriveLetter } from "./urls";
+import { valueLabel, parameterType } from "./data-utils";
+
+export default class KiteSignatureProvider {
   constructor(Kite, isTest) {
     this.Kite = Kite;
     this.isTest = isTest;
@@ -77,4 +78,4 @@ module.exports = class KiteSignatureProvider {
       })
       .catch(() => null);
   }
-};
+}

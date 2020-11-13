@@ -1,48 +1,48 @@
 "use strict";
 
-const vscode = require("vscode");
+import vscode from 'vscode';
+import os from 'os';
+import open from 'open';
 
-const os = require("os");
-const opn = require("opn");
-const KiteAPI = require("kite-api");
-const Logger = require("kite-connector/lib/logger");
-const {
+import KiteAPI from "kite-api";
+import Logger from "kite-connector/lib/logger";
+import {
   ERROR_COLOR,
   IsEnabledAndSupported,
   CompletionsSupport,
-  FullCompletionsSupport,
-  DefinitionsSupport,
-  HoverSupport,
-  SignaturesSupport,
+  PythonFullCompletionsSupport,
+  PythonDefinitionsSupport,
+  PythonHoverSupport,
+  PythonSignaturesSupport,
   IsSupportedFile,
-} = require("./constants");
-const KiteHoverProvider = require("./hover");
-const KiteCompletionProvider = require("./completion");
-const KiteSignatureProvider = require("./signature");
-const KiteDefinitionProvider = require("./definition");
-const KiteEditor = require("./kite-editor");
-const EditorEvents = require("./events");
-const NotificationsManager = require("./notifications");
-const localconfig = require("./localconfig");
-const metrics = require("./metrics");
-const { statusPath, hoverPath } = require("./urls");
-const Rollbar = require("rollbar");
-const {
+} from "./constants";
+import KiteHoverProvider from "./hover";
+import KiteCompletionProvider from "./completion";
+import KiteSignatureProvider from "./signature";
+import KiteDefinitionProvider from "./definition";
+import KiteEditor from "./kite-editor";
+import EditorEvents from "./events";
+import NotificationsManager from "./notifications";
+import localconfig from "./localconfig";
+import metrics from "./metrics";
+import { statusPath, hoverPath } from "./urls";
+import Rollbar from "rollbar";
+import {
   editorsForDocument,
   promisifyReadResponse,
   kiteOpen
-} = require("./utils");
-const { version } = require("../package.json");
-const { DEFAULT_MAX_FILE_SIZE } = require("kite-api");
+} from "./utils";
+import { version } from "../package.json";
+import { DEFAULT_MAX_FILE_SIZE } from "kite-api";
 
 const RUN_KITE_ATTEMPTS = 30;
 const RUN_KITE_INTERVAL = 2500;
 
-const Kite = {
+export const Kite = {
   maxFileSize: DEFAULT_MAX_FILE_SIZE,
 
   activate(ctx) {
-    this.globalState = ctx.globalState
+    this.globalState = ctx.globalState;
     if (process.env.NODE_ENV !== "test") {
       this._activate();
       ctx.subscriptions.push(this);
@@ -78,24 +78,24 @@ const Kite = {
 
     Logger.LEVEL =
       Logger.LEVELS[
-      vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
+        vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
       ];
 
     KiteAPI
       .isKiteInstalled()
-      .catch(NotificationsManager.showKiteInstallNotification)
+      .catch(NotificationsManager.showKiteInstallNotification);
 
     this.setMaxFileSize();
 
     this.disposables.push(
       vscode.languages.registerHoverProvider(
-        HoverSupport(),
+        PythonHoverSupport(),
         new KiteHoverProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerDefinitionProvider(
-        DefinitionsSupport(),
+        PythonDefinitionsSupport(),
         new KiteDefinitionProvider(Kite)
       )
     );
@@ -115,13 +115,13 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
-        FullCompletionsSupport(),
+        PythonFullCompletionsSupport(),
         new KiteCompletionProvider(Kite, pythonCompletionsTriggers), ...pythonCompletionsTriggers)
     );
 
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(
-        SignaturesSupport(),
+        PythonSignaturesSupport(),
         new KiteSignatureProvider(Kite),
         "(",
         ","
@@ -132,7 +132,7 @@ const Kite = {
       vscode.workspace.onDidChangeConfiguration(() => {
         Logger.LEVEL =
           Logger.LEVELS[
-          vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
+            vscode.workspace.getConfiguration("kite").loggingLevel.toUpperCase()
           ];
       })
     );
@@ -142,7 +142,7 @@ const Kite = {
         this.setMaxFileSize();
         this.setStatusBarLabel();
         if (e) {
-          if (/Code[\/\\]User[\/\\]settings.json$/.test(e.document.fileName)) {
+          if (/Code[/\\]User[/\\]settings.json$/.test(e.document.fileName)) {
             metrics.featureRequested("settings");
             metrics.featureFulfilled("settings");
           }
@@ -198,7 +198,7 @@ const Kite = {
       vscode.commands.registerCommand("kite.insert-completion", ({ lang, completion }) => {
         metrics.increment(`vscode_kite_${lang}_completions_inserted`);
         metrics.increment(`kite_${lang}_completions_inserted`);
-        metrics.sendCompletionSelected(lang, completion).catch(e => { console.error(e) });
+        metrics.sendCompletionSelected(lang, completion).catch(e => { console.error(e); });
       })
     );
 
@@ -218,14 +218,14 @@ const Kite = {
       vscode.commands.registerTextEditorCommand("kite.related-code-from-file", (textEditor) => {
         KiteAPI
           .requestRelatedCode("vscode", textEditor.document.fileName, null, null)
-          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, 0))
+          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, 0));
       })
     );
 
     this.disposables.push(
       vscode.commands.registerTextEditorCommand("kite.related-code-from-line", (textEditor) => {
-        const zeroBasedLineNo = textEditor.selection.active.line
-        const oneBasedLineNo = zeroBasedLineNo+1
+        const zeroBasedLineNo = textEditor.selection.active.line;
+        const oneBasedLineNo = zeroBasedLineNo+1;
 
         const requireNonEmptyLine = new Promise((resolve, reject) => {
           if (textEditor.document.lineAt(zeroBasedLineNo).text === "") {
@@ -233,14 +233,14 @@ const Kite = {
               data: {
                 responseData: "ErrEmptyLine"
               }
-            })
+            });
           }
-          return resolve()
-        })
+          return resolve();
+        });
 
         requireNonEmptyLine
           .then(() => KiteAPI.requestRelatedCode("vscode", textEditor.document.fileName, oneBasedLineNo, null))
-          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, oneBasedLineNo))
+          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, oneBasedLineNo));
       })
     );
 
@@ -275,7 +275,7 @@ const Kite = {
 
     this.disposables.push(
       vscode.commands.registerCommand("kite.web-url", url => {
-        opn(url.replace(/;/g, "%3B"));
+        open(url.replace(/;/g, "%3B"));
       })
     );
 
@@ -315,7 +315,7 @@ const Kite = {
 
     const openKiteTutorial = async language => {
       try {
-        const path = await KiteAPI.getOnboardingFilePath("vscode", language)
+        const path = await KiteAPI.getOnboardingFilePath("vscode", language);
         const tutorial = await vscode.workspace.openTextDocument(path);
         vscode.window.showTextDocument(tutorial);
         KiteAPI.setKiteSetting("has_done_onboarding", true);
@@ -346,7 +346,7 @@ const Kite = {
 
     this.disposables.push(
       vscode.commands.registerCommand("kite.help", () => {
-        opn("https://help.kite.com/category/46-vs-code-integration");
+        open("https://help.kite.com/category/46-vs-code-integration");
       })
     );
 
@@ -394,7 +394,7 @@ const Kite = {
 
     const config = vscode.workspace.getConfiguration("kite");
     if (config.showWelcomeNotificationOnStartup) {
-      NotificationsManager.showWelcomeNotification(config, openKiteTutorial)
+      NotificationsManager.showWelcomeNotification(config, openKiteTutorial);
     }
 
     setTimeout(() => {
@@ -432,7 +432,7 @@ const Kite = {
     this.shown = {};
     this.disposables = [];
     this.attemptedToStartKite = false;
-    this.notifications = new NotificationsManager()
+    this.notifications = new NotificationsManager();
     delete this.lastState;
     delete this.lastStatus;
     delete this.lastPolledState;
@@ -577,7 +577,7 @@ const Kite = {
   setMaxFileSize() {
     KiteAPI.getMaxFileSizeBytes().then(max => {
       this.maxFileSize = max;
-    })
+    });
   },
 
   setStatusBarLabel() {
@@ -613,27 +613,27 @@ const Kite = {
           break;
         default:
           if (!enabledFiletype) {
-            this.statusBarItem.color = undefined
-            this.statusBarItem.text = "𝕜𝕚𝕥𝕖: disabled"
-            this.statusBarItem.tooltip = "Enable this file type in VS Code settings"
+            this.statusBarItem.color = undefined;
+            this.statusBarItem.text = "𝕜𝕚𝕥𝕖: disabled";
+            this.statusBarItem.tooltip = "Enable this file type in VS Code settings";
           } else if (status) {
-            this.statusBarItem.color = undefined
-            this.statusBarItem.text = status.short ? ("𝕜𝕚𝕥𝕖: " + status.short) : "𝕜𝕚𝕥𝕖"
-            this.statusBarItem.tooltip = status.long ? status.long : ""
+            this.statusBarItem.color = undefined;
+            this.statusBarItem.text = status.short ? ("𝕜𝕚𝕥𝕖: " + status.short) : "𝕜𝕚𝕥𝕖";
+            this.statusBarItem.tooltip = status.long ? status.long : "";
           } else {
-            this._clearStatusBarItem()
+            this._clearStatusBarItem();
           }
       }
     } else {
-      this._clearStatusBarItem()
+      this._clearStatusBarItem();
     }
   },
 
   _clearStatusBarItem() {
-      this.statusBarItem.text = "";
-      this.statusBarItem.color = undefined;
-      this.statusBarItem.tooltip = "";
-      this.statusBarItem.hide();
+    this.statusBarItem.text = "";
+    this.statusBarItem.color = undefined;
+    this.statusBarItem.tooltip = "";
+    this.statusBarItem.hide();
   },
 
   setStatus(state = this.lastState, document) {
@@ -646,12 +646,12 @@ const Kite = {
 
   isGrammarSupported(e) {
     // Whether Kite supports this file extension, regardless of user settings
-    return e && e.document && IsSupportedFile(e.document.fileName)
+    return e && e.document && IsSupportedFile(e.document.fileName);
   },
 
   isEnabledAndSupported(e) {
     // Takes into account whether the user has chosen to disable this file extension
-    return e && e.document && IsEnabledAndSupported(e.document.fileName)
+    return e && e.document && IsEnabledAndSupported(e.document.fileName);
   },
 
   getStatus(document) {
@@ -675,15 +675,13 @@ const Kite = {
   },
 };
 
-module.exports = {
-  activate(ctx) {
-    return Kite.activate(ctx);
-  },
-  deactivate() {
-    Kite.deactivate();
-  },
-  request(...args) {
-    return Kite.request(...args);
-  },
-  kite: Kite
-};
+
+export function activate(ctx) {
+  return Kite.activate(ctx);
+}
+export function deactivate() {
+  Kite.deactivate();
+}
+export function request(...args) {
+  return Kite.request(...args);
+}

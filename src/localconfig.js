@@ -1,9 +1,10 @@
 "use strict";
 
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
-const Logger = require("kite-connector/lib/logger");
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+
+import Logger from "kite-connector/lib/logger";
 const legacyConfigDir = path.join(os.homedir(), ".kite");
 const legacyConfigPath = path.join(legacyConfigDir, "kite-config.json");
 
@@ -59,7 +60,7 @@ function set(key, value) {
   persist(); // will write to disk asynchronously
 }
 
-module.exports = {
-  get: get,
-  set: set
+export default {
+  get,
+  set,
 };

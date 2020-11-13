@@ -1,10 +1,11 @@
-const vscode = require("vscode");
-const opn = require("opn");
-const metrics = require("./metrics");
+import vscode from "vscode";
+import open from "open";
 
-const KiteAPI = require("kite-api");
+import metrics from "./metrics";
 
-module.exports = class NotificationsManager {
+import KiteAPI from "kite-api";
+
+export default class NotificationsManager {
   constructor() {
     this.shownNotifications = {};
   }
@@ -71,7 +72,7 @@ module.exports = class NotificationsManager {
       .then(item => {
         switch (item) {
           case "Learn how to use Kite":
-            opn("http://help.kite.com/category/46-vs-code-integration");
+            open("http://help.kite.com/category/46-vs-code-integration");
             break;
           case "Don't show this again":
             config.update("showWelcomeNotificationOnStartup", false, true);
@@ -93,11 +94,11 @@ module.exports = class NotificationsManager {
         .then(item => {
           switch (item) {
             case "Install":
-              opn("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
+              open("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
               metrics.track("vscode_kite_installer_github_link_clicked");
               break;
           }
         });
     }
   }
-};
+}

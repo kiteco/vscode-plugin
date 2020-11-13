@@ -1,7 +1,8 @@
 'use strict';
-const vscode = require('vscode');
-const md5 = require('md5');
-const { head } = require('./utils');
+import vscode from 'vscode';
+import md5 from 'md5';
+
+import { head } from './utils';
 
 function metricsCounterPath() {
   return '/clientapi/metrics/counters';
@@ -56,7 +57,7 @@ function shouldNotifyPath(path) {
 }
 
 function settingsPath(key) {
-  return '/clientapi/settings/' + key
+  return '/clientapi/settings/' + key;
 }
 
 function completionsPath() {
@@ -126,7 +127,7 @@ function hoverPath(document, position) {
   const filename = document.fileName;
   const buffer = cleanPath(filename);
   const pos = document.offsetAt(position);
-  const encoding = 'utf-16'
+  const encoding = 'utf-16';
   return [
     `/api/buffer/vscode/${buffer}/${state}/hover`,
     [
@@ -154,7 +155,7 @@ function normalizeDriveLetter(str) {
   return str.replace(/^[a-z]:/, m => m.toUpperCase());
 }
 
-module.exports = {
+export {
   accountPath,
   completionsPath,
   examplePath,
