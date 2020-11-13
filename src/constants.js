@@ -112,6 +112,16 @@ function IsSupportedFile(fileName) {
   return SupportedExtensions().includes(fileExt);
 }
 
+function CodeFinderSupport() {
+  // These lists happen to be the same
+  // but may diverge in the future.
+  const navSupported = SupportedExtensions();
+  return [
+    { pattern: `**/*{${navSupported}}`, scheme: "file" },
+    { pattern: `**/*{${navSupported}}`, scheme: "untitled" }
+  ];
+}
+
 const CONNECT_ERROR_LOCKOUT = 15 * 60;
 
 const ATTEMPTS = 30;
@@ -138,6 +148,7 @@ export {
   INTERVAL,
   IsEnabledAndSupported,
   CompletionsSupport,
+  CodeFinderSupport,
   SupportedExtensions,
   IsSupportedFile,
   CONNECT_ERROR_LOCKOUT,

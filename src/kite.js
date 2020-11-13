@@ -15,11 +15,13 @@ import {
   PythonHoverSupport,
   PythonSignaturesSupport,
   IsSupportedFile,
+  CodeFinderSupport,
 } from "./constants";
 import KiteHoverProvider from "./hover";
 import KiteCompletionProvider from "./completion";
 import KiteSignatureProvider from "./signature";
 import KiteDefinitionProvider from "./definition";
+import KiteCodeLensProvider from './codelens-provider';
 import KiteEditor from "./kite-editor";
 import EditorEvents from "./events";
 import NotificationsManager from "./notifications";
@@ -125,6 +127,14 @@ export const Kite = {
         new KiteSignatureProvider(Kite),
         "(",
         ","
+      )
+    );
+
+    console.log(CodeFinderSupport());
+    this.disposables.push(
+      vscode.languages.registerCodeLensProvider(
+        CodeFinderSupport(),
+        new KiteCodeLensProvider()
       )
     );
 
