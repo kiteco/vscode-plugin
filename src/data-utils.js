@@ -90,7 +90,7 @@ const signature = (data, withType = true, current = -1) => {
 
 const callParameterName = (parameter) => parameter.name;
 
-const callKwargParameter = (parameter, withType) => {
+const callKwargParameter = (parameter) => {
   const example = head(parameter.types.filter(t => t.examples));
   return example
     ? compact([
@@ -100,7 +100,7 @@ const callKwargParameter = (parameter, withType) => {
     : callParameterName(parameter);
 };
 
-const callKwargParameters = (signature, withType) =>
+const callKwargParameters = (signature) =>
   detailNotEmpty(signature, 'kwargs')
     ? detailGet(signature, 'kwargs').map(p => callKwargParameter(p)).join(', ')
     : null;
