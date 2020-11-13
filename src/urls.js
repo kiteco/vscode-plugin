@@ -1,7 +1,8 @@
 'use strict';
-const vscode = require('vscode');
-const md5 = require('md5');
-const { head } = require('./utils');
+import vscode from 'vscode';
+import md5 from 'md5';
+
+import { head } from './utils';
 
 function metricsCounterPath() {
   return '/clientapi/metrics/counters';
@@ -154,7 +155,7 @@ function normalizeDriveLetter(str) {
   return str.replace(/^[a-z]:/, m => m.toUpperCase());
 }
 
-module.exports = {
+export {
   accountPath,
   completionsPath,
   examplePath,

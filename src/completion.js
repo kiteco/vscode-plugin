@@ -1,5 +1,5 @@
 "use strict";
-const {
+import {
   CompletionItem,
   CompletionItemKind,
   CompletionList,
@@ -8,20 +8,20 @@ const {
   SnippetString,
   window,
   workspace
-} = require("vscode");
-const Logger = require("kite-connector/lib/logger");
-const {
+} from 'vscode';
+import Logger from "kite-connector/lib/logger";
+import {
   KITE_BRANDING,
   OFFSET_ENCODING
-} = require("./constants");
-const {
+} from "./constants";
+import {
   parseJSON,
   getSupportedLanguage
-} = require("./utils");
-const {
+} from "./utils";
+import {
   completionsPath,
   normalizeDriveLetter
-} = require("./urls");
+} from "./urls";
 
 
 const fill = (s, l, f = " ") => {
@@ -129,7 +129,7 @@ const processCompletion = (
   return item;
 };
 
-module.exports = class KiteCompletionProvider {
+export default class KiteCompletionProvider {
   constructor(Kite, triggers, optionalTriggers, isTest) {
     this.Kite = Kite;
     this.triggers = triggers;
@@ -230,4 +230,4 @@ module.exports = class KiteCompletionProvider {
       })
       .catch(() => []);
   }
-};
+}

@@ -1,44 +1,44 @@
 "use strict";
 
-const vscode = require("vscode");
+import vscode from 'vscode';
+import os from 'os';
+import opn from 'opn';
 
-const os = require("os");
-const opn = require("opn");
-const KiteAPI = require("kite-api");
-const Logger = require("kite-connector/lib/logger");
-const {
+import KiteAPI from "kite-api";
+import Logger from "kite-connector/lib/logger";
+import {
   ERROR_COLOR,
   IsEnabledAndSupported,
   CompletionsSupport,
-  FullCompletionsSupport,
-  DefinitionsSupport,
-  HoverSupport,
-  SignaturesSupport,
+  PythonFullCompletionsSupport,
+  PythonDefinitionsSupport,
+  PythonHoverSupport,
+  PythonSignaturesSupport,
   IsSupportedFile,
-} = require("./constants");
-const KiteHoverProvider = require("./hover");
-const KiteCompletionProvider = require("./completion");
-const KiteSignatureProvider = require("./signature");
-const KiteDefinitionProvider = require("./definition");
-const KiteEditor = require("./kite-editor");
-const EditorEvents = require("./events");
-const NotificationsManager = require("./notifications");
-const localconfig = require("./localconfig");
-const metrics = require("./metrics");
-const { statusPath, hoverPath } = require("./urls");
-const Rollbar = require("rollbar");
-const {
+} from "./constants";
+import KiteHoverProvider from "./hover";
+import KiteCompletionProvider from "./completion";
+import KiteSignatureProvider from "./signature";
+import KiteDefinitionProvider from "./definition";
+import KiteEditor from "./kite-editor";
+import EditorEvents from "./events";
+import NotificationsManager from "./notifications";
+import localconfig from "./localconfig";
+import metrics from "./metrics";
+import { statusPath, hoverPath } from "./urls";
+import Rollbar from "rollbar";
+import {
   editorsForDocument,
   promisifyReadResponse,
   kiteOpen
-} = require("./utils");
-const { version } = require("../package.json");
-const { DEFAULT_MAX_FILE_SIZE } = require("kite-api");
+} from "./utils";
+import { version } from "../package.json";
+import { DEFAULT_MAX_FILE_SIZE } from "kite-api";
 
 const RUN_KITE_ATTEMPTS = 30;
 const RUN_KITE_INTERVAL = 2500;
 
-const Kite = {
+export const Kite = {
   maxFileSize: DEFAULT_MAX_FILE_SIZE,
 
   activate(ctx) {
@@ -89,13 +89,13 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerHoverProvider(
-        HoverSupport(),
+        PythonHoverSupport(),
         new KiteHoverProvider(Kite)
       )
     );
     this.disposables.push(
       vscode.languages.registerDefinitionProvider(
-        DefinitionsSupport(),
+        PythonDefinitionsSupport(),
         new KiteDefinitionProvider(Kite)
       )
     );
@@ -115,13 +115,13 @@ const Kite = {
 
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
-        FullCompletionsSupport(),
+        PythonFullCompletionsSupport(),
         new KiteCompletionProvider(Kite, pythonCompletionsTriggers), ...pythonCompletionsTriggers)
     );
 
     this.disposables.push(
       vscode.languages.registerSignatureHelpProvider(
-        SignaturesSupport(),
+        PythonSignaturesSupport(),
         new KiteSignatureProvider(Kite),
         "(",
         ","
@@ -675,15 +675,13 @@ const Kite = {
   },
 };
 
-module.exports = {
-  activate(ctx) {
-    return Kite.activate(ctx);
-  },
-  deactivate() {
-    Kite.deactivate();
-  },
-  request(...args) {
-    return Kite.request(...args);
-  },
-  kite: Kite
-};
+
+export function activate(ctx) {
+  return Kite.activate(ctx);
+}
+export function deactivate() {
+  Kite.deactivate();
+}
+export function request(...args) {
+  return Kite.request(...args);
+}

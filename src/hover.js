@@ -1,12 +1,12 @@
 'use strict';
 
-const vscode = require('vscode');
-const {Hover} = vscode;
-const {hoverPath} = require('./urls');
-const {compact, escapeCommandArguments} = require('./utils');
-const {symbolName, symbolKindMarkdown} = require('./data-utils');
+import {MarkdownString, Hover} from 'vscode';
 
-module.exports = class KiteHoverProvider {
+import {hoverPath} from './urls';
+import {compact, escapeCommandArguments} from './utils';
+import {symbolName, symbolKindMarkdown} from './data-utils';
+
+export default class KiteHoverProvider {
   constructor (Kite, isTest) {
     this.Kite = Kite;
     this.isTest = isTest;
@@ -35,7 +35,7 @@ module.exports = class KiteHoverProvider {
           defLink = `[Def](command:kite.def?${defData})`;
         }
 
-        const content = new vscode.MarkdownString(`⟠&nbsp;&nbsp;__${symbolName(symbol).replace('_', '\\_')}__:&nbsp;${symbolKindMarkdown(symbol)}&nbsp;&nbsp;&nbsp;&nbsp;${docsLink}${defLink ? '&nbsp;&nbsp;' + defLink : ''}`);
+        const content = new MarkdownString(`⟠&nbsp;&nbsp;__${symbolName(symbol).replace('_', '\\_')}__:&nbsp;${symbolKindMarkdown(symbol)}&nbsp;&nbsp;&nbsp;&nbsp;${docsLink}${defLink ? '&nbsp;&nbsp;' + defLink : ''}`);
         content.isTrusted = true;
 
         const texts = [
@@ -47,4 +47,4 @@ module.exports = class KiteHoverProvider {
     })
     .catch(() => {});
   }
-};
+}

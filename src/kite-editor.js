@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class KiteEditor {
+export default class KiteEditor {
   constructor(Kite, editor) {
     this.Kite = Kite;
     this.editor = editor;
@@ -12,4 +12,4 @@ module.exports = class KiteEditor {
     delete this.editor;
     delete this.document;
   }
-};
+}

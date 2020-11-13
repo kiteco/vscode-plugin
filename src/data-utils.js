@@ -1,6 +1,6 @@
 'use strict';
 
-const { compact, flatten, head, last, uniq, detailGet, detailLang, detailNotEmpty, getFunctionDetails } = require('./utils');
+import { compact, flatten, head, last, uniq, detailGet, detailLang, detailNotEmpty, getFunctionDetails } from './utils';
 
 const idIsEmpty = (id) =>
   !id || id === '' ||
@@ -206,7 +206,7 @@ const symbolId = (symbol) =>
     ? symbol.id
     : head(symbol.value).id;
 
-module.exports = {
+export {
   callSignature,
   memberLabel,
   parameterName,

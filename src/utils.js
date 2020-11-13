@@ -1,8 +1,8 @@
 'use strict';
 
-const vscode = require('vscode');
-const cp = require('child_process');
-const os = require('os');
+import vscode from 'vscode';
+import cp from 'child_process';
+import os from 'os';
 
 const compact = a => a.filter(v => v && v !== '');
 
@@ -185,7 +185,7 @@ const getSupportedLanguage = document => {
   return null;
 };
 
-module.exports = {
+export {
   compact,
   delayPromise,
   flatten,

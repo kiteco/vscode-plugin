@@ -1,10 +1,11 @@
-const vscode = require("vscode");
-const opn = require("opn");
-const metrics = require("./metrics");
+import vscode from "vscode";
+import opn from "opn";
 
-const KiteAPI = require("kite-api");
+import metrics from "./metrics";
 
-module.exports = class NotificationsManager {
+import KiteAPI from "kite-api";
+
+export default class NotificationsManager {
   constructor() {
     this.shownNotifications = {};
   }
@@ -100,4 +101,4 @@ module.exports = class NotificationsManager {
         });
     }
   }
-};
+}
