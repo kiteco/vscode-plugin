@@ -17,7 +17,7 @@ const config = {
   target: 'node',
 
   entry: {
-    extension: path.resolve(__dirname, '..', 'src', 'kite.js'), 
+    extension: path.resolve(__dirname, '..', 'src', 'kite.js'),
   },
   output: {
     // the bundle is stored in the 'dist' folder (check package.json)
@@ -31,8 +31,17 @@ const config = {
     vscode: 'commonjs vscode', // the vscode-module is created on-the-fly and must be excluded.
     atom: 'atom' // because kite-installer imports it (has null checks around its usage, though)
   },
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+    ],
+  },
   resolve: {
-    extensions: ['.js']
+    extensions: ['.ts', '.js']
   },
   plugins: [
     // static asset merging and copying
