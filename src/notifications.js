@@ -1,5 +1,5 @@
 import vscode from "vscode";
-import opn from "opn";
+import open from "open";
 
 import metrics from "./metrics";
 
@@ -72,7 +72,7 @@ export default class NotificationsManager {
       .then(item => {
         switch (item) {
           case "Learn how to use Kite":
-            opn("http://help.kite.com/category/46-vs-code-integration");
+            open("http://help.kite.com/category/46-vs-code-integration");
             break;
           case "Don't show this again":
             config.update("showWelcomeNotificationOnStartup", false, true);
@@ -94,7 +94,7 @@ export default class NotificationsManager {
         .then(item => {
           switch (item) {
             case "Install":
-              opn("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
+              open("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
               metrics.track("vscode_kite_installer_github_link_clicked");
               break;
           }

@@ -2,7 +2,7 @@
 
 import vscode from 'vscode';
 import os from 'os';
-import opn from 'opn';
+import open from 'open';
 
 import KiteAPI from "kite-api";
 import Logger from "kite-connector/lib/logger";
@@ -275,7 +275,7 @@ export const Kite = {
 
     this.disposables.push(
       vscode.commands.registerCommand("kite.web-url", url => {
-        opn(url.replace(/;/g, "%3B"));
+        open(url.replace(/;/g, "%3B"));
       })
     );
 
@@ -346,7 +346,7 @@ export const Kite = {
 
     this.disposables.push(
       vscode.commands.registerCommand("kite.help", () => {
-        opn("https://help.kite.com/category/46-vs-code-integration");
+        open("https://help.kite.com/category/46-vs-code-integration");
       })
     );
 
