@@ -130,7 +130,6 @@ export const Kite = {
       )
     );
 
-    console.log(CodeFinderSupport());
     this.disposables.push(
       vscode.languages.registerCodeLensProvider(
         CodeFinderSupport(),
