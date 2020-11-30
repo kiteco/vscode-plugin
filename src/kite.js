@@ -50,6 +50,8 @@ export const Kite = {
   },
 
   _activate() {
+    this.globalState.setKeysForSync(["kite.showWelcomeNotificationOnStartup"]);
+    
     metrics.featureRequested("starting");
 
     this.reset();
