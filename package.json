@@ -169,7 +169,8 @@
           "python"
         ],
         "extensions": [
-          ".py"
+          ".py",
+          ".pyw"
         ]
       },
       {
