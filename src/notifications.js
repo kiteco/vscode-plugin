@@ -1,5 +1,6 @@
 import vscode from "vscode";
 import open from "open";
+import path from "path";
 
 import metrics from "./metrics";
 
@@ -44,6 +45,9 @@ export default class NotificationsManager {
 
       if (responseData && typeof responseData === 'string') {
         switch (responseData.trim()) {
+          case "ErrPathHasUnsupportedExtension":
+            vscode.window.showWarningMessage(`Code Finder does not support the \`${path.extname(filename)}\` file extension yet.`);
+            return;
           case "ErrPathNotInSupportedProject":
             vscode.window.showWarningMessage(`The file ${filename} is not in any Git project. Code finder only works inside Git projects.`);
             return;
