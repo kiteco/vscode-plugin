@@ -23,7 +23,7 @@ export default class NotificationsManager {
     }
   }
 
-  static getRelatedCodeErrHandler(filename, lineNo, fileName) {
+  static getRelatedCodeErrHandler(filename, lineNo) {
     return (err) => {
       if (!err) {
         return;
@@ -57,8 +57,7 @@ export default class NotificationsManager {
             vscode.window.showWarningMessage(`Line ${lineNo} in file ${filename} is empty. Code finder only works in non-empty lines.`);
             return;
           case "ErrPathHasUnsupportedExtension": {
-            const fileExt = path.extname(fileName);
-            vscode.window.showWarningMessage(`Code Finder does not support the \`${fileExt}\` file extension yet.`);
+            vscode.window.showWarningMessage(`Code Finder does not support the \`${path.extname(filename)}\` file extension yet.`);
             return;
           }
         }

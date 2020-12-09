@@ -218,7 +218,7 @@ export const Kite = {
       vscode.commands.registerTextEditorCommand("kite.related-code-from-file", (textEditor) => {
         KiteAPI
           .requestRelatedCode("vscode", vscode.env.appRoot, textEditor.document.fileName)
-          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, 0, textEditor.document.fileName));
+          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, 0));
       })
     );
 
@@ -240,7 +240,7 @@ export const Kite = {
 
         requireNonEmptyLine
           .then(() => KiteAPI.requestRelatedCode("vscode", vscode.env.appRoot, textEditor.document.fileName, oneBasedLineNo))
-          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, oneBasedLineNo, textEditor.document.fileName));
+          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, oneBasedLineNo));
       })
     );
 
