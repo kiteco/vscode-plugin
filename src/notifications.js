@@ -1,5 +1,6 @@
 import vscode from "vscode";
 import open from "open";
+import path from "path";
 
 import metrics from "./metrics";
 
@@ -22,7 +23,7 @@ export default class NotificationsManager {
     }
   }
 
-  static getRelatedCodeErrHandler(filename, lineNo) {
+  static getRelatedCodeErrHandler(filename, lineNo, fileName) {
     return (err) => {
       if (!err) {
         return;
@@ -55,6 +56,11 @@ export default class NotificationsManager {
           case "ErrEmptyLine":
             vscode.window.showWarningMessage(`Line ${lineNo} in file ${filename} is empty. Code finder only works in non-empty lines.`);
             return;
+          case "ErrPathHasUnsupportedExtension": {
+            const fileExt = path.extname(fileName);
+            vscode.window.showWarningMessage(`Code Finder does not support the \`${fileExt}\` file extension yet.`);
+            return;
+          }
         }
       }
 
