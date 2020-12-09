@@ -45,6 +45,9 @@ export default class NotificationsManager {
 
       if (responseData && typeof responseData === 'string') {
         switch (responseData.trim()) {
+          case "ErrPathHasUnsupportedExtension":
+            vscode.window.showWarningMessage(`Code Finder does not support the \`${path.extname(filename)}\` file extension yet.`);
+            return;
           case "ErrPathNotInSupportedProject":
             vscode.window.showWarningMessage(`The file ${filename} is not in any Git project. Code finder only works inside Git projects.`);
             return;
@@ -56,10 +59,6 @@ export default class NotificationsManager {
           case "ErrEmptyLine":
             vscode.window.showWarningMessage(`Line ${lineNo} in file ${filename} is empty. Code finder only works in non-empty lines.`);
             return;
-          case "ErrPathHasUnsupportedExtension": {
-            vscode.window.showWarningMessage(`Code Finder does not support the \`${path.extname(filename)}\` file extension yet.`);
-            return;
-          }
         }
       }
 
