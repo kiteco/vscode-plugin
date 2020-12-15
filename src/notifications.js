@@ -49,7 +49,9 @@ export default class NotificationsManager {
           vscode.window.showWarningMessage(message);
           return;
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error(e);
+      }
 
       showDefaultErrMsg();
     };
