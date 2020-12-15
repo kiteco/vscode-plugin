@@ -318,6 +318,11 @@
           "type": "array",
           "default": [],
           "description": "Array of file extensions for which Kite will not provide completions, e.g. ['.go', '.ts']. Requires restart of VSCode."
+        },
+        "kite.codefinder.enableLineDecoration": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enables ..."
         }
       }
     }

@@ -15,13 +15,11 @@ import {
   PythonHoverSupport,
   PythonSignaturesSupport,
   IsSupportedFile,
-  CodeFinderSupport,
 } from "./constants";
 import KiteHoverProvider from "./hover";
 import KiteCompletionProvider from "./completion";
 import KiteSignatureProvider from "./signature";
 import KiteDefinitionProvider from "./definition";
-import KiteCodeLensProvider from './codelens-provider';
 import KiteEditor from "./kite-editor";
 import EditorEvents from "./events";
 import NotificationsManager from "./notifications";
@@ -36,6 +34,7 @@ import {
 } from "./utils";
 import { version } from "../package.json";
 import { DEFAULT_MAX_FILE_SIZE } from "kite-api";
+import KiteRelatedCodeDecorationsProvider from './codenav-decoration';
 
 const RUN_KITE_ATTEMPTS = 30;
 const RUN_KITE_INTERVAL = 2500;
@@ -127,13 +126,6 @@ export const Kite = {
         new KiteSignatureProvider(Kite),
         "(",
         ","
-      )
-    );
-
-    this.disposables.push(
-      vscode.languages.registerCodeLensProvider(
-        CodeFinderSupport(),
-        new KiteCodeLensProvider()
       )
     );
 
@@ -252,6 +244,8 @@ export const Kite = {
           .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, oneBasedLineNo));
       })
     );
+
+    this.disposables.push(new KiteRelatedCodeDecorationsProvider());
 
     this.disposables.push(
       vscode.commands.registerCommand("kite.open-copilot", () => {
@@ -605,11 +599,11 @@ export const Kite = {
           this.statusBarItem.color = ERROR_COLOR();
           this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not supported";
           break;
-        case KiteAPI.STATES.UNINSTALLED:
-          this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not installed";
-          this.statusBarItem.tooltip = "Kite engine is not installed";
-          this.statusBarItem.color = ERROR_COLOR();
-          break;
+        // case KiteAPI.STATES.UNINSTALLED:
+        //   this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not installed";
+        //   this.statusBarItem.tooltip = "Kite engine is not installed";
+        //   this.statusBarItem.color = ERROR_COLOR();
+        //   break;
         case KiteAPI.STATES.INSTALLED:
           this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not running";
           this.statusBarItem.tooltip = "Kite engine is not running";
