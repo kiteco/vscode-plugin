@@ -328,7 +328,6 @@
     }
   },
   "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "node ./node_modules/vscode/bin/test",
     "cleanup": "rm -f package-lock.json && rm -rf node_modules",
     "vscode:prepublish": "webpack --config config/webpack.config.js --mode production",
