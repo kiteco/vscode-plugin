@@ -17,12 +17,6 @@ import * as KiteAPI from "kite-api";
 import { codenavDecorationLinePath } from './urls';
 
 const relatedCodeLineDecoration: TextEditorDecorationType = window.createTextEditorDecorationType({
-  after: {
-    margin: '0 0 0 3em',
-    color: '#4784d6',
-    fontWeight: 'normal',
-    fontStyle: 'normal',
-  },
   rangeBehavior: DecorationRangeBehavior.ClosedOpen,
 });
 
@@ -70,6 +64,10 @@ export default class KiteRelatedCodeDecorationsProvider {
         renderOptions: {
           after: {
             contentText: `${this.lineInfo.inlineMessage}`,
+            margin: '0 0 0 3em',
+            color: '#4784d6',
+            fontWeight: 'normal',
+            fontStyle: 'normal',
           }
         }
       };
