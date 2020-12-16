@@ -1,6 +1,8 @@
+import * as path from 'path';
 import {
   DecorationOptions,
   DecorationRangeBehavior,
+  extensions,
   MarkdownString,
   Position,
   Range,
@@ -76,7 +78,8 @@ export default class KiteRelatedCodeDecorationsProvider {
   }
 
   private hoverMessage(hover: string): MarkdownString {
-    const md = new MarkdownString(`[${hover}](command:kite.related-code-from-line)`);
+    const logo = path.join(extensions.getExtension("kiteco.kite").extensionPath , "/dist/assets/images/logo-white.svg");
+    const md = new MarkdownString(`![KiteIcon](${logo}|height=10,backgroundColor=#4784d6) [${hover}](command:kite.related-code-from-line)`);
     // Must mark as trusted to run commands in MarkdownStrings
     md.isTrusted = true;
     return md;
