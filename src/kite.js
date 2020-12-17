@@ -232,7 +232,7 @@ export const Kite = {
         const oneBasedLineNo = zeroBasedLineNo+1;
         KiteAPI
           .requestRelatedCode("vscode", vscode.env.appRoot, textEditor.document.fileName, oneBasedLineNo)
-          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, oneBasedLineNo));
+          .catch(NotificationsManager.getRelatedCodeErrHandler());
       })
     );
 
