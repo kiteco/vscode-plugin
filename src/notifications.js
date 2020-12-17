@@ -43,23 +43,14 @@ export default class NotificationsManager {
         return;
       }
 
-      if (responseData && typeof responseData === 'string') {
-        switch (responseData.trim()) {
-          case "ErrPathHasUnsupportedExtension":
-            vscode.window.showWarningMessage(`Code Finder does not support the \`${path.extname(filename)}\` file extension yet.`);
-            return;
-          case "ErrPathNotInSupportedProject":
-            vscode.window.showWarningMessage(`The file ${filename} is not in any Git project. Code finder only works inside Git projects.`);
-            return;
-          case "ErrProjectStillIndexing":
-            vscode.window.showWarningMessage(
-              "Kite is not done indexing your project yet. Please wait for the status icon to switch to ready before using Code Finder."
-            );
-            return;
-          case "ErrEmptyLine":
-            vscode.window.showWarningMessage(`Line ${lineNo} in file ${filename} is empty. Code finder only works in non-empty lines.`);
-            return;
+      try {
+        const { message } = JSON.parse(responseData);
+        if (message && typeof responseData === 'string') {
+          vscode.window.showWarningMessage(message);
+          return;
         }
+      } catch (e) {
+        console.error(e);
       }
 
       showDefaultErrMsg();
