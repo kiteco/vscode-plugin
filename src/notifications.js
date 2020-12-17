@@ -23,7 +23,7 @@ export default class NotificationsManager {
     }
   }
 
-  static getRelatedCodeErrHandler(filename, lineNo) {
+  static getRelatedCodeErrHandler() {
     return (err) => {
       if (!err) {
         return;
