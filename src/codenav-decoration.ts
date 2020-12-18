@@ -9,6 +9,7 @@ import {
   TextEditor,
   TextEditorDecorationType,
   TextEditorSelectionChangeEvent,
+  ThemeColor,
   window,
   workspace
 } from 'vscode';
@@ -65,7 +66,7 @@ export default class KiteRelatedCodeDecorationsProvider {
           after: {
             contentText: `${this.lineInfo.inlineMessage}`,
             margin: '0 0 0 3em',
-            color: '#4784d6',
+            color: new ThemeColor('textLink.activeForeground'),
             fontWeight: 'normal',
             fontStyle: 'normal',
           }
@@ -77,7 +78,7 @@ export default class KiteRelatedCodeDecorationsProvider {
 
   private hoverMessage(hover: string): MarkdownString {
     const logo = path.join(extensions.getExtension("kiteco.kite").extensionPath , "/dist/assets/images/logo-white.svg");
-    const md = new MarkdownString(`![KiteIcon](${logo}|height=10,backgroundColor=#4784d6) [${hover}](command:kite.related-code-from-line)`);
+    const md = new MarkdownString(`![KiteIcon](${logo}|height=10) [${hover}](command:kite.related-code-from-line)`);
     // Must mark as trusted to run commands in MarkdownStrings
     md.isTrusted = true;
     return md;
