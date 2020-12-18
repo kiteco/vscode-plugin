@@ -1,14 +1,14 @@
 'use strict';
 
 const expect = require('expect.js');
-const {kite} = require('../src/kite');
+const kite = require('../src/kite');
 const sinon = require('sinon');
 const vscode = require('vscode');
 const KiteAPI = require('kite-api');
-const {withKite} = require('kite-api/test/helpers/kite');
-const {waitsFor} = require('./helpers');
+const { withKite } = require('kite-api/test/helpers/kite');
+const { waitsFor } = require('./helpers');
 
-withKite({running: false}, () => {
+withKite({ running: false }, () => {
   let spy, spy2;
 
   describe('when startKiteAtStartup is disabled', () => {
@@ -18,12 +18,12 @@ withKite({running: false}, () => {
           startKiteAtStartup: false,
           loggingLevel: 'info',
           get(key) {
-            return this[key]
+            return this[key];
           }
-        }
+        };
       });
       spy = sinon.spy(KiteAPI, 'runKiteAndWait');
-      kite._activate();
+      kite.activate({ globalState: {}});
     });
 
     afterEach('package deactivation', () => {
@@ -44,12 +44,12 @@ withKite({running: false}, () => {
           startKiteEngineOnStartup: true,
           loggingLevel: 'info',
           get(key) {
-            return this[key]
+            return this[key];
           }
-        }
+        };
       });
       spy = sinon.spy(KiteAPI, 'runKiteAndWait');
-      kite._activate();
+      kite.activate({ globalState: {}});
     });
 
     afterEach('package deactivation', () => {

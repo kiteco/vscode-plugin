@@ -5,7 +5,7 @@
   "version": "0.134.0",
   "publisher": "kiteco",
   "engines": {
-    "vscode": "^1.28.0"
+    "vscode": "^1.32.0"
   },
   "icon": "logo.png",
   "galleryBanner": {
@@ -328,7 +328,8 @@
     }
   },
   "scripts": {
-    "test": "node ./node_modules/vscode/bin/test",
+    "compile-test": "rm -rf ./out/test && webpack --config config/webpack.tests.config.js --mode none",
+    "test": "npm run compile-test && node ./out/test/runTests.js",
     "cleanup": "rm -f package-lock.json && rm -rf node_modules",
     "vscode:prepublish": "webpack --config config/webpack.config.js --mode production",
     "compile-prod": "webpack --config config/webpack.config.js --mode production",
@@ -353,9 +354,9 @@
     "@atom/temp": "^0.8.4",
     "@types/md5": "^2.2.1",
     "@types/mixpanel": "^2.14.2",
-    "@types/mocha": "^2.2.32",
-    "@types/node": "^6.0.40",
-    "@types/vscode": "^1.52.0",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^10.12.21",
+    "@types/vscode": "^1.34.0",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
     "copy-webpack-plugin": "^5.0.2",
@@ -363,18 +364,20 @@
     "eslint": ">=4.18.2",
     "expect.js": "^0.3.1",
     "fs-plus": "^3.0.2",
+    "glob": "^7.1.6",
     "jsdom": "^10",
     "jsdom-global": "^3",
-    "mocha": "^5.2.0",
+    "mocha": "^6.1.4",
     "sinon": "^2.3.5",
     "terser": "^3.17.0",
     "ts-loader": "^8.0.11",
     "typescript": "^4.0.5",
     "vsce": "^1.59.0",
-    "vscode-test": "^0.4.3",
+    "vscode-test": "^1.4.1",
     "webpack": "^5.10.3",
     "webpack-cli": "^4.2.0",
     "webpack-merge-and-include-globally": "^2.1.16",
+    "webpack-node-externals": "^2.5.2",
     "widjet-test-utils": "^1.8.0"
   }
 }
