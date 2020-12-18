@@ -15,7 +15,6 @@ import {
 } from 'vscode';
 
 import * as KiteAPI from "kite-api";
-import { codenavDecorationLinePath } from './urls';
 
 const relatedCodeLineDecoration: TextEditorDecorationType = window.createTextEditorDecorationType({
   rangeBehavior: DecorationRangeBehavior.ClosedOpen,
@@ -93,23 +92,16 @@ export default class KiteRelatedCodeDecorationsProvider {
     editor.setDecorations(relatedCodeLineDecoration, []);
     this.activeEditor = editor;
     this.lineInfo = undefined;
-    const info = await this.fetchLineDecorationInfo(editor.document.fileName);
+    const info = await this.fetchDecoration(editor.document.fileName);
     if (!info) {
       return;
     }
     this.lineInfo = info;
   }
 
-  private async fetchLineDecorationInfo(filename: string): Promise<decorationStatusResponse | null> {
-    // TODO: Pull call into kite-api
+  private async fetchDecoration(filename: string): Promise<decorationStatusResponse | null> {
     try {
-      const resp = await KiteAPI.requestJSON(
-        {
-          path: codenavDecorationLinePath(),
-          method: 'POST'
-        },
-        JSON.stringify({ filename }),
-      );
+      const resp = await KiteAPI.getLineDecoration(filename);
       if (resp && !resp.err) {
         return {
           inlineMessage: resp.inline_message,

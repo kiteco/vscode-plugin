@@ -20,10 +20,6 @@ function accountPath() {
   return '/api/account/user';
 }
 
-function codenavDecorationLinePath() {
-  return '/codenav/decoration/line';
-}
-
 function statusPath(path) {
   return [
     '/clientapi/status',
@@ -161,7 +157,6 @@ function normalizeDriveLetter(str) {
 
 export {
   accountPath,
-  codenavDecorationLinePath,
   completionsPath,
   examplePath,
   hoverPath,
