@@ -5,15 +5,15 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 const testDir = path.resolve(__dirname, '..', 'test');
-const testEntries = glob.sync('*.test.js', {
-  cwd: testDir,
-}).reduce((acc, p) => {
-  if (p.includes('json')) {
-    return acc;
-  }
-  acc[p] = path.resolve(testDir, p);
-  return acc;
-}, {});
+const testEntries = glob
+  .sync('*.test.js', { cwd: testDir, })
+  .reduce((obj, filename) => {
+    if (filename.includes('json')) {
+      return obj;
+    }
+    obj[filename] = path.resolve(testDir, filename);
+    return obj;
+  }, {});
 
 module.exports = {
   entry: {
@@ -48,9 +48,5 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
-    roots: [
-      __dirname,
-      path.resolve(__dirname, '..', 'out', 'test'),
-    ]
   },
 };
