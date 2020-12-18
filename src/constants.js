@@ -31,7 +31,7 @@ function IsEnabledAndSupported(fileName) {
 function CompletionsSupport() {
   // Python has "FullCompletionsSupport" so filter from regular.
   const enabled = EnabledAndSupported()
-                  .filter(ext => ext != ".py")
+                  .filter(ext => ext != ".py" && ext != ".pyw")
                   .join(',');
   if (enabled === "") {
     return [];
@@ -53,29 +53,29 @@ function requirePythonEnabled(fn) {
 
 function FullCompletionsSupport() {
   return [
-    { pattern: "**/*.{py}", scheme: "file" },
-    { pattern: "**/*.{py}", scheme: "untitled" }
+    { pattern: "**/*.{py,pyw}", scheme: "file" },
+    { pattern: "**/*.{py,pyw}", scheme: "untitled" }
   ];
 }
 
 function DefinitionsSupport() {
   return [
-    { pattern: "**/*.{py}", scheme: "file" },
-    { pattern: "**/*.{py}", scheme: "untitled" }
+    { pattern: "**/*.{py,pyw}", scheme: "file" },
+    { pattern: "**/*.{py,pyw}", scheme: "untitled" }
   ];
 }
 
 function HoverSupport() {
   return [
-    { pattern: "**/*.{py}", scheme: "file" },
-    { pattern: "**/*.{py}", scheme: "untitled" }
+    { pattern: "**/*.{py,pyw}", scheme: "file" },
+    { pattern: "**/*.{py,pyw}", scheme: "untitled" }
   ];
 }
 
 function SignaturesSupport() {
   return [
-    { pattern: "**/*.{py}", scheme: "file" },
-    { pattern: "**/*.{py}", scheme: "untitled" }
+    { pattern: "**/*.{py,pyw}", scheme: "file" },
+    { pattern: "**/*.{py,pyw}", scheme: "untitled" }
   ];
 }
 
@@ -98,6 +98,7 @@ function SupportedExtensions() {
     ".m",
     ".php",
     ".py",
+    ".pyw",
     ".rb",
     ".scala",
     ".sh",

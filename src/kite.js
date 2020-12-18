@@ -51,6 +51,10 @@ export const Kite = {
   },
 
   _activate() {
+    if (this.globalState.setKeysForSync) {
+      this.globalState.setKeysForSync(["kite.showWelcomeNotificationOnStartup"]);
+    }
+
     metrics.featureRequested("starting");
 
     this.reset();
@@ -218,8 +222,8 @@ export const Kite = {
     this.disposables.push(
       vscode.commands.registerTextEditorCommand("kite.related-code-from-file", (textEditor) => {
         KiteAPI
-          .requestRelatedCode("vscode", textEditor.document.fileName, null, null)
-          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, 0));
+          .requestRelatedCode("vscode", vscode.env.appRoot, textEditor.document.fileName)
+          .catch(NotificationsManager.getRelatedCodeErrHandler());
       })
     );
 
@@ -227,21 +231,9 @@ export const Kite = {
       vscode.commands.registerTextEditorCommand("kite.related-code-from-line", (textEditor) => {
         const zeroBasedLineNo = textEditor.selection.active.line;
         const oneBasedLineNo = zeroBasedLineNo+1;
-
-        const requireNonEmptyLine = new Promise((resolve, reject) => {
-          if (textEditor.document.lineAt(zeroBasedLineNo).text === "") {
-            return reject({
-              data: {
-                responseData: "ErrEmptyLine"
-              }
-            });
-          }
-          return resolve();
-        });
-
-        requireNonEmptyLine
-          .then(() => KiteAPI.requestRelatedCode("vscode", textEditor.document.fileName, oneBasedLineNo, null))
-          .catch(NotificationsManager.getRelatedCodeErrHandler(textEditor.document.fileName, oneBasedLineNo));
+        KiteAPI
+          .requestRelatedCode("vscode", vscode.env.appRoot, textEditor.document.fileName, oneBasedLineNo)
+          .catch(NotificationsManager.getRelatedCodeErrHandler());
       })
     );
 

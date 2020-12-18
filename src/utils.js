@@ -165,6 +165,7 @@ const extToLangMap = new Map([
   ["m","objectivec"],
   ["php", "php"],
   ["py", "python"],
+  ["pyw", "python"],
   ["rb","ruby"],
   ["scala","scala"],
   ["sh","bash"],
