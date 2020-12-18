@@ -1,13 +1,13 @@
 const fs = require('fs');
 const expect = require('expect.js');
 const vscode = require('vscode');
-const {fixtureURI, Kite} = require('./helpers');
+const { fixtureURI, Kite } = require('./helpers');
 
-const {withKite, withKiteRoutes} = require('kite-api/test/helpers/kite');
-const {fakeResponse} = require('kite-api/test/helpers/http');
+const { withKite, withKiteRoutes } = require('kite-api/test/helpers/kite');
+const { fakeResponse } = require('kite-api/test/helpers/http');
 
 
-const KiteSignatureProvider = require('../src/signature');
+const KiteSignatureProvider = require('../src/signature').default;
 
 describe('KiteSignatureProvider', () => {
   let provider;
@@ -15,7 +15,7 @@ describe('KiteSignatureProvider', () => {
   beforeEach(() => {
     provider = new KiteSignatureProvider(Kite, true);
   });
-  withKite({reachable: true}, () => {
+  withKite({ reachable: true }, () => {
     describe('for a python function with a signature', () => {
       withKiteRoutes([
         [

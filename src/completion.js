@@ -130,11 +130,11 @@ const processCompletion = (
 };
 
 export default class KiteCompletionProvider {
-  constructor(Kite, triggers, optionalTriggers, isTest) {
+  constructor(Kite, triggers, optionalTriggers, win = window) {
     this.Kite = Kite;
     this.triggers = triggers;
     this.optionalTriggers = optionalTriggers || [];
-    this.isTest = isTest;
+    this.window = win;
   }
 
   provideCompletionItems(document, position, token, context) {
@@ -151,7 +151,7 @@ export default class KiteCompletionProvider {
   }
 
   getCompletions(document, text, filename, filterText, context) {
-    const selection = window.activeTextEditor.selection;
+    const selection = this.window.activeTextEditor.selection;
     const begin = document.offsetAt(selection.start);
     const end = document.offsetAt(selection.end);
     const enableSnippets = workspace.getConfiguration("kite").enableSnippets;

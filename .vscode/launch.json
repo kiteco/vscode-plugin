@@ -22,7 +22,11 @@
             "type": "extensionHost",
             "request": "launch",
             "runtimeExecutable": "${execPath}",
-            "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--extensionTestsPath=${workspaceFolder}/out/test", "--disable-extensions" ],
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--extensionTestsPath=${workspaceFolder}/out/test",
+                "--disable-extensions"
+            ],
             "stopOnEntry": false,
             "outFiles": [
                 "${workspaceFolder}/out/test/**/*.js"

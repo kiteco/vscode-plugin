@@ -1,12 +1,12 @@
-const fs = require('fs');
-const expect = require('expect.js');
-const vscode = require('vscode');
-const {fixtureURI, Kite} = require('./helpers');
+import fs from 'fs';
+import expect from 'expect.js';
+import vscode from 'vscode';
 
-const {withKite, withKiteRoutes} = require('kite-api/test/helpers/kite');
-const {fakeResponse} = require('kite-api/test/helpers/http');
+import { withKite, withKiteRoutes } from 'kite-api/test/helpers/kite';
+import { fakeResponse } from 'kite-api/test/helpers/http';
 
-const KiteDefinitionProvider = require('../src/definition');
+import { fixtureURI, Kite } from './helpers';
+import KiteDefinitionProvider from '../src/definition';
 
 describe('KiteDefinitionProvider', () => {
   let provider;
@@ -14,12 +14,12 @@ describe('KiteDefinitionProvider', () => {
   beforeEach(() => {
     provider = new KiteDefinitionProvider(Kite, true);
   });
-  withKite({reachable: true}, () => {
+  withKite({ reachable: true }, () => {
     describe('when the endpoints returns a definition', () => {
       withKiteRoutes([
         [
           o => /\/api\/buffer\/vscode\/.*\/hover/.test(o.path),
-          o => fakeResponse(200, fs.readFileSync(fixtureURI('test/increment.json').toString()))
+          () => fakeResponse(200, fs.readFileSync(fixtureURI('test/increment.json').toString()))
         ]
       ]);
 
@@ -42,7 +42,7 @@ describe('KiteDefinitionProvider', () => {
       withKiteRoutes([
         [
           o => /\/api\/buffer\/vscode\/.*\/hover/.test(o.path),
-          o => fakeResponse(404)
+          () => fakeResponse(404)
         ]
       ]);
 

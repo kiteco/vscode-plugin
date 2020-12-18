@@ -1,25 +1,31 @@
-const fs = require('fs');
-const expect = require('expect.js');
-const vscode = require('vscode');
-const {fixtureURI, Kite} = require('./helpers');
+import fs from 'fs';
+import expect from 'expect.js';
+import vscode from 'vscode';
 
-const {withKite, withKiteRoutes} = require('kite-api/test/helpers/kite');
-const {fakeResponse} = require('kite-api/test/helpers/http');
+import { withKite, withKiteRoutes } from 'kite-api/test/helpers/kite';
+import { fakeResponse } from 'kite-api/test/helpers/http';
 
-const KiteCompletionProvider = require('../src/completion');
+import { fixtureURI, Kite } from './helpers';
+import KiteCompletionProvider from '../src/completion';
+
+const mockWindow = {
+  activeTextEditor: {
+    selection: new vscode.Selection(new vscode.Position(19, 13), new vscode.Position(19,13))
+  }
+};
 
 describe('KiteCompletionProvider', () => {
   let provider;
 
   beforeEach(() => {
-    provider = new KiteCompletionProvider(Kite, true);
+    provider = new KiteCompletionProvider(Kite, ['a'], ['('], mockWindow);
   });
-  withKite({reachable: true}, () => {
+  withKite({ reachable: true }, () => {
     describe('when the endpoints returns some completions', () => {
       withKiteRoutes([
         [
-          o => /\/clientapi\/editor\/completions/.test(o.path),
-          o => fakeResponse(200, fs.readFileSync(fixtureURI('completions.json').toString()))
+          o => /\/clientapi\/editor\/complete/.test(o.path),
+          () => fakeResponse(200, fs.readFileSync(fixtureURI('completions.json').toString()))
         ]
       ]);
 
@@ -27,17 +33,17 @@ describe('KiteCompletionProvider', () => {
         const uri = vscode.Uri.file(fixtureURI('sample.py'));
 
         return vscode.workspace.openTextDocument(uri)
-        .then(doc => provider.provideCompletionItems(doc, new vscode.Position(19, 13), null))
-        .then(res => {
-          expect(res.length).to.eql(2);
+        .then(doc => provider.provideCompletionItems(doc, new vscode.Position(19, 13), null, { triggerCharacter: '' }))
+        .then(({ items }) => {
+          expect(items.length).to.eql(2);
 
-          expect(res[0].label).to.eql('⟠ dumps');
-          expect(res[0].insertText).to.eql('idumps');
-          expect(res[0].sortText).to.eql('0');
+          expect(items[0].label).to.eql('json.dumps');
+          expect(items[0].insertText).to.eql('dumps');
+          expect(items[0].sortText).to.eql('0');
 
-          expect(res[1].label).to.eql('⟠ dump');
-          expect(res[1].insertText).to.eql('idump');
-          expect(res[1].sortText).to.eql('1');
+          expect(items[1].label).to.contain('json.dumps(「obj」)');
+          expect(items[1].insertText.value).to.eql('dumps(${1:「obj」})$0');
+          expect(items[1].sortText).to.eql('1');
         });
       });
     });
@@ -46,15 +52,15 @@ describe('KiteCompletionProvider', () => {
       withKiteRoutes([
         [
           o => /\/clientapi\/editor\/completions/.test(o.path),
-          o => fakeResponse(404)
+          () => fakeResponse(404)
         ]
       ]);
 
-      it('returns null', () => {
+      it('returns empty array', () => {
         const uri = vscode.Uri.file(fixtureURI('sample.py'));
 
         return vscode.workspace.openTextDocument(uri)
-        .then(doc => provider.provideCompletionItems(doc, new vscode.Position(19, 13), null))
+        .then(doc => provider.provideCompletionItems(doc, new vscode.Position(19, 13), null, { triggerCharacter: '' }))
         .then(res => {
           expect(res).to.eql([]);
         });

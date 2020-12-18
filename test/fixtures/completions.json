@@ -1,32 +1,49 @@
 {
-  "language": "python",
+  "offset_encoding": "utf-32",
+
   "completions": [
     {
-      "display": "dumps",
-      "insert": "idumps",
+      "snippet": {
+        "text": "dumps",
+        "placeholders": []
+      },
+      "replace": {
+        "begin": 17,
+        "end": 18
+      },
+      "display": "json.dumps",
+
+      "web_id": "json.dumps",
+      "local_id": "python;;;;json.dumps",
+
       "hint": "function",
-      "id": "json.dumps",
-      "documentation_text": "some dumps documentation",
-      "symbol": {
-        "value": [
-          {
-            "repr": "json.dumps"
-          }
-        ]
-      }
-    }, {
-      "display": "dump",
-      "insert": "idump",
-      "hint": "function",
-      "id": "json.dump",
-      "documentation_text": "some dump documentation",
-      "symbol": {
-        "value": [
-          {
-            "repr": "json.dump"
-          }
-        ]
-      }
+      "documentation": {
+        "text": "..."
+      },
+      "smart": false,
+
+      "children": [
+        {
+          "snippet": {
+            "text": "dumps(「obj」)",
+            "placeholders": [{
+              "begin": 6,
+              "end": 11
+            }]
+          },
+          "replace": {
+            "begin": 17,
+            "end": 18
+          },
+          "display": "json.dumps(「obj」)",
+
+          "hint": "function",
+          "documentation": {
+            "text": "..."
+          },
+          "smart": true
+        }
+      ]
     }
   ]
 }

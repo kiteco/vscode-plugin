@@ -3,15 +3,22 @@
 const glob = require('glob');
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const CopyPlugin = require('copy-webpack-plugin');
 
-const testDir = path.resolve(__dirname, '..', 'test');
+const OUT_TEST_DIR = path.resolve(__dirname, '..', 'out', 'test');
+const TEST_DIR = path.resolve(__dirname, '..', 'test');
+
+const TestNeedsUpdating = {
+  'autostart.test.js': true,
+  'json-runner.test.js': true,
+};
+
 const testEntries = glob
-  .sync('*.test.js', { cwd: testDir, })
+  .sync('*.test.js', { cwd: TEST_DIR })
   .reduce((obj, filename) => {
-    if (filename.includes('json')) {
-      return obj;
+    if (!TestNeedsUpdating[filename]) {
+      obj[filename] = path.resolve(TEST_DIR, filename);
     }
-    obj[filename] = path.resolve(testDir, filename);
     return obj;
   }, {});
 
@@ -22,11 +29,12 @@ module.exports = {
     ...testEntries
   },
   output: {
-    path: path.resolve(__dirname, '..', 'out', 'test'),
+    path: OUT_TEST_DIR,
     filename: '[name]',
     libraryTarget: 'commonjs2',
     devtoolModuleFilenameTemplate: '../[resource-path]'
   },
+  devtool: 'source-map',
   target: 'node',
   externals: [
     {
@@ -34,6 +42,7 @@ module.exports = {
       fs: 'commonjs2 fs',
       crypto: 'commonjs2 crypto',
       child_process: 'commonjs2 child_process',
+      ['editors-json-tests']: 'commonjs2 editors-json-tests',
     },
     nodeExternals()
   ],
@@ -49,4 +58,14 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
   },
+  plugins: [
+    new CopyPlugin([
+      {
+        from: 'fixtures/',
+        to: path.resolve(OUT_TEST_DIR, 'fixtures/')
+      }
+    ],
+    { context: TEST_DIR }
+    )
+  ],
 };
