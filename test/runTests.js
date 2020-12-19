@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { runTests } from 'vscode-test';
+import { runTests, downloadAndUnzipVSCode } from 'vscode-test';
 
 async function main() {
   try {
@@ -12,12 +12,17 @@ async function main() {
     // Passed to --extensionTestsPath
     const extensionTestsPath = path.resolve(__dirname, './out/test');
 
-    // Download VS Code, unzip it and run the integration test
-    await runTests({
+    const vscodeExecutablePath = await downloadAndUnzipVSCode('stable');
+    console.log("Finished downloading VSCode to ", vscodeExecutablePath);
+
+    const exitCode = await runTests({
+      vscodeExecutablePath,
       extensionDevelopmentPath,
       extensionTestsPath,
       launchArgs: ['--disable-extensions']
     });
+
+    console.log("Finished running tests with exit code", exitCode);
   } catch (err) {
     console.error('Failed to run tests: ', err);
     process.exit(1);
