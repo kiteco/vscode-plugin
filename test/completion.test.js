@@ -1,7 +1,7 @@
 import fs from 'fs';
 import vscode from 'vscode';
 
-import { expect } from 'chai';
+import { assert } from 'chai';
 import { withKite, withKiteRoutes } from 'kite-api/test/helpers/kite';
 import { fakeResponse } from 'kite-api/test/helpers/http';
 
@@ -35,15 +35,15 @@ describe('KiteCompletionProvider', () => {
         return vscode.workspace.openTextDocument(uri)
         .then(doc => provider.provideCompletionItems(doc, new vscode.Position(19, 13), null, { triggerCharacter: '' }))
         .then(({ items }) => {
-          expect(items.length).to.eql(2);
+          assert.equal(items.length, 2);
 
-          expect(items[0].label).to.eql('json.dumps');
-          expect(items[0].insertText).to.eql('dumps');
-          expect(items[0].sortText).to.eql('0');
+          assert.equal(items[0].label, 'json.dumps');
+          assert.equal(items[0].insertText, 'dumps');
+          assert.equal(items[0].sortText, '0');
 
-          expect(items[1].label).to.contain('json.dumps(「obj」)');
-          expect(items[1].insertText.value).to.eql('dumps(${1:「obj」})$0');
-          expect(items[1].sortText).to.eql('1');
+          assert.include(items[1].label, 'json.dumps(「obj」)');
+          assert.equal(items[1].insertText.value, 'dumps(${1:「obj」})$0');
+          assert.equal(items[1].sortText, '1');
         });
       });
     });
@@ -61,9 +61,7 @@ describe('KiteCompletionProvider', () => {
 
         return vscode.workspace.openTextDocument(uri)
         .then(doc => provider.provideCompletionItems(doc, new vscode.Position(19, 13), null, { triggerCharacter: '' }))
-        .then(res => {
-          expect(res).to.eql([]);
-        });
+        .then(res => assert.deepEqual(res, []));
       });
     });
   });

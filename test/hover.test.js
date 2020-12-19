@@ -1,7 +1,7 @@
 import fs from 'fs';
 import vscode from 'vscode';
 
-import { expect } from 'chai';
+import { assert } from 'chai';
 import { withKite, withKiteRoutes } from 'kite-api/test/helpers/kite';
 import { fakeResponse } from 'kite-api/test/helpers/http';
 
@@ -29,11 +29,11 @@ describe('KiteHoverProvider', () => {
         return vscode.workspace.openTextDocument(uri)
         .then(doc => provider.provideHover(doc, new vscode.Position(19, 13), null))
         .then(({ contents }) => {
-          expect(contents.length).to.eql(1);
+          assert.equal(contents.length, 1);
           const contentString = contents[0].value;
 
-          expect(contentString).to.contain('[Docs](command:kite.more-position?{"position":{"line":19,"character":13},"source":"Hover"}');
-          expect(contentString).to.contain('[Def](command:kite.def?{"file":"sample.py","line":50,"source":"Hover"})');
+          assert.include(contentString, '[Docs](command:kite.more-position?{"position":{"line":19,"character":13},"source":"Hover"}');
+          assert.include(contentString, '[Def](command:kite.def?{"file":"sample.py","line":50,"source":"Hover"})');
         });
       });
     });
@@ -52,10 +52,10 @@ describe('KiteHoverProvider', () => {
         return vscode.workspace.openTextDocument(uri)
         .then(doc => provider.provideHover(doc, new vscode.Position(19, 13), null))
         .then(({ contents }) => {
-          expect(contents.length).to.eql(1);
+          assert.equal(contents.length, 1);
           const contentString = contents[0].value;
 
-          expect(contentString).to.contain('[Docs](command:kite.more-position?{"position":{"line":19,"character":13},"source":"Hover"}');
+          assert.include(contentString, '[Docs](command:kite.more-position?{"position":{"line":19,"character":13},"source":"Hover"}');
         });
       });
     });
@@ -75,15 +75,15 @@ describe('KiteHoverProvider', () => {
         return vscode.workspace.openTextDocument(uri)
         .then(doc => provider.provideHover(doc, new vscode.Position(19, 13), null))
         .then(({ contents }) => {
-          expect(contents.length).to.eql(1);
+          assert.equal(contents.length, 1);
           const contentString = contents[0].value;
 
-          expect(contentString).to.contain('[Docs](command:kite.more-position?{"position":{"line":19,"character":13},"source":"Hover"}');
+          assert.include(contentString, '[Docs](command:kite.more-position?{"position":{"line":19,"character":13},"source":"Hover"}');
 
           const data = JSON.parse(osjson);
-          for (const value of data["symbol"][0]["value"]){
-            expect(contentString).to.contain(["_", value["type"], "_"].join(""));
-          }
+          data["symbol"][0]["value"].forEach(({ type }) => {
+            assert.include(contentString, type);
+          });
         });
       });
     });
@@ -103,16 +103,16 @@ describe('KiteHoverProvider', () => {
         return vscode.workspace.openTextDocument(uri)
         .then(doc => provider.provideHover(doc, new vscode.Position(19, 13), null))
         .then(({ contents }) => {
-          expect(contents.length).to.eql(1);
+          assert.equal(contents.length, 1);
           const contentString = contents[0].value;
 
-          expect(contentString).to.contain("[Docs](command:kite.more-position");
-          expect(contentString).to.contain('"position":{"line":19,"character":13}');
+          assert.include(contentString, "[Docs](command:kite.more-position");
+          assert.include(contentString, '"position":{"line":19,"character":13}');
 
           const data = JSON.parse(selfjson);
-          for (const value of data["symbol"][0]["value"]){
-            expect(contentString).to.contain(["_", value["type"], "_"].join(""));
-          }
+          data["symbol"][0]["value"].forEach(({ type }) => {
+            assert.include(contentString, type);
+          });
         });
       });
     });
@@ -130,9 +130,7 @@ describe('KiteHoverProvider', () => {
 
         return vscode.workspace.openTextDocument(uri)
         .then(doc => provider.provideHover(doc, new vscode.Position(19, 13), null))
-        .then(res => {
-          expect(res).to.equal(undefined);
-        });
+        .then(res => assert.equal(res, undefined));
       });
     });
   });
