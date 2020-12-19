@@ -1,7 +1,7 @@
 import fs from 'fs';
-import expect from 'expect.js';
 import vscode from 'vscode';
 
+import { expect } from 'chai';
 import { withKite, withKiteRoutes } from 'kite-api/test/helpers/kite';
 import { fakeResponse } from 'kite-api/test/helpers/http';
 
@@ -131,7 +131,7 @@ describe('KiteHoverProvider', () => {
         return vscode.workspace.openTextDocument(uri)
         .then(doc => provider.provideHover(doc, new vscode.Position(19, 13), null))
         .then(res => {
-          expect(res).to.be(undefined);
+          expect(res).to.equal(undefined);
         });
       });
     });

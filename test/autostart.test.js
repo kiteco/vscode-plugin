@@ -1,6 +1,6 @@
 'use strict';
 
-const expect = require('expect.js');
+const expect = require('chai').expect;
 const kite = require('../src/kite');
 const sinon = require('sinon');
 const vscode = require('vscode');

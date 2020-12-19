@@ -1,8 +1,9 @@
 'use strict';
 
-import expect from 'expect.js';
-import sinon from 'sinon';
 import vscode from 'vscode';
+
+import { expect } from 'chai';
+import sinon from 'sinon';
 
 import EditorEvents from '../src/events';
 import { fixtureURI } from './helpers';
