@@ -370,6 +370,7 @@
     "jsdom-global": "^3",
     "mocha": "^6.1.4",
     "sinon": "^2.3.5",
+    "source-map-support": "^0.5.19",
     "terser": "^3.17.0",
     "ts-loader": "^8.0.11",
     "typescript": "^4.0.5",

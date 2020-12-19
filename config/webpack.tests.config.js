@@ -14,23 +14,24 @@ const TestNeedsUpdating = {
 };
 
 const testEntries = glob
-  .sync('*.test.js', { cwd: TEST_DIR })
+  .sync('*.test.{js,ts}', { cwd: TEST_DIR })
   .reduce((obj, filename) => {
     if (!TestNeedsUpdating[filename]) {
-      obj[filename] = path.resolve(TEST_DIR, filename);
+      const filenameWithoutExt = filename.replace(path.extname(filename), '');
+      obj[filenameWithoutExt] = path.resolve(TEST_DIR, filename);
     }
     return obj;
   }, {});
 
 module.exports = {
   entry: {
-    ['runTests.js']: path.resolve(__dirname, '..', 'test', 'runTests.js'),
-    ['index.js']: path.resolve(__dirname, '..', 'test', 'index.ts'),
+    ['runTests']: path.resolve(__dirname, '..', 'test', 'runTests.js'),
+    ['index']: path.resolve(__dirname, '..', 'test', 'index.ts'),
     ...testEntries
   },
   output: {
     path: OUT_TEST_DIR,
-    filename: '[name]',
+    filename: '[name].js',
     libraryTarget: 'commonjs2',
     devtoolModuleFilenameTemplate: '../[resource-path]'
   },

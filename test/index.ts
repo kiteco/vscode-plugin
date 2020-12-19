@@ -12,6 +12,7 @@
 
 process.env.NODE_ENV = "test";
 
+import 'source-map-support/register';
 import * as path from 'path';
 import * as glob from 'glob';
 import Mocha = require('mocha')
