@@ -2,6 +2,7 @@ import * as path from 'path';
 import {
   DecorationOptions,
   DecorationRangeBehavior,
+  Event,
   extensions,
   MarkdownString,
   Position,
@@ -26,14 +27,18 @@ interface decorationStatusResponse {
   projectReady: boolean,
 }
 
+interface IOnDidChangeTextEditorSelection {
+  onDidChangeTextEditorSelection: Event<TextEditorSelectionChangeEvent>
+}
+
 export default class KiteRelatedCodeDecorationsProvider {
   private lineInfo: decorationStatusResponse | undefined
   private activeEditor: TextEditor | undefined
 
-  constructor() {
+  constructor(win: IOnDidChangeTextEditorSelection = window) {
     this.lineInfo = undefined;
     this.activeEditor = undefined;
-    window.onDidChangeTextEditorSelection(this.onDidChangeTextEditorSelection.bind(this));
+    win.onDidChangeTextEditorSelection(this.onDidChangeTextEditorSelection.bind(this));
   }
 
   public dispose(): void {
@@ -41,8 +46,14 @@ export default class KiteRelatedCodeDecorationsProvider {
     relatedCodeLineDecoration.dispose();
   }
 
-  private async onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent): Promise<void> {
-    if (!workspace.getConfiguration('kite').codefinder.enableLineDecoration) {
+  // For testing and easy stubbing
+  public enabled(): boolean {
+    return workspace.getConfiguration('kite').codefinder.enableLineDecoration;
+  }
+
+  // Public for testing
+  public async onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent): Promise<void> {
+    if (!this.enabled()) {
       return;
     }
 
