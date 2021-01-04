@@ -106,7 +106,6 @@ describe('KiteRelatedCodeDecorationsProvider', () => {
   });
 });
 
-// getFireEvent sets up a function to fire onDidChangeTextEditorSelection with required input
 async function setupDocument(
   decorationProvider: KiteRelatedCodeDecorationsProvider
 ) : Promise<{
