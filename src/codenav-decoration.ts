@@ -62,8 +62,8 @@ export default class KiteRelatedCodeDecorationsProvider {
     const ready = this.lineInfo && this.lineInfo.projectReady;
     if (editor !== this.activeEditor || (applicable && !ready)) {
       await this.reset(editor);
-    }
-    if (event.selections.length != 1) {
+    } else if (event.selections.length != 1) {
+      await this.reset(editor);
       return;
     }
 
