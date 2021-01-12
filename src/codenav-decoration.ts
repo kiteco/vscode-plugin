@@ -121,7 +121,7 @@ export default class KiteRelatedCodeDecorationsProvider {
         } as decorationStatusResponse;
       }
     } catch (e) {
-      console.log(e, e.data);
+      // pass
     }
     return null;
   }
