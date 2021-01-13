@@ -34,6 +34,7 @@ import {
 } from "./utils";
 import { version } from "../package.json";
 import { DEFAULT_MAX_FILE_SIZE } from "kite-api";
+import KiteRelatedCodeDecorationsProvider from './codenav-decoration';
 
 const RUN_KITE_ATTEMPTS = 30;
 const RUN_KITE_INTERVAL = 2500;
@@ -235,6 +236,8 @@ export const Kite = {
           .catch(NotificationsManager.getRelatedCodeErrHandler());
       })
     );
+
+    this.disposables.push(new KiteRelatedCodeDecorationsProvider());
 
     this.disposables.push(
       vscode.commands.registerCommand("kite.open-copilot", () => {

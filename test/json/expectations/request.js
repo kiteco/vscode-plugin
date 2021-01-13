@@ -1,14 +1,11 @@
 'use strict';
 
-const expect = require('expect.js')
-const vscode = require('vscode');
-const http = require('http');
+const expect = require('chai').expect;
 const KiteAPI = require('kite-api');
-const KiteConnect = require('kite-connector');
-const {loadPayload, substituteFromContext, buildContext, itForExpectation, inLiveEnvironment} = require('../utils');
-const {waitsFor, formatCall} = require('../../helpers')
+const { loadPayload, substituteFromContext, buildContext, itForExpectation, inLiveEnvironment } = require('../utils');
+const { waitsFor, formatCall } = require('../../helpers');
 
-let closeMatches, calls;
+let closeMatches;
 const getDesc = (expectation, root) => () => {
   const base = [
     'request to',
@@ -20,21 +17,21 @@ const getDesc = (expectation, root) => () => {
 
   if(expectation.properties.body) {
     base.push('with');
-    base.push(JSON.stringify(substituteFromContext(loadPayload(expectation.properties.body), buildContext(root))))
+    base.push(JSON.stringify(substituteFromContext(loadPayload(expectation.properties.body), buildContext(root))));
   }
 
   if (closeMatches.length > 0) {
     base.push('\nbut some calls were close');
     closeMatches.forEach((call) => {
-      base.push(`\n - ${formatCall(call)}`)
+      base.push(`\n - ${formatCall(call)}`);
     });
   } else {
     //   .map(({args: [{path, method}, payload]}) => `${method || 'GET'} ${path} '${payload || ''}'`));
     base.push(`\nbut no calls were anywhere close\n${KiteAPI.request.getCalls().map(c => {
-      let [{path, method}, payload] = c.args;
+      let [{ path, method }, payload] = c.args;
       method = method || 'GET';
 
-      return `- ${formatCall({path, method, payload})}`
+      return `- ${formatCall({ path, method, payload })}`;
     }).join('\n')}`);
   }
 
@@ -51,7 +48,7 @@ const getNotDesc = (expectation, root) => {
 
   if(expectation.properties.body) {
     base.push('with');
-    base.push(JSON.stringify(substituteFromContext(loadPayload(expectation.properties.body), buildContext(root))))
+    base.push(JSON.stringify(substituteFromContext(loadPayload(expectation.properties.body), buildContext(root))));
   }
 
   base.push('\nbut calls were found');
@@ -79,7 +76,7 @@ const mostRecentCallMatching = (data, exPath, exMethod, exPayload, context = {},
   if (calls.length === 0) { return false; }
 
   return calls.reverse().reduce((b, c, i, a) => {
-    let {path, method, body} = c;
+    let { path, method, body } = c;
     method = method || 'GET';
 
     // b is false here only if we found a call that partially matches
@@ -92,7 +89,7 @@ const mostRecentCallMatching = (data, exPath, exMethod, exPayload, context = {},
 
     if (path === exPath) {
       if (method === exMethod) {
-        closeMatches.push({path, method, body});
+        closeMatches.push({ path, method, body });
         if (!exPayload || expect.eql(JSON.parse(body), exPayload)) {
           matched = true;
           return true;
@@ -114,11 +111,11 @@ const mostRecentCallMatching = (data, exPath, exMethod, exPayload, context = {},
   }, true);
 };
 
-module.exports = ({expectation, not, root}) => {
+module.exports = ({ expectation, not, root }) => {
   beforeEach('request matching', function() {
     const promise = waitsFor(getDesc(expectation, root), () => {
       if (inLiveEnvironment()) {
-        return KiteAPI.requestJSON({path: '/testapi/request-history'})
+        return KiteAPI.requestJSON({ path: '/testapi/request-history' })
         .then((data) => {
           if (!mostRecentCallMatching(
             data,
@@ -144,7 +141,7 @@ module.exports = ({expectation, not, root}) => {
     if(not) {
       return promise.then(() => {
         throw new Error(getNotDesc(expectation, root));
-      }, () => {})
+      }, () => {});
     } else {
       return promise;
     }

@@ -1,13 +1,13 @@
 const fs = require('fs');
-const expect = require('expect.js');
+const expect = require('chai').expect;
 const vscode = require('vscode');
-const {fixtureURI, Kite} = require('./helpers');
+const { fixtureURI, Kite } = require('./helpers');
 
-const {withKite, withKiteRoutes} = require('kite-api/test/helpers/kite');
-const {fakeResponse} = require('kite-api/test/helpers/http');
+const { withKite, withKiteRoutes } = require('kite-api/test/helpers/kite');
+const { fakeResponse } = require('kite-api/test/helpers/http');
 
 
-const KiteSignatureProvider = require('../src/signature');
+const KiteSignatureProvider = require('../src/signature').default;
 
 describe('KiteSignatureProvider', () => {
   let provider;
@@ -15,12 +15,12 @@ describe('KiteSignatureProvider', () => {
   beforeEach(() => {
     provider = new KiteSignatureProvider(Kite, true);
   });
-  withKite({reachable: true}, () => {
+  withKite({ reachable: true }, () => {
     describe('for a python function with a signature', () => {
       withKiteRoutes([
         [
           o => /\/clientapi\/editor\/signatures/.test(o.path),
-          o => fakeResponse(200, fs.readFileSync(fixtureURI('plot-signatures.json').toString()))
+          () => fakeResponse(200, fs.readFileSync(fixtureURI('plot-signatures.json').toString()))
         ]
       ]);
 
@@ -30,14 +30,14 @@ describe('KiteSignatureProvider', () => {
         return vscode.workspace.openTextDocument(uri)
         .then(doc => provider.provideSignatureHelp(doc, new vscode.Position(19, 13), null))
         .then(res => {
-          expect(res.signatures.length).to.eql(1);
-          expect(res.signatures[0].label).to.eql('⟠ plot(x:list|uint64, y:list|str)');
-          expect(res.signatures[0].parameters.length).to.eql(2);
-          expect(res.signatures[0].parameters[0].label).to.eql('x:list|uint64');
-          expect(res.signatures[0].parameters[1].label).to.eql('y:list|str');
+          expect(res.signatures.length).to.equal(1);
+          expect(res.signatures[0].label).to.equal('⟠ plot(x:list|uint64, y:list|str)');
+          expect(res.signatures[0].parameters.length).to.equal(2);
+          expect(res.signatures[0].parameters[0].label).to.equal('x:list|uint64');
+          expect(res.signatures[0].parameters[1].label).to.equal('y:list|str');
 
-          expect(res.activeParameter).to.eql(1);
-          expect(res.activeSignature).to.eql(0);
+          expect(res.activeParameter).to.equal(1);
+          expect(res.activeSignature).to.equal(0);
         });
       });
     });
@@ -46,7 +46,7 @@ describe('KiteSignatureProvider', () => {
       withKiteRoutes([
         [
           o => /\/clientapi\/editor\/signatures/.test(o.path),
-          o => fakeResponse(404)
+          () => fakeResponse(404)
         ]
       ]);
 
@@ -56,7 +56,7 @@ describe('KiteSignatureProvider', () => {
         return vscode.workspace.openTextDocument(uri)
         .then(doc => provider.provideSignatureHelp(doc, new vscode.Position(19, 13), null))
         .then(res => {
-          expect(res).to.be(null);
+          expect(res).to.equal(null);
         });
       });
     });

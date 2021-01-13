@@ -1,16 +1,8 @@
 "use strict";
 
 const path = require("path");
-const sinon = require("sinon");
-const Logger = require("kite-connector/lib/logger");
 const KiteAPI = require("kite-api");
 const { promisifyReadResponse } = require("../src/utils");
-const { withKiteRoutes } = require("kite-api/test/helpers/kite");
-const { fakeResponse } = require("kite-api/test/helpers/http");
-
-before(() => {
-  sinon.stub(Logger, "log");
-});
 
 const Kite = {
   request(req, data) {
