@@ -1,11 +1,8 @@
 # Kite Autocomplete Plugin for Visual Studio Code
 
-[github-shield]: https://img.shields.io/github/stars/kiteco/vscode-plugin?style=social
-[github-url]: https://github.com/kiteco/vscode-plugin
-[twitter-shield]: https://img.shields.io/twitter/follow/kitehq?style=social
-[twitter-url]: https://twitter.com/kitehq
-[youtube-shield]: https://img.shields.io/youtube/views/L2vpOL-jHpQ?style=social
-[youtube-url]: https://www.youtube.com/watch?v=L2vpOL-jHpQ
+![GitHub Repo stars](https://img.shields.io/github/stars/kiteco/vscode-plugin?style=social)
+![Twitter Follow](https://img.shields.io/twitter/follow/kitehq?style=social)
+![YouTube Video Views](https://img.shields.io/youtube/views/L2vpOL-jHpQ?label=Kite%20Youtube&style=social)
 
 Kite is an **AI-powered** programming assistant that helps you **write code faster inside Visual Studio Code**. Kite helps you write code faster by saving you keystokes and showing you the right information at the right time. 
 
