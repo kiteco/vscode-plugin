@@ -1,6 +1,10 @@
 # Kite Autocomplete Plugin for Visual Studio Code
 
-Kite is an AI-powered programming assistant that helps you write Python & JavaScript code inside Visual Studio Code. Kite helps you write code faster by saving you keystokes and showing you the right information at the right time. Learn more about how Kite heightens VS Code's capabilities at https://kite.com/integrations/vs-code/.
+Kite is an AI-powered programming assistant that helps you write code faster inside Visual Studio Code. Kite helps you write code faster by saving you keystokes and showing you the right information at the right time. 
+
+![kite vs no kite](https://kite-public-assets.s3-us-west-1.amazonaws.com/kite-public/plugin_vs/kite_vs_nokite.mp4)
+
+Learn more about how Kite heightens VS Code's capabilities at https://kite.com/integrations/vs-code/.
 
 At a high level, Kite provides you with:
 * 🧠 __[Line-of-Code Completions](https://kite.com/blog/product/launching-line-of-code-completions-going-cloudless-and-17-million-in-funding/)__ powered by machine learning models trained on over 25 million open-source code files
