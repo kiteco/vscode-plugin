@@ -1,6 +1,6 @@
 {
   "name": "kite",
-  "displayName": "Kite AutoComplete AI Code: Python, Java, Go, PHP, C/C#/C++, Javascript, HTML/CSS, Typescript, React, Ruby, Scala, Kotlin, Bash, Vue",
+  "displayName": "Kite AutoComplete AI Code: Python, Java, Go, PHP, C/C#/C++, Javascript, HTML/CSS, Typescript, React, Ruby, Scala, Kotlin, Bash, Vue, React",
   "description": "AI powered autocomplete, code snippets, code signatures, and cursor-following documentation for VS Code. Kite supports .js .jsx .vue .tsx .ts .css .html .less .c .cc .cpp .cs .h .hpp .m .scala .java .kt .py .go .php .rb and .sh filetypes.",
   "version": "0.135.0",
   "publisher": "kiteco",

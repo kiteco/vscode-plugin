@@ -1,14 +1,23 @@
 # Kite Autocomplete Plugin for Visual Studio Code
 
-Kite is an AI-powered programming assistant that helps you write code faster inside Visual Studio Code. Kite helps you write code faster by saving you keystokes and showing you the right information at the right time. 
+Kite is an **AI-powered** programming assistant that helps you **write code faster inside Visual Studio Code**. Kite helps you write code faster by saving you keystokes and showing you the right information at the right time. 
 
-![kite vs no kite](https://kite-public-assets.s3-us-west-1.amazonaws.com/kite-public/plugin_vs/kite_vs_nokite.mp4)
+**Kite works for over all major programming languages:** Python, Java, Go, PHP, C/C#/C++, Javascript, HTML/CSS, Typescript, React, Ruby, Scala, Kotlin, Bash, Vue and React.
 
-Learn more about how Kite heightens VS Code's capabilities at https://kite.com/integrations/vs-code/.
+![kite vs no kite](https://kite-public-assets.s3-us-west-1.amazonaws.com/kite-public/plugin_vs/kite_vs_nokite.gif)
 
-At a high level, Kite provides you with:
-* 🧠 __[Line-of-Code Completions](https://kite.com/blog/product/launching-line-of-code-completions-going-cloudless-and-17-million-in-funding/)__ powered by machine learning models trained on over 25 million open-source code files
-* 🔍 __[Instant documentation](https://kite.com/copilot/)__ for the symbol underneath your cursor so you save time searching for Python docs (not yet available for JavaScript docs)
+## Features
+### Completions Powered by Machine Learning
+Kite’s code completions are powered by **machine learning** models trained on over 25 million open-source code files. **Kite also runs locally**. Your code is private and does not leave your machine.
+
+![](https://kite-public-assets.s3-us-west-1.amazonaws.com/kite-public/plugin-intellij/python_intellij_v1.gif)  
+
+
+### Instant Code Documentation
+
+Get instant documentation for the symbol underneath your cursor so you save time searching for Python docs (not yet available for JavaScript docs).
+
+![](https://kite-public-assets.s3-us-west-1.amazonaws.com/kite-public/plugin-intellij/kite_documentation.gif)
 
 
 ## Requirements
