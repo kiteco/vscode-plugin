@@ -5,7 +5,7 @@
   "version": "0.135.0",
   "publisher": "kiteco",
   "engines": {
-    "vscode": "^1.32.0"
+    "vscode": "^1.34.0"
   },
   "icon": "logo.png",
   "galleryBanner": {
@@ -374,6 +374,7 @@
   },
   "devDependencies": {
     "@atom/temp": "^0.8.4",
+    "@babel/runtime": "^7.12.5",
     "@types/chai": "^4.2.14",
     "@types/md5": "^2.2.1",
     "@types/mixpanel": "^2.14.2",
