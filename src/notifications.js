@@ -1,6 +1,5 @@
 import vscode from "vscode";
 import open from "open";
-import path from "path";
 
 import metrics from "./metrics";
 
@@ -78,22 +77,56 @@ export default class NotificationsManager {
       .then(hasDone => !hasDone && openKiteTutorial('python'));
   }
 
-  static showKiteInstallNotification(err) {
-    if (typeof err.data !== 'undefined' && err.data.state === KiteAPI.STATES.UNINSTALLED) {
-      metrics.track("vscode_kite_installer_notification_shown");
-      vscode.window
-        .showInformationMessage(
-          "Kite requires the Kite Engine backend to provide completions and documentation. Please install it to use Kite.",
-          "Install"
-        )
-        .then(item => {
-          switch (item) {
-            case "Install":
-              open("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
-              metrics.track("vscode_kite_installer_github_link_clicked");
-              break;
-          }
-        });
-    }
+  static showKiteInstallNotification() {
+    metrics.track("vscode_kite_installer_notification_shown");
+    vscode.window
+      .showInformationMessage(
+        "Kite requires the Kite Engine backend to provide completions and documentation. Please install it to use Kite.",
+        "Install"
+      )
+      .then(item => {
+        switch (item) {
+          case "Install":
+            open("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
+            metrics.track("vscode_kite_installer_github_link_clicked");
+            break;
+        }
+      });
+  }
+
+  static showKiteDownloadingNotification() {
+    metrics.track("vscode_kite_downloading_notification_shown");
+    vscode.window
+      .showInformationMessage(
+        "Kite ships with a standalone application called the Copilot that can show you documentation while you code. The Copilot will launch automatically after Kite is finished installing.",
+        "OK",
+        "Learn More"
+      )
+      .then(item => {
+        switch (item) {
+          case "OK":
+            break;
+          case "Learn More":
+            open("https://www.kite.com/copilot/");
+            break;
+        }
+      });
+  }
+
+  static showKiteInstallErrorNotification() {
+    metrics.track("vscode_kite_downloading_failed_notification_shown");
+    vscode.window
+      .showErrorMessage(
+        "There was an error installing the Kite Engine, which is required for Kite to provide completions and documentation. Please install it to use Kite.",
+        "Install"
+      )
+      .then(item => {
+        switch (item) {
+          case "Install":
+            open("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
+            metrics.track("vscode_kite_installer_github_link_clicked");
+            break;
+        }
+      });
   }
 }
