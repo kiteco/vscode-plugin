@@ -4,9 +4,9 @@
 ![Twitter Follow](https://img.shields.io/twitter/follow/kitehq?style=social)
 ![YouTube Video Views](https://img.shields.io/youtube/views/L2vpOL-jHpQ?label=Kite%20Youtube&style=social)
 
-Kite is an **AI-powered** programming assistant that helps you **write code faster inside Visual Studio Code**. Kite helps you write code faster by saving you keystokes and showing you the right information at the right time. 
+Kite is an **AI-powered** programming assistant that helps you **write code faster inside Visual Studio Code**. Kite helps you write code faster by saving you keystrokes and showing you the right information at the right time. 
 
-**Kite works for over all major programming languages:** Python, Java, Go, PHP, C/C#/C++, Javascript, HTML/CSS, Typescript, React, Ruby, Scala, Kotlin, Bash, Vue and React.
+**Kite works for all major programming languages:** Python, Java, Go, PHP, C/C#/C++, Javascript, HTML/CSS, Typescript, React, Ruby, Scala, Kotlin, Bash, Vue and React.
 
 ![kite vs no kite](https://kite-public-assets.s3-us-west-1.amazonaws.com/kite-public/plugin_vs/kite_vs_nokite.gif)
 
