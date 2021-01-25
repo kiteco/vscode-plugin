@@ -520,7 +520,7 @@ export const Kite = {
               return state;
             }
             this.shown[state] = true;
-            if (!KiteAPI.hasKiteConfig()) {
+            if (!KiteAPI.hasKiteRun()) {
               NotificationsManager.showKiteDownloadingNotification();
               this.installing = true;
               this.showCopilot = true;
@@ -529,7 +529,7 @@ export const Kite = {
                 onRemove: () => { this.installing = false; },
               })
               .catch(e => {
-                console.err(e);
+                console.error(e);
                 NotificationsManager.showKiteInstallErrorNotification();
               });
             } else {
