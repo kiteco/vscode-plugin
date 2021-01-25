@@ -1,10 +1,27 @@
 # Kite Autocomplete Plugin for Visual Studio Code
 
-Kite is an AI-powered programming assistant that helps you write Python & JavaScript code inside Visual Studio Code. Kite helps you write code faster by saving you keystokes and showing you the right information at the right time. Learn more about how Kite heightens VS Code's capabilities at https://kite.com/integrations/vs-code/.
+![GitHub Repo stars](https://img.shields.io/github/stars/kiteco/vscode-plugin?style=social)
+![Twitter Follow](https://img.shields.io/twitter/follow/kitehq?style=social)
+![YouTube Video Views](https://img.shields.io/youtube/views/L2vpOL-jHpQ?label=Kite%20Youtube&style=social)
 
-At a high level, Kite provides you with:
-* 🧠 __[Line-of-Code Completions](https://kite.com/blog/product/launching-line-of-code-completions-going-cloudless-and-17-million-in-funding/)__ powered by machine learning models trained on over 25 million open-source code files
-* 🔍 __[Instant documentation](https://kite.com/copilot/)__ for the symbol underneath your cursor so you save time searching for Python docs (not yet available for JavaScript docs)
+Kite is an **AI-powered** programming assistant that helps you **write code faster inside Visual Studio Code**. Kite helps you write code faster by saving you keystrokes and showing you the right information at the right time. 
+
+**Kite works for all major programming languages:** Python, Java, Go, PHP, C/C#/C++, Javascript, HTML/CSS, Typescript, React, Ruby, Scala, Kotlin, Bash, Vue and React.
+
+![kite vs no kite](https://kite-public-assets.s3-us-west-1.amazonaws.com/kite-public/plugin_vs/kite_vs_nokite.gif)
+
+## Features
+### Completions Powered by Machine Learning
+Kite’s code completions are powered by **machine learning** models trained on over 25 million open-source code files. **Kite also runs locally**. Your code is private and does not leave your machine.
+
+![](https://kite-public-assets.s3-us-west-1.amazonaws.com/kite-public/plugin-intellij/python_intellij_v1.gif)  
+
+
+### Instant Code Documentation
+
+Get instant documentation for the symbol underneath your cursor so you save time searching for Python docs (not yet available for JavaScript docs).
+
+![](https://kite-public-assets.s3-us-west-1.amazonaws.com/kite-public/plugin-intellij/kite_documentation.gif)
 
 
 ## Requirements
