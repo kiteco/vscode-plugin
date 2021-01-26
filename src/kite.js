@@ -523,9 +523,10 @@ export const Kite = {
             if (!KiteAPI.hasKiteRun()) {
               NotificationsManager.showKiteDownloadingNotification();
               this.installing = true;
-              this.showCopilot = true;
               KiteAPI.downloadKiteRelease({
                 install: true,
+                launchCopilot: true,
+                channel: 'vscode',
                 onRemove: () => { this.installing = false; },
               })
               .catch(e => {
@@ -545,8 +546,7 @@ export const Kite = {
                 // Guard against instances where code signing needs to complete first
                 break;
               }
-              KiteAPI.runKiteAndWait(RUN_KITE_ATTEMPTS, RUN_KITE_INTERVAL, this.showCopilot).then(() => this.checkState(src));
-              this.showCopilot = false;
+              KiteAPI.runKiteAndWait(RUN_KITE_ATTEMPTS, RUN_KITE_INTERVAL).then(() => this.checkState(src));
               this.attemptedToStartKite = true;
             }
             break;
