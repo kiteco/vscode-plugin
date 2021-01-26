@@ -254,7 +254,7 @@ export const Kite = {
 
     this.disposables.push(
       vscode.commands.registerCommand(
-        "kite.more-position",
+        "kite.copilot-docs-from-position",
         ({ position, source }) => {
           metrics.track(`${source} See info clicked`);
           const doc = vscode.window.activeTextEditor.document;
@@ -356,7 +356,7 @@ export const Kite = {
           const path = hoverPath(document, pos);
           KiteAPI.request({ path }).then(resp => {
             if (resp.statusCode === 200) {
-              vscode.commands.executeCommand("kite.more-position", {
+              vscode.commands.executeCommand("kite.copilot-docs-from-position", {
                 position: pos,
                 source: "Command"
               });

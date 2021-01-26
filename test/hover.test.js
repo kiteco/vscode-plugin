@@ -32,7 +32,7 @@ describe('KiteHoverProvider', () => {
           assert.equal(contents.length, 1);
           const contentString = contents[0].value;
 
-          assert.include(contentString, '[Docs](command:kite.more-position?{"position":{"line":19,"character":13},"source":"Hover"}');
+          assert.include(contentString, '[Docs](command:kite.copilot-docs-from-position?{"position":{"line":19,"character":13},"source":"Hover"}');
           assert.include(contentString, '[Def](command:kite.def?{"file":"sample.py","line":50,"source":"Hover"})');
         });
       });
@@ -55,7 +55,7 @@ describe('KiteHoverProvider', () => {
           assert.equal(contents.length, 1);
           const contentString = contents[0].value;
 
-          assert.include(contentString, '[Docs](command:kite.more-position?{"position":{"line":19,"character":13},"source":"Hover"}');
+          assert.include(contentString, '[Docs](command:kite.copilot-docs-from-position?{"position":{"line":19,"character":13},"source":"Hover"}');
         });
       });
     });
@@ -78,7 +78,7 @@ describe('KiteHoverProvider', () => {
           assert.equal(contents.length, 1);
           const contentString = contents[0].value;
 
-          assert.include(contentString, '[Docs](command:kite.more-position?{"position":{"line":19,"character":13},"source":"Hover"}');
+          assert.include(contentString, '[Docs](command:kite.copilot-docs-from-position?{"position":{"line":19,"character":13},"source":"Hover"}');
 
           const data = JSON.parse(osjson);
           data["symbol"][0]["value"].forEach(({ type }) => {
@@ -106,7 +106,7 @@ describe('KiteHoverProvider', () => {
           assert.equal(contents.length, 1);
           const contentString = contents[0].value;
 
-          assert.include(contentString, "[Docs](command:kite.more-position");
+          assert.include(contentString, "[Docs](command:kite.copilot-docs-from-position");
           assert.include(contentString, '"position":{"line":19,"character":13}');
 
           const data = JSON.parse(selfjson);

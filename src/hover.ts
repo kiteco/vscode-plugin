@@ -31,7 +31,7 @@ export default class KiteHoverProvider {
       if (data && data.symbol && data.symbol.length) {
         const [symbol] = data.symbol;
 
-        const docsLink = `[Docs](command:kite.more-position?${escapeCommandArguments({
+        const docsLink = `[Docs](command:kite.copilot-docs-from-position?${escapeCommandArguments({
           position,
           source: 'Hover',
         })})`;
