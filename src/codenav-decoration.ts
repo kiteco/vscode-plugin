@@ -75,8 +75,8 @@ export default class KiteRelatedCodeDecorationsProvider {
         renderOptions: {
           after: {
             contentText: `${this.lineInfo.inlineMessage}`,
-            margin: '0 0 0 3em',
-            color: new ThemeColor('textLink.activeForeground'),
+            margin: '0 0 0 4em',
+            color: new ThemeColor('textSeparator.foreground'),
             fontWeight: 'normal',
             fontStyle: 'normal',
           }
