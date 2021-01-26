@@ -12,7 +12,7 @@ describe('KiteHoverProvider', () => {
   let provider;
 
   beforeEach(() => {
-    provider = new KiteHoverProvider(Kite, true);
+    provider = new KiteHoverProvider(Kite);
   });
   withKite({ reachable: true }, () => {
     describe('for a python function with a definition', () => {
