@@ -6,7 +6,6 @@ import crypto from 'crypto';
 import mixpanel from 'mixpanel';
 
 import Logger from "kite-connector/lib/logger";
-import kitePkg from "../package.json";
 import localconfig from "./localconfig.js";
 import { metricsCounterPath, metricsCompletionSelectedPath } from "./urls";
 
@@ -104,7 +103,6 @@ export default {
   increment: name => sendFeatureMetric(name),
   getOsName,
   sendCompletionSelected,
-  version: kitePkg.version,
   track: (event, props) => {
     if (process.env.NODE_ENV !== "production") {
       console.log(`tracking ${event}`, props);
