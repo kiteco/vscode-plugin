@@ -1,6 +1,5 @@
 import vscode from "vscode";
 import open from "open";
-import path from "path";
 
 import metrics from "./metrics";
 
@@ -23,6 +22,41 @@ export default class NotificationsManager {
     }
   }
 
+  // notifyFromError takes an error from a request and parses it
+  // If it matches the expected presentational API, it will notify
+  // It returns whether it sent a notification
+  static async notifyFromError(err) {
+    const { state, responseData } = err.data;
+    if (!responseData) {
+      return false;
+    }
+
+    if (state && state <= KiteAPI.STATES.UNREACHABLE) {
+      vscode.window.showWarningMessage("Kite could not be reached. Please check that Kite engine is running.");
+      return true;
+    }
+
+    try {
+      const { notification: notif, message } = JSON.parse(responseData);
+      if (notif) {
+        // Since warning messages don't have a title, join it with body
+        let title = notif.title;
+        if (title !== "" && !title.endsWith('.')) {
+          title += ".";
+        }
+        vscode.window.showWarningMessage([title, notif.body].join(" "));
+        // handle buttons
+        return true;
+      } else if (message) {
+        vscode.window.showWarningMessage(message);
+        return true;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    return false;
+  }
+
   static getRelatedCodeErrHandler() {
     return (err) => {
       if (!err) {
@@ -36,24 +70,8 @@ export default class NotificationsManager {
         return;
       }
 
-      const { state, responseData } = err.data;
-
-      if (state && state <= KiteAPI.STATES.UNREACHABLE) {
-        vscode.window.showWarningMessage("Kite could not be reached. Please check that Kite engine is running.");
-        return;
-      }
-
-      try {
-        const { message } = JSON.parse(responseData);
-        if (message && typeof responseData === 'string') {
-          vscode.window.showWarningMessage(message);
-          return;
-        }
-      } catch (e) {
-        console.error(e);
-      }
-
-      showDefaultErrMsg();
+      const success = NotificationsManager.notifyFromError(err);
+      !success && showDefaultErrMsg();
     };
   }
 
