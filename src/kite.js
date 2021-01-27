@@ -246,13 +246,6 @@ export const Kite = {
     );
 
     this.disposables.push(
-      vscode.commands.registerCommand("kite.more", ({ id, source }) => {
-        metrics.track(`${source} See info clicked`);
-        kiteOpen(`kite://docs/${id}`);
-      })
-    );
-
-    this.disposables.push(
       vscode.commands.registerCommand("kite.web-url", url => {
         open(url.replace(/;/g, "%3B"));
       })
