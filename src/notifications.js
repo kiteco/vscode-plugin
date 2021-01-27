@@ -26,6 +26,10 @@ export default class NotificationsManager {
   // If it matches the expected presentational API, it will notify
   // It returns whether it sent a notification
   static async notifyFromError(err) {
+    if (!err.data) {
+      return false
+    }
+
     const { state, responseData } = err.data;
     if (!responseData) {
       return false;
@@ -44,8 +48,18 @@ export default class NotificationsManager {
         if (title !== "" && !title.endsWith('.')) {
           title += ".";
         }
-        vscode.window.showWarningMessage([title, notif.body].join(" "));
-        // handle buttons
+        const buttons = notif.buttons.map(b => b.text)
+        vscode.window
+          .showWarningMessage([title, notif.body].join(" "), ...buttons)
+          .then(item => {
+            const b = notif.buttons.find(b => b.text == item);
+            switch(b.action) {
+              case "open":
+                open(b.link)
+              case "dismiss":
+                // no-op closes
+            }
+          })
         return true;
       } else if (message) {
         vscode.window.showWarningMessage(message);
@@ -62,16 +76,12 @@ export default class NotificationsManager {
       if (!err) {
         return;
       }
-      const showDefaultErrMsg = () => vscode.window.showWarningMessage(
-        "Oops! Something went wrong with Code Finder. Please try again later."
-      );
-      if (!err.data) {
-        showDefaultErrMsg();
-        return;
+      const notified = NotificationsManager.notifyFromError(err);
+      if (!notified) {
+        vscode.window.showWarningMessage(
+          "Oops! Something went wrong with Code Finder. Please try again later."
+        )
       }
-
-      const success = NotificationsManager.notifyFromError(err);
-      !success && showDefaultErrMsg();
     };
   }
 
