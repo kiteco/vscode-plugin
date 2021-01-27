@@ -34,10 +34,12 @@ interface IOnDidChangeTextEditorSelection {
 export default class KiteRelatedCodeDecorationsProvider {
   private lineInfo: decorationStatusResponse | undefined
   private activeEditor: TextEditor | undefined
+  private editTimeout: ReturnType<typeof setTimeout> | undefined
 
   constructor(win: IOnDidChangeTextEditorSelection = window) {
     this.lineInfo = undefined;
     this.activeEditor = undefined;
+    this.editTimeout = undefined;
     win.onDidChangeTextEditorSelection(this.onDidChangeTextEditorSelection.bind(this));
   }
 
@@ -57,6 +59,24 @@ export default class KiteRelatedCodeDecorationsProvider {
       return;
     }
 
+    if (typeof(event.kind) !== 'undefined' && event.kind !== 1 && typeof(this.editTimeout) === 'undefined') {
+      this.decorate(event);
+
+    } else {
+      this.clearDecorations(event.textEditor);
+
+      if (typeof(this.editTimeout) !== 'undefined') {
+        clearTimeout(this.editTimeout);
+        this.editTimeout = undefined;
+      }
+
+      this.editTimeout = setTimeout(() => {
+        this.decorate(event);
+      }, 1000);
+    }
+  }
+
+  private async decorate(event: TextEditorSelectionChangeEvent): Promise<void> {
     const editor = event.textEditor;
     const applicable = this.lineInfo && this.lineInfo.projectReady !== undefined;
     const ready = this.lineInfo && this.lineInfo.projectReady;
@@ -84,6 +104,8 @@ export default class KiteRelatedCodeDecorationsProvider {
       };
       editor.setDecorations(relatedCodeLineDecoration, [opts]);
     }
+
+    this.editTimeout = undefined;
   }
 
   private hoverMessage(hover: string): MarkdownString {
@@ -100,14 +122,18 @@ export default class KiteRelatedCodeDecorationsProvider {
   }
 
   private async reset(editor: TextEditor): Promise<void> {
-    editor.setDecorations(relatedCodeLineDecoration, []);
-    this.activeEditor = editor;
-    this.lineInfo = undefined;
+    this.clearDecorations(editor);
     const info = await this.fetchDecoration(editor.document.fileName);
     if (!info) {
       return;
     }
     this.lineInfo = info;
+  }
+
+  private clearDecorations(editor: TextEditor) {
+    editor.setDecorations(relatedCodeLineDecoration, []);
+    this.activeEditor = editor;
+    this.lineInfo = undefined;
   }
 
   private async fetchDecoration(filename: string): Promise<decorationStatusResponse | null> {
