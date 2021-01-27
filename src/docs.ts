@@ -24,6 +24,11 @@ import {
 } from './utils';
 import { symbolName, symbolKindMarkdown } from './data-utils';
 
+enum Sources {
+  Command = "Command",
+  Hover = "Hover",
+}
+
 export class DocsCommands implements ICommandRegistrant {
   register(): Disposable[] {
     const ret = [];
@@ -43,16 +48,16 @@ export class DocsCommands implements ICommandRegistrant {
         if (resp.statusCode === 200) {
           commands.executeCommand("kite.copilot-docs-from-position", {
             position: pos,
-            source: "Command"
+            source: Sources.Command
           });
         }
       } catch(e) {
-        // pass
+        NotificationsManager.notifyFromError(e);
       }
     }
   }
 
-  static async copilotDocsFromPos(args: { position: Position, source: string }): Promise<void> {
+  static async copilotDocsFromPos(args: { position: Position, source: Sources }): Promise<void> {
     metrics.track(`${args.source} See info clicked`);
     const doc = window.activeTextEditor.document;
     const path = hoverPath(doc, args.position);
@@ -61,7 +66,7 @@ export class DocsCommands implements ICommandRegistrant {
       const data = JSON.parse(jdata);
       kiteOpen(`kite://docs/${data.symbol[0].id}`);
     } catch(e) {
-       // pass
+      NotificationsManager.notifyFromError(e);
     }
   }
 }
@@ -78,7 +83,7 @@ export class KiteHoverProvider {
 
         const docsLink = `[Docs](command:kite.copilot-docs-from-position?${escapeCommandArguments({
           position,
-          source: 'Hover',
+          source: Sources.Hover,
         })})`;
 
         let defLink: string;
@@ -86,7 +91,7 @@ export class KiteHoverProvider {
           const defData = escapeCommandArguments({
             file: data.report.definition.filename,
             line: data.report.definition.line,
-            source: 'Hover',
+            source: Sources.Hover,
           });
           defLink = `[Def](command:kite.def?${defData})`;
         }
