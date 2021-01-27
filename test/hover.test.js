@@ -6,7 +6,7 @@ import { withKite, withKiteRoutes } from 'kite-api/test/helpers/kite';
 import { fakeResponse } from 'kite-api/test/helpers/http';
 
 import { fixtureURI } from './helpers';
-import KiteHoverProvider from '../src/hover';
+import { KiteHoverProvider } from '../src/docs';
 
 describe('KiteHoverProvider', () => {
   let provider;

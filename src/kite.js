@@ -16,7 +16,7 @@ import {
   PythonSignaturesSupport,
   IsSupportedFile,
 } from "./constants";
-import KiteHoverProvider, { DocsCommands } from "./hover";
+import { KiteHoverProvider, DocsCommands } from "./docs";
 import KiteCompletionProvider from "./completion";
 import KiteSignatureProvider from "./signature";
 import KiteDefinitionProvider from "./definition";

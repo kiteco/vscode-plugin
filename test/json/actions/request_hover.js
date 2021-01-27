@@ -2,7 +2,7 @@
 
 const vscode = require('vscode');
 const {kite: Kite} = require('../../../src/kite');
-const KiteHoverProvider = require('../../../src/hover');
+const { KiteHoverProvider } = require('../../../src/docs');
 
 module.exports = () => {
   beforeEach('requesting hover', () => {

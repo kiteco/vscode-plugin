@@ -66,7 +66,7 @@ export class DocsCommands implements ICommandRegistrant {
   }
 }
 
-export default class KiteHoverProvider {
+export class KiteHoverProvider {
   async provideHover(doc: TextDocument, position: Position): Promise<Hover | void> {
     const path = hoverPath(doc, position);
 
