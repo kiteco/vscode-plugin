@@ -424,7 +424,6 @@ export const Kite = {
     this.disposables = [];
     this.attemptedToStartKite = false;
     this.installing = false;
-    this.showCopilot = false;
     this.notifications = new NotificationsManager();
     delete this.lastState;
     delete this.lastStatus;
