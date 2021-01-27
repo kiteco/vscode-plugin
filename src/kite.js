@@ -520,7 +520,9 @@ export const Kite = {
               return state;
             }
             this.shown[state] = true;
-            if (!KiteAPI.hasKiteRun()) {
+            if (KiteAPI.hasKiteRun()) {
+              NotificationsManager.showKiteInstallNotification();
+            } else {
               NotificationsManager.showKiteDownloadingNotification();
               this.installing = true;
               KiteAPI.downloadKiteRelease({
@@ -533,8 +535,6 @@ export const Kite = {
                 console.error(e);
                 NotificationsManager.showKiteInstallErrorNotification();
               });
-            } else {
-              NotificationsManager.showKiteInstallNotification();
             }
             break;
           case KiteAPI.STATES.INSTALLED:
@@ -543,7 +543,7 @@ export const Kite = {
               vscode.workspace.getConfiguration("kite").startKiteEngineOnStartup
             ) {
               if (this.installing) {
-                // Guard against instances where code signing needs to complete first
+                // Guard against running Kite before installation fully completes.
                 break;
               }
               KiteAPI.runKiteAndWait(RUN_KITE_ATTEMPTS, RUN_KITE_INTERVAL).then(() => this.checkState(src));
