@@ -5,14 +5,14 @@ import { assert } from 'chai';
 import { withKite, withKiteRoutes } from 'kite-api/test/helpers/kite';
 import { fakeResponse } from 'kite-api/test/helpers/http';
 
-import { fixtureURI, Kite } from './helpers';
+import { fixtureURI } from './helpers';
 import KiteHoverProvider from '../src/hover';
 
 describe('KiteHoverProvider', () => {
   let provider;
 
   beforeEach(() => {
-    provider = new KiteHoverProvider(Kite);
+    provider = new KiteHoverProvider();
   });
   withKite({ reachable: true }, () => {
     describe('for a python function with a definition', () => {

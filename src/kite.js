@@ -16,7 +16,7 @@ import {
   PythonSignaturesSupport,
   IsSupportedFile,
 } from "./constants";
-import KiteHoverProvider from "./hover";
+import KiteHoverProvider, { DocsCommands } from "./hover";
 import KiteCompletionProvider from "./completion";
 import KiteSignatureProvider from "./signature";
 import KiteDefinitionProvider from "./definition";
@@ -25,7 +25,7 @@ import EditorEvents from "./events";
 import NotificationsManager from "./notifications";
 import localconfig from "./localconfig";
 import metrics from "./metrics";
-import { statusPath, hoverPath } from "./urls";
+import { statusPath } from "./urls";
 import Rollbar from "rollbar";
 import {
   editorsForDocument,
@@ -95,7 +95,7 @@ export const Kite = {
     this.disposables.push(
       vscode.languages.registerHoverProvider(
         PythonHoverSupport(),
-        new KiteHoverProvider(Kite)
+        new KiteHoverProvider()
       )
     );
     this.disposables.push(
@@ -253,22 +253,6 @@ export const Kite = {
     );
 
     this.disposables.push(
-      vscode.commands.registerCommand(
-        "kite.copilot-docs-from-position",
-        ({ position, source }) => {
-          metrics.track(`${source} See info clicked`);
-          const doc = vscode.window.activeTextEditor.document;
-          const path = hoverPath(doc, position);
-          return this.request({ path })
-            .then(data => JSON.parse(data))
-            .then(data => {
-              kiteOpen(`kite://docs/${data.symbol[0].id}`);
-            });
-        }
-      )
-    );
-
-    this.disposables.push(
       vscode.commands.registerCommand("kite.web-url", url => {
         open(url.replace(/;/g, "%3B"));
       })
@@ -345,26 +329,7 @@ export const Kite = {
       })
     );
 
-    this.disposables.push(
-      vscode.commands.registerCommand("kite.docs-at-cursor", () => {
-        const editor = vscode.window.activeTextEditor;
-
-        if (editor) {
-          const pos = editor.selection.active;
-          const { document } = editor;
-
-          const path = hoverPath(document, pos);
-          KiteAPI.request({ path }).then(resp => {
-            if (resp.statusCode === 200) {
-              vscode.commands.executeCommand("kite.copilot-docs-from-position", {
-                position: pos,
-                source: "Command"
-              });
-            }
-          });
-        }
-      })
-    );
+    this.disposables.push(...(new DocsCommands).register())
 
     this.disposables.push(
       vscode.commands.registerCommand(
