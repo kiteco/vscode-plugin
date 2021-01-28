@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as process from 'process';
 import {
   DecorationOptions,
   DecorationRangeBehavior,
@@ -113,8 +114,11 @@ export default class KiteRelatedCodeDecorationsProvider {
   }
 
   private hoverMessage(hover: string): MarkdownString {
-    const logo = path.join(extensions.getExtension("kiteco.kite").extensionPath, "dist", "assets", "images", "logo-light-blue.svg");
-    const md = new MarkdownString(`![KiteIcon](${logo}|height=10) [${hover}](command:kite.related-code-from-line)`);
+    let logo = path.join(extensions.getExtension("kiteco.kite").extensionPath, "dist", "assets", "images", "logo-light-blue.svg");
+    if (process.platform === 'win32') {
+      logo = `file:\\\\\\${logo}`;
+    }
+    const md = new MarkdownString(`![KiteIcon](${logo}|height=12)&nbsp;&nbsp;[${hover}](command:kite.related-code-from-line)`);
     // Must mark as trusted to run commands in MarkdownStrings
     md.isTrusted = true;
     return md;
