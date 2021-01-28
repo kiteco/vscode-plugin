@@ -64,7 +64,7 @@ export default class KiteRelatedCodeDecorationsProvider {
     if (typeof(this.editTimeout) === 'undefined' && (event.kind === TextEditorSelectionChangeKind.Command || event.kind === TextEditorSelectionChangeKind.Mouse)) {
       // If timeout is not set (i.e. the decoration is already showing), and the cursor is moved by
       // a non-edit event, then show the decoration immediately.
-      this.decorate(event);
+      await this.decorate(event);
 
     } else {
       // Otherwise, show the decoration after 1 second of inactivity.

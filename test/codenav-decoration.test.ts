@@ -3,6 +3,7 @@ import {
   MarkdownString,
   Position,
   Selection,
+  TextEditorSelectionChangeKind,
   workspace,
   window,
 } from 'vscode';
@@ -126,7 +127,8 @@ async function setupDocument(
             new Position(0,0),
             new Position(0,0),
           ),
-        ]
+        ],
+        kind: TextEditorSelectionChangeKind.Mouse,
       });
     }
   };
