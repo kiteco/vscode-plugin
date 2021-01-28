@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as process from 'process';
 import {
   DecorationOptions,
   DecorationRangeBehavior,
@@ -10,6 +11,7 @@ import {
   TextEditor,
   TextEditorDecorationType,
   TextEditorSelectionChangeEvent,
+  TextEditorSelectionChangeKind,
   ThemeColor,
   window,
   workspace
@@ -34,10 +36,12 @@ interface IOnDidChangeTextEditorSelection {
 export default class KiteRelatedCodeDecorationsProvider {
   private lineInfo: decorationStatusResponse | undefined
   private activeEditor: TextEditor | undefined
+  private editTimeout: ReturnType<typeof setTimeout> | undefined
 
   constructor(win: IOnDidChangeTextEditorSelection = window) {
     this.lineInfo = undefined;
     this.activeEditor = undefined;
+    this.editTimeout = undefined;
     win.onDidChangeTextEditorSelection(this.onDidChangeTextEditorSelection.bind(this));
   }
 
@@ -57,6 +61,27 @@ export default class KiteRelatedCodeDecorationsProvider {
       return;
     }
 
+    if (typeof(this.editTimeout) === 'undefined' && (event.kind === TextEditorSelectionChangeKind.Command || event.kind === TextEditorSelectionChangeKind.Mouse)) {
+      // If timeout is not set (i.e. the decoration is already showing), and the cursor is moved by
+      // a non-edit event, then show the decoration immediately.
+      await this.decorate(event);
+
+    } else {
+      // Otherwise, show the decoration after 1 second of inactivity.
+      this.clearDecorations(event.textEditor);
+
+      if (typeof(this.editTimeout) !== 'undefined') {
+        clearTimeout(this.editTimeout);
+        this.editTimeout = undefined;
+      }
+
+      this.editTimeout = setTimeout(() => {
+        this.decorate(event);
+      }, 1000);
+    }
+  }
+
+  private async decorate(event: TextEditorSelectionChangeEvent): Promise<void> {
     const editor = event.textEditor;
     const applicable = this.lineInfo && this.lineInfo.projectReady !== undefined;
     const ready = this.lineInfo && this.lineInfo.projectReady;
@@ -75,8 +100,8 @@ export default class KiteRelatedCodeDecorationsProvider {
         renderOptions: {
           after: {
             contentText: `${this.lineInfo.inlineMessage}`,
-            margin: '0 0 0 3em',
-            color: new ThemeColor('textLink.activeForeground'),
+            margin: '0 0 0 4em',
+            color: new ThemeColor('textSeparator.foreground'),
             fontWeight: 'normal',
             fontStyle: 'normal',
           }
@@ -84,11 +109,16 @@ export default class KiteRelatedCodeDecorationsProvider {
       };
       editor.setDecorations(relatedCodeLineDecoration, [opts]);
     }
+
+    this.editTimeout = undefined;
   }
 
   private hoverMessage(hover: string): MarkdownString {
-    const logo = path.join(extensions.getExtension("kiteco.kite").extensionPath, "dist", "assets", "images", "logo-light-blue.svg");
-    const md = new MarkdownString(`![KiteIcon](${logo}|height=10) [${hover}](command:kite.related-code-from-line)`);
+    let logo = path.join(extensions.getExtension("kiteco.kite").extensionPath, "dist", "assets", "images", "logo-light-blue.svg");
+    if (process.platform === 'win32') {
+      logo = `file:\\\\\\${logo}`;
+    }
+    const md = new MarkdownString(`![KiteIcon](${logo}|height=12)&nbsp;&nbsp;[${hover}](command:kite.related-code-from-line)`);
     // Must mark as trusted to run commands in MarkdownStrings
     md.isTrusted = true;
     return md;
@@ -100,14 +130,18 @@ export default class KiteRelatedCodeDecorationsProvider {
   }
 
   private async reset(editor: TextEditor): Promise<void> {
-    editor.setDecorations(relatedCodeLineDecoration, []);
-    this.activeEditor = editor;
-    this.lineInfo = undefined;
+    this.clearDecorations(editor);
     const info = await this.fetchDecoration(editor.document.fileName);
     if (!info) {
       return;
     }
     this.lineInfo = info;
+  }
+
+  private clearDecorations(editor: TextEditor) {
+    editor.setDecorations(relatedCodeLineDecoration, []);
+    this.activeEditor = editor;
+    this.lineInfo = undefined;
   }
 
   private async fetchDecoration(filename: string): Promise<decorationStatusResponse | null> {
