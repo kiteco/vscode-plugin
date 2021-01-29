@@ -48,14 +48,14 @@ export default class NotificationsManager {
         if (title !== "" && !title.endsWith('.')) {
           title += ".";
         }
-        const buttons = notif.buttons.map(b => b.text)
+        const buttonsText = notif.buttons.map(button => button.text)
         vscode.window
-          .showWarningMessage([title, notif.body].join(" "), ...buttons)
-          .then(item => {
-            const b = notif.buttons.find(b => b.text == item);
-            switch(b.action) {
+          .showWarningMessage([title, notif.body].join(" "), ...buttonsText)
+          .then(selectedText => {
+            const selectedButton = notif.buttons.find(button => button.text == selectedText);
+            switch(selectedButton.action) {
               case "open":
-                open(b.link)
+                open(selectedButton.link)
               case "dismiss":
                 // no-op closes
             }
