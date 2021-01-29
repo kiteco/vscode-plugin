@@ -223,7 +223,7 @@ export const Kite = {
       vscode.commands.registerTextEditorCommand("kite.related-code-from-file", (textEditor) => {
         KiteAPI
           .requestRelatedCode("vscode", vscode.env.appRoot, textEditor.document.fileName)
-          .catch(NotificationsManager.getRelatedCodeErrHandler());
+          .catch(err => NotificationsManager.notifyFromError(err, "Oops! Something went wrong with Code Finder. Please try again later."));
       })
     );
 
@@ -233,7 +233,7 @@ export const Kite = {
         const oneBasedLineNo = zeroBasedLineNo+1;
         KiteAPI
           .requestRelatedCode("vscode", vscode.env.appRoot, textEditor.document.fileName, oneBasedLineNo)
-          .catch(NotificationsManager.getRelatedCodeErrHandler());
+          .catch(err => NotificationsManager.notifyFromError(err, "Oops! Something went wrong with Code Finder. Please try again later."));
       })
     );
 

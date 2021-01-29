@@ -24,20 +24,28 @@ export default class NotificationsManager {
 
   // notifyFromError takes an error from a request and parses it
   // If it matches the expected presentational API, it will notify
-  // It returns whether it sent a notification
-  static async notifyFromError(err) {
+  // using the message. Otherwise it notifies using the defaultMessage
+  // if it's passed one.
+  static async notifyFromError(err, defaultMessage) {
+    function tryNotifyDefault() {
+      if (defaultMessage) {
+        vscode.window.showWarningMessage(defaultMessage)
+      }
+    }
     if (!err.data) {
-      return false
+      tryNotifyDefault()
+      return
     }
 
     const { state, responseData } = err.data;
     if (!responseData) {
-      return false;
+      tryNotifyDefault()
+      return
     }
 
     if (state && state <= KiteAPI.STATES.UNREACHABLE) {
       vscode.window.showWarningMessage("Kite could not be reached. Please check that Kite engine is running.");
-      return true;
+      return;
     }
 
     try {
@@ -60,29 +68,15 @@ export default class NotificationsManager {
                 // no-op closes
             }
           })
-        return true;
       } else if (message) {
         vscode.window.showWarningMessage(message);
-        return true;
+      } else {
+        tryNotifyDefault();
       }
     } catch (e) {
       console.log(e);
+      tryNotifyDefault();
     }
-    return false;
-  }
-
-  static getRelatedCodeErrHandler() {
-    return (err) => {
-      if (!err) {
-        return;
-      }
-      const notified = NotificationsManager.notifyFromError(err);
-      if (!notified) {
-        vscode.window.showWarningMessage(
-          "Oops! Something went wrong with Code Finder. Please try again later."
-        )
-      }
-    };
   }
 
   static showWelcomeNotification(config, openKiteTutorial) {
