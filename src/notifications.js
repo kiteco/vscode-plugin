@@ -73,8 +73,7 @@ export default class NotificationsManager {
       } else {
         tryNotifyDefault();
       }
-    } catch (e) {
-      console.log(e);
+    } catch {
       tryNotifyDefault();
     }
   }
