@@ -101,8 +101,12 @@ export class KiteHoverProvider {
 
         return new Hover(compact([content]));
       }
-    } catch {
-      // pass
+    } catch(err) {
+      // Endpoint can 503 for paywall locked or 404 for not found symbol. Ignore those.
+      const expected = err.data && (err.data.responseStatus === 503 || err.data.responseStatus === 404)
+      if (!expected) {
+        console.log(err, err.data)
+      }
     }
   }
 }
