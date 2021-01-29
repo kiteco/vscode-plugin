@@ -199,6 +199,10 @@ export const Kite = {
 
     this.disposables.push(this.statusBarItem);
 
+    // ICommandRegistrant[] (target TS refactor for commands below)
+    const commandRegistrants = [new DocsCommands()];
+    commandRegistrants.forEach(cmdreg => this.disposables.push(...cmdreg.register()));
+
     this.disposables.push(
       vscode.commands.registerCommand("kite.insert-completion", ({ lang, completion }) => {
         metrics.increment(`vscode_kite_${lang}_completions_inserted`);
@@ -321,8 +325,6 @@ export const Kite = {
         open("https://help.kite.com/category/46-vs-code-integration");
       })
     );
-
-    this.disposables.push(...(new DocsCommands).register())
 
     this.disposables.push(
       vscode.commands.registerCommand(
