@@ -4,6 +4,12 @@ import vscode from 'vscode';
 import cp from 'child_process';
 import os from 'os';
 
+import KiteAPI from "kite-api";
+
+function promisifiedKiteAPIRequest(req, data) {
+  return KiteAPI.request(req, data).then(resp => promisifyReadResponse(resp));
+};
+
 const compact = a => a.filter(v => v && v !== '');
 
 const uniq = a => a.reduce((m, v) => m.indexOf(v) === -1 ? m.concat(v) : m, []);
@@ -202,6 +208,7 @@ export {
   promisifyReadResponse,
   promisifyRequest,
   secondsSince,
+  promisifiedKiteAPIRequest,
   stopPropagationAndDefault,
   truncate,
   uniq,

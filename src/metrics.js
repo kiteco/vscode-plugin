@@ -6,17 +6,15 @@ import crypto from 'crypto';
 import mixpanel from 'mixpanel';
 
 import Logger from "kite-connector/lib/logger";
-import kitePkg from "../package.json";
 import localconfig from "./localconfig.js";
 import { metricsCounterPath, metricsCompletionSelectedPath } from "./urls";
+import { promisifiedKiteAPIRequest } from './utils'
 
 const OS_VERSION = os.type() + " " + os.release();
 
 const EDITOR_UUID = vscode.env.machineId;
 
 const MIXPANEL_TOKEN = "fb6b9b336122a8b29c60f4c28dab6d03";
-
-import { Kite } from './kite';
 
 const mpClient = mixpanel.init(MIXPANEL_TOKEN, {
   protocol: "https",
@@ -40,7 +38,7 @@ function sendCompletionSelected(lang, completion) {
 
   const path = metricsCompletionSelectedPath();
 
-  return Kite.request(
+  return promisifiedKiteAPIRequest(
     {
       path,
       method: "POST"
@@ -62,7 +60,7 @@ function sendFeatureMetric(name) {
 
   Logger.debug("feature metric:", name);
 
-  return Kite.request(
+  return promisifiedKiteAPIRequest(
     {
       path,
       method: "POST"
@@ -104,7 +102,6 @@ export default {
   increment: name => sendFeatureMetric(name),
   getOsName,
   sendCompletionSelected,
-  version: kitePkg.version,
   track: (event, props) => {
     if (process.env.NODE_ENV !== "production") {
       console.log(`tracking ${event}`, props);

@@ -22,38 +22,60 @@ export default class NotificationsManager {
     }
   }
 
-  static getRelatedCodeErrHandler() {
-    return (err) => {
-      if (!err) {
-        return;
+  // notifyFromError takes an error from a request and parses it
+  // If it matches the expected presentational API, it will notify
+  // using the message. Otherwise it notifies using the defaultMessage
+  // if it's passed one.
+  static async notifyFromError(err, defaultMessage) {
+    function tryNotifyDefault() {
+      if (defaultMessage) {
+        vscode.window.showWarningMessage(defaultMessage)
       }
-      const showDefaultErrMsg = () => vscode.window.showWarningMessage(
-        "Oops! Something went wrong with Code Finder. Please try again later."
-      );
-      if (!err.data) {
-        showDefaultErrMsg();
-        return;
-      }
+    }
+    if (!err.data) {
+      tryNotifyDefault()
+      return
+    }
 
-      const { state, responseData } = err.data;
+    const { state, responseData } = err.data;
+    if (!responseData) {
+      tryNotifyDefault()
+      return
+    }
 
-      if (state && state <= KiteAPI.STATES.UNREACHABLE) {
-        vscode.window.showWarningMessage("Kite could not be reached. Please check that Kite engine is running.");
-        return;
-      }
+    if (state && state <= KiteAPI.STATES.UNREACHABLE) {
+      vscode.window.showWarningMessage("Kite could not be reached. Please check that Kite engine is running.");
+      return;
+    }
 
-      try {
-        const { message } = JSON.parse(responseData);
-        if (message && typeof responseData === 'string') {
-          vscode.window.showWarningMessage(message);
-          return;
+    try {
+      const { notification: notif, message } = JSON.parse(responseData);
+      if (notif) {
+        // Since warning messages don't have a title, join it with body
+        let title = notif.title;
+        if (title !== "" && !title.endsWith('.')) {
+          title += ".";
         }
-      } catch (e) {
-        console.error(e);
+        const buttonsText = notif.buttons.map(button => button.text)
+        vscode.window
+          .showWarningMessage([title, notif.body].join(" "), ...buttonsText)
+          .then(selectedText => {
+            const selectedButton = notif.buttons.find(button => button.text == selectedText);
+            switch(selectedButton.action) {
+              case "open":
+                open(selectedButton.link)
+              case "dismiss":
+                // no-op closes
+            }
+          })
+      } else if (message) {
+        vscode.window.showWarningMessage(message);
+      } else {
+        tryNotifyDefault();
       }
-
-      showDefaultErrMsg();
-    };
+    } catch {
+      tryNotifyDefault();
+    }
   }
 
   static showWelcomeNotification(config, openKiteTutorial) {

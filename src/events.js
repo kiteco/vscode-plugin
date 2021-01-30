@@ -2,8 +2,8 @@
 
 import { version as editor_version } from 'vscode';
 
-import metrics from './metrics';
-const { version: plugin_version } = metrics;
+import kitePkg from '../package.json'
+const plugin_version = kitePkg.version
 
 import { normalizeDriveLetter } from './urls';
 

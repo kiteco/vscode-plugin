@@ -16,7 +16,7 @@ import {
   PythonSignaturesSupport,
   IsSupportedFile,
 } from "./constants";
-import KiteHoverProvider from "./hover";
+import { KiteHoverProvider, DocsCommands } from "./docs";
 import KiteCompletionProvider from "./completion";
 import KiteSignatureProvider from "./signature";
 import KiteDefinitionProvider from "./definition";
@@ -25,7 +25,7 @@ import EditorEvents from "./events";
 import NotificationsManager from "./notifications";
 import localconfig from "./localconfig";
 import metrics from "./metrics";
-import { statusPath, hoverPath } from "./urls";
+import { statusPath } from "./urls";
 import Rollbar from "rollbar";
 import {
   editorsForDocument,
@@ -91,7 +91,7 @@ export const Kite = {
     this.disposables.push(
       vscode.languages.registerHoverProvider(
         PythonHoverSupport(),
-        new KiteHoverProvider(Kite)
+        new KiteHoverProvider()
       )
     );
     this.disposables.push(
@@ -195,6 +195,10 @@ export const Kite = {
 
     this.disposables.push(this.statusBarItem);
 
+    // ICommandRegistrant[] (target TS refactor for commands below)
+    const commandRegistrants = [new DocsCommands()];
+    commandRegistrants.forEach(cmdreg => this.disposables.push(...cmdreg.register()));
+
     this.disposables.push(
       vscode.commands.registerCommand("kite.insert-completion", ({ lang, completion }) => {
         metrics.increment(`vscode_kite_${lang}_completions_inserted`);
@@ -219,7 +223,7 @@ export const Kite = {
       vscode.commands.registerTextEditorCommand("kite.related-code-from-file", (textEditor) => {
         KiteAPI
           .requestRelatedCode("vscode", vscode.env.appRoot, textEditor.document.fileName)
-          .catch(NotificationsManager.getRelatedCodeErrHandler());
+          .catch(err => NotificationsManager.notifyFromError(err, "Oops! Something went wrong with Code Finder. Please try again later."));
       })
     );
 
@@ -229,7 +233,7 @@ export const Kite = {
         const oneBasedLineNo = zeroBasedLineNo+1;
         KiteAPI
           .requestRelatedCode("vscode", vscode.env.appRoot, textEditor.document.fileName, oneBasedLineNo)
-          .catch(NotificationsManager.getRelatedCodeErrHandler());
+          .catch(err => NotificationsManager.notifyFromError(err, "Oops! Something went wrong with Code Finder. Please try again later."));
       })
     );
 
@@ -239,29 +243,6 @@ export const Kite = {
       vscode.commands.registerCommand("kite.open-copilot", () => {
         kiteOpen("kite://home");
       })
-    );
-
-    this.disposables.push(
-      vscode.commands.registerCommand("kite.more", ({ id, source }) => {
-        metrics.track(`${source} See info clicked`);
-        kiteOpen(`kite://docs/${id}`);
-      })
-    );
-
-    this.disposables.push(
-      vscode.commands.registerCommand(
-        "kite.more-position",
-        ({ position, source }) => {
-          metrics.track(`${source} See info clicked`);
-          const doc = vscode.window.activeTextEditor.document;
-          const path = hoverPath(doc, position);
-          return this.request({ path })
-            .then(data => JSON.parse(data))
-            .then(data => {
-              kiteOpen(`kite://docs/${data.symbol[0].id}`);
-            });
-        }
-      )
     );
 
     this.disposables.push(
@@ -338,27 +319,6 @@ export const Kite = {
     this.disposables.push(
       vscode.commands.registerCommand("kite.help", () => {
         open("https://help.kite.com/category/46-vs-code-integration");
-      })
-    );
-
-    this.disposables.push(
-      vscode.commands.registerCommand("kite.docs-at-cursor", () => {
-        const editor = vscode.window.activeTextEditor;
-
-        if (editor) {
-          const pos = editor.selection.active;
-          const { document } = editor;
-
-          const path = hoverPath(document, pos);
-          KiteAPI.request({ path }).then(resp => {
-            if (resp.statusCode === 200) {
-              vscode.commands.executeCommand("kite.more-position", {
-                position: pos,
-                source: "Command"
-              });
-            }
-          });
-        }
       })
     );
 
