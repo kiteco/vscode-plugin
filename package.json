@@ -314,7 +314,7 @@
         {
           "when": "!editorHasMultipleSelections",
           "command": "kite.related-code-from-line",
-          "group": "navigation@5"
+          "group": "0_navigation"
         }
       ]
     },
