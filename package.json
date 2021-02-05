@@ -312,8 +312,9 @@
     "menus": {
       "editor/context": [
         {
-          "when": "editorHasSelection",
-          "command": "kite.related-code-from-line"
+          "when": "!editorHasMultipleSelections",
+          "command": "kite.related-code-from-line",
+          "group": "navigation@5"
         }
       ]
     },
