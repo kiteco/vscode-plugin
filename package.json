@@ -1,7 +1,7 @@
 {
   "name": "kite",
   "displayName": "Kite AutoComplete AI Code: Python, Java, Go, PHP, C/C#/C++, Javascript, HTML/CSS, Typescript, React, Ruby, Scala, Kotlin, Bash, Vue, React",
-  "description": "AI code completions for all languages, intellisense, code snippets, code signatures, and cursor-following documentation for VS Code. Kite supports .js .jsx .vue .tsx .ts .css .html .less .c .cc .cpp .cs .h .hpp .m .scala .java .kt .py .go .php .rb and .sh filetypes.",
+  "description": "AI code completions for all languages, intellisense, code snippets, code signatures, and cursor-following documentation for VS Code. Kite supports .js .jsx .vue .tsx .ts .css .html .less .c .cc .cpp .cxx .cs .h .hpp .hxx .tpp .txx .ipp .ixx .m .scala .java .kt .py .go .php .rb and .sh filetypes.",
   "version": "0.136.0",
   "publisher": "kiteco",
   "engines": {
@@ -67,9 +67,15 @@
     ".c",
     ".cc",
     ".cpp",
+    ".cxx",
     ".cs",
     ".h",
     ".hpp",
+    ".hxx",
+    ".tpp",
+    ".txx",
+    ".ipp",
+    ".ixx",
     ".m",
     ".scala",
     ".java",
@@ -107,7 +113,13 @@
         "extensions": [
           ".cc",
           ".cpp",
-          ".hpp"
+          ".cxx",
+          ".hpp",
+          ".hxx",
+          ".tpp",
+          ".txx",
+          ".ipp",
+          ".ixx"
         ]
       },
       {

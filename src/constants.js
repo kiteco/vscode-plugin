@@ -84,12 +84,16 @@ function SupportedExtensions() {
     ".c",
     ".cc",
     ".cpp",
+    ".cxx",
     ".cs",
     ".css",
     ".go",
     ".h",
     ".hpp",
+    ".hxx",
     ".html",
+    ".ipp",
+    ".ixx",
     ".java",
     ".js",
     ".jsx",
@@ -102,8 +106,10 @@ function SupportedExtensions() {
     ".rb",
     ".scala",
     ".sh",
+    ".tpp",
     ".ts",
     ".tsx",
+    ".txx",
     ".vue"
   ];
 }
