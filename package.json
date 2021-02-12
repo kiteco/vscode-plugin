@@ -290,11 +290,11 @@
       },
       {
         "command": "kite.related-code-from-file",
-        "title": "Kite: Find Related Code From File (experimental)"
+        "title": "Kite: Find Related Code From File"
       },
       {
         "command": "kite.related-code-from-line",
-        "title": "Kite: Find Related Code From Line (experimental)"
+        "title": "Kite: Find Related Code From Line"
       },
       {
         "command": "kite.python-tutorial",
@@ -312,8 +312,9 @@
     "menus": {
       "editor/context": [
         {
-          "when": "editorHasSelection",
-          "command": "kite.related-code-from-line"
+          "when": "!editorHasMultipleSelections",
+          "command": "kite.related-code-from-line",
+          "group": "0_navigation"
         }
       ]
     },
