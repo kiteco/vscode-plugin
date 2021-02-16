@@ -116,7 +116,10 @@ export default class KiteRelatedCodeDecorationsProvider {
   private hoverMessage(hover: string): MarkdownString {
     let logo = path.join(extensions.getExtension("kiteco.kite").extensionPath, "dist", "assets", "images", "logo-light-blue.svg");
     if (process.platform === 'win32') {
-      logo = `file:\\\\\\${logo}`;
+      logo = `file:\\\\${logo}`;
+      // Replace all \ in Windows path with \\
+      // otherwise c:\Users\Foo\.vscode turns into c:\Users\Foo.vscode
+      logo = logo.replace(/\\/g,'\\\\');
     }
     const md = new MarkdownString(`![KiteIcon](${logo}|height=12)&nbsp;&nbsp;[${hover}](command:kite.related-code-from-line)`);
     // Must mark as trusted to run commands in MarkdownStrings
