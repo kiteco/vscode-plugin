@@ -103,14 +103,18 @@ export default class NotificationsManager {
     metrics.track("vscode_kite_installer_notification_shown");
     vscode.window
       .showInformationMessage(
-        "Kite requires the Kite Engine backend to provide completions and documentation. Please install it to use Kite.",
-        "Install"
+        "Kite requires the Kite Copilot desktop application to provide completions and documentation. Please install it to use Kite.",
+        "Install",
+        "Learn More"
       )
       .then(item => {
         switch (item) {
           case "Install":
             open("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
             metrics.track("vscode_kite_installer_github_link_clicked");
+            break;
+          case "Learn More":
+            open("https://www.kite.com/copilot/");
             break;
         }
       });
@@ -139,7 +143,7 @@ export default class NotificationsManager {
     metrics.track("vscode_kite_downloading_failed_notification_shown");
     vscode.window
       .showErrorMessage(
-        "There was an error installing the Kite Engine, which is required for Kite to provide completions and documentation. Please install it to use Kite.",
+        "There was an error installing the Kite Copilot, which is required for Kite to provide completions and documentation. Please install it to use Kite.",
         "Install"
       )
       .then(item => {

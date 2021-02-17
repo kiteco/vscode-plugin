@@ -104,6 +104,7 @@ export default {
   sendCompletionSelected,
   track: (event, props) => {
     if (process.env.NODE_ENV !== "production") {
+      props = props || "";
       console.log(`tracking ${event}`, props);
       return;
     }
