@@ -99,7 +99,7 @@ export default class NotificationsManager {
       .then(hasDone => !hasDone && openKiteTutorial('python'));
   }
 
-  static showKiteInstallNotification() {
+  static showKiteInstallNotification(install) {
     metrics.track("vscode_kite_installer_notification_shown");
     vscode.window
       .showInformationMessage(
@@ -110,8 +110,12 @@ export default class NotificationsManager {
       .then(item => {
         switch (item) {
           case "Install":
-            open("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
-            metrics.track("vscode_kite_installer_github_link_clicked");
+            if (!install) {
+              open("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
+              metrics.track("vscode_kite_installer_github_link_clicked")
+            } else {
+              install();
+            }
             break;
           case "Learn More":
             open("https://www.kite.com/copilot/");
@@ -139,8 +143,8 @@ export default class NotificationsManager {
       });
   }
 
-  static showKiteInstallErrorNotification() {
-    metrics.track("vscode_kite_downloading_failed_notification_shown");
+  static showKiteInstallErrorNotification(error) {
+    metrics.track("vscode_kite_downloading_failed_notification_shown", { error });
     vscode.window
       .showErrorMessage(
         "There was an error installing the Kite Copilot, which is required for Kite to provide completions and documentation. Please install it to use Kite.",
