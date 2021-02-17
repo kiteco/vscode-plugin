@@ -19,7 +19,7 @@ import {
 
 import * as KiteAPI from "kite-api";
 
-const relatedCodeLineDecoration: TextEditorDecorationType = window.createTextEditorDecorationType({
+export const relatedCodeLineDecoration: TextEditorDecorationType = window.createTextEditorDecorationType({
   rangeBehavior: DecorationRangeBehavior.ClosedOpen,
 });
 
@@ -58,6 +58,7 @@ export default class KiteRelatedCodeDecorationsProvider {
   // Public for testing
   public async onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent): Promise<void> {
     if (!this.enabled()) {
+      this.clearDecorations(event.textEditor)
       return;
     }
 

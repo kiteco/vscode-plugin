@@ -14,7 +14,7 @@ import { assert } from 'chai';
 import * as sinon from 'sinon';
 
 import * as KiteAPI from 'kite-api';
-import KiteRelatedCodeDecorationsProvider from '../src/codenav-decoration';
+import KiteRelatedCodeDecorationsProvider, { relatedCodeLineDecoration } from '../src/codenav-decoration';
 
 describe('KiteRelatedCodeDecorationsProvider', () => {
 
@@ -66,7 +66,7 @@ describe('KiteRelatedCodeDecorationsProvider', () => {
       await fireEvent();
 
       assert.isFalse(getLineDecorationStub.called);
-      assert.isFalse(setDecorationSpy.called);
+      assert.isTrue(setDecorationSpy.calledWith(relatedCodeLineDecoration, []), "clears the decoration when disabled");
 
       getConfigurationStub.restore();
     });
