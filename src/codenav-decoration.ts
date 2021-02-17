@@ -19,7 +19,7 @@ import {
 
 import * as KiteAPI from "kite-api";
 
-const relatedCodeLineDecoration: TextEditorDecorationType = window.createTextEditorDecorationType({
+export const relatedCodeLineDecoration: TextEditorDecorationType = window.createTextEditorDecorationType({
   rangeBehavior: DecorationRangeBehavior.ClosedOpen,
 });
 
