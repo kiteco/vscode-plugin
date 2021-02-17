@@ -58,6 +58,7 @@ export default class KiteRelatedCodeDecorationsProvider {
   // Public for testing
   public async onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent): Promise<void> {
     if (!this.enabled()) {
+      this.clearDecorations(event.textEditor)
       return;
     }
 
