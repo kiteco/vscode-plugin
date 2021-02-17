@@ -479,9 +479,7 @@ export const Kite = {
               return state;
             }
             this.shown[state] = true;
-            if (KiteAPI.hasKiteRun()) {
-              NotificationsManager.showKiteInstallNotification();
-            } else {
+            NotificationsManager.showKiteInstallNotification(() => {
               NotificationsManager.showKiteDownloadingNotification();
               this.installing = true;
               KiteAPI.downloadKiteRelease({
@@ -491,10 +489,9 @@ export const Kite = {
                 onRemove: () => { this.installing = false; },
               })
               .catch(e => {
-                console.error(e);
-                NotificationsManager.showKiteInstallErrorNotification();
+                NotificationsManager.showKiteInstallErrorNotification(e);
               });
-            }
+            });
             break;
           case KiteAPI.STATES.INSTALLED:
             if (
@@ -559,7 +556,7 @@ export const Kite = {
     const supported = this.isGrammarSupported(vscode.window.activeTextEditor);
     const enabledFiletype = this.isEnabledAndSupported(vscode.window.activeTextEditor);
 
-    if (supported) {
+    if (!vscode.window.activeTextEditor || supported) {
       this.statusBarItem.show();
       switch (state) {
         case KiteAPI.STATES.UNSUPPORTED:
