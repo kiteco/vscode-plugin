@@ -141,7 +141,7 @@ export const Kite = {
     this.disposables.push(
       vscode.window.onDidChangeActiveTextEditor(e => {
         this.setMaxFileSize();
-        this.setStatusBarLabel();
+        this.checkState('onDidChangeActiveTextEditor');
         if (e) {
           if (/Code[/\\]User[/\\]settings.json$/.test(e.document.fileName)) {
             metrics.featureRequested("settings");
@@ -189,9 +189,6 @@ export const Kite = {
     this.statusBarItem = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Right
     );
-    this.statusBarItem.text = "𝕜𝕚𝕥𝕖";
-    this.statusBarItem.color = undefined;
-    this.statusBarItem.show();
 
     this.disposables.push(this.statusBarItem);
 
@@ -448,16 +445,9 @@ export const Kite = {
     return KiteAPI
       .checkHealth()
       .then(state => {
-        if (state > KiteAPI.STATES.INSTALLED) {
-          localconfig.set("wasInstalled", true);
-        }
-
         switch (state) {
           case KiteAPI.STATES.UNSUPPORTED:
-            if (
-              this.shown[state] ||
-              !this.isGrammarSupported(vscode.window.activeTextEditor)
-            ) {
+            if (this.shown[state]) {
               return state;
             }
             this.shown[state] = true;
@@ -471,11 +461,7 @@ export const Kite = {
             );
             break;
           case KiteAPI.STATES.UNINSTALLED:
-            if (
-              this.shown[state] ||
-              (vscode.window.activeTextEditor &&
-                !this.isGrammarSupported(vscode.window.activeTextEditor))
-            ) {
+            if (this.shown[state]) {
               return state;
             }
             this.shown[state] = true;
@@ -494,10 +480,7 @@ export const Kite = {
             });
             break;
           case KiteAPI.STATES.INSTALLED:
-            if (
-              !this.attemptedToStartKite &&
-              vscode.workspace.getConfiguration("kite").startKiteEngineOnStartup
-            ) {
+            if (!this.attemptedToStartKite && vscode.workspace.getConfiguration("kite").startKiteEngineOnStartup) {
               if (this.installing) {
                 // Guard against running Kite before installation fully completes.
                 break;
@@ -507,10 +490,7 @@ export const Kite = {
             }
             break;
           case KiteAPI.STATES.RUNNING:
-            if (
-              this.shown[state] ||
-              !this.isGrammarSupported(vscode.window.activeTextEditor)
-            ) {
+            if (this.shown[state]) {
               return state;
             }
             break;
@@ -531,16 +511,10 @@ export const Kite = {
         return state;
       })
       .then(state => {
-        this.setStatus(
-          state,
-          this.isGrammarSupported(vscode.window.activeTextEditor)
-            ? vscode.window.activeTextEditor.document
-            : null
-        );
+        this.setStatus(state,
+          vscode.window.activeTextEditor ? vscode.window.activeTextEditor.document : undefined);
       })
-      .catch(err => {
-        console.error(err);
-      });
+      .catch(err => console.error(err));
   },
 
   setMaxFileSize() {
@@ -556,50 +530,46 @@ export const Kite = {
     const supported = this.isGrammarSupported(vscode.window.activeTextEditor);
     const enabledFiletype = this.isEnabledAndSupported(vscode.window.activeTextEditor);
 
-    if (!vscode.window.activeTextEditor || supported) {
-      this.statusBarItem.show();
-      switch (state) {
-        case KiteAPI.STATES.UNSUPPORTED:
-          this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not supported";
-          this.statusBarItem.tooltip =
-            "Kite engine is currently not supported on your platform";
-          this.statusBarItem.color = ERROR_COLOR();
-          break;
-        case KiteAPI.STATES.UNINSTALLED:
-          if (this.installing) {
-            this.statusBarItem.text = "𝕜𝕚𝕥𝕖: installing components";
-            this.statusBarItem.tooltip = "Installing components. Kite will launch automatically when ready.";
-          } else {
-            this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not installed";
-            this.statusBarItem.tooltip = "Kite engine is not installed";
-          }
-          this.statusBarItem.color = ERROR_COLOR();
-          break;
-        case KiteAPI.STATES.INSTALLED:
-          this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not running";
-          this.statusBarItem.tooltip = "Kite engine is not running";
-          this.statusBarItem.color = ERROR_COLOR();
-          break;
-        case KiteAPI.STATES.RUNNING:
-          this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not reachable";
-          this.statusBarItem.tooltip = "Kite engine is not reachable";
-          this.statusBarItem.color = ERROR_COLOR();
-          break;
-        default:
-          if (!enabledFiletype) {
-            this.statusBarItem.color = undefined;
-            this.statusBarItem.text = "𝕜𝕚𝕥𝕖: disabled";
-            this.statusBarItem.tooltip = "Enable this file type in VS Code settings";
-          } else if (status) {
-            this.statusBarItem.color = undefined;
-            this.statusBarItem.text = status.short ? ("𝕜𝕚𝕥𝕖: " + status.short) : "𝕜𝕚𝕥𝕖";
-            this.statusBarItem.tooltip = status.long ? status.long : "";
-          } else {
-            this._clearStatusBarItem();
-          }
-      }
-    } else {
-      this._clearStatusBarItem();
+    this.statusBarItem.show();
+    switch (state) {
+      case KiteAPI.STATES.UNSUPPORTED:
+        this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not supported";
+        this.statusBarItem.tooltip =
+          "Kite engine is currently not supported on your platform";
+        this.statusBarItem.color = ERROR_COLOR();
+        break;
+      case KiteAPI.STATES.UNINSTALLED:
+        if (this.installing) {
+          this.statusBarItem.text = "𝕜𝕚𝕥𝕖: installing components";
+          this.statusBarItem.tooltip = "Installing components. Kite will launch automatically when ready.";
+        } else {
+          this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not installed";
+          this.statusBarItem.tooltip = "Kite engine is not installed";
+        }
+        this.statusBarItem.color = ERROR_COLOR();
+        break;
+      case KiteAPI.STATES.INSTALLED:
+        this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not running";
+        this.statusBarItem.tooltip = "Kite engine is not running";
+        this.statusBarItem.color = ERROR_COLOR();
+        break;
+      case KiteAPI.STATES.RUNNING:
+        this.statusBarItem.text = "𝕜𝕚𝕥𝕖: not reachable";
+        this.statusBarItem.tooltip = "Kite engine is not reachable";
+        this.statusBarItem.color = ERROR_COLOR();
+        break;
+      default:
+        if (supported && !enabledFiletype) {
+          this.statusBarItem.color = undefined;
+          this.statusBarItem.text = "𝕜𝕚𝕥𝕖: disabled";
+          this.statusBarItem.tooltip = "Enable this file type in VS Code settings";
+        } else if (status) {
+          this.statusBarItem.color = undefined;
+          this.statusBarItem.text = status.short ? ("𝕜𝕚𝕥𝕖: " + status.short) : "𝕜𝕚𝕥𝕖";
+          this.statusBarItem.tooltip = status.long ? status.long : "";
+        } else {
+          this._clearStatusBarItem();
+        }
     }
   },
 
@@ -630,7 +600,7 @@ export const Kite = {
 
   getStatus(document) {
     if (!document) {
-      return Promise.resolve({ status: "ready" });
+      return Promise.resolve(undefined);
     }
 
     const path = statusPath(document.fileName);
@@ -641,7 +611,7 @@ export const Kite = {
           return promisifyReadResponse(resp).then(json => JSON.parse(json));
         }
       })
-      .catch(() => ({ status: "ready" }));
+      .catch(e => console.error(e));
   },
 
   request(req, data) {
