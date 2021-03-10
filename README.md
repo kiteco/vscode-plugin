@@ -1,5 +1,7 @@
 # Kite Autocomplete Plugin for Visual Studio Code
 
+[![Report an issue](https://img.shields.io/badge/-Report%20an%20issue-critical)](https://github.com/kiteco/issue-tracker/issues)
+
 ![GitHub Repo stars](https://img.shields.io/github/stars/kiteco/vscode-plugin?style=social)
 ![Twitter Follow](https://img.shields.io/twitter/follow/kitehq?style=social)
 ![YouTube Video Views](https://img.shields.io/youtube/views/L2vpOL-jHpQ?label=Kite%20Youtube&style=social)
