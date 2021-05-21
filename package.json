@@ -372,7 +372,7 @@
         },
         "kite.codefinder.enableLineDecoration": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Enables line decoration for Kite code finder."
         }
       }
