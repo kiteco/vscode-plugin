@@ -118,8 +118,8 @@ const processCompletion = (
         snippetText.slice(placeholder.end);
       offset += 5;
     }
-    // Sanitize snippet text by replacing all $ not for placeholders with \\$
-    snippetText = snippetText.replaceAll(/\$(?!{)/g, "\\$");
+    // Sanitize snippet text by replacing all $ with \\$ except those in the form of ${x:...}
+    snippetText = snippetText.replaceAll(/\$(?!{\d+:.*})/g, "\\$");
     // Add closing tab stop
     snippetText += "$0";
     item.insertText = new SnippetString(snippetText);
