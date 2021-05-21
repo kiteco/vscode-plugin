@@ -78,7 +78,6 @@ const processCompletion = (
   i
 ) => {
   const item = new CompletionItem(displayPrefix + c.display);
-  item.insertText = c.snippet.text;
 
   const start = document.positionAt(c.replace.begin);
   const end = document.positionAt(c.replace.end);
@@ -99,26 +98,31 @@ const processCompletion = (
   item.detail = c.hint + KITE_BRANDING;
   item.kind = kindForHint(c.hint);
 
-  if (c.snippet.placeholders.length > 0) {
+  item.insertText = c.snippet.text;
+  const placeholders = c.snippet.placeholders;
+  if (Array.isArray(placeholders) && placeholders.length) {
+    let snippetText = c.snippet.text;
     var offset = 0;
     let i = 0;
     for (i = 0; i < c.snippet.placeholders.length; i++) {
       let placeholder = c.snippet.placeholders[i];
       placeholder.begin += offset;
       placeholder.end += offset;
-      item.insertText =
-        item.insertText.slice(0, placeholder.begin) +
+      snippetText =
+      snippetText.slice(0, placeholder.begin) +
         "${" +
         (i + 1).toString() +
         ":" +
-        item.insertText.slice(placeholder.begin, placeholder.end) +
+        snippetText.slice(placeholder.begin, placeholder.end) +
         "}" +
-        item.insertText.slice(placeholder.end);
+        snippetText.slice(placeholder.end);
       offset += 5;
     }
+    // Sanitize snippet text by replacing all $ not for placeholders with \\$
+    snippetText = snippetText.replaceAll(/\$(?!{)/g, "\\$");
     // Add closing tab stop
-    item.insertText += "$0";
-    item.insertText = new SnippetString(item.insertText);
+    snippetText += "$0";
+    item.insertText = new SnippetString(snippetText);
   }
 
   item.command = {
