@@ -103,11 +103,15 @@ export default class NotificationsManager {
     vscode.window
     .showInformationMessage(
       "The Kite Copilot cannot be installed for the time being. We'll notify you when it's available again.",
-      "OK"
+      "OK",
+      "Learn More"
     )
     .then(item => {
       switch (item) {
         case "OK":
+          break;
+        case "Learn More":
+          open("https://kite.com/kite-is-temporarily-unavailable/?source=vscode");
           break;
       }
     });
