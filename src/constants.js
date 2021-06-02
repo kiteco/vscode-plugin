@@ -134,6 +134,8 @@ const KITE_BRANDING = " 𝕜𝕚𝕥𝕖 ";
 
 const OFFSET_ENCODING = "utf-16";
 
+const INSTALL_PAUSED_NOTIFICATION_SHOWN = "kite.hasShownInstallPausedNotification";
+
 export {
   ATTEMPTS,
   INTERVAL,
@@ -141,6 +143,7 @@ export {
   CompletionsSupport,
   SupportedExtensions,
   IsSupportedFile,
+  INSTALL_PAUSED_NOTIFICATION_SHOWN,
   CONNECT_ERROR_LOCKOUT,
   ERROR_COLOR,
   WARNING_COLOR,

@@ -99,6 +99,48 @@ export default class NotificationsManager {
       .then(hasDone => !hasDone && openKiteTutorial('python'));
   }
 
+  static showKiteInstallPausedNotification() {
+    vscode.window
+    .showInformationMessage(
+      "The Kite Copilot cannot be installed for the time being. We'll notify you when it's available again.",
+      "OK",
+      "Learn More"
+    )
+    .then(item => {
+      switch (item) {
+        case "OK":
+          break;
+        case "Learn More":
+          open("https://kite.com/kite-is-temporarily-unavailable/?source=vscode");
+          break;
+      }
+    });
+  }
+
+  static showKiteInstallResumedNotification(install) {
+    vscode.window
+    .showInformationMessage(
+      "The Kite Copilot is installable again. Kite requires the Kite Copilot desktop application to provide completions and documentation. Please install it to use Kite.",
+      "Install",
+      "Learn More"
+    )
+    .then(item => {
+      switch (item) {
+        case "Install":
+          if (!install) {
+            open("https://www.kite.com/install/?utm_medium=editor&utm_source=vscode");
+            metrics.track("vscode_kite_installer_github_link_clicked")
+          } else {
+            install();
+          }
+          break;
+        case "Learn More":
+          open("https://www.kite.com/copilot/");
+          break;
+      }
+    });
+  }
+
   static showKiteInstallNotification(install) {
     metrics.track("vscode_kite_installer_notification_shown");
     vscode.window

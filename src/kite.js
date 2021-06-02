@@ -15,6 +15,7 @@ import {
   PythonHoverSupport,
   PythonSignaturesSupport,
   IsSupportedFile,
+  INSTALL_PAUSED_NOTIFICATION_SHOWN,
 } from "./constants";
 import { KiteHoverProvider, DocsCommands } from "./docs";
 import KiteCompletionProvider from "./completion";
@@ -52,7 +53,7 @@ export const Kite = {
 
   _activate() {
     if (this.globalState.setKeysForSync) {
-      this.globalState.setKeysForSync(["kite.showWelcomeNotificationOnStartup"]);
+      this.globalState.setKeysForSync(["kite.showWelcomeNotificationOnStartup", INSTALL_PAUSED_NOTIFICATION_SHOWN]);
     }
 
     metrics.featureRequested("starting");
@@ -465,7 +466,8 @@ export const Kite = {
               return state;
             }
             this.shown[state] = true;
-            NotificationsManager.showKiteInstallNotification(() => {
+
+            const installFunc = () => {
               NotificationsManager.showKiteDownloadingNotification();
               this.installing = true;
               KiteAPI.downloadKiteRelease({
@@ -477,6 +479,22 @@ export const Kite = {
               .catch(e => {
                 NotificationsManager.showKiteInstallErrorNotification(e);
               });
+            }
+
+            KiteAPI.canDownloadKite().then(yes => {
+              if (!yes) {
+                if (!this.globalState.get(INSTALL_PAUSED_NOTIFICATION_SHOWN)) {
+                  NotificationsManager.showKiteInstallPausedNotification();
+                  this.globalState.update(INSTALL_PAUSED_NOTIFICATION_SHOWN, true);
+                }
+                return;
+              }
+              if (this.globalState.get(INSTALL_PAUSED_NOTIFICATION_SHOWN)) {
+                NotificationsManager.showKiteInstallResumedNotification(installFunc);
+                this.globalState.update(INSTALL_PAUSED_NOTIFICATION_SHOWN, undefined);
+              } else {
+                NotificationsManager.showKiteInstallNotification(installFunc);
+              }
             });
             break;
           case KiteAPI.STATES.INSTALLED:
