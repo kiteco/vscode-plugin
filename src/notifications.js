@@ -102,7 +102,7 @@ export default class NotificationsManager {
   static showKiteInstallPausedNotification() {
     vscode.window
     .showInformationMessage(
-      "The Kite Copilot cannot be installed for the time being. We'll notify you when it's available again.",
+      "Kite requires the Kite Copilot to function. However, it cannot be downloaded for the next few weeks. This plugin will notify you when it's available again.",
       "OK",
       "Learn More"
     )
