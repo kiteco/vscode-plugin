@@ -108,7 +108,7 @@ labeled with the `⟠` symbol.
 
 ### Commands
 
-Kite comes with sevaral commands that you can run from VS Code's command palette.
+Kite comes with several commands that you can run from VS Code's command palette.
 
 |Command|Description|
 |:---|:---|
