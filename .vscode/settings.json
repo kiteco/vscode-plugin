@@ -1,3 +1,5 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+    "angular-cli.appShell.enabled": false,
+    "terminal.integrated.allowMnemonics": true
 }
